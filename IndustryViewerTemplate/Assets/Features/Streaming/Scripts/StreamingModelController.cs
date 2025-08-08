@@ -131,7 +131,7 @@ namespace Unity.Industry.Viewer.Streaming
                 .CreateDefaultBuilder().SetWireframeSettings(m_EnableWireframe, WireframeModes.Shaded, Color.green); //Turn on wireframe mode will have performance cost (double the memory) no matter what mode you put into
             
             // Set the resource limits for the streaming model controller, feel free to change as it only affects WEBGL and VR
-#if UNITY_WEBGL || ENABLE_VR
+#if UNITY_WEBGL || VR_MODE
             if (m_StreamingResourceLimiterSettings != null)
             {
                 builder.ConfigureDefaultResourceLimiter(x => x.SetMaxTriangleCount(m_StreamingResourceLimiterSettings.maxTriangleCount));
