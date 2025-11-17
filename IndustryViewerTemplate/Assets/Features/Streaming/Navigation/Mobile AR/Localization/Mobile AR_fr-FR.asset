@@ -19,7 +19,7 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 751689523200
-    m_Localized: AR mobile
+    m_Localized: "R\xE9alit\xE9 augment\xE9e"
     m_Metadata:
       m_Items: []
   - m_Id: 3464783454209
@@ -31,7 +31,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648512
-    m_Localized: <u>Ancre spatiale</u>
+    m_Localized: Ancrage spatial
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648513
@@ -59,7 +59,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648519
-    m_Localized: "R\xE9initialiser aux valeurs par d\xE9faut"
+    m_Localized: "R\xE9initialiser aux param\xE8tres par d\xE9faut"
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648520
@@ -67,24 +67,23 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506304
-    m_Localized: "Ancrage AR align\xE9"
+    m_Localized: "Ancre AR align\xE9e"
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506305
-    m_Localized: "Ancre AR enregistr\xE9e"
+    m_Localized: "AR Anchor enregistr\xE9"
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506306
-    m_Localized: "\xC9chec de l'enregistrement de l'ancre AR - Inconnu"
+    m_Localized: "\xC9chec de la sauvegarde AR Anchor - Inconnu"
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506307
-    m_Localized: Scannez et appuyez pour initialiser la position de l'actif
+    m_Localized: "Num\xE9risez et appuyez pour initialiser la position de l'actif"
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506308
-    m_Localized: Vous pouvez ajuster finement votre actif et appuyer sur Verrouiller
-      la position
+    m_Localized: Vous pouvez affiner votre actif et cliquer sur Verrouiller la position
     m_Metadata:
       m_Items: []
   - m_Id: 41362627148898304
@@ -96,7 +95,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 41362627157286913
-    m_Localized: Axe Z
+    m_Localized: axe Z
     m_Metadata:
       m_Items: []
   - m_Id: 44105927752671232
@@ -109,6 +108,27 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 45568947439788032
     m_Localized: "Vous n'avez pas l'autorisation d'\xE9criture."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084964016128
+    m_Localized: "Ancrage spatial trouv\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084972404736
+    m_Localized: "Une ancre spatiale pr\xE9c\xE9demment enregistr\xE9e a \xE9t\xE9
+      trouv\xE9e. Voulez-vous la charger\_?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084972404737
+    m_Localized: Ignorer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084972404738
+    m_Localized: Charger
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119205759076524032
+    m_Localized: "Appuyez sur le point pour placer l'\xE9l\xE9ment"
     m_Metadata:
       m_Items: []
   references:

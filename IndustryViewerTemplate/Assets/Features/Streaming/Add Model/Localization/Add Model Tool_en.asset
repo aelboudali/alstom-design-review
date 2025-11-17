@@ -18,22 +18,24 @@ MonoBehaviour:
   m_Metadata:
     m_Items: []
   m_TableData:
-  - m_Id: 511469150208
-    m_Localized: Cloud Asset
-    m_Metadata:
-      m_Items: []
-  - m_Id: 40570196551786496
-    m_Localized: Select
-    m_Metadata:
-      m_Items: []
   - m_Id: 40570196551786497
     m_Localized: Selected
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217674
   - m_Id: 40570196551786498
     m_Localized: Add to the Scene
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217675
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 8258937048882217674
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is button when asset/layout is selected
+    - rid: 8258937048882217675
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: 'This is button for adding selected assets/layout to the scene '

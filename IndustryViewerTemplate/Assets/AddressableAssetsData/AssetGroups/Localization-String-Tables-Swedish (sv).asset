@@ -36,6 +36,12 @@ MonoBehaviour:
     - Locale-sv
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2a333c02ad386493f973d7f0b5b060d6
+    m_Address: UI_sv
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-sv
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 397f252040dd24e5bb602eaab6d8d67f
     m_Address: Mobile AR_sv
     m_ReadOnly: 1
@@ -43,12 +49,24 @@ MonoBehaviour:
     - Locale-sv
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3d74d2a9e3d74ae4f89c987a9f643a3b
+    m_Address: MeasureTool_sv
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-sv
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 51e4ebc1beb084d6ebf7a920cb2f3d5f
     m_Address: Add Model Tool_sv
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-sv
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5bd2fa1c0613f45d990066ed6275ef36
+    m_Address: Section Cut_sv
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-sv
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 74bce4fde1eea4cb08afa099dd1f85af
     m_Address: Fly Camera_sv
@@ -71,6 +89,24 @@ MonoBehaviour:
     - Locale-sv
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 97f7fb974afb34087a1504c2e5ac6b16
+    m_Address: Collaboration_sv
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-sv
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a3f79517d07ade6459495212a59fafc0
+    m_Address: Environment Tool_sv
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-sv
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b7746446fdf3c4d3ab7ece19541ada1d
+    m_Address: Shared_sv
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-sv
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ccde6fbd3b3a040f9a42fb7cb4d747aa
     m_Address: Assets_sv
     m_ReadOnly: 1
@@ -84,6 +120,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-sv
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dbfc33f679cb1f04287bda6fe3c1f526
+    m_Address: Deep Linking_sv
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-sv
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: dcee5bf29c673184492466d2986707de
     m_Address: Walk Camera_sv

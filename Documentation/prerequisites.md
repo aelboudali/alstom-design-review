@@ -22,7 +22,7 @@ You must also have the following project and role settings inside your organizat
 
 [Contact us](https://unity.com/contact-us?sfcid=701f4000000nQwYAAU&sflsa=Unity%20Enterprise%20Contact%20Us%20Form) if you would like to apply for those licenses. 
 
-The following additional services are required to use the multiplayer functionality of the Industry Viewer Template:
+The following additional services are required to use the [multiplayer functionality](project-settings-customization/feature-management/multiplayer-services.md) of the Industry Viewer Template:
 
 * [Distributed Authority](https://unity.com/products/distributed-authority)  
 * [Lobby](https://docs.unity.com/ugs/en-us/manual/lobby/manual/unity-lobby-service)  

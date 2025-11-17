@@ -19,7 +19,7 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 751689523200
-    m_Localized: Mobil AR
+    m_Localized: Utvidet virkelighet
     m_Metadata:
       m_Items: []
   - m_Id: 3464783454209
@@ -31,15 +31,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648512
-    m_Localized: <u>Spatialt ankare</u>
+    m_Localized: Spatialt ankare
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648513
-    m_Localized: Spara spatialt ankare
+    m_Localized: Spara ankare
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648514
-    m_Localized: "L\xE4s in spatialt ankare"
+    m_Localized: Lastankare
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648515
@@ -55,11 +55,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648518
-    m_Localized: "\xD6ka"
+    m_Localized: "\xD6kning"
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648519
-    m_Localized: "\xC5terst\xE4ll till standardposition"
+    m_Localized: "\xC5terst\xE4ll till standard"
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648520
@@ -67,15 +67,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506304
-    m_Localized: AR-ankare justerat
+    m_Localized: AR Anchor Aligned
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506305
-    m_Localized: AR-ankare sparad
+    m_Localized: AR-ankare sparat
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506306
-    m_Localized: "Det gick inte att spara AR-ankaret - Ok\xE4nt"
+    m_Localized: "Misslyckas Spara AR-ankare - Ok\xE4nd"
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506307
@@ -103,11 +103,31 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 45568947435593728
-    m_Localized: Lastning misslyckades
+    m_Localized: Laddningen misslyckades
     m_Metadata:
       m_Items: []
   - m_Id: 45568947439788032
     m_Localized: "Du har inte skrivbeh\xF6righet."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084964016128
+    m_Localized: Romlig anker funnet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084972404736
+    m_Localized: Et tidligere lagret romlig anker ble funnet. Vil du laste det inn?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084972404737
+    m_Localized: Overse
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084972404738
+    m_Localized: Laste
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119205759076524032
+    m_Localized: "Trykk p\xE5 punktet for \xE5 plassere ressursen"
     m_Metadata:
       m_Items: []
   references:

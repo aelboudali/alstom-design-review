@@ -15,6 +15,12 @@ MonoBehaviour:
   m_GroupName: Localization-String-Tables-Japanese (Japan) (ja-JP)
   m_GUID: 66d724176928d4a56ad064ba6fa3ebd0
   m_SerializeEntries:
+  - m_GUID: 1c55f58acea0a3e41b282602a21bfd71
+    m_Address: Environment Tool_ja-JP
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ja-JP
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 28aa4643815c04e6d9c583cf8bd879ea
     m_Address: Assets_ja-JP
     m_ReadOnly: 1
@@ -28,6 +34,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-ja-JP
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5fd7d510c10304ec99a7c65ca3516cb4
+    m_Address: UI_ja-JP
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ja-JP
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 72d19957f0c6b47f88714ad937df9d89
     m_Address: Metadata Tool_ja-JP
@@ -50,6 +62,18 @@ MonoBehaviour:
     - Locale-ja-JP
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 82f1c3bfcc42d4cdbb4f0f4cdd1528e1
+    m_Address: Shared_ja-JP
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ja-JP
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8e4833e46df8c49f594f8872380888be
+    m_Address: Section Cut_ja-JP
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ja-JP
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 95e45dfb209214fffa02b25e871a0c18
     m_Address: Fly Camera_ja-JP
     m_ReadOnly: 1
@@ -71,12 +95,24 @@ MonoBehaviour:
     - Locale-ja-JP
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c3d15533a1384b64fb9c1b9d0beae6f1
+    m_Address: MeasureTool_ja-JP
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ja-JP
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: cd18d298f08b0486784a4a5b333e8dc3
     m_Address: Orbit Camera_ja-JP
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-ja-JP
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d51a334e3aa39ac43902ec5f8c8b065a
+    m_Address: Deep Linking_ja-JP
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ja-JP
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: eaeeca00248d44da5975de9d281ec487
     m_Address: Add Model Tool_ja-JP
@@ -104,6 +140,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-ja-JP
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f842465d73eb145719f81e0fd52f1b67
+    m_Address: Collaboration_ja-JP
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ja-JP
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: fc37827dd7de740e2a1d4a1f2eb1ff34
     m_Address: InAppSettings_ja-JP

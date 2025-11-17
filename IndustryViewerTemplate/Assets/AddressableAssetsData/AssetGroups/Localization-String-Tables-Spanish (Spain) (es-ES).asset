@@ -15,6 +15,12 @@ MonoBehaviour:
   m_GroupName: Localization-String-Tables-Spanish (Spain) (es-ES)
   m_GUID: 4277d7056e6a449d5ad7f9d3f25c1aac
   m_SerializeEntries:
+  - m_GUID: 064b2ffc80f704cb1840c2185ce2a996
+    m_Address: Section Cut_es-ES
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-es-ES
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 09eae9ffd98aa478cbd388bcafcaab6a
     m_Address: Assets_es-ES
     m_ReadOnly: 1
@@ -42,6 +48,24 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-es-ES
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 30cf3c724a7a6b442bb50c7afc50a5be
+    m_Address: Environment Tool_es-ES
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-es-ES
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4ff1201128f6c44528fba490d29fbde9
+    m_Address: UI_es-ES
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-es-ES
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5254a8027604ad546940e1e532177c06
+    m_Address: Deep Linking_es-ES
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-es-ES
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 5719a9b603d784c38af32c6ad5e076fa
     m_Address: Mobile AR_es-ES
@@ -84,6 +108,24 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-es-ES
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b473fe2de8a098c4d9bb8ba715e90277
+    m_Address: MeasureTool_es-ES
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-es-ES
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c11f3c5adbf0c43f1839744932fc0b40
+    m_Address: Collaboration_es-ES
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-es-ES
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c2f11d38bf27641c29cd20310e24141a
+    m_Address: Shared_es-ES
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-es-ES
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c76d889753fa4ef45b3db07fe44e06ce
     m_Address: Walk Camera_es-ES

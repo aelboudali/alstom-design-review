@@ -19,7 +19,7 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 12604054429696
-    m_Localized: Fotocamera orbitale
+    m_Localized: Telecamera Orbit
     m_Metadata:
       m_Items: []
   - m_Id: 12455156637696

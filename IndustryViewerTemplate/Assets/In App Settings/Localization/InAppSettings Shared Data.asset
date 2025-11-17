@@ -15,10 +15,6 @@ MonoBehaviour:
   m_TableCollectionName: InAppSettings
   m_TableCollectionNameGuidString: 753eb184db2564b0bacaa9891468f216
   m_Entries:
-  - m_Id: 13261332480
-    m_Key: Version
-    m_Metadata:
-      m_Items: []
   - m_Id: 642184634368
     m_Key: Target Refresh Rate
     m_Metadata:
@@ -45,6 +41,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 45987493470789632
     m_Key: Offline Mode On
+    m_Metadata:
+      m_Items: []
+  - m_Id: 91376129548476416
+    m_Key: Settings
     m_Metadata:
       m_Items: []
   m_Metadata:

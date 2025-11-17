@@ -4,11 +4,15 @@ using Unity.Cloud.DataStreaming.Runtime;
 using Unity.Cloud.HighPrecision.Runtime;
 using Unity.Mathematics;
 using Unity.Industry.Viewer.Streaming;
+using System.Collections;
 
 namespace Unity.Industry.Viewer.Navigation.StandardCameraControl.Shared
 {
     public class StandardCamera : MonoBehaviour
     {
+        public const string JoystickEnable = "JoystickEnable";
+        public const float DefaultBounds = 10000f;
+        
         public Camera Camera => m_Camera;
         
         private float m_MinSpeed = 1.0f;
@@ -41,6 +45,8 @@ namespace Unity.Industry.Viewer.Navigation.StandardCameraControl.Shared
         public CameraUtility Utility { get; protected set; }
         
         private bool m_ShouldPauseCameraControl;
+        
+        private Coroutine m_TranslationCoroutine;
 
         public Transform Transform
         {
@@ -165,6 +171,14 @@ namespace Unity.Industry.Viewer.Navigation.StandardCameraControl.Shared
         public void ResetTracking(Vector3 pos, Vector3 lookAt)
         {
             var rotation = Quaternion.LookRotation(lookAt - pos, Vector3.up);
+            
+            pos = new Vector3(
+                Mathf.Clamp(pos.x, -StandardCamera.DefaultBounds, StandardCamera.DefaultBounds),
+                Mathf.Clamp(pos.y, -StandardCamera.DefaultBounds, StandardCamera.DefaultBounds),
+                Mathf.Clamp(pos.z, -StandardCamera.DefaultBounds, StandardCamera.DefaultBounds)
+            );
+            
+            m_Camera.transform.SetPositionAndRotation(pos, rotation);
             m_DesiredPosition = pos;
             m_DesiredRotation = rotation;
             m_DesiredRotationEuler = rotation.eulerAngles;
@@ -182,6 +196,47 @@ namespace Unity.Industry.Viewer.Navigation.StandardCameraControl.Shared
             m_DesiredRotationEuler = m_DesiredRotation.eulerAngles;
 
             return true;
+        }
+
+        public void FollowPresenter(GameObject presenterObject, GameObject cameraObject)
+        {
+            if (m_TranslationCoroutine != null)
+            {
+                StopCoroutine(m_TranslationCoroutine);
+            }
+            cameraObject.transform.SetPositionAndRotation(presenterObject.transform.position,
+                presenterObject.transform.rotation);
+        }
+
+        public void TranslateTo(GameObject objectToTranslate, Vector3 targetPosition,
+            Quaternion targetRotation)
+        {
+            if (m_TranslationCoroutine != null)
+            {
+                StopCoroutine(m_TranslationCoroutine);
+            }
+
+            m_TranslationCoroutine = StartCoroutine(SmoothTranslateTo());
+
+            IEnumerator SmoothTranslateTo(float duration = 1.0f)
+            {
+                NavigationController.PauseCameraControl?.Invoke(true);
+                Vector3 startPosition = objectToTranslate.transform.position;
+                Quaternion startRotation = objectToTranslate.transform.rotation;
+                float elapsedTime = 0;
+
+                while (elapsedTime < duration)
+                {
+                    var finalPos = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
+                    var finalRot = Quaternion.Lerp(startRotation, targetRotation, elapsedTime / duration);
+                    objectToTranslate.transform.SetPositionAndRotation(finalPos, finalRot);
+                    elapsedTime += Time.deltaTime;
+                    yield return null;
+                }
+
+                objectToTranslate.transform.SetPositionAndRotation(targetPosition, targetRotation);
+                NavigationController.PauseCameraControl?.Invoke(false);
+            }
         }
     }
 }

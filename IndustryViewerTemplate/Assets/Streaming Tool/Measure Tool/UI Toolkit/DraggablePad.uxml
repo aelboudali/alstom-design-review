@@ -1,0 +1,4 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Streaming%20Tool/Measure%20Tool/UI%20Toolkit/DraggablePadStyle.uss?fileID=7433441132597879392&amp;guid=cdad2aa06df1d2a458d5f1bc0f9735db&amp;type=3#DraggablePadStyle" />
+    <ui:VisualElement focusable="true" name="draggable_button" class="image__draggable-button" />
+</ui:UXML>

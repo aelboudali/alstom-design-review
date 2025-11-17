@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:appui="Unity.AppUI.UI" editor-extension-mode="False">
+    <Style src="project://database/Assets/Streaming%20Tool/Measure%20Tool/UI%20Toolkit/MeasureLabelStyle.uss?fileID=7433441132597879392&amp;guid=fc72131eeaf7b3f488bdf7c1460fcc6c&amp;type=3#MeasureLabelStyle" />
+    <ui:VisualElement name="line_measure_label" class="container__line-measure-label">
+        <appui:Text name="line_measure_label_text" class="text__line-measure" />
+    </ui:VisualElement>
+</ui:UXML>

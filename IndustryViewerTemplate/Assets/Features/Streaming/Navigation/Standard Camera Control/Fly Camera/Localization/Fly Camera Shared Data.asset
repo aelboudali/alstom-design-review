@@ -27,10 +27,6 @@ MonoBehaviour:
     m_Key: Rotation Sensitivity
     m_Metadata:
       m_Items: []
-  - m_Id: 37490617155051520
-    m_Key: New Entry
-    m_Metadata:
-      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

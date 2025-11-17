@@ -1,6 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using Unity.Industry.Viewer.Assets;
+using Unity.Industry.Viewer.Identity;
+using Unity.Industry.Viewer.Shared;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,13 +13,14 @@ namespace Unity.Industry.Viewer.Streaming
         
         [SerializeField]
         private string streamingSceneName;
+        public string StreamingSceneName => streamingSceneName;
 
         [SerializeField]
         private bool keepMainSceneCameraActive = false;
         
         [SerializeField] private Camera mainSceneCamera;
 
-        private void Start()
+        protected virtual void Start()
         {
             StartStreaming += OnStartStreaming;
             SceneManager.sceneLoaded += OnSceneLoaded;
@@ -32,7 +34,7 @@ namespace Unity.Industry.Viewer.Streaming
             SceneManager.activeSceneChanged -= OnActiveSceneChanged;
         }
 
-        private void OnActiveSceneChanged(Scene fromScene, Scene toScene)
+        protected virtual void OnActiveSceneChanged(Scene fromScene, Scene toScene)
         {
             if (keepMainSceneCameraActive) return;
             mainSceneCamera.gameObject.SetActive(string.Equals(toScene.name, gameObject.scene.name));
@@ -40,6 +42,14 @@ namespace Unity.Industry.Viewer.Streaming
 
         private void OnStartStreaming()
         {
+#if ENABLE_MULTIPLAY
+            // CheckingForNewVersion logic can break flow if will be executed before multiplayer session is started.
+            // After the session will be established the version check will be switched on back.
+            if (!NetworkDetector.RequestedOfflineMode && !IdentityController.GuestMode)
+            {
+                AssetsController.IsCheckingForNewVersionEnabled = false;
+            }
+#endif
             SceneManager.LoadScene(streamingSceneName, LoadSceneMode.Additive);
         }
 

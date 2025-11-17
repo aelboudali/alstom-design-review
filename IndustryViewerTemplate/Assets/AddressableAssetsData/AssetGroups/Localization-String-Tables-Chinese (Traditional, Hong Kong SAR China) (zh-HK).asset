@@ -44,8 +44,32 @@ MonoBehaviour:
     - Locale-zh-HK
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 29ebde02284224e65a04351b7994f0e2
+    m_Address: Collaboration_zh-HK
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-HK
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 316700dbc5f44ce409f73b7007115edd
+    m_Address: MeasureTool_zh-HK
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-HK
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 31fc740e2cddc4c53bf04b4c766fa02e
+    m_Address: UI_zh-HK
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-HK
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 413cfba82a9b7334cb5e1d35da4e94ec
     m_Address: Walk Camera_zh-HK
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-HK
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 660b281fde475412389ee2c8d8fa4f1d
+    m_Address: Section Cut_zh-HK
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-zh-HK
@@ -63,6 +87,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-zh-HK
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 82de5fe8e72824843af582080174b7ab
+    m_Address: Environment Tool_zh-HK
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-HK
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 90293e8c6d1674dbdae13d47be3c06fc
     m_Address: Streaming_zh-HK
@@ -99,6 +129,12 @@ MonoBehaviour:
     - Locale-zh-HK
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cd11162088ed4a846a5a8df4e452b857
+    m_Address: Deep Linking_zh-HK
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-HK
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d540b6870a222469294e48a69943cf50
     m_Address: Mobile AR_zh-HK
     m_ReadOnly: 1
@@ -112,6 +148,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-zh-HK
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f244c1492d59c4095a6b07e399402701
+    m_Address: Shared_zh-HK
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-HK
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: bf5713deec68845209684f81a71bb85a, type: 2}

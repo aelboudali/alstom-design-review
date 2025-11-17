@@ -1,15 +1,18 @@
-using UnityEngine;
-using Unity.Industry.Viewer.Streaming;
+using System;
+using System.Linq;
 using Unity.AppUI.Core;
-using UnityEngine.UIElements;
 using Unity.AppUI.UI;
+using Unity.Industry.Viewer.Assets;
+using Unity.Industry.Viewer.Identity;
+using Unity.Industry.Viewer.Streaming;
+using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.UIElements;
 using Button = Unity.AppUI.UI.Button;
 using FloatField = Unity.AppUI.UI.FloatField;
 using Toggle = Unity.AppUI.UI.Toggle;
-using System.Linq;
-using Unity.Industry.Viewer.Assets;
-using Unity.Industry.Viewer.Identity;
-using UnityEngine.Localization;
+using Unity.Industry.Viewer.Shared;
+using System.Collections;
 
 namespace Unity.Industry.Viewer.Navigation.MobileAR
 {
@@ -17,11 +20,14 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
     public class MobileARUIController : NavigationOptionUI
     {
         #region Common
-        private const string k_ContentName = "Content";
+        private const string k_ContentName = "ARContent";
         private const string k_ResetButtonName = "ResetButton";
         private const string k_ConfirmButtonName = "ConfirmButton";
         private const string k_OcclusionToggleName = "OcclusionToggle";
         private const string k_TransformTabName = "TransformTab";
+        private const string k_StreamingPanelName = "StreamingContainer";
+        private const string k_ToolScrollListName = "ToolScrollList";
+        private const string k_AddBGToLabelClass = "AddBGToLabel";
         #endregion
 
         #region Position
@@ -61,6 +67,8 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
 
         #endregion
         
+        private ActionButton m_ARActionButton;
+        
         private Button m_ResetToDefaultPositionButton,
             m_ConfirmPositionButton,
             m_SaveMapButton,
@@ -74,7 +82,7 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
         private Stepper m_MoveIncrementStepper, m_RotateIncrementStepper, m_XMoveStepper, m_YMoveStepper, m_ZMoveStepper,
             m_XRotateStepper, m_YRotateStepper, m_ZRotateStepper;
         
-        VisualElement m_ContentContainer, m_MoveContainer, m_RotateContainer, m_ScaleContainer, m_SpatialContainer;
+        VisualElement m_ContentContainer, m_MoveContainer, m_RotateContainer, m_ScaleContainer, m_SpatialContainer, m_Panel;
         
         [SerializeField]
         MobileARController m_ARController;
@@ -82,6 +90,11 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
         private bool m_HasIntialised;
 
         private ARState m_CurrentState = ARState.Placing;
+        
+        private Modal m_ConfirmMappingAlertModal;
+        
+        [SerializeField]
+        private StyleSheet m_MobileARUIStyleSheet;
 
         #region Localisation
         
@@ -111,6 +124,21 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
         
         [SerializeField]
         private LocalizedString m_FailSaveWriteAccessLocalizedString;
+
+        [SerializeField]
+        private LocalizedString m_ARModeLocalizedString;
+        
+        [SerializeField]
+        private LocalizedString m_FoundSpatialMapLocalizedString;
+        
+        [SerializeField]
+        private LocalizedString m_LoadSpatialMapDescriptionLocalizedString;
+        
+        [SerializeField]
+        private LocalizedString m_LoadLocalizedString;
+        
+        [SerializeField]
+        private LocalizedString m_IgnoreLocalizedString;
         
         #endregion
 
@@ -124,6 +152,23 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
             MobileARController.WorldAnchorFileLoad += OnWorldAnchorFileLoad;
             MobileARController.WorldAnchorAligned += OnWorldAnchorAligned;
             MobileARController.LoadMapError += OnLoadMapError;
+            MobileARController.FoundMapping += FoundMapping;
+        }
+
+        private void OnEnable()
+        {
+            if (!SharedUIManager.Instance.AssetsUIDocument.rootVisualElement.styleSheets.Contains(
+                    m_MobileARUIStyleSheet))
+            {
+                SharedUIManager.Instance.AssetsUIDocument.rootVisualElement.styleSheets.Add(m_MobileARUIStyleSheet);
+            }
+
+            var topBarLabels = SharedUIManager.Instance.AssetsUIDocument.rootVisualElement
+                .Query<VisualElement>(className: "TopBarLabel").ToList();
+            foreach (var label in topBarLabels)
+            {
+                label.AddToClassList(k_AddBGToLabelClass);
+            }
         }
 
         private void Start()
@@ -138,6 +183,21 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
             {
                 ToolPanelUIController.CloseToolPanel.Invoke();
             }
+            if (SharedUIManager.Instance.AssetsUIDocument.rootVisualElement.styleSheets.Contains(
+                    m_MobileARUIStyleSheet))
+            {
+                SharedUIManager.Instance.AssetsUIDocument.rootVisualElement.styleSheets.Remove(m_MobileARUIStyleSheet);
+            }
+            
+            var topBarLabels = SharedUIManager.Instance.AssetsUIDocument.rootVisualElement
+                .Query<VisualElement>(className: "TopBarLabel").ToList();
+            foreach (var label in topBarLabels)
+            {
+                label.RemoveFromClassList(k_AddBGToLabelClass);
+            }
+            
+            m_ARActionButton?.RemoveFromHierarchy();
+            m_ARActionButton = null;
             
             #region Common
             if (m_ResetToDefaultPositionButton != null)
@@ -257,6 +317,7 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
 
         private void OnDestroy()
         {
+            MobileARController.FoundMapping -= FoundMapping;
             MobileARController.ARStateChange -= OnARStateChanged;
             MobileARController.TwoFingerDragging -= OnTwoFingerDragging;
             MobileARController.PinchScaling -= OnPinchScaling;
@@ -266,6 +327,50 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
             MobileARController.WorldAnchorAligned -= OnWorldAnchorAligned;
             MobileARController.LoadMapError -= OnLoadMapError;
             ToolPanelUIController.CloseToolPanel -= OnCloseToolPanel;
+        }
+        
+        private void FoundMapping()
+        {
+            if(m_ConfirmMappingAlertModal != null) return;
+            LoadingUIPanel.HideLoadingPanel?.Invoke(null);
+            var confirmMappingAlertDialog = new AlertDialog()
+            {
+                title = m_FoundSpatialMapLocalizedString.GetTitleLocalizedStringForAppUI(),
+                description = m_LoadSpatialMapDescriptionLocalizedString.GetTitleLocalizedStringForAppUI(),
+                variant = AlertSemantic.Confirmation,
+            };
+            
+            confirmMappingAlertDialog.SetPrimaryAction(99, m_LoadLocalizedString.GetTitleLocalizedStringForAppUI(), () =>
+            {
+                m_ARController?.ConfirmMapping(true);
+            });
+            
+            confirmMappingAlertDialog.SetSecondaryAction(98, m_IgnoreLocalizedString.GetTitleLocalizedStringForAppUI(), () =>
+            {
+                if (m_CurrentState == ARState.Placing || m_CurrentState == ARState.Positioning)
+                {
+                    m_ResetToDefaultPositionButton?.SetEnabled(true);
+                }
+                m_ConfirmPositionButton?.SetEnabled(true);
+                m_TransformTab?.SetEnabled(true);
+                m_MoveContainer?.SetEnabled(true);
+                m_RotateContainer?.SetEnabled(true);
+                m_ScaleContainer?.SetEnabled(true);
+                m_ARController?.ConfirmMapping(false);
+            });
+            m_ConfirmMappingAlertModal = Modal.Build(
+                SharedUIManager.Instance.AssetsUIDocument.rootVisualElement.Q<VisualElement>(k_StreamingPanelName), 
+                confirmMappingAlertDialog);
+            m_ConfirmMappingAlertModal.dismissed += ConfirmMappingAlertModalOnDismissed;
+
+            m_ConfirmMappingAlertModal.Show();
+            return;
+            
+            void ConfirmMappingAlertModalOnDismissed(Modal arg1, DismissType arg2)
+            {
+                m_ConfirmMappingAlertModal.dismissed -= ConfirmMappingAlertModalOnDismissed;
+                m_ConfirmMappingAlertModal = null;
+            }
         }
 
         private void OnCloseToolPanel()
@@ -280,63 +385,45 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
         private void OnLoadMapError(string errorMessage)
         {
             //Debug.LogError(errorMessage);
-            SharedUIManager.HideLoadingModal();
-            var toast = Toast.Build(m_SaveMapButton, string.Empty, NotificationDuration.Long).SetStyle(NotificationStyle.Negative);
-            toast.shown += LoadMapErrorToast;
+            LoadingUIPanel.HideLoadingPanel?.Invoke(null);
+            var toast = Toast.Build(m_SaveMapButton, m_LoadFailLocalizedString.GetTitleLocalizedStringForAppUI(), NotificationDuration.Long).SetStyle(NotificationStyle.Negative);
             toast.Show();
-            return;
-            
-            void LoadMapErrorToast(Toast obj)
-            {
-                obj.shown -= LoadMapErrorToast;
-                var text = obj.view.Q<LocalizedTextElement>("appui-toast__message");
-                text.SetBinding("text", m_LoadFailLocalizedString);
-            }
         }
 
         private void OnWorldAnchorAligned()
         {
-            SharedUIManager.HideLoadingModal();
-            m_ResetToDefaultPositionButton.SetEnabled(true);
-            m_ConfirmPositionButton.SetEnabled(true);
-            m_TransformTab.SetEnabled(true);
-            m_MoveContainer.SetEnabled(true);
-            m_RotateContainer.SetEnabled(true);
-            m_ScaleContainer.SetEnabled(true);
+            m_ResetToDefaultPositionButton?.SetEnabled(true);
+            m_ConfirmPositionButton?.SetEnabled(true);
+            m_TransformTab?.SetEnabled(true);
+            m_MoveContainer?.SetEnabled(true);
+            m_RotateContainer?.SetEnabled(true);
+            m_ScaleContainer?.SetEnabled(true);
             
-            m_XPositionField.SetValueWithoutNotify(TransformController.Instance.transform.position.x);
-            m_YPositionField.SetValueWithoutNotify(TransformController.Instance.transform.position.y);
-            m_ZPositionField.SetValueWithoutNotify(TransformController.Instance.transform.position.z);
+            m_XPositionField?.SetValueWithoutNotify(TransformController.Instance.transform.position.x);
+            m_YPositionField?.SetValueWithoutNotify(TransformController.Instance.transform.position.y);
+            m_ZPositionField?.SetValueWithoutNotify(TransformController.Instance.transform.position.z);
                     
-            m_XRotationField.SetValueWithoutNotify(TransformController.Instance.transform.rotation.eulerAngles.x);
-            m_YRotationField.SetValueWithoutNotify(TransformController.Instance.transform.rotation.eulerAngles.y);
-            m_ZRotationField.SetValueWithoutNotify(TransformController.Instance.transform.rotation.eulerAngles.z);
+            m_XRotationField?.SetValueWithoutNotify(TransformController.Instance.transform.rotation.eulerAngles.x);
+            m_YRotationField?.SetValueWithoutNotify(TransformController.Instance.transform.rotation.eulerAngles.y);
+            m_ZRotationField?.SetValueWithoutNotify(TransformController.Instance.transform.rotation.eulerAngles.z);
 
-            m_ScaleSliderField.SetValueWithoutNotify(TransformController.Instance.transform.localScale.x);
+            m_ScaleSliderField?.SetValueWithoutNotify(TransformController.Instance.transform.localScale.x);
             
-            var toast = Toast.Build(m_LoadMapButton, string.Empty, NotificationDuration.Long).SetStyle(NotificationStyle.Positive);
+            var streamingPanel = SharedUIManager.Instance.AssetsUIDocument.rootVisualElement.Q<VisualElement>(k_StreamingPanelName);
             
-            toast.shown += AlignedToast;
+            var toast = Toast.Build(streamingPanel, m_ARAnchorAlignedLocalizedString.GetTitleLocalizedStringForAppUI(), NotificationDuration.Long).SetStyle(NotificationStyle.Positive);
 
             toast.Show();
-            return;
-
-            void AlignedToast(Toast obj)
-            {
-                obj.shown -= AlignedToast;
-                var text = toast.view.Q<LocalizedTextElement>("appui-toast__message");
-                text.SetBinding("text", m_ARAnchorAlignedLocalizedString);
-            }
         }
 
         private void OnWorldAnchorFileLoad(bool fileFound)
         {
-            m_LoadMapButton.SetEnabled(fileFound);
+            m_LoadMapButton?.SetEnabled(fileFound);
         }
 
         private void OnWorldAnchorFileSave(bool saved, string errorMessage)
         {
-            SharedUIManager.HideLoadingModal();
+            LoadingUIPanel.HideLoadingPanel?.Invoke(null);
             _ = m_ARController.CheckIfWorldMapExists();
             m_MoveContainer.SetEnabled(true);
             m_RotateContainer.SetEnabled(true);
@@ -354,43 +441,21 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
                     m_ConfirmPositionButton.SetEnabled(false);
                     break;
             }
-            
+            string messageText;
             if (saved)
             {
-                var toast = Toast.Build(m_SaveMapButton, string.Empty, NotificationDuration.Long).SetStyle(NotificationStyle.Positive);
-                
-                toast.shown += AnchorSavedToast;
-                toast.Show();
+                messageText = m_ARAnchorSavedLocalizedString.GetTitleLocalizedStringForAppUI();
             }
             else
             {
-                var toast = Toast.Build(m_SaveMapButton, string.Empty, NotificationDuration.Long).SetStyle(NotificationStyle.Negative);
-                toast.shown += AnchorSavedFailedToast;
-                toast.Show();
-            }
 
-            return;
-
-            void AnchorSavedToast(Toast obj)
-            {
-                obj.shown -= AnchorSavedToast;
-                var text = obj.view.Q<LocalizedTextElement>("appui-toast__message");
-                text.SetBinding("text", m_ARAnchorSavedLocalizedString);
+                messageText = errorMessage.Contains("Forbidden") || errorMessage.Contains("Not Authorized")
+                    ? m_FailSaveWriteAccessLocalizedString.GetTitleLocalizedStringForAppUI()
+                    : m_ARAnchorSavedLocalizedString.GetTitleLocalizedStringForAppUI();
             }
             
-            void AnchorSavedFailedToast(Toast obj)
-            {
-                obj.shown -= AnchorSavedFailedToast;
-                var text = obj.view.Q<LocalizedTextElement>("appui-toast__message");
-                if (errorMessage.Contains("Forbidden") || errorMessage.Contains("Not Authorized"))
-                {
-                    text.SetBinding("text", m_FailSaveWriteAccessLocalizedString);
-                }
-                else
-                {
-                    text.SetBinding("text", m_ARAnchorSavedLocalizedString);
-                }
-            }
+            var toast = Toast.Build(m_SaveMapButton, messageText, NotificationDuration.Long).SetStyle(NotificationStyle.Positive);
+            toast.Show();
         }
 
         private void OnWorldMapSaveReady(bool saveReady)
@@ -439,29 +504,29 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
 
         private void OnARStateChanged(ARState newState)
         {
+            bool justPlaced = m_CurrentState == ARState.Placing;
             m_CurrentState = newState;
             Toast toast = null;
             switch (newState)
             {
                 case ARState.Placing:
-                    string k_StreamingPanelName = "StreamingContainer";
                     var streamingContainer = SharedUIManager.Instance.AssetsUIDocument.rootVisualElement.Q<VisualElement>(k_StreamingPanelName);
-                    toast = Toast.Build(streamingContainer, string.Empty, NotificationDuration.Long).SetStyle(NotificationStyle.Informative);
-                    
-                    toast.shown += ScanTipsToast;
-
+                    toast = Toast.Build(streamingContainer, m_ScanTipsLocalizedString.GetTitleLocalizedStringForAppUI(), NotificationDuration.Long).SetStyle(NotificationStyle.Informative);
                     toast.Show();
                     break;
                 
                 case ARState.Positioning:
+                    InitializeARMenuButton();
                     if (!m_HasIntialised)
                     {
                         CreatePanel();
                     }
+
+                    StartCoroutine(WaitForUpdateUI());
+                    
                     m_ResetToDefaultPositionButton.SetEnabled(true);
                     m_ContentContainer.SetEnabled(true);
-                    m_ConfirmPositionButton.ClearBinding("title");
-                    m_ConfirmPositionButton.SetBinding("title", m_lockPositionLocalizedString);
+                    m_ConfirmPositionButton.title = m_lockPositionLocalizedString.GetTitleLocalizedStringForAppUI();
                     m_XPositionField.SetValueWithoutNotify(TransformController.Instance.transform.position.x);
                     m_YPositionField.SetValueWithoutNotify(TransformController.Instance.transform.position.y);
                     m_ZPositionField.SetValueWithoutNotify(TransformController.Instance.transform.position.z);
@@ -473,44 +538,65 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
                     m_ScaleSliderField.SetValueWithoutNotify(TransformController.Instance.transform.localScale.x);
 
                     m_SpatialContainer.style.display = m_ARController.IsWorldMapSupported ? DisplayStyle.Flex : DisplayStyle.None;
-                    toast = Toast.Build(m_ContentContainer, string.Empty, NotificationDuration.Long).SetStyle(NotificationStyle.Informative);
-                    toast.shown += ShowConfirmToast;
+                    toast = Toast.Build(m_ContentContainer, m_ConfirmTipsLocalizedString.GetTitleLocalizedStringForAppUI(), NotificationDuration.Long).SetStyle(NotificationStyle.Informative);
                     toast.Show();
                     break;
                 
                 case ARState.ConfirmPosition:
+                    InitializeARMenuButton();
                     if (!m_HasIntialised)
                     {
                         return;
                     }
                     m_ResetToDefaultPositionButton.SetEnabled(false);
-                    m_ConfirmPositionButton.ClearBinding("title");
-                    m_ConfirmPositionButton.SetBinding("title", m_UnlockPositionLocalizedString);
+                    m_ConfirmPositionButton.title =
+                        m_UnlockPositionLocalizedString.GetTitleLocalizedStringForAppUI();
                     m_ContentContainer.SetEnabled(false);
                     m_SpatialContainer.style.display = m_ARController.IsWorldMapSupported ? DisplayStyle.Flex : DisplayStyle.None;
                     break;
             }
-
             return;
-
-            void ShowConfirmToast(Toast obj)
-            {
-                obj.shown -= ShowConfirmToast;
-                var text = toast.view.Q<LocalizedTextElement>("appui-toast__message");
-                text.SetBinding("text", m_ConfirmTipsLocalizedString);
-            }
             
-            void ScanTipsToast(Toast obj)
+            IEnumerator WaitForUpdateUI()
             {
-                obj.shown -= ScanTipsToast;
-                var text = toast.view.Q<LocalizedTextElement>("appui-toast__message");
-                text.SetBinding("text", m_ScanTipsLocalizedString);
+                yield return new WaitForEndOfFrame();
+                m_TransformTab.value = justPlaced? 2 : m_TransformTab.value;
             }
+        }
+
+        private void InitializeARMenuButton()
+        {
+            if(m_ARActionButton != null) return;
+            m_ARActionButton = new ActionButton()
+            {
+                quiet = true
+            };
+            m_ARActionButton.AddToClassList("MainToolIcon");
+            Icon icon = m_ARActionButton.Q<Icon>("appui-actionbutton__icon");
+            icon.image = NavigationIcon;
+            m_ARActionButton.tooltip = m_ARModeLocalizedString.GetTitleLocalizedStringForAppUI();
+            m_ARActionButton.clicked += TogglePanel;
+            m_ARActionButton.accent = m_HasIntialised;
+            m_ARActionButton.selected = m_HasIntialised;
+            var toolScrollList = SharedUIManager.Instance.AssetsUIDocument.rootVisualElement.Q<ScrollView>(k_ToolScrollListName);
+            toolScrollList.Add(m_ARActionButton);
+        }
+
+        private void TogglePanel()
+        {
+            if (m_HasIntialised)
+            {
+                ToolPanelUIController.CloseToolPanel?.Invoke();
+                return;
+            }
+            CreatePanel();
         }
 
         protected override void InitialUI(VisualElement panel)
         {
             #region Common
+
+            m_Panel = panel;
             
             m_ContentContainer = panel.Q<VisualElement>(k_ContentName);
             
@@ -567,7 +653,7 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
             m_ZPositionField.RegisterValueChangedCallback(OnZPositionValueChanged);
             m_ZPositionField.RegisterValueChangingCallback(OnZPositionValueChanging);
 
-            m_MoveIncrementField.SetValueWithoutNotify(1f);
+            m_MoveIncrementField.SetValueWithoutNotify(0.1f);
             
             #endregion
 
@@ -603,7 +689,7 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
             #region Scale
 
             m_ScaleSliderField = panel.Q<TouchSliderFloat>(k_ScaleSliderName);
-            m_ScaleSliderField.incrementFactor = 0.01f;
+            m_ScaleSliderField.style.display = DisplayStyle.Flex;
             m_ScaleSliderField.RegisterValueChangingCallback(OnModelScaleChanging);
             m_ScaleSliderField.RegisterValueChangedCallback(OnModelScaleChanged);
 
@@ -626,8 +712,36 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
             
             m_SpatialContainer.style.display = m_ARController.IsWorldMapSupported? DisplayStyle.Flex : DisplayStyle.None;
             #endregion
-
+            
+            m_Panel.RegisterCallback<DetachFromPanelEvent>(OnPanelDetachFromPanel);
+            
             m_HasIntialised = true;
+            
+            if (m_CurrentState == ARState.ConfirmPosition)
+            {
+                m_ConfirmPositionButton.title =
+                    m_UnlockPositionLocalizedString.GetTitleLocalizedStringForAppUI();
+                m_ResetToDefaultPositionButton?.SetEnabled(false);
+                m_ScaleContainer.DisplayOff();
+                m_RotateContainer.DisplayOff();
+                m_MoveContainer.DisplayOn();
+                m_ContentContainer.SetEnabled(false);
+            }
+            else
+            {
+                m_ConfirmPositionButton.title = m_lockPositionLocalizedString.GetTitleLocalizedStringForAppUI();
+            }
+        }
+
+        private void OnPanelDetachFromPanel(DetachFromPanelEvent evt)
+        {
+            m_Panel.UnregisterCallback<DetachFromPanelEvent>(OnPanelDetachFromPanel);
+            m_HasIntialised = false;
+            if (m_ARActionButton != null)
+            {
+                m_ARActionButton.accent = m_HasIntialised;
+                m_ARActionButton.selected = m_HasIntialised;
+            }
         }
 
         private void OnZMoveStepperChanged(ChangeEvent<int> evt)
@@ -679,21 +793,42 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
 
         private void OnMoveIncrementStepperChanged(ChangeEvent<int> evt)
         {
-            m_MoveIncrementField.value += evt.newValue;
+            m_MoveIncrementField.value += evt.newValue * 0.1f;
         }
 
         public override void CreatePanel()
         {
+            //if(m_CurrentState == ARState.Placing) return;
             if (NavigationOptionUIAsset == null || m_HasIntialised) return;
+            
+            StreamToolsController.DisableAllTools?.Invoke(true);
+            if (ToolPanelUIController.IsOpened)
+            {
+                ToolPanelUIController.CloseToolPanel?.Invoke();
+            }
+            
             var navigationOptionUIAsset = NavigationOptionUIAsset.Instantiate().Children().First();
-            ToolPanelUIController.OpenToolPanel(m_ARController.NavigationName, navigationOptionUIAsset);
+            ToolPanelUIController.OpenToolPanel(m_ARController.NavigationName, navigationOptionUIAsset, false);
             InitialUI(navigationOptionUIAsset);
+            if (m_ARActionButton != null)
+            {
+                m_ARActionButton.accent = true;
+                m_ARActionButton.selected = true;
+            }
+            m_XPositionField.SetValueWithoutNotify(TransformController.Instance.transform.position.x);
+            m_YPositionField.SetValueWithoutNotify(TransformController.Instance.transform.position.y);
+            m_ZPositionField.SetValueWithoutNotify(TransformController.Instance.transform.position.z);
+                    
+            m_XRotationField.SetValueWithoutNotify(TransformController.Instance.transform.rotation.eulerAngles.x);
+            m_YRotationField.SetValueWithoutNotify(TransformController.Instance.transform.rotation.eulerAngles.y);
+            m_ZRotationField.SetValueWithoutNotify(TransformController.Instance.transform.rotation.eulerAngles.z);
+            
             OnARStateChanged(m_CurrentState);
         }
 
         private void OnLoadMapButtonClicked()
         {
-            SharedUIManager.ShowLoadingModal();
+            LoadingUIPanel.ShowLoadingPanel?.Invoke(null);
             m_SaveMapButton.SetEnabled(false);
             m_LoadMapButton.SetEnabled(false);
             m_MoveContainer.SetEnabled(false);
@@ -717,7 +852,7 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
             m_ConfirmPositionButton.SetEnabled(false);
             m_ARController?.SaveSpatialAnchor();
 
-            SharedUIManager.ShowLoadingModal();
+            LoadingUIPanel.ShowLoadingPanel?.Invoke(null);
         }
 
         void OnModelScaleChanged(ChangeEvent<float> evt)

@@ -4,6 +4,7 @@ using Unity.Industry.Viewer.Identity;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Unity.Industry.Viewer.Assets;
+using UnityEngine.Rendering.Universal;
 
 namespace Unity.Industry.Viewer.Streaming
 {
@@ -33,6 +34,15 @@ namespace Unity.Industry.Viewer.Streaming
 
         private void OnExitSceneConfirmed()
         {
+            var allCameras = FindObjectsByType<Camera>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            foreach (var camera in allCameras)
+            {
+                if (camera.TryGetComponent<UniversalAdditionalCameraData>(out var cameraData))
+                {
+                    cameraData.renderPostProcessing = false;
+                }
+            }
+            
             var originalScene = SharedUIManager.Instance.AssetsUIDocument.gameObject.scene;
             SceneManager.SetActiveScene(originalScene);
             for (int i = 0; i < SceneManager.sceneCount; i++)

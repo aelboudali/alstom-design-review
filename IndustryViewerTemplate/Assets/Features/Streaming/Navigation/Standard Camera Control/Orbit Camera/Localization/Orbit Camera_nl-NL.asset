@@ -19,7 +19,7 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 12604054429696
-    m_Localized: Baancamera
+    m_Localized: Orbitcamera
     m_Metadata:
       m_Items: []
   - m_Id: 12455156637696
@@ -27,7 +27,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 12455160832000
-    m_Localized: Pan-gevoeligheid
+    m_Localized: Pangevoeligheid
     m_Metadata:
       m_Items: []
   - m_Id: 12455160832001

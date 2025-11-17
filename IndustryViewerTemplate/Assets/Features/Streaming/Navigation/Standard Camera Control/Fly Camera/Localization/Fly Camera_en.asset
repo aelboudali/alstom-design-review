@@ -21,15 +21,30 @@ MonoBehaviour:
   - m_Id: 620487499776
     m_Localized: Fly Camera
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937045952496471
   - m_Id: 620508471296
     m_Localized: Move Sensitivity
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937045952496472
   - m_Id: 620508471297
     m_Localized: Rotation Sensitivity
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937045952496473
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 8258937045952496471
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is header in settings for camera mode
+    - rid: 8258937045952496472
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: 'This is background text on slider in settings '
+    - rid: 8258937045952496473
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: 'This is background text on slider in settings '

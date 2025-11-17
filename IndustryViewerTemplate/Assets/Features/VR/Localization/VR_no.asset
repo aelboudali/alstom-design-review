@@ -19,7 +19,15 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 376479670272
-    m_Localized: VR Flymodus
+    m_Localized: VR Fly Mode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 95971741896007680
+    m_Localized: "Gjennomstr\xF8mning"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119196761623355392
+    m_Localized: "Aseta kohde painamalla liipaisinta tai nipist\xE4m\xE4ll\xE4 sormea"
     m_Metadata:
       m_Items: []
   references:

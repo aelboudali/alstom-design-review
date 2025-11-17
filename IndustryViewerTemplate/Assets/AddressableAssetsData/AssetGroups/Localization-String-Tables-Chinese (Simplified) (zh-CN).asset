@@ -15,6 +15,12 @@ MonoBehaviour:
   m_GroupName: Localization-String-Tables-Chinese (Simplified) (zh-CN)
   m_GUID: bd60b2267d5504499bd9bd9e9e910386
   m_SerializeEntries:
+  - m_GUID: 0c4ac5790fed8234bb222d553347508b
+    m_Address: Deep Linking_zh-CN
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-CN
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 13f14971ba9894aac9a56d579d59b2dc
     m_Address: Assets_zh-CN
     m_ReadOnly: 1
@@ -57,6 +63,12 @@ MonoBehaviour:
     - Locale-zh-CN
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 556e64e61160b447b85362b2dfa54a86
+    m_Address: UI_zh-CN
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-CN
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 5a920cc4778224a879da203abdd4944e
     m_Address: Mobile AR_zh-CN
     m_ReadOnly: 1
@@ -64,12 +76,36 @@ MonoBehaviour:
     - Locale-zh-CN
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6999186e88b07476bb5a6b49db127823
+    m_Address: Collaboration_zh-CN
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-CN
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6fe9534f98061449f83825262ec4fe3f
     m_Address: Metadata Tool_zh-CN
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-zh-CN
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 92820392d597645819955f85d09fa5f2
+    m_Address: Shared_zh-CN
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-CN
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9370499a7a84a2743b9ab297b34de8e5
+    m_Address: MeasureTool_zh-CN
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-CN
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 98faefd6da55eb14ead4dc6c6f09bfeb
+    m_Address: Environment Tool_zh-CN
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-CN
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9fb7a3f35c2a4994c84db44ab223c4b6
     m_Address: Walk Camera_zh-CN
@@ -104,6 +140,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-zh-CN
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e25ea312ce1034517848e47f701eea52
+    m_Address: Section Cut_zh-CN
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-CN
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e2b81489cd4254825a4e1da1d35ea257
     m_Address: Vivox_zh-CN

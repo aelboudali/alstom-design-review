@@ -13,6 +13,19 @@ MonoBehaviour:
   m_Name: ARBackgroundRendererFeature
   m_EditorClassIdentifier: 
   m_Active: 1
+--- !u!114 &-1783872567824629732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01b019caa33e147829f48e2b15958f84, type: 3}
+  m_Name: ARCommandBufferSupportRendererFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42,17 +55,21 @@ MonoBehaviour:
   m_RendererFeatures:
   - {fileID: -6493947454394057720}
   - {fileID: 7740584462903710183}
-  m_RendererFeatureMap: 083cca5632dde0a5e79148c18e146c6b
+  - {fileID: -1783872567824629732}
+  m_RendererFeatureMap: 083cca5632dde0a5e79148c18e146c6b1cc03fd659693ee7
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
-  m_AssetVersion: 2
+  m_AssetVersion: 3
+  m_PrepassLayerMask:
+    serializedVersion: 2
+    m_Bits: 1073742719
   m_OpaqueLayerMask:
     serializedVersion: 2
-    m_Bits: 1073742199
+    m_Bits: 1073742719
   m_TransparentLayerMask:
     serializedVersion: 2
-    m_Bits: 1073742199
+    m_Bits: 1073742719
   m_DefaultStencilState:
     overrideStencilState: 0
     stencilReference: 0
@@ -60,7 +77,7 @@ MonoBehaviour:
     passOperation: 2
     failOperation: 0
     zFailOperation: 0
-  m_ShadowTransparentReceive: 1
+  m_ShadowTransparentReceive: 0
   m_RenderingMode: 0
   m_DepthPrimingMode: 0
   m_CopyDepthMode: 0

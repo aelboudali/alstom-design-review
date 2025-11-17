@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -9,11 +10,13 @@ using Unity.Cloud.HighPrecision.Runtime;
 using Unity.Mathematics;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.EnhancedTouch;
+using Unity.Industry.Viewer.Navigation.StandardCameraControl.Shared;
 #if UNITY_WEBGL && !UNITY_EDITOR
 using UnityEngine.InputSystem.Processors;
 #endif
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 using TouchPhase = UnityEngine.InputSystem.TouchPhase;
+using System.Linq;
 
 namespace Unity.Industry.Viewer.Navigation.OrbitCamera
 {
@@ -149,6 +152,7 @@ namespace Unity.Industry.Viewer.Navigation.OrbitCamera
             {
                 var newBounds = StreamingUtils.ReturnBounds(m_MainBounds.Value);
                 m_Camera.Utility.SetClipPlane(newBounds);
+                m_Camera.Camera.nearClipPlane = 0.01f;
             }
         }
 
@@ -265,10 +269,17 @@ namespace Unity.Industry.Viewer.Navigation.OrbitCamera
             
             if(Touch.activeTouches.Count < 2) return;
 
+            if (EventSystem.current != null)
+            {
+                if (Touch.activeTouches.Any(activeTouch =>
+                        EventSystem.current.IsPointerOverGameObject(activeTouch.touchId)))
+                {
+                    return;
+                }
+            }
+
             var touch0 = Touchscreen.current.touches[0];
             var touch1 = Touchscreen.current.touches[1];
-
-            //if(EventSystem.current.IsPointerOverGameObject(touch0.touchId.ReadValue()) || EventSystem.current.IsPointerOverGameObject(touch1.touchId.ReadValue())) return;
 
             if (touch0.phase.ReadValue() == TouchPhase.Began || touch1.phase.ReadValue() == TouchPhase.Began)
             {
@@ -448,6 +459,7 @@ namespace Unity.Industry.Viewer.Navigation.OrbitCamera
         
         public void SetView(DoubleBounds bounds)
         {
+            
             m_CurrentBounds = bounds;
             //m_MainBounds = bounds;
             if(!gameObject.activeSelf) return;
@@ -472,7 +484,6 @@ namespace Unity.Industry.Viewer.Navigation.OrbitCamera
         {
             var t = m_Camera.Transform;
             //m_Camera.SetCameraSpeedSettings(bounds);
-            
             Vector3 newPosition = t.position;
             if (zoom)
             {
@@ -480,6 +491,10 @@ namespace Unity.Industry.Viewer.Navigation.OrbitCamera
                 newPosition = ((Bounds)bounds).center + direction * 5.0f;
             }
             
+            if (NavigationController.StartingPosition.HasValue)
+            {
+                newPosition = NavigationController.StartingPosition.Value;
+            }
             m_Camera.ResetTracking(newPosition, ((Bounds)bounds).center);
         }
 

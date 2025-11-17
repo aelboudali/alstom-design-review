@@ -1,17 +1,21 @@
-.appui-icon--trash-simple {
+.appui-icon-white{
+    --unity-image-tint-color: rgb(255, 255, 255);
+}
+
+.appui-icon--trash-simple--regular {
     background-image: url("project://database/Assets/UI/Textures/TrashSimple.png");
 }
 
-.appui-icon--download {
-    background-image: url("project://database/Assets/UI/Textures/Download.png");
-}
-
-.appui-icon--broadcast {
-    background-image: url("project://database/Assets/UI/Textures/Broadcast.png");
+.appui-icon--download--regular {
+    --unity-image: url("project://database/Assets/UI/Textures/Download.png");
 }
 
 .appui-button .appui-icon {
     -unity-background-image-tint-color: rgba(187.935, 187.935, 187.935, 1);
+}
+
+.appui-icon--broadcast--regular{
+    --unity-image: url("project://database/Assets/UI/Textures/Broadcast.png");
 }
 
 .appui-button.unity-disabled{
@@ -25,4 +29,58 @@
 
 .appui-actionbutton.unity-disabled .appui-icon {
     -unity-background-image-tint-color: rgba(99, 99, 99, 1);
+}
+
+.ItemSelected {
+    background-color: var(--appui-alias-actions-accent-background-color-default);
+    border-color: var(--appui-alias-actions-border-color-selected);
+}
+
+.unity-base-slider .unity-base-slider__dragger {
+    background-color: #DCDCDC;
+    border-radius: 5px;
+}
+
+.appui-picker-item.is-selected {
+    background-color: var(--appui-alias-actions-accent-background-color-default);
+}
+
+.appui-picker-item .appui-dropdown-item__label {
+    color: white;
+}
+
+/* Vertical Slider */
+.unity-scroller--vertical {
+    padding: 16px 8px;
+}
+
+.unity-scroller--vertical .unity-base-slider__dragger {
+    width: 10px;
+}
+
+.unity-scroller--vertical > .unity-scroller__slider {
+    width: 10px;
+    min-width: 10px;
+}
+  
+.unity-base-slider--vertical .unity-scroll-view__vertical-scroller {
+    width: 10px;
+}
+
+/* Horizontal Slider */
+.unity-scroller--horizontal {
+    padding: 8px 16px;
+}
+
+.unity-scroller--horizontal .unity-base-slider__dragger {
+    height: 10px;
+}
+
+.unity-base-slider .unity-base-slider--horizontal {
+    height: 10px;
+    min-height: 10px;
+}
+
+.unity-base-slider--horizontal .unity-scroll-view__horizontal-scroller {
+    height: 10px;
 }

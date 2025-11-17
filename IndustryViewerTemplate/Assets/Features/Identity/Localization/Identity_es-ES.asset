@@ -19,7 +19,7 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 2213752594432
-    m_Localized: "Visor de la industria de Unity \nProyecto de plantilla"
+    m_Localized: Proyecto de plantilla de Unity Industry Viewer
     m_Metadata:
       m_Items: []
   - m_Id: 7997920108544
@@ -27,19 +27,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 9303762132992
-    m_Localized: O
+    m_Localized: o
     m_Metadata:
       m_Items: []
   - m_Id: 9420774825984
-    m_Localized: Continuar como invitado
+    m_Localized: Modo invitado
     m_Metadata:
       m_Items: []
   - m_Id: 15982369169408
     m_Localized: "Finalizar la sesi\xF3n"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 32483335725056
-    m_Localized: Cancelar
     m_Metadata:
       m_Items: []
   - m_Id: 33199882231808
@@ -47,7 +43,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 33283562790912
-    m_Localized: "\xBFEst\xE1 seguro de que desea cerrar la sesi\xF3n?"
+    m_Localized: "\xBFEst\xE1s seguro de cerrar sesi\xF3n?"
     m_Metadata:
       m_Items: []
   - m_Id: 33349040070656
@@ -67,12 +63,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 58408840381587456
-    m_Localized: "Actualmente est\xE1s en modo fuera de l\xEDnea. \xBFQuiere volver
-      al modo en l\xEDnea e iniciar sesi\xF3n?"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 58409243970101248
-    m_Localized: DE ACUERDO
+    m_Localized: "Est\xE1s en modo sin conexi\xF3n. \xBFQuieres volver al modo en
+      l\xEDnea e iniciar sesi\xF3n?"
     m_Metadata:
       m_Items: []
   references:

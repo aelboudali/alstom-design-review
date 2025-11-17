@@ -1,0 +1,23 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Unity.AppUI.UI.Panel style="background-color: rgba(29, 29, 29, 0); max-width: 750px; min-width: 420px;">
+        <ui:VisualElement style="flex-grow: 1; align-items: center; justify-content: center;">
+            <ui:VisualElement name="Background" style="flex-grow: 0; background-color: rgba(27, 27, 27, 0.85); padding-top: 24px; padding-right: 24px; padding-bottom: 24px; padding-left: 24px; border-top-left-radius: 24px; border-top-right-radius: 24px; border-bottom-right-radius: 24px; border-bottom-left-radius: 24px; min-width: 420px;">
+                <ui:VisualElement style="flex-grow: 1; flex-direction: row; margin-bottom: 24px; justify-content: center;">
+                    <Unity.AppUI.UI.Text name="Title" style="height: 34px; font-size: 24px; max-width: 275px; overflow: visible; text-overflow: ellipsis; white-space: normal; -unity-text-align: upper-center;" />
+                    <Unity.AppUI.UI.IconButton quiet="true" icon="x" name="Close-Button" style="width: 40px; height: 40px; position: absolute; right: 0;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="Divider" style="flex-grow: 1; height: 2px; margin-bottom: 24px; max-height: 2px; min-height: 2px; background-color: rgb(255, 255, 255);" />
+                <ui:VisualElement name="Content-Container" style="flex-grow: 0; align-items: center; justify-content: center;">
+                    <ui:VisualElement name="Message-Containter" style="flex-grow: 1; width: 100%;">
+                        <Unity.AppUI.UI.Text name="Description" style="font-size: 20px;" />
+                        <ui:VisualElement style="flex-grow: 1; flex-direction: row-reverse; justify-content: flex-start; height: 40px; margin-top: 15px; align-items: center;">
+                            <Unity.AppUI.UI.ActionButton name="Primary-Button" style="height: 100%; margin-left: 15px; min-width: 100px;" />
+                            <Unity.AppUI.UI.ActionButton name="Secondary-Button" style="height: 100%; margin-left: 15px; min-width: 100px;" />
+                            <Unity.AppUI.UI.ActionButton name="Cancel-Button" style="height: 100%; margin-left: 15px; min-width: 100px;" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </Unity.AppUI.UI.Panel>
+</ui:UXML>

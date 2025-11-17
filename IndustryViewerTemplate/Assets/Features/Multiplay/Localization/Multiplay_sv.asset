@@ -20,29 +20,29 @@ MonoBehaviour:
     - rid: 1545659760810917923
   m_TableData:
   - m_Id: 5081708617728
-    m_Localized: "M\xF6tet \xE4r fullt"
+    m_Localized: "Sessionen \xE4r full"
     m_Metadata:
       m_Items: []
   - m_Id: 5081977053184
-    m_Localized: "Det gick inte att skapa eller g\xE5 med i m\xF6tet, f\xF6rs\xF6k
-      igen."
+    m_Localized: "Det gick inte att skapa eller g\xE5 med i sessionen, f\xF6rs\xF6k
+      igen"
     m_Metadata:
       m_Items: []
   - m_Id: 5081981247488
-    m_Localized: "Vill du g\xE5 med i presentationen?"
+    m_Localized: "G\xE5 med i presentationen?"
     m_Metadata:
       m_Items: []
   - m_Id: 5081981247489
-    m_Localized: "{name} presenterar. Vill du g\xE5 med i presentationen?"
+    m_Localized: '{name} presenterar. Vill du vara med i presentationen?'
     m_Metadata:
       m_Items:
       - rid: 1545659760810917923
   - m_Id: 5081985441792
-    m_Localized: "G\xE5 med"
+    m_Localized: Ansluta sig till
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441793
-    m_Localized: Avvisa
+    m_Localized: "Avf\xE4rda"
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441794
@@ -50,7 +50,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441795
-    m_Localized: Avsluta presentation
+    m_Localized: Avsluta presentationen
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441796
@@ -62,7 +62,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441798
-    m_Localized: "L\xE4mna presentation"
+    m_Localized: "L\xE4mna presentationen"
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441799
@@ -90,11 +90,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441805
-    m_Localized: Starta
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5081985441806
-    m_Localized: Avbryt
+    m_Localized: Start
     m_Metadata:
       m_Items: []
   - m_Id: 42058065896267776
@@ -102,7 +98,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 42058065904656384
-    m_Localized: "Sessionen sparad som ny layout. G\xE5 med?"
+    m_Localized: "Session sparad som ny layout. G\xE5 med i en ny session med andra?"
     m_Metadata:
       m_Items: []
   references:

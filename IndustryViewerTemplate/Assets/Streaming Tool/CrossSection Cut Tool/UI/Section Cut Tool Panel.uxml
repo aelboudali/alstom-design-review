@@ -1,0 +1,41 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement style="flex-grow: 1; padding-bottom: 5px;">
+        <Unity.AppUI.UI.ActionGroup selection-type="Single" allow-no-selection="false" close-on-selection="false" compact="true" justified="true" style="flex-grow: 0; margin-bottom: 15px;">
+            <Unity.AppUI.UI.ActionButton name="MoveButton" style="border-top-right-radius: 0; border-bottom-right-radius: 0;">
+                <Bindings>
+                    <UnityEngine.Localization.LocalizedString property="label" table="GUID:88f5d7360291544fd8b69234e98f8fa3" entry="Id(2586893165256704)" />
+                </Bindings>
+            </Unity.AppUI.UI.ActionButton>
+            <Unity.AppUI.UI.ActionButton name="RotateButton" style="border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0;">
+                <Bindings>
+                    <UnityEngine.Localization.LocalizedString property="label" table="GUID:88f5d7360291544fd8b69234e98f8fa3" entry="Id(2586893173645312)" />
+                </Bindings>
+            </Unity.AppUI.UI.ActionButton>
+            <Unity.AppUI.UI.ActionButton name="ScaleButton" style="border-top-left-radius: 0; border-bottom-left-radius: 0;">
+                <Bindings>
+                    <UnityEngine.Localization.LocalizedString property="label" table="GUID:88f5d7360291544fd8b69234e98f8fa3" entry="Id(2586893173645313)" />
+                </Bindings>
+            </Unity.AppUI.UI.ActionButton>
+        </Unity.AppUI.UI.ActionGroup>
+        <Unity.AppUI.UI.Toggle name="FlipToggle" style="margin-bottom: 15px;">
+            <Bindings>
+                <UnityEngine.Localization.LocalizedString property="label" table="GUID:88f5d7360291544fd8b69234e98f8fa3" entry="Id(2586893173645314)" />
+            </Bindings>
+        </Unity.AppUI.UI.Toggle>
+        <Unity.AppUI.UI.Toggle name="GizmoToggle" style="margin-bottom: 15px;">
+            <Bindings>
+                <UnityEngine.Localization.LocalizedString property="label" table="GUID:88f5d7360291544fd8b69234e98f8fa3" entry="Id(2586893173645315)" />
+            </Bindings>
+        </Unity.AppUI.UI.Toggle>
+        <Unity.AppUI.UI.Toggle name="SectionBoxToggle" style="margin-bottom: 15px;">
+            <Bindings>
+                <UnityEngine.Localization.LocalizedString property="label" table="GUID:88f5d7360291544fd8b69234e98f8fa3" entry="Id(2586893173645316)" />
+            </Bindings>
+        </Unity.AppUI.UI.Toggle>
+        <Unity.AppUI.UI.ActionButton name="ResetButton" accent="true" selected="true" style="margin-bottom: 15px;">
+            <Bindings>
+                <UnityEngine.Localization.LocalizedString property="label" table="GUID:2a6c1c34211344e798bb376d8fa80190" entry="Id(31232716568518656)" />
+            </Bindings>
+        </Unity.AppUI.UI.ActionButton>
+    </ui:VisualElement>
+</ui:UXML>

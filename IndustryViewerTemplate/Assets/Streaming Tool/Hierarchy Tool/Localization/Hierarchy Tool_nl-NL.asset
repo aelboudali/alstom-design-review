@@ -30,8 +30,8 @@ MonoBehaviour:
     m_Localized: Positie resetten
     m_Metadata:
       m_Items: []
-  - m_Id: 42677741605085184
-    m_Localized: Laden
+  - m_Id: 115508050741207040
+    m_Localized: Reset alle Zichtbaarheid
     m_Metadata:
       m_Items: []
   references:

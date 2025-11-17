@@ -1,0 +1,15 @@
+#AnnotationEntry > #AnnotationMessageLabel.NoMargin {
+    margin-left: 0;
+}
+
+#AnnotationEntry > #AttachmentContainer.NoMargin {
+    margin-left: 0;
+}
+
+#AnnotationEntry > #ReplyLabel.NoMargin {
+    margin-left: 0;
+}
+
+#AnnotationEntry > #ReactionContainer.NoMargin {
+    margin-left: 0;
+}

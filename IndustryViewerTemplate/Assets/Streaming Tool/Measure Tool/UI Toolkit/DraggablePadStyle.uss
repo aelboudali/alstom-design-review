@@ -1,0 +1,9 @@
+.image__draggable-button {
+    background-image: url("project://database/Assets/Streaming%20Tool/Measure%20Tool/Sprites/PadControl.png?fileID=21300000&guid=c9340e4a5bfbaec4aa7d923fcf352cdf&type=3#PadControl");
+    width: 80px;
+    height: 80px;
+}
+
+.hover {
+    -unity-background-image-tint-color: rgb(0, 0, 0);
+}

@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using UnityEngine.XR.Management;
 
-namespace Unity.Industry.Viewer.Navigation.VR
+namespace Unity.Industry.Viewer.VR
 {
     public class XRInitializer : MonoBehaviour
     {

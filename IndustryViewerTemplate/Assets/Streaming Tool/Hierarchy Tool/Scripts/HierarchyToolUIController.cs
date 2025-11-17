@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-//using IndustryCSE.RuntimeTransformHandle;
 using RuntimeGizmos;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -16,6 +15,7 @@ using Unity.Industry.Viewer.Assets;
 using Vector3Field = Unity.AppUI.UI.Vector3Field;
 using Button = Unity.AppUI.UI.Button;
 using System.Collections;
+using Unity.Industry.Viewer.Shared;
 #if ENABLE_MULTIPLAY
 using Unity.Collections;
 using Unity.Industry.Viewer.Shared;
@@ -27,9 +27,8 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
     {
         private const string k_HierarchyTreeViewName = "HierarchyTreeView";
         private const string k_HierarchyItemToggleLabelName = "ToggleLabel";
-        private const string k_EyeIconName = "eye";
-        private const string k_EyeSlashIconName = "eye-slash";
-        private const string k_FocusButtonName = "FocusButton";
+        private const string k_CubeIconName = "cube";
+        private const string k_HiddenCubeIconName = "hidden-cube";
         private const string k_BinButtonName = "BinButton";
         private const string k_VisibilityButtonName = "VisibilityButton";
         private const string k_PositionFieldName = "Position";
@@ -39,7 +38,10 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
         private const string k_LoadingPanelName = "Loading";
         private const string k_PositionModeButton = "PositionModeButton";
         private const string k_RotationModeButton = "RotationModeButton";
-        
+        private const string k_TransformInspectorName = "TransformInspectorElement";
+        private const string k_StreamingPanelName = "StreamingContainer";
+        private const string k_ResetAllVisibilityButtonName = "ResetAllVisibilityButton";
+
         private TreeView m_HierarchyTreeView;
 
         private int m_LastInstanceId = 0;
@@ -59,12 +61,19 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
         
         private VisualElement m_TransformInspectorElement;
         private VisualElement m_LoadingPanel;
+        private VisualElement m_StreamingContainer;
         private Vector3Field m_PositionField;
         private Vector3Field m_RotationField;
         private TouchSliderFloat m_SnapValueField;
         private Button m_ResetPositionButton;
         private IconButton m_PositionModeButton;
         private IconButton m_RotationModeButton;
+        private ActionButton m_ResetAllVisibilityButton;
+
+        private float m_LastTapTime = 0f;
+        private const float k_DoubleTapThreshold = 0.5f; // 300 ms
+        
+        public bool Initialized { get; private set; }
         
         private GridViewManager m_GridViewManager => m_HierarchyController.GridViewManager;
         
@@ -79,13 +88,6 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
             TransformController.TransformChanged += OnTransformChanged;
             HierarchyToolController.QueryStarted += OnQueryStarted;
             HierarchyToolController.QueryAbort += OnQueryAbort;
-            
-            var UIDocument = SharedUIManager.Instance.AssetsUIDocument;
-            if (UIDocument == null) return;
-            if (!UIDocument.rootVisualElement.styleSheets.Contains(m_HierarchyToolStyleSheet))
-            {
-                UIDocument.rootVisualElement.styleSheets.Add(m_HierarchyToolStyleSheet);
-            }
 
             TransformController.ModelAdded += OnModelAdded;
             TransformController.ModelRemoved += OnModelRemoved;
@@ -100,12 +102,11 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
             TransformController.TransformChanged -= OnTransformChanged;
             TransformController.ModelAdded -= OnModelAdded;
             TransformController.ModelRemoved -= OnModelRemoved;
-            var UIDocument = SharedUIManager.Instance.AssetsUIDocument;
-            if (UIDocument != null)
+            if (m_PanelDocument != null)
             {
-                if (UIDocument.rootVisualElement.styleSheets.Contains(m_HierarchyToolStyleSheet))
+                if (m_PanelDocument.rootVisualElement.styleSheets.Contains(m_HierarchyToolStyleSheet))
                 {
-                    UIDocument.rootVisualElement.styleSheets.Remove(m_HierarchyToolStyleSheet);
+                    m_PanelDocument.rootVisualElement.styleSheets.Remove(m_HierarchyToolStyleSheet);
                 }
             }
             
@@ -184,33 +185,59 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
             m_HierarchyTreeView?.RefreshItems();
         }
 
-        private void OnUpdateToggleUI(InstanceData arg1, bool arg2)
+        private void OnUpdateToggleUI(InstanceData instanceData, bool visible)
         {
             if(m_HierarchyTreeView == null) return;
             var allItemId = m_HierarchyTreeView.viewController.GetAllItemIds();
             foreach (var i in allItemId)
             {
                 var itemData = m_HierarchyTreeView.GetItemDataForId<InstanceData>(i);
-                if (itemData == null) continue;
 
-                if (itemData.StreamingModel != arg1.StreamingModel || ((itemData.Instance != null && arg1.Instance != null) &&
-                    itemData.Instance.Id != arg1.Instance.Id)) continue;
+                if (itemData == null || itemData.StreamingModel != instanceData.StreamingModel)
+                {
+                    continue;
+                }
+
                 var ve = m_HierarchyTreeView.GetRootElementForId(i);
-                ve.Q<IconButton>(k_VisibilityButtonName).icon = arg2? k_EyeIconName : k_EyeSlashIconName;
+                if (ve == null)
+                {
+                    continue; // ve can be null if the item is not visible in the tree view
+                }
+
+                if (instanceData.Instance == null && itemData.Instance?.Name == "Root")
+                {
+                    ve.Q<IconButton>(k_VisibilityButtonName).icon = visible ? k_CubeIconName : k_HiddenCubeIconName;
+                    break;
+                }
+
+                if (itemData.Instance != null && instanceData.Instance != null
+                    && itemData.Instance.Id != instanceData.Instance.Id) continue;
+
+                ve.Q<IconButton>(k_VisibilityButtonName).icon = visible ? k_CubeIconName : k_HiddenCubeIconName;
+                break;
             }
         }
 
-        public override void InitializeUI(VisualElement parent, GameObject controller)
+        public override void InitializeUI(UIDocument uiDocument, VisualElement parent, GameObject controller)
         {
+            m_PanelDocument = uiDocument;
+            
+            if (!m_PanelDocument.rootVisualElement.styleSheets.Contains(m_HierarchyToolStyleSheet))
+            {
+                m_PanelDocument.rootVisualElement.styleSheets.Add(m_HierarchyToolStyleSheet);
+            }
+            
             if (controller.TryGetComponent(out m_Controller))
             {
                 m_Controller.ToolOpened += OnToolOpened;
                 m_Controller.ToolClosed += OnToolClosed;
             }
             m_LastInstanceId = 0;
-            
             HierarchyToolController.TreeViewItemsUpdated += OnTreeViewItemsUpdated;
             HierarchyToolController.InstanceSelectedOnModel += OnInstanceSelectedOnModel;
+            
+            m_StreamingContainer =
+                SharedUIManager.Instance.AssetsUIDocument.rootVisualElement.Q<VisualElement>(k_StreamingPanelName);
             
             m_HierarchyTreeView = parent.Q<TreeView>(k_HierarchyTreeViewName);
             
@@ -221,11 +248,12 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
             
             m_LoadingPanel = parent.Q<VisualElement>(k_LoadingPanelName);
             SetLoadingPanel(false);
-
+            
             m_TransformInspectorElement = m_TransformInspector.Instantiate().Children().First();
-            var streamingContainer =
-                SharedUIManager.Instance.AssetsUIDocument.rootVisualElement.Q<VisualElement>("StreamingContainer");
-            streamingContainer.Add(m_TransformInspectorElement);
+            m_TransformInspectorElement.name = k_TransformInspectorName;
+            
+            
+            m_StreamingContainer.Add(m_TransformInspectorElement);
             m_TransformInspectorElement.style.position = Position.Absolute;
             m_TransformInspectorElement.style.top = new Length(85f, LengthUnit.Pixel);
             m_TransformInspectorElement.style.left = new Length(20f, LengthUnit.Pixel);
@@ -248,13 +276,38 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
             m_SnapValueField = m_TransformInspectorElement.Q<TouchSliderFloat>(k_SnapValueFieldName);
             m_SnapValueField.RegisterValueChangingCallback(OnSnapValueChanging);
             m_SnapValueField.RegisterValueChangedCallback(OnSnapValueChanged);
-            m_GridViewManager?.SetGridUnit(m_SnapValueField.value);
             
             m_PositionModeButton = m_TransformInspectorElement.Q<IconButton>(k_PositionModeButton);
             m_PositionModeButton.clicked += OnGizmoPositionModeButtonClicked;
             
             m_RotationModeButton = m_TransformInspectorElement.Q<IconButton>(k_RotationModeButton);
             m_RotationModeButton.clicked += OnGizmoRotationModeButtonClicked;
+
+            m_ResetAllVisibilityButton = parent.Q<ActionButton>(k_ResetAllVisibilityButtonName);
+            m_ResetAllVisibilityButton.clicked += OnResetAllVisibilityButtonClicked;
+
+            StartCoroutine(WaitForGridViewManager());
+            return;
+            
+            IEnumerator WaitForGridViewManager()
+            {
+                while (m_GridViewManager == null)
+                {
+                    yield return null;
+                }
+                m_SnapValueField.SetValueWithoutNotify(m_GridViewManager.GetGridUnit());
+                Initialized = true;
+            }
+        }
+
+        public void RefreshTreeViewItems()
+        {
+            m_HierarchyTreeView?.RefreshItems();
+        }
+
+        public void RebuildTreeViewItems()
+        {
+            m_HierarchyTreeView?.Rebuild();
         }
 
         private void OnGizmoRotationModeButtonClicked()
@@ -297,6 +350,11 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
             m_RotationField.SetValueWithoutNotify(Vector3.zero);
         }
 
+        private void OnResetAllVisibilityButtonClicked()
+        {
+            HierarchyToolController.ResetVisibility(false);
+        }
+
         private void OnRotationFieldValueChanging(ChangingEvent<Vector3> evt)
         {
             Transform selectedTransform = (m_TransformInspectorElement.userData as StreamingModel).transform;
@@ -329,7 +387,7 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
 
         private void OnInstanceSelectedOnModel(ModelStreamId modelStreamId, MetadataInstance instance, Dictionary<InstanceId, List<InstanceData>> children)
         {
-            if(children.Count == 0)
+            if (children.Count == 0)
             {
                 return;
             }
@@ -352,10 +410,16 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
 
             void QueryHierarchy(int parentId, InstanceId parentInstanceId)
             {
-                var childrenTreeItemId = m_HierarchyTreeView.viewController.GetChildrenIds(parentId);
+                if (!children.ContainsKey(parentInstanceId))
+                {
+                    // Wrong root
+                    return;
+                }
+                var childrenTreeItemId = m_HierarchyTreeView.viewController.GetChildrenIds(parentId).ToList();
+                if (childrenTreeItemId.Count == 0) return;
 
-                var firsItemID = childrenTreeItemId.First();
-                var item = m_HierarchyTreeView.GetItemDataForId<InstanceData>(firsItemID);
+                var firstItemID = childrenTreeItemId[0];
+                var item = m_HierarchyTreeView.GetItemDataForId<InstanceData>(firstItemID);
                 KeyValuePair<InstanceId, List<InstanceData>> nextSet = default;
                 if (!item.IsPlaceholder)
                 {
@@ -363,42 +427,54 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
                     
                     if (children.Count == 0)
                     {
+                        // Build a quick lookup from InstanceId -> Tree item id for this level
+                        var levelMap = new Dictionary<InstanceId, int>(childrenTreeItemId.Count);
                         foreach (var childId in childrenTreeItemId)
                         {
-                            item = m_HierarchyTreeView.GetItemDataForId<InstanceData>(childId);
-                            if (item.Instance.Id != instance.Id) continue;
-                            m_HierarchyTreeView.SetSelectionByIdWithoutNotify(new int[] {childId});
-                            m_HierarchyTreeView.ScrollToItemById(childId);
+                            var childItem = m_HierarchyTreeView.GetItemDataForId<InstanceData>(childId);
+                            if (childItem == null || childItem.Instance.Id == InstanceId.None) continue;
+                            levelMap[childItem.Instance.Id] = childId;
+                        }
+                        if (levelMap.TryGetValue(instance.Id, out var targetId))
+                        {
+                            m_HierarchyTreeView.SetSelectionById(new int[] {targetId});
+                            m_HierarchyTreeView.ScrollToItemById(targetId);
                             m_HierarchyTreeView.Focus();
                             SetLoadingPanel(false);
-                            return;
                         }
                         return;
                     }
                     
                     nextSet = children.First();
+                    // Build a quick lookup from InstanceId -> Tree item id for this level
+                    var nextMap = new Dictionary<InstanceId, int>(childrenTreeItemId.Count);
                     foreach (var childId in childrenTreeItemId)
                     {
-                        item = m_HierarchyTreeView.GetItemDataForId<InstanceData>(childId);
-                        if (item.Instance.Id == nextSet.Key)
-                        {
-                            QueryHierarchy(childId, item.Instance.Id);
-                        }
+                        var childItem = m_HierarchyTreeView.GetItemDataForId<InstanceData>(childId);
+                        if (childItem == null || childItem.Instance.Id == InstanceId.None) continue;
+                        nextMap[childItem.Instance.Id] = childId;
+                    }
+                    if (nextMap.TryGetValue(nextSet.Key, out var nextId))
+                    {
+                        var nextItem = m_HierarchyTreeView.GetItemDataForId<InstanceData>(nextId);
+                        QueryHierarchy(nextId, nextItem.Instance.Id);
                     }
                     return;
                 }
-                var metadataValue = children[parentInstanceId];
-                children.Remove(parentInstanceId);
+                if (!children.Remove(parentInstanceId, out var metadataValue))
+                {
+                    Debug.LogError($"[HierarchyUI] Metadata value not found for parentInstanceId={parentInstanceId}");
+                    return;
+                }
 
                 if (children.Count > 0)
                 {
                     nextSet = children.First();
                 }
-                
-                m_HierarchyTreeView.TryRemoveItem(firsItemID, false);
-                int nextQueryId = 0;
-                InstanceId nextQueryInstanceId;
-                int focusId = 0;
+                m_HierarchyTreeView.TryRemoveItem(firstItemID, false);
+                var nextQueryId = 0;
+                var nextQueryInstanceId = InstanceId.None;
+                var focusId = 0;
                 foreach (var metadataInstance in metadataValue)
                 {
                     var childrenList = new List<TreeViewItemData<InstanceData>>();
@@ -431,7 +507,7 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
                     return;
                 }
                 
-                if(nextQueryInstanceId == InstanceId.None) return;
+                if (nextQueryInstanceId == InstanceId.None) return;
                 QueryHierarchy(nextQueryId, nextQueryInstanceId);
             }
 
@@ -439,7 +515,7 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
             {
                 // Wait for the end of the frame to ensure the tree view is fully built
                 yield return new WaitForEndOfFrame();
-                m_HierarchyTreeView.SetSelectionByIdWithoutNotify(new int[] {ids});
+                m_HierarchyTreeView.SetSelectionById(new int[] {ids});
                 m_HierarchyTreeView.ScrollToItemById(ids);
                 m_HierarchyTreeView.Focus();
                 SetLoadingPanel(false);
@@ -503,20 +579,30 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
 #if ENABLE_MULTIPLAY
                 UnlockModel();
 #endif
-                m_HierarchyController.HighlightModifier?.Reset();
-                m_TransformInspectorElement.userData = null;
-                m_TransformInspectorElement.SetEnabled(false);
+                if (m_HierarchyController != null)
+                {
+                    m_HierarchyController.HierarchyToolSceneListener.ResetHighlight();
+                    //m_HierarchyController.HighlightModifier?.Reset();
+                    m_HierarchyController.DestroyTransformHandle();
+                }
+
+                if (m_TransformInspectorElement != null)
+                {
+                    m_TransformInspectorElement.userData = null;
+                    m_TransformInspectorElement.SetEnabled(false);
+                }
                 return;
             }
-            m_TransformInspectorElement.SetEnabled(enable);
+            m_TransformInspectorElement?.SetEnabled(enable);
             if (enable)
             {
-                m_PositionField.SetValueWithoutNotify(streamingModel.transform.localPosition);
-                m_RotationField.SetValueWithoutNotify(streamingModel.transform.localEulerAngles);
+                if(m_TransformInspectorElement == null) return;
+                m_PositionField?.SetValueWithoutNotify(streamingModel.transform.localPosition);
+                m_RotationField?.SetValueWithoutNotify(streamingModel.transform.localEulerAngles);
                 m_TransformInspectorElement.userData = streamingModel;
                 m_PositionModeButton.primary = true;
                 m_RotationModeButton.primary = false;
-                m_HierarchyController.CreateTransformHandle(streamingModel.transform, TransformType.Move);
+                m_HierarchyController?.CreateTransformHandle(streamingModel.transform, TransformType.Move);
                 //RuntimeTransformHandle.Instance.snap = m_SnapValueField.value;
 #if ENABLE_MULTIPLAY
                 HierarchyToolController.LockModel?.Invoke(streamingModel.transform.name, true);
@@ -527,10 +613,13 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
 #if ENABLE_MULTIPLAY
                 UnlockModel();
 #endif
-                m_HierarchyController.DestroyTransformHandle();
-                m_PositionField.SetValueWithoutNotify(Vector3.zero);
-                m_RotationField.SetValueWithoutNotify(Vector3.zero);
-                m_TransformInspectorElement.userData = null;
+                m_HierarchyController?.DestroyTransformHandle();
+                m_PositionField?.SetValueWithoutNotify(Vector3.zero);
+                m_RotationField?.SetValueWithoutNotify(Vector3.zero);
+                if (m_TransformInspectorElement != null)
+                {
+                    m_TransformInspectorElement.userData = null;
+                }
             }
         }
         
@@ -573,14 +662,14 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
         {
             var visibilityButton = element.Q<IconButton>(k_VisibilityButtonName);
             var binButton = element.Q<IconButton>(k_BinButtonName);
-            var focusButton = element.Q<IconButton>(k_FocusButtonName);
+            
+            element.UnregisterCallback<PointerDownEvent>(OnFocusToInstance);
             
             visibilityButton.UnregisterCallback<ClickEvent>(OnVisibilityButtonClicked);
-            focusButton.UnregisterCallback<ClickEvent>(OnFocusButtonClicked);
             if(binButton.style.display == DisplayStyle.None || !binButton.enabledSelf) return;
             binButton.UnregisterCallback<ClickEvent>(OnBinButtonClicked);
         }
-        
+
         private void HierarchyBindItem(VisualElement element, int index)
         {
             var item = m_HierarchyTreeView.GetItemDataForIndex<InstanceData>(index);
@@ -589,39 +678,36 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
                 return;
             }
             
-            //var toggle = element.Q<Toggle>();
+            element.RegisterCallback<PointerDownEvent>(OnFocusToInstance);
+            
             var visibilityButton = element.Q<IconButton>(k_VisibilityButtonName);
             var binButton = element.Q<IconButton>(k_BinButtonName);
-            var focusButton = element.Q<IconButton>(k_FocusButtonName);
             
             visibilityButton.UnregisterCallback<ClickEvent>(OnVisibilityButtonClicked);
-            focusButton.UnregisterCallback<ClickEvent>(OnFocusButtonClicked);
             binButton.UnregisterCallback<ClickEvent>(OnBinButtonClicked);
-            
+            element.name = "Data";
             element.userData = item;
             
             var text = element.Q<Text>(k_HierarchyItemToggleLabelName);
-            text.ClearBinding("text");
+            text.text = string.Empty;
             
             if (item.Instance != null)
             {
                 if (item.Instance.AncestorIds.Count == 0)
                 {
-                    //_ = GetTopLevelName(item, toggle);
                     binButton.style.display = DisplayStyle.Flex;
                     binButton.SetEnabled(item.StreamingModel.Asset != StreamingModelController.StreamingAsset.Value.Asset);
-                    var modelIndex = int.Parse(item.StreamingModel.gameObject.name.Split("@")[1]);
 
                     if (binButton.enabledSelf)
                     {
                         binButton.RegisterCallback<ClickEvent>(OnBinButtonClicked);
                     }
-                
-                    text.text = modelIndex > 1 ? $"{item.StreamingModel.AssetName} ({modelIndex})" : item.StreamingModel.AssetName;
+
+                    text.text = GetAssetInstanceName(item.StreamingModel);
                 }
                 else
                 {
-                    binButton.style.display = DisplayStyle.None;
+                    binButton.DisplayOff();
                     text.text = item.Name;
                 }
                 
@@ -629,48 +715,80 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
                 {
                     if (item.Instance.AncestorIds.Count == 0)
                     {
-                        visibilityButton.icon = item.StreamingModel.gameObject.activeSelf? k_EyeIconName : k_EyeSlashIconName;
+                        visibilityButton.icon = item.StreamingModel.gameObject.activeSelf? k_CubeIconName : k_HiddenCubeIconName;
                     }
                     else
                     {
-                        if (m_HierarchyController.VisibilityModifier.HiddenInstances == null)
-                        {
-                            visibilityButton.icon = k_EyeIconName;
-                        }
-                        else
-                        {
-                            var isCurrentlyInvisible = m_HierarchyController.VisibilityModifier.HiddenInstances.Any(x =>
-                                x.StreamingModel.ModelStream.Id == item.StreamModel.Id &&
-                                x.Instance.Id == item.Instance.Id);
-                            visibilityButton.icon = isCurrentlyInvisible ? k_EyeSlashIconName : k_EyeIconName;
-                        }
+                        bool isCurrentlyInvisible =
+                            m_HierarchyController.HierarchyToolSceneListener.IsCurrentlyHidden(
+                                item.StreamingModel.ModelStream.Id, item.Instance.Id);
+                        visibilityButton.icon = !isCurrentlyInvisible ? k_CubeIconName : k_HiddenCubeIconName;
                     }
                 }
             }
             else
             {
-                binButton.style.display = DisplayStyle.Flex;
+                binButton.DisplayOn();
                 binButton.SetEnabled(item.StreamingModel.Asset != StreamingModelController.StreamingAsset.Value.Asset);
-                var modelIndex = int.Parse(item.StreamingModel.gameObject.name.Split("@")[1]);
 
                 if (binButton.enabledSelf)
                 {
                     binButton.RegisterCallback<ClickEvent>(OnBinButtonClicked);
                 }
-                
-                text.text = modelIndex > 1 ? $"{item.StreamingModel.AssetName} ({modelIndex})" : item.StreamingModel.AssetName;
-                
-                visibilityButton.icon = item.StreamingModel.gameObject.activeSelf? k_EyeIconName : k_EyeSlashIconName;
+
+                text.text = GetAssetInstanceName(item.StreamingModel);
+                visibilityButton.icon = item.StreamingModel.gameObject.activeSelf ? k_CubeIconName : k_HiddenCubeIconName;
             }
 
             visibilityButton.RegisterCallback<ClickEvent>(OnVisibilityButtonClicked);
-            focusButton.RegisterCallback<ClickEvent>(OnFocusButtonClicked);
+        }
+
+        private string GetAssetInstanceName(StreamingModel streamingModel)
+        {
+            var modelIndex = streamingModel.InstanceNumber;
+            var indexString = modelIndex > 1 ? $" ({modelIndex})" : string.Empty;
+            return $"{streamingModel.AssetName}{indexString} v.{streamingModel.Version}";
+        }
+
+        private void OnFocusToInstance(PointerDownEvent evt)
+        {
+            float currentTime = Time.unscaledTime;
+            bool isDoubleTap = false;
+
+            if (evt.pointerType == UnityEngine.UIElements.PointerType.touch)
+            {
+                if (currentTime - m_LastTapTime < k_DoubleTapThreshold)
+                {
+                    isDoubleTap = true;
+                }
+                m_LastTapTime = currentTime;
+            }
+            else if (evt.clickCount == 2)
+            {
+                isDoubleTap = true;
+            }
+
+            if (isDoubleTap)
+            {
+                var clickedElement = evt.target as VisualElement;
+                if (clickedElement?.userData is InstanceData instanceData)
+                {
+                    if (instanceData.Instance != null && instanceData.Instance.Geometry.HasValue && instanceData.Instance.Geometry.Value.BoundingBox.HasValue)
+                    {
+                        double3 boundCenter = instanceData.Instance.Geometry.Value.BoundingBox.Value.Center;
+                        double3 modelPosition = new double3(instanceData.StreamingModel.transform.position.x, instanceData.StreamingModel.transform.position.y, instanceData.StreamingModel.transform.position.z);
+                        var newBounds = new DoubleBounds(modelPosition + boundCenter, instanceData.Instance.Geometry.Value.BoundingBox.Value.Size);
+                        NavigationController.FocusToPoint?.Invoke(newBounds);
+                    }
+                }
+            }
         }
 
         private void OnBinButtonClicked(ClickEvent evt)
         {
             var clickedElement = (IconButton)evt.target;
-            var instanceData = clickedElement.parent.parent.parent.userData as InstanceData;
+            var dataElement = ReturnDataVisualElement(clickedElement);
+            var instanceData = dataElement.userData as InstanceData;
             if (instanceData == null)
             {
                 return;
@@ -680,29 +798,22 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
             StreamingModelController.RemoveStreamModel(instanceData.StreamingModel);
         }
 
-        private void OnFocusButtonClicked(ClickEvent evt)
+        private static VisualElement ReturnDataVisualElement(VisualElement visualElement)
         {
-            var clickedElement = (IconButton)evt.target;
-            var instanceData = clickedElement.parent.parent.parent.userData as InstanceData;
-            if (instanceData == null)
+            var currentElement = visualElement;
+            while (currentElement != null && currentElement.name != "Data")
             {
-                return;
+                currentElement = currentElement.parent;
             }
-
-            if (instanceData.Instance != null && instanceData.Instance.Geometry.HasValue && instanceData.Instance.Geometry.Value.BoundingBox.HasValue)
-            {
-                double3 boundCenter = instanceData.Instance.Geometry.Value.BoundingBox.Value.Center;
-                double3 modelPosition = new double3(instanceData.StreamingModel.transform.position.x, instanceData.StreamingModel.transform.position.y, instanceData.StreamingModel.transform.position.z);
-                var newBounds = new DoubleBounds(modelPosition + boundCenter,
-                    instanceData.Instance.Geometry.Value.BoundingBox.Value.Size);
-                NavigationController.FocusToPoint?.Invoke(newBounds);
-            }
+            return currentElement;
         }
+        
 
         private void OnVisibilityButtonClicked(ClickEvent evt)
         {
             var clickedElement = (IconButton)evt.target;
-            var instanceData = clickedElement.parent.parent.parent.userData as InstanceData;
+            var dataElement = ReturnDataVisualElement(clickedElement);
+            var instanceData = dataElement.userData as InstanceData;
             if (instanceData == null)
             {
                 return;
@@ -712,23 +823,20 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
             {
                 var currentActive = instanceData.StreamingModel.gameObject.activeSelf;
                 instanceData.StreamingModel.gameObject.SetActive(!instanceData.StreamingModel.gameObject.activeSelf);
-                clickedElement.icon = !currentActive ? k_EyeIconName : k_EyeSlashIconName;
+                clickedElement.icon = !currentActive ? k_CubeIconName : k_HiddenCubeIconName;
                 HierarchyToolController.InstanceVisibilityChanged?.Invoke(instanceData, !currentActive);
             }
             else
             {
-                bool isCurrentlyInvisible = false;
-                if (m_HierarchyController.VisibilityModifier.HiddenInstances != null)
-                {
-                    isCurrentlyInvisible = m_HierarchyController.VisibilityModifier.HiddenInstances.Any(x =>
-                        x.StreamingModel.ModelStream.Id == instanceData.StreamModel.Id &&
-                        x.Instance.Id == instanceData.Instance.Id);
-                }
-                clickedElement.icon = isCurrentlyInvisible ? k_EyeIconName : k_EyeSlashIconName;
+                bool isCurrentlyInvisible =
+                    m_HierarchyController.HierarchyToolSceneListener.IsCurrentlyHidden(
+                        instanceData.StreamingModel.ModelStream.Id, instanceData.Instance.Id);
+                m_HierarchyController.HierarchyToolSceneListener.UpdateVisibility(instanceData.StreamingModel, false, instanceData, isCurrentlyInvisible);
+                clickedElement.icon = isCurrentlyInvisible ? k_CubeIconName : k_HiddenCubeIconName;
                 HierarchyToolController.InstanceVisibilityChanged?.Invoke(instanceData, isCurrentlyInvisible);
             }
         }
-        
+
         private void OnTreeViewItemsUpdated(int id, List<List<InstanceData>> list)
         {
             if (id == -1)
@@ -809,7 +917,7 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
                 if(childItem.StreamModel.Id != m_TargetModelStreamId) continue;
                 if (childItem.Instance.Id == InstanceId.None) continue;
                 if (childItem.Instance.Id != m_TargetInstanceID) continue;
-                m_HierarchyTreeView.SetSelectionByIdWithoutNotify(new int[] {child});
+                m_HierarchyTreeView.SetSelectionById(new int[] {child});
                 m_HierarchyTreeView.ScrollToItemById(child);
                 m_HierarchyTreeView.Focus();
                 m_TargetInstanceID = InstanceId.None;
@@ -825,7 +933,7 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
 
         private void OnToolClosed()
         {
-            
+            UninitializeUI();
         }
 
         private void OnToolOpened()
@@ -835,21 +943,45 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
 
         public override void UninitializeUI()
         {
-            m_HierarchyTreeView.selectedIndicesChanged -= OnSelectedIndicesChanged;
-            m_HierarchyTreeView.itemExpandedChanged -= HierarchyItemExpanded;
+            if (m_HierarchyTreeView != null)
+            {
+                m_HierarchyTreeView.selectedIndicesChanged -= OnSelectedIndicesChanged;
+                m_HierarchyTreeView.itemExpandedChanged -= HierarchyItemExpanded;
+            }
             
             EnableTransformInspector(false, null);
-            m_PositionField.UnregisterValueChangedCallback(OnPositionFieldValueChanged);
-            m_PositionField.UnregisterValueChangingCallback(OnPositionFieldValueChanging);
-            m_RotationField.UnregisterValueChangedCallback(OnRotationFieldValueChanged);
-            m_RotationField.UnregisterValueChangingCallback(OnRotationFieldValueChanging);
-            m_SnapValueField.UnregisterValueChangingCallback(OnSnapValueChanging);
-            m_SnapValueField.UnregisterValueChangedCallback(OnSnapValueChanged);
-            m_ResetPositionButton.clicked -= OnResetPositionButtonClicked;
-            m_TransformInspectorElement.RemoveFromHierarchy();
             
-            m_PositionModeButton.clicked -= OnGizmoPositionModeButtonClicked;
-            m_RotationModeButton.clicked -= OnGizmoRotationModeButtonClicked;
+            m_PositionField?.UnregisterValueChangedCallback(OnPositionFieldValueChanged);
+            m_PositionField?.UnregisterValueChangingCallback(OnPositionFieldValueChanging);
+            m_RotationField?.UnregisterValueChangedCallback(OnRotationFieldValueChanged);
+            m_RotationField?.UnregisterValueChangingCallback(OnRotationFieldValueChanging);
+            m_SnapValueField?.UnregisterValueChangingCallback(OnSnapValueChanging);
+            m_SnapValueField?.UnregisterValueChangedCallback(OnSnapValueChanged);
+
+            if (m_ResetPositionButton != null)
+            {
+                m_ResetPositionButton.clicked -= OnResetPositionButtonClicked;
+            }
+            
+            if (m_TransformInspectorElement == null)
+            {
+                // If the transform inspector element is null, we try to find it in the streaming container to make sure it gets removed
+                var streamingContainer =
+                    SharedUIManager.Instance.AssetsUIDocument.rootVisualElement.Q<VisualElement>("StreamingContainer");
+                m_TransformInspectorElement = streamingContainer.Q<VisualElement>(k_TransformInspectorName);
+            }
+            
+            m_TransformInspectorElement?.RemoveFromHierarchy();
+            
+            if (m_PositionField != null)
+            {
+                m_PositionModeButton.clicked -= OnGizmoPositionModeButtonClicked;
+            }
+
+            if (m_RotationField != null)
+            {
+                m_RotationModeButton.clicked -= OnGizmoRotationModeButtonClicked;
+            }
         }
     }
 }

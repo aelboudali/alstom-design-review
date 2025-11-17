@@ -1,0 +1,171 @@
+.reaction .appui-icon--fire--regular {
+    --unity-image: url("Reactions Icons/fire.png");
+}
+
+.reaction .appui-icon--thumb-up--regular {
+    --unity-image: url("Reactions Icons/thumb_up.png");
+}
+
+.reaction .appui-icon--thumb-down--regular {
+    --unity-image: url("Reactions Icons/thumb_down.png");
+}
+
+.reaction .appui-icon--hundred--regular {
+    --unity-image: url("Reactions Icons/hundred.png");
+}
+
+.reaction .appui-icon--celebrate--regular {
+    --unity-image: url("Reactions Icons/celebrate.png");
+}
+
+.reaction .appui-icon--smiley--regular {
+    --unity-image: url("Reactions Icons/smiley.png");
+}
+
+.reaction .appui-icon--check--regular {
+    --unity-image: url("Reactions Icons/check.png");
+}
+
+.reaction .appui-icon--look--regular {
+    --unity-image: url("Reactions Icons/look.png");
+}
+
+.thread.resolved .appui-icon--check-fill--regular{
+    --unity-image: url("CheckFill.png");
+}
+
+.collaboration.appui-textarea {
+    height: 30px;
+    max-height: 30px;
+    min-height: 30px;
+}
+
+.collaboration.appui-textarea.focused {
+    height: 81px;
+    max-height: 81px;
+    min-height: 81px;
+}
+
+#ResolvedButton.thread.appui-actionbutton--quiet {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+#ResolveIconButton.thread.resolved .appui-button__leadingicon{
+    --unity-image-tint-color: rgb(17, 168, 95);
+}
+
+#ResolvedButton.thread.appui-actionbutton--quiet.resolved {
+    padding-right: 6px;
+    padding-left: 1px;
+    background-color: rgba(17, 168, 95, 0.49);
+}
+
+#ResolvedButton.thread.appui-actionbutton--quiet.resolved #appui-actionbutton__icon {
+    --unity-image-tint-color: rgb(17, 168, 95);
+}
+
+#ResolvedButton.thread.appui-actionbutton--quiet.resolved #appui-actionbutton__label {
+    color: rgb(134, 255, 196);
+}
+
+.attachment.appui-grid-view {
+    min-height: 58px;
+}
+
+.attachment.entry.appui-grid-view {
+    max-height: 100px;
+}
+
+.thread-Popover-menu {
+    background-color: var(--appui-color-dark-gray-500);
+    border-color: #4D4D4D;
+    border-width: 1px;
+    border-radius: 6px;
+}
+
+.thead-dropdown-menu {
+    flex-grow: 0;
+    padding-right: 12px;
+    padding-left: 12px;
+}
+
+.thread.NameSuggestionButton {
+    height: 44px;
+    max-height: 44px;
+    min-height: 44px;
+    border-width: 0px;
+    margin: 6px;
+}
+
+.thead-dropdown-menu .appui-button {
+    height: 40px;
+    max-height: 40px;
+    min-height: 40px;
+}
+
+.thead-dropdown-menu .appui-button #appui-button__titlecontainer {
+    align-items: flex-start;
+}
+
+.thead-dropdown-menu .appui-divider .appui-divider__content {
+    background-color: #4D4D4D;
+}
+
+.thead-dropdown-menu .appui-button--quiet.unity-disabled {
+    background-color: rgba(0,0,0,0);
+    border-color: rgba(0,0,0,0);
+}
+
+#RemoveAttachmentButton .appui-button__leadingicon {
+    width: 10px;
+    height: 10px;
+}
+
+#AnnotationRoot {
+    justify-content: flex-start;
+}
+
+#ReplyParent {
+    min-height: 38px;
+}
+
+#ReplyParent.ready-to-send {
+    min-height: 75px;
+}
+
+#ReplyParent.editing-reply {
+    min-height: 122px;
+}
+
+#ReplyParent.editing-reply.has-attachment {
+    min-height: 180px;
+}
+
+#AnnotationParent {
+    max-height: 100%;
+}
+
+#AnnotationParent.read-annotation {
+    max-height: 68%;
+}
+
+#AnnotationParent.in-3d-view.read-annotation {
+    max-height: 79%;
+}
+
+#AnnotationEntry > #AnnotationMessageLabel {
+    margin-left: 48px;
+}
+
+#AnnotationEntry > #AttachmentContainer {
+    margin-left: 48px;
+}
+
+#AnnotationEntry > #ReplyLabel {
+    margin-left: 48px;
+}
+
+#AnnotationEntry > #ReactionContainer {
+    margin-left: 48px;
+}

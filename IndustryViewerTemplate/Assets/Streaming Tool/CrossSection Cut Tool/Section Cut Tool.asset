@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4704d895b3cb8448fb27a262bdde1285, type: 3}
+  m_Name: Section Cut Tool
+  m_EditorClassIdentifier: Unity.Industry.Viewer.Streaming::Unity.Industry.Viewer.Streaming.StreamingToolAsset
+  toolName:
+    m_TableReference:
+      m_TableCollectionName: GUID:88f5d7360291544fd8b69234e98f8fa3
+    m_TableEntryReference:
+      m_KeyId: 8400134144
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  toolIcon: {fileID: 2800000, guid: 863bf8f2830f54240bae9fe586a678c3, type: 3}
+  toolPrefab: {fileID: 2661276955741297022, guid: 026255e184a6e43c7a01bb1dc22b74b3,
+    type: 3}
+  sceneListener: {fileID: 1751291250723892827, guid: 68dbd70ffc9de43e4a36de79f23fbe7a,
+    type: 3}
+  resizablePanel: 0
+  references:
+    version: 2
+    RefIds: []

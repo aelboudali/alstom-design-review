@@ -1,0 +1,23 @@
+{
+    "name": "Unity.Industry.Viewer.VR.Multiplay",
+    "rootNamespace": "Unity.Industry.Viewer.VR.Multiplay",
+    "references": [
+        "GUID:1491147abca9d7d4bb7105af628b223e",
+        "GUID:e0cd26848372d4e5c891c569017e11f1",
+        "GUID:2f101f87087d58f4ba92ca00188e763d",
+        "GUID:3d626114a732519449749a63b5422611",
+        "GUID:c5a5b73654d2d422383b51fb8dfbb105",
+        "GUID:eec0964c48f6f4e40bc3ec2257ccf8c5",
+        "GUID:3072efb1b5d06449eb35617ac762a62d",
+        "GUID:ded3a1fd6dfcb488e8056389a56a3f4f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

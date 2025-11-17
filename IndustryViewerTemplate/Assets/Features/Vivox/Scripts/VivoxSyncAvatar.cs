@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Unity.Netcode;
 
@@ -5,28 +6,47 @@ namespace Unity.Industry.Viewer.Vivox
 {
     public class VivoxSyncAvatar : NetworkBehaviour
     {
-        [SerializeField]
-        private Transform mouthTransform;
-        
         private NetworkVariable<float> m_VoiceLevel = new NetworkVariable<float>();
+        
+        /// <summary>
+        /// The head transform.
+        /// </summary>
+        [SerializeField] Transform m_HeadTransform;
+
+        /// <summary>
+        /// The head renderer.
+        /// </summary>
+        [SerializeField] SkinnedMeshRenderer m_HeadRend;
+        
+        /// <summary>
+        /// The voice amplitude curve.
+        /// </summary>
+        [SerializeField] AnimationCurve m_VoiceCurve;
+        
+        /// <summary>
+        /// The voice destination volume.
+        /// </summary>
+        float m_VoiceDestinationVolume;
+        
+        [SerializeField] float m_MouthBlendSmoothing = 5.0f;
         
         public override void OnNetworkSpawn()
         {
-            m_VoiceLevel.OnValueChanged += OnVoiceLevelChanged;
-            if(!IsOwner) return;
+            if (!IsOwner) return;
             VivoxController.ParticipantAudioEnergyChanged += OnParticipantAudioEnergyChanged;
         }
-        
-        public override void OnNetworkDespawn()
+
+        private void Update()
         {
-            m_VoiceLevel.OnValueChanged -= OnVoiceLevelChanged;
-            if(!IsOwner) return;
-            VivoxController.ParticipantAudioEnergyChanged -= OnParticipantAudioEnergyChanged;
+            m_VoiceDestinationVolume = Mathf.Clamp01(Mathf.Lerp(m_VoiceDestinationVolume, m_VoiceLevel.Value, Time.deltaTime * m_MouthBlendSmoothing));
+            float appliedCurve = m_VoiceCurve.Evaluate(m_VoiceDestinationVolume);
+            m_HeadRend.SetBlendShapeWeight(0, 100 - appliedCurve * 100);
         }
 
-        private void OnVoiceLevelChanged(float previousValue, float newValue)
+        public override void OnNetworkDespawn()
         {
-            mouthTransform.localScale = new Vector3(1f, newValue, 1f);
+            if (!IsOwner) return;
+            VivoxController.ParticipantAudioEnergyChanged -= OnParticipantAudioEnergyChanged;
         }
 
         private void OnParticipantAudioEnergyChanged(double energy)

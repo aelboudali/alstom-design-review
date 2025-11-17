@@ -16,23 +16,14 @@ MonoBehaviour:
     m_Code: no
   m_SharedData: {fileID: 11400000, guid: e57257823a7964becb6eb06d6181f15a, type: 2}
   m_Metadata:
-    m_Items:
-    - rid: 1545659760810917898
+    m_Items: []
   m_TableData:
-  - m_Id: 20735582208
-    m_Localized: "S\xF8k..."
-    m_Metadata:
-      m_Items: []
   - m_Id: 3047743807488
     m_Localized: Ny versjon tilgjengelig
     m_Metadata:
       m_Items: []
   - m_Id: 4032537026560
     m_Localized: Navn
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4496284442624
-    m_Localized: Versjon
     m_Metadata:
       m_Items: []
   - m_Id: 4881900363776
@@ -56,41 +47,32 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6667159724032
-    m_Localized: Opprettet av
+    m_Localized: Laget av
     m_Metadata:
       m_Items: []
-  - m_Id: 7216613548032
-    m_Localized: Last ned
-    m_Metadata:
-      m_Items: []
-  - m_Id: 11727306481664
-    m_Localized: Versjon {num}
-    m_Metadata:
-      m_Items:
-      - rid: 1545659760810917898
   - m_Id: 35648491741184
     m_Localized: En ny versjon av ressursen er tilgjengelig. Vil du bytte til den
       nye versjonen?
     m_Metadata:
       m_Items: []
   - m_Id: 35994052059136
-    m_Localized: Bytt
+    m_Localized: Bryter
     m_Metadata:
       m_Items: []
   - m_Id: 36144556269568
-    m_Localized: Avvis
+    m_Localized: Avskjedige
     m_Metadata:
       m_Items: []
   - m_Id: 41819579604992
-    m_Localized: Velg organisasjon
+    m_Localized: Velg Organisasjon
     m_Metadata:
       m_Items: []
   - m_Id: 41959505780736
-    m_Localized: Fant ingen prosjekter
+    m_Localized: Ingen prosjekt funnet
     m_Metadata:
       m_Items: []
   - m_Id: 42129496727552
-    m_Localized: Fant ingen organisasjoner
+    m_Localized: Ingen organisasjon funnet
     m_Metadata:
       m_Items: []
   - m_Id: 52814918180864
@@ -98,7 +80,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 52882140291072
-    m_Localized: Opplastningsdato
+    m_Localized: Opplastingsdato
     m_Metadata:
       m_Items: []
   - m_Id: 53070703616000
@@ -118,7 +100,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 83968589291520
-    m_Localized: 2D-ressurs
+    m_Localized: 2D ressurs
     m_Metadata:
       m_Items: []
   - m_Id: 84109517905920
@@ -134,11 +116,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 84497860124672
-    m_Localized: Annet
+    m_Localized: Annen
     m_Metadata:
       m_Items: []
   - m_Id: 84533826281472
-    m_Localized: Skript
+    m_Localized: Manus
     m_Metadata:
       m_Items: []
   - m_Id: 84673161060352
@@ -150,7 +132,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 113148827787264
-    m_Localized: Ressursopplasting
+    m_Localized: Legg til Eiendel
     m_Metadata:
       m_Items: []
   - m_Id: 113743160664064
@@ -166,7 +148,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 114765505486848
-    m_Localized: Filsti
+    m_Localized: Filbane
     m_Metadata:
       m_Items: []
   - m_Id: 115961192505344
@@ -174,23 +156,19 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 116076095463424
-    m_Localized: Fjern valg
+    m_Localized: Fjern utvalg
     m_Metadata:
       m_Items: []
-  - m_Id: 116427913682944
-    m_Localized: Laster opp ressurs
-    m_Metadata:
-      m_Items: []
-  - m_Id: 117455979536384
-    m_Localized: Last opp ressurs
+  - m_Id: 103408215129104384
+    m_Localized: Opprettelse
     m_Metadata:
       m_Items: []
   - m_Id: 126885479571456
-    m_Localized: Ressurs opprettet
+    m_Localized: Aktiva opprettet
     m_Metadata:
       m_Items: []
   - m_Id: 129700784496640
-    m_Localized: Velg filer
+    m_Localized: Velg Filer
     m_Metadata:
       m_Items: []
   - m_Id: 25800459972239360
@@ -198,7 +176,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 25800460005793792
-    m_Localized: Totalt fil(er)
+    m_Localized: Totalt antall fil(er)
     m_Metadata:
       m_Items: []
   - m_Id: 25801326007934976
@@ -206,7 +184,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 25802025936609280
-    m_Localized: Eiendels-ID
+    m_Localized: Eiendel-ID
     m_Metadata:
       m_Items: []
   - m_Id: 26945938399420416
@@ -233,12 +211,55 @@ MonoBehaviour:
     m_Localized: "Gjennomg\xE5"
     m_Metadata:
       m_Items: []
+  - m_Id: 98637747977232384
+    m_Localized: Status
+    m_Metadata:
+      m_Items: []
+  - m_Id: 102582021617917952
+    m_Localized: "    Klar for 3D-datastr\xF8mming"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 102589537559027712
+    m_Localized: Legg til Ny Ressurs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 102911663331647488
+    m_Localized: Opprettelsen av ressursen mislyktes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 102916677815017472
+    m_Localized: Ressursen vil vises etter at den er fullstendig lastet opp og transformert,
+      noe som kan ta litt tid.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103410122987970560
+    m_Localized: Opplasting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103437425314930688
+    m_Localized: "Opplasting fullf\xF8rt"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103438020864155648
+    m_Localized: Opplasting mislyktes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103438847884435456
+    m_Localized: Transformere
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103439357110689792
+    m_Localized: "Transformasjon fullf\xF8rt"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103439907755696128
+    m_Localized: Transformasjonen mislyktes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103803189238734848
+    m_Localized: "Filtypen st\xF8ttes ikke"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
-    RefIds:
-    - rid: 1545659760810917898
-      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
-      data:
-        m_Entries: 
-        m_SharedEntries:
-        - id: 11727306481664
+    RefIds: []

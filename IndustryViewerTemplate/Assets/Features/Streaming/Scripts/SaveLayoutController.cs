@@ -30,7 +30,7 @@ namespace Unity.Industry.Viewer.Streaming
             m_texture = screenshot;
             m_saveCompleteCallback = saveCompleteCallback;
             
-            SharedUIManager.ShowLoadingModal(() =>
+            LoadingUIPanel.ShowLoadingPanel?.Invoke(() =>
             {
                 List<LayoutModelEntity> layoutModels = new List<LayoutModelEntity>();
                 var streamModels = TransformController.Instance.GetComponentsInChildren<StreamingModel>();
@@ -84,11 +84,10 @@ namespace Unity.Industry.Viewer.Streaming
                 IDataset sourceDataset = null;
                 IDataset previewDataset = null;
                 string changeLog = string.Empty;
-                
-                bool updating = StreamingModelController.StreamingAsset.Value.Properties.Value.Tags.Contains(StreamingUtils
-                    .LayoutTag);
+
+                bool updating = StreamingModelController.IsLayoutAsset;
                 int currentVersion = updating
-                    ? StreamingModelController.StreamingAsset.Value.Properties.Value.FrozenSequenceNumber
+                    ? StreamingModelController.StreamingAssetVersion
                     : 0;
                 
                 if (!updating)
@@ -188,7 +187,7 @@ namespace Unity.Industry.Viewer.Streaming
                             Properties = properties
                         };
                         m_saveCompleteCallback?.Invoke(assetInfo, string.Empty);
-                       Clear();
+                        Clear();
                         return;
                     }
                 }

@@ -1,0 +1,126 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2661276955741297022
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6327134731190381457}
+  - component: {fileID: 2311965219067630091}
+  - component: {fileID: 3135567596734324703}
+  m_Layer: 0
+  m_Name: Section Cut Tool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6327134731190381457
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2661276955741297022}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2311965219067630091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2661276955741297022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bba4a36ad371b4c84ad094b02c45cc04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Industry.Viewer.Streaming.CrossSection::Unity.Industry.Viewer.Streaming.CrossSection.SectionCutToolController
+  m_BoxVisualPrefab: {fileID: 6676697382297134408, guid: 518ea889b31df4833986116b4e3d636d,
+    type: 3}
+  m_RuntimeHandleLayerMask:
+    serializedVersion: 2
+    m_Bits: 256
+  m_PointerClick:
+    m_UseReference: 0
+    m_Action:
+      m_Name: Pointer Click
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 5b6083ec-bba9-4cdf-ad54-b8314705228b
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings:
+      - m_Name: 
+        m_Id: b8d7f8ef-3eb8-4f88-8d83-563f3cd22dba
+        m_Path: <Pointer>/press
+        m_Interactions: Tap
+        m_Processors: 
+        m_Groups: 
+        m_Action: Pointer Click
+        m_Flags: 0
+      m_Flags: 0
+    m_Reference: {fileID: 0}
+  m_PointerPress:
+    m_UseReference: 0
+    m_Action:
+      m_Name: Pointer Press
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: cb5f0c34-16ca-43ac-b953-a426230ef4c2
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings:
+      - m_Name: 
+        m_Id: d0386264-99c8-4d09-a402-4b84fb581b81
+        m_Path: <Pointer>/press
+        m_Interactions: Press(behavior=2)
+        m_Processors: 
+        m_Groups: 
+        m_Action: Pointer Press
+        m_Flags: 0
+      m_Flags: 0
+    m_Reference: {fileID: 0}
+  m_PointerMove:
+    m_UseReference: 0
+    m_Action:
+      m_Name: Pointer Move
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 01c1c599-a11b-4743-a640-4be053a5e3e7
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings:
+      - m_Name: 
+        m_Id: 6e47109b-d272-4ff9-8898-3829820c8178
+        m_Path: <Pointer>/position
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Pointer Move
+        m_Flags: 0
+      m_Flags: 0
+    m_Reference: {fileID: 0}
+--- !u!114 &3135567596734324703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2661276955741297022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6553205362c5644e68195d823352559a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Industry.Viewer.Streaming.CrossSection::Unity.Industry.Viewer.Streaming.CrossSection.SectionCutToolUIController
+  m_toolUIAsset: {fileID: 9197481963319205126, guid: 61811d5e970ad4566b440901d9e524b7,
+    type: 3}

@@ -1,0 +1,32 @@
+.appui-button.appui-button--quiet:hover {
+    background-color: rgba(0, 0, 0, 0);
+    border-color: rgba(0, 0, 0, 0);
+}
+
+.unity-base-slider .unity-base-slider__dragger.unity-base-slider--movable {
+    background-color: #DCDCDC;
+}
+
+.unity-scroller .unity-base-slider__input:focus:enabled .unity-base-slider__dragger {
+    background-color: #DCDCDC;
+}
+
+.unity-scroller unity-base-slider__input:focus:enabled unity-base-slider__dragger {
+    background-color: #DCDCDC;
+}
+
+.unity-scroller .unity-base-slider__dragger:hover:enabled {
+    background-color: #DCDCDC;
+}
+
+.unity-base-slider__dragger:hover:enabled {
+    background-color: #DCDCDC;
+}
+
+.unity-scroller unity-base-slider__input:focus:enabled .unity-base-slider__dragger:hover:enabled {
+    background-color: #DCDCDC;
+}
+
+.unity-base-slider__dragger.unity-base-slider--movable:hover:enabled {
+    background-color: #DCDCDC;
+}

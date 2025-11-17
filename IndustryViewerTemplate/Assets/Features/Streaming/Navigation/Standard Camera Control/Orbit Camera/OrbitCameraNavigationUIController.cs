@@ -1,10 +1,9 @@
-using UnityEngine;
 using Unity.AppUI.UI;
-using UnityEngine.UIElements;
-using Unity.Industry.Viewer.Streaming;
-using System.Linq;
 using Unity.Industry.Viewer.AppSettings;
 using Unity.Industry.Viewer.Assets;
+using Unity.Industry.Viewer.Streaming;
+using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Unity.Industry.Viewer.Navigation.OrbitCamera
 {
@@ -96,18 +95,6 @@ namespace Unity.Industry.Viewer.Navigation.OrbitCamera
             m_OrbitSensitivitySlider.SetValueWithoutNotify(m_CameraInputSystemController.OrbitSensitivity);
             m_PanSensitivitySlider.SetValueWithoutNotify(m_CameraInputSystemController.PanSensitivity);
             m_ZoomSensitivitySlider.SetValueWithoutNotify(m_CameraInputSystemController.ZoomSensitivity);
-        }
-
-        public override void CreatePanel()
-        {
-            
-        }
-
-        protected override void ChangeCameraTitle(VisualTreeAsset titleTemplate)
-        {
-            var titleText = m_Title.Q<Text>("Title");
-            titleText.ClearBinding("text");
-            titleText.SetBinding("text", m_OrbitCameraNavigationController.NavigationName);
         }
 
         private void OnZoomSensitivityChanged(ChangeEvent<float> evt)

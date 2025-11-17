@@ -30,8 +30,8 @@ MonoBehaviour:
     m_Localized: "R\xE9initialiser la position"
     m_Metadata:
       m_Items: []
-  - m_Id: 42677741605085184
-    m_Localized: Chargement
+  - m_Id: 115508050741207040
+    m_Localized: "R\xE9initialiser toute Visibilit\xE9"
     m_Metadata:
       m_Items: []
   references:

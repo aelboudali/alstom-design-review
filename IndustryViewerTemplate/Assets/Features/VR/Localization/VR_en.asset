@@ -21,7 +21,25 @@ MonoBehaviour:
   - m_Id: 376479670272
     m_Localized: VR Fly Mode
     m_Metadata:
+      m_Items:
+      - rid: 8052603973692555614
+  - m_Id: 95971741896007680
+    m_Localized: Passthrough
+    m_Metadata:
+      m_Items:
+      - rid: 8052603973692555615
+  - m_Id: 119196761623355392
+    m_Localized: Press Trigger or finger pinch to place the asset
+    m_Metadata:
       m_Items: []
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 8052603973692555614
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is simple text
+    - rid: 8052603973692555615
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is passthrough camera feature

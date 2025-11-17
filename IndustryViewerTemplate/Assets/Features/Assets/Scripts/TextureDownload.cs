@@ -16,14 +16,13 @@ namespace Unity.Industry.Viewer.Assets
     // The script also handles invoking callbacks once the texture download is complete.
     public static class TextureDownload
     {
-        private static Action<Texture> _actionCallBack;
-        
         static readonly int k_TimeoutDelay = 10000;
 
         private class TextureDownloadEntry
         {
             public bool IsDownloading;
             public Texture2D Texture2D;
+            public string versionId;
             public string Url;
             public readonly List<Action<Texture2D>> Listeners = new();
         }
@@ -38,10 +37,20 @@ namespace Unity.Industry.Viewer.Assets
         public static async Task DownloadThumbnail(IAsset asset, Action<Texture2D> actionCallBack)
         {
             var downloadKey = asset.Descriptor.AssetId.GetHashCode();
+            var versionId = asset.Descriptor.AssetVersion.ToString();
             Uri url = null;
+            bool updateUrl = false;
             if (s_TextureCache.TryGetValue(downloadKey, out var entry))
             {
-                url = new Uri(entry.Url);
+                if (entry.versionId != versionId)
+                {
+                    url = await asset.GetPreviewUrlAsync(CancellationToken.None);
+                    updateUrl = true;
+                }
+                else
+                {
+                    url = new Uri(entry.Url);
+                }
             }
             else
             {
@@ -54,17 +63,23 @@ namespace Unity.Industry.Viewer.Assets
                 }
             }
 
-            _ = Download(downloadKey, url.ToString(), actionCallBack);
+            if (updateUrl)
+            {
+                s_TextureCache.Remove(downloadKey);
+            }
+
+            _ = Download(downloadKey, versionId, url.ToString(), actionCallBack);
         }
 
-        static async Task Download(int key, string url, Action<Texture2D> actionCallBack)
+        static async Task Download(int key, string versionId, string url, Action<Texture2D> actionCallBack)
         {
             if(!s_TextureCache.TryGetValue(key, out var entry))
             {
                 entry = new TextureDownloadEntry
                 {
                     IsDownloading = true,
-                    Url = url
+                    Url = url,
+                    versionId = versionId
                 };
                 
                 lock (entry.Listeners)
@@ -136,7 +151,7 @@ namespace Unity.Industry.Viewer.Assets
             }
         }
 
-        public static Task DownloadThumbnail(int assetId, string url, Action<Texture2D> actionCallBack)
+        public static Task DownloadThumbnail(int assetId, string versionId, string url, Action<Texture2D> actionCallBack)
         {
             var key = assetId;
             var sb = new StringBuilder(url);
@@ -153,7 +168,7 @@ namespace Unity.Industry.Viewer.Assets
             #endif
             url = sb.ToString();
             
-            _ = Download(key, url, actionCallBack);
+            _ = Download(key, versionId, url, actionCallBack);
             return Task.CompletedTask;
         }
     }

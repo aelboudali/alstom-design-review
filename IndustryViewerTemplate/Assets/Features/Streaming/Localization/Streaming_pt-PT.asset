@@ -20,69 +20,41 @@ MonoBehaviour:
     - rid: 7555826617756942443
   m_TableData:
   - m_Id: 2543798181888
-    m_Localized: Remover recurso do disco local
+    m_Localized: Remover ativo da unidade local
     m_Metadata:
       m_Items: []
   - m_Id: 2720789422080
-    m_Localized: "Tem certeza? Essa a\xE7\xE3o \xE9 irreversivel"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 2966592413696
-    m_Localized: Remover
+    m_Localized: "Tem certeza? Observe que esta a\xE7\xE3o \xE9 irrevers\xEDvel."
     m_Metadata:
       m_Items: []
   - m_Id: 3004496338944
-    m_Localized: Recurso removido.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 3080430018560
-    m_Localized: Cancelar
+    m_Localized: Ativo removido.
     m_Metadata:
       m_Items: []
   - m_Id: 3629921591296
-    m_Localized: Baixar recurso ao disco local
+    m_Localized: Baixar o ativo para a unidade local
     m_Metadata:
       m_Items: []
   - m_Id: 3705742024704
-    m_Localized: Tem certeza? Observe que o download pode demorar algum tempo devido
+    m_Localized: Tem certeza? Observe que o download pode demorar um pouco devido
       ao tamanho do arquivo.
     m_Metadata:
       m_Items: []
-  - m_Id: 3862307004416
-    m_Localized: Baixar
-    m_Metadata:
-      m_Items: []
   - m_Id: 3894355681280
-    m_Localized: Baixando recurso...
+    m_Localized: Baixando ativo...
     m_Metadata:
       m_Items: []
   - m_Id: 4142910136320
-    m_Localized: "O download de {name} recurso foi conclu\xEDdo..."
+    m_Localized: "Conclu\xEDdo o download do recurso {name}"
     m_Metadata:
       m_Items:
       - rid: 7555826617756942443
-  - m_Id: 4789797642240
-    m_Localized: Layout de carga
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5427377987584
-    m_Localized: Stream
-    m_Metadata:
-      m_Items: []
   - m_Id: 5709449125888
-    m_Localized: Escolha seus dados
+    m_Localized: "Modo de transmiss\xE3o"
     m_Metadata:
       m_Items: []
   - m_Id: 5795449135104
-    m_Localized: Que fonte de dados gostarias de utilizar?
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5858598576128
-    m_Localized: Nuvem
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5890873745408
-    m_Localized: Local
+    m_Localized: "Por favor, selecione o m\xE9todo de transmiss\xE3o preferido."
     m_Metadata:
       m_Items: []
   - m_Id: 268399107104768
@@ -95,8 +67,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 268399140659201
-    m_Localized: "Uma nova vers\xE3o deste recurso est\xE1 disponivel. Gostarias
-      de trocar pela nova vers\xE3o?"
+    m_Localized: "Uma nova vers\xE3o do recurso est\xE1 dispon\xEDvel. Deseja migrar
+      para a nova vers\xE3o?"
     m_Metadata:
       m_Items: []
   - m_Id: 268399140659202
@@ -104,7 +76,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 268399140659203
-    m_Localized: Dispensar
+    m_Localized: Liberar
     m_Metadata:
       m_Items: []
   - m_Id: 268399140659204
@@ -115,16 +87,12 @@ MonoBehaviour:
     m_Localized: Tem certeza de que deseja sair da cena de streaming?
     m_Metadata:
       m_Items: []
-  - m_Id: 268399140659206
-    m_Localized: "Sa\xEDda"
-    m_Metadata:
-      m_Items: []
   - m_Id: 271402836942848
-    m_Localized: "Nova vers\xE3o dispon\xEDvel"
+    m_Localized: "Nova vers\xE3o dispon\xEDvel!"
     m_Metadata:
       m_Items: []
   - m_Id: 15579884532260864
-    m_Localized: Malha de fios
+    m_Localized: Estrutura de arame
     m_Metadata:
       m_Items: []
   - m_Id: 21644036333887488
@@ -132,8 +100,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 21644036354859008
-    m_Localized: "Voc\xEA deseja preservar os ativos referenciados? Esta a\xE7\xE3o
-      \xE9 irrevers\xEDvel."
+    m_Localized: "Deseja preservar os ativos referenciados? Esta a\xE7\xE3o \xE9
+      irrevers\xEDvel."
     m_Metadata:
       m_Items: []
   - m_Id: 21710844147523584
@@ -142,38 +110,18 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 22092926879260672
-    m_Localized: "Ativo referenciado - {name} possui uma vers\xE3o local {localVersion}
+    m_Localized: "Recurso referenciado - {name} tem uma vers\xE3o local {localVersion}
       armazenada no dispositivo. Mas o layout requer a vers\xE3o {requiredVersion}.
-      Quer continuar usando a vers\xE3o local?"
+      Deseja continuar usando a vers\xE3o local?"
     m_Metadata:
       m_Items:
       - rid: 7555826617756942443
-  - m_Id: 40828184860549120
-    m_Localized: Link
-    m_Metadata:
-      m_Items: []
-  - m_Id: 40831164800294912
-    m_Localized: Descarregar
-    m_Metadata:
-      m_Items: []
   - m_Id: 40835830153994240
     m_Localized: Pronto para streaming local
     m_Metadata:
       m_Items: []
   - m_Id: 40835830153994241
-    m_Localized: "Atualiza\xE7\xE3o dispon\xEDvel"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 40835830153994242
-    m_Localized: Atualizar
-    m_Metadata:
-      m_Items: []
-  - m_Id: 40847564071755776
-    m_Localized: "Iniciar a transmiss\xE3o?"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 40847564071755777
-    m_Localized: Clique para iniciar o streaming 3D.
+    m_Localized: "Atualiza\xE7\xE3o dispon\xEDvel para streaming local"
     m_Metadata:
       m_Items: []
   - m_Id: 1428897652736
@@ -188,16 +136,12 @@ MonoBehaviour:
     m_Localized: "Cole\xE7\xE3o"
     m_Metadata:
       m_Items: []
-  - m_Id: 3471058132994
-    m_Localized: Salvar
-    m_Metadata:
-      m_Items: []
   - m_Id: 3862327975936
     m_Localized: Nome
     m_Metadata:
       m_Items: []
   - m_Id: 40851833860644864
-    m_Localized: "N\xE3o foi poss\xEDvel carregar um recurso devido \xE0 permiss\xE3o"
+    m_Localized: "N\xE3o \xE9 poss\xEDvel carregar um ativo devido \xE0 permiss\xE3o"
     m_Metadata:
       m_Items: []
   - m_Id: 40851833860644865
@@ -205,11 +149,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 40851833860644866
-    m_Localized: Salvar seu layout 3D no Asset Manager
-    m_Metadata:
-      m_Items: []
-  - m_Id: 40851833860644867
-    m_Localized: Selecione
+    m_Localized: Salve seu layout 3D no Gerenciador de Ativos
     m_Metadata:
       m_Items: []
   - m_Id: 40857613896769536
@@ -217,10 +157,6 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7555826617756942443
-  - m_Id: 42308461222944768
-    m_Localized: Carregando
-    m_Metadata:
-      m_Items: []
   - m_Id: 44808540777340928
     m_Localized: "Voc\xEA n\xE3o tem permiss\xE3o de grava\xE7\xE3o."
     m_Metadata:
@@ -230,7 +166,33 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 47728520850300928
-    m_Localized: "Link copiado para a \xE1rea de transfer\xEAncia"
+    m_Localized: "Liga\xE7\xE3o copiada para a \xE1rea de transfer\xEAncia"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 113671218895249408
+    m_Localized: "<b>N\xE3o h\xE1 arquivos baixados para streaming local</b>\n\n<size=70%>Fa\xE7a
+      o download online antes de continuar</size>"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 118748446100283392
+    m_Localized: Ferramenta
+    m_Metadata:
+      m_Items: []
+  - m_Id: 123180386542936064
+    m_Localized: "Selecione aqui a sua organiza\xE7\xE3o."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 123892356694925312
+    m_Localized: "O recurso n\xE3o possui um conjunto de dados que possa ser transmitido
+      por streaming."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 124618061661593600
+    m_Localized: "P\xF3s-processamento de renderiza\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 124621959373774848
+    m_Localized: "Renderiza\xE7\xE3o"
     m_Metadata:
       m_Items: []
   references:

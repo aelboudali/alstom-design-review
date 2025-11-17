@@ -21,23 +21,48 @@ MonoBehaviour:
   - m_Id: 1804204157
     m_Localized: Walk Camera
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937045952496621
   - m_Id: 29980151459840
     m_Localized: Move Sensitivity
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937045952496622
   - m_Id: 29980151459841
     m_Localized: Rotation Sensitivity
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937045952496623
   - m_Id: 754539096907776
     m_Localized: Camera Height
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937045952496624
   - m_Id: 13492953057058816
     m_Localized: Joystick Controls
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937045952496625
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 8258937045952496621
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is header in settings for camera mode
+    - rid: 8258937045952496622
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: 'This is background text on slider in settings '
+    - rid: 8258937045952496623
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: 'This is background text on slider in settings '
+    - rid: 8258937045952496624
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: 'This is background text on slider in settings '
+    - rid: 8258937045952496625
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is text for switcher(toggle) in settings

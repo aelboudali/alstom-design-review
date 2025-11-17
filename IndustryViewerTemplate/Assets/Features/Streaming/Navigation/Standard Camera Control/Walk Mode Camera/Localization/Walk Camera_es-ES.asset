@@ -23,11 +23,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 29980151459840
-    m_Localized: Sensibilidad de movimiento
+    m_Localized: Sensibilidad al movimiento
     m_Metadata:
       m_Items: []
   - m_Id: 29980151459841
-    m_Localized: "Sensibilidad de rotaci\xF3n"
+    m_Localized: "Sensibilidad a la rotaci\xF3n"
     m_Metadata:
       m_Items: []
   - m_Id: 754539096907776
@@ -35,7 +35,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 13492953057058816
-    m_Localized: Controles de palanca de mando
+    m_Localized: Controles de joystick
     m_Metadata:
       m_Items: []
   references:

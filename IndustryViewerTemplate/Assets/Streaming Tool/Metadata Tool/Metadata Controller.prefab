@@ -60,6 +60,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_toolUIAsset: {fileID: 9197481963319205126, guid: 1f246b892ade4be408990d7f6b7102df,
     type: 3}
+  m_MetadataPanelStyleSheet: {fileID: 7433441132597879392, guid: 269921b81238a4461a38736b76dbf41b,
+    type: 3}
   m_NoMetadataFoundLocalizedString:
     m_TableReference:
       m_TableCollectionName: GUID:6efcd4a9cb0e446d2a317f1da935b0ba

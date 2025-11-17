@@ -161,6 +161,7 @@ namespace Unity.Industry.Viewer.Navigation.WalkModeCamera
 
         private void LateUpdate()
         {
+            if(m_PauseCameraControl) return;
             var finalPosition = transform.position;
             if (m_CharacterController != null)
             {

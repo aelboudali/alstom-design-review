@@ -22,6 +22,14 @@ MonoBehaviour:
     m_Localized: VR-vliegmodus
     m_Metadata:
       m_Items: []
+  - m_Id: 95971741896007680
+    m_Localized: Doorkijkmodus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119196761623355392
+    m_Localized: Druk op de trigger of knijp met uw vinger om het object te plaatsen
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

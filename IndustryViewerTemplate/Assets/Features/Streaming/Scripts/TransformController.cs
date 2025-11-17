@@ -43,11 +43,21 @@ namespace Unity.Industry.Viewer.Streaming
                 var oldController = Instance;
                 transform.SetPositionAndRotation(oldController.transform.position, oldController.transform.rotation);
                 transform.localScale = oldController.transform.localScale;
-                StreamingModel[] models = oldController.GetComponentsInChildren<StreamingModel>(true);
-                foreach (var child in models)
+
+                while (oldController.transform.childCount > 0)
                 {
-                    if(!child.gameObject.CompareTag(StreamingUtils.StreamModelTag)) continue;
-                    AddModelToTransform(child.gameObject, child.ModelStream.Transform);
+                    var child = oldController.transform.GetChild(0);
+                    if (child.gameObject.CompareTag(StreamingUtils.StreamModelTag))
+                    {
+                        if (child.gameObject.TryGetComponent(out StreamingModel childModel))
+                        {
+                            AddModelToTransform(child.gameObject, childModel.ModelStream.Transform);
+                        }
+                    }
+                    else
+                    {
+                        child.SetParent(transform, false);
+                    }
                 }
                 Instance = this;
                 Destroy(oldController.gameObject);

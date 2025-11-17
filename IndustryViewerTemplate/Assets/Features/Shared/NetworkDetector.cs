@@ -44,9 +44,13 @@ namespace Unity.Industry.Viewer.Shared
 
 #if UNITY_EDITOR
         [SerializeField] private bool m_SimulateOffLine = false;
+        private bool _lastSimulateOffline;
 #endif
         private void Awake()
         {
+#if UNITY_EDITOR
+            _lastSimulateOffline = m_SimulateOffLine;
+#endif
             _instance = this;
         }
 
@@ -111,5 +115,17 @@ namespace Unity.Industry.Viewer.Shared
                 }
             }
         }
+        
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if(!Application.isPlaying) return;
+            if (_lastSimulateOffline != m_SimulateOffLine)
+            {
+                _lastSimulateOffline = m_SimulateOffLine;
+                OnNetworkStatusChanged?.Invoke(!m_SimulateOffLine);
+            }
+        }
+#endif
     }
 }

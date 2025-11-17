@@ -16,7 +16,7 @@
                     <UnityEngine.Localization.LocalizedString property="text" table="GUID:0f0e26e2fcb43452a837fa831753065b" entry="Id(3862327975936)" />
                 </Bindings>
             </Unity.AppUI.UI.Text>
-            <Unity.AppUI.UI.TextField size="L" name="LayoutAssetNameTextfield" style="height: 100%; width: 100px; flex-shrink: 1; flex-grow: 1;" />
+            <Unity.AppUI.UI.TextField size="L" name="LayoutAssetNameTextfield" max-length="256" style="height: 100%; width: 100px; flex-shrink: 1; flex-grow: 1;" />
         </engine:VisualElement>
         <engine:VisualElement style="flex-grow: 1; flex-direction: row; align-items: center; justify-content: space-between; height: 40px; max-height: 40px; margin-bottom: 18px;">
             <Unity.AppUI.UI.Text style="height: 100%; width: 106px;">
@@ -24,11 +24,7 @@
                     <UnityEngine.Localization.LocalizedString property="text" table="GUID:0f0e26e2fcb43452a837fa831753065b" entry="Id(1428897652736)" />
                 </Bindings>
             </Unity.AppUI.UI.Text>
-            <Unity.AppUI.UI.Dropdown size="L" name="OrganizationDropdown" style="height: 100%; flex-shrink: 1; flex-grow: 1;">
-                <Bindings>
-                    <UnityEngine.Localization.LocalizedString property="defaultMessage" table="GUID:0f0e26e2fcb43452a837fa831753065b" entry="Id(40851833860644867)" />
-                </Bindings>
-            </Unity.AppUI.UI.Dropdown>
+            <Unity.AppUI.UI.Dropdown size="L" name="OrganizationDropdown" default-message="@Shared:Select" style="height: 100%; flex-shrink: 1; flex-grow: 1;" />
         </engine:VisualElement>
         <engine:VisualElement style="flex-grow: 1; flex-direction: row; align-items: center; justify-content: space-between; height: 40px; max-height: 40px; margin-bottom: 18px;">
             <Unity.AppUI.UI.Text style="height: 100%; width: 106px;">
@@ -36,11 +32,7 @@
                     <UnityEngine.Localization.LocalizedString property="text" table="GUID:0f0e26e2fcb43452a837fa831753065b" entry="Id(1428897652737)" />
                 </Bindings>
             </Unity.AppUI.UI.Text>
-            <Unity.AppUI.UI.Dropdown size="L" name="ProjectDropdown" style="height: 100%; margin-top: 12px; flex-shrink: 1; flex-grow: 1;">
-                <Bindings>
-                    <UnityEngine.Localization.LocalizedString property="defaultMessage" table="GUID:0f0e26e2fcb43452a837fa831753065b" entry="Id(40851833860644867)" />
-                </Bindings>
-            </Unity.AppUI.UI.Dropdown>
+            <Unity.AppUI.UI.Dropdown size="L" name="ProjectDropdown" default-message="@Shared:Select" style="height: 100%; margin-top: 12px; flex-shrink: 1; flex-grow: 1;" />
         </engine:VisualElement>
         <engine:VisualElement style="flex-grow: 1; flex-direction: row; align-items: center; justify-content: space-between; height: 40px; max-height: 40px; margin-bottom: 18px;">
             <Unity.AppUI.UI.Text style="height: 100%; width: 106px;">
@@ -48,21 +40,17 @@
                     <UnityEngine.Localization.LocalizedString property="text" table="GUID:0f0e26e2fcb43452a837fa831753065b" entry="Id(1428897652738)" />
                 </Bindings>
             </Unity.AppUI.UI.Text>
-            <Unity.AppUI.UI.Dropdown size="L" name="CollectionDropdown" style="height: 100%; margin-top: 12px; flex-shrink: 1; flex-grow: 1;">
-                <Bindings>
-                    <UnityEngine.Localization.LocalizedString property="defaultMessage" table="GUID:0f0e26e2fcb43452a837fa831753065b" entry="Id(40851833860644867)" />
-                </Bindings>
-            </Unity.AppUI.UI.Dropdown>
+            <Unity.AppUI.UI.Dropdown size="L" name="CollectionDropdown" default-message="@Shared:Select" style="height: 100%; margin-top: 12px; flex-shrink: 1; flex-grow: 1;" />
         </engine:VisualElement>
         <engine:VisualElement style="flex-grow: 0; align-items: flex-end; justify-content: flex-start; flex-direction: row-reverse; height: 30px;">
             <Unity.AppUI.UI.ActionButton selected="true" accent="true" label="Save" name="SaveLayoutButton" icon="upload" style="height: 30px; margin-left: 20px;">
                 <Bindings>
-                    <UnityEngine.Localization.LocalizedString property="label" table="GUID:0f0e26e2fcb43452a837fa831753065b" entry="Id(3471058132994)" />
+                    <UnityEngine.Localization.LocalizedString property="label" table="GUID:2a6c1c34211344e798bb376d8fa80190" entry="Id(53019533107212)" />
                 </Bindings>
             </Unity.AppUI.UI.ActionButton>
             <Unity.AppUI.UI.ActionButton selected="false" accent="false" label="Cancel" name="CancelButton" style="height: 30px;">
                 <Bindings>
-                    <UnityEngine.Localization.LocalizedString property="label" table="GUID:0f0e26e2fcb43452a837fa831753065b" entry="Id(3080430018560)" />
+                    <UnityEngine.Localization.LocalizedString property="label" table="GUID:2a6c1c34211344e798bb376d8fa80190" entry="Id(53019499552768)" />
                 </Bindings>
             </Unity.AppUI.UI.ActionButton>
         </engine:VisualElement>

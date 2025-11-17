@@ -31,7 +31,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 482419400706
-    m_Localized: "Ausgangslautst\xE4rke"
+    m_Localized: Ausgabevolumen
     m_Metadata:
       m_Items: []
   - m_Id: 482419400707
@@ -39,7 +39,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 482419400708
-    m_Localized: Stummschaltung aufheben
+    m_Localized: Stummschalten
     m_Metadata:
       m_Items: []
   references:

@@ -19,7 +19,7 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 482415206400
-    m_Localized: Dispositivo di ingresso
+    m_Localized: Dispositivo di input
     m_Metadata:
       m_Items: []
   - m_Id: 482419400704
@@ -27,7 +27,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 482419400705
-    m_Localized: Dispositivo di uscita
+    m_Localized: Dispositivo di output
     m_Metadata:
       m_Items: []
   - m_Id: 482419400706
@@ -35,11 +35,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 482419400707
-    m_Localized: Disattiva audio
+    m_Localized: Muto
     m_Metadata:
       m_Items: []
   - m_Id: 482419400708
-    m_Localized: Riattiva audio
+    m_Localized: Disattiva audio
     m_Metadata:
       m_Items: []
   references:

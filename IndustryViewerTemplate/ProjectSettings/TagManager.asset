@@ -5,18 +5,22 @@ TagManager:
   serializedVersion: 3
   tags:
   - Model
+  - Left Hand Tracker
+  - Right Hand Tracker
+  - VR-UI
+  - VR-RightHandTeleport Interactor
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Environment
   - Water
   - UI
   - ARPlane
   - OverlayUI
   - RuntimeTransformHandle
   - VRControllers
-  - 
+  - ARMesh
   - 
   - 
   - 

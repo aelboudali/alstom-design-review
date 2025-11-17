@@ -30,8 +30,8 @@ MonoBehaviour:
     m_Localized: Ripristina posizione
     m_Metadata:
       m_Items: []
-  - m_Id: 42677741605085184
-    m_Localized: Caricamento
+  - m_Id: 115508050741207040
+    m_Localized: "Reimposta tutta la Visibilit\xE0"
     m_Metadata:
       m_Items: []
   references:

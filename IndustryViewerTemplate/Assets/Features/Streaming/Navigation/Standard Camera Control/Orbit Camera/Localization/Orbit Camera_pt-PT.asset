@@ -19,19 +19,19 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 12604054429696
-    m_Localized: "C\xE2mera orbital"
+    m_Localized: "C\xE2mera Orbit"
     m_Metadata:
       m_Items: []
   - m_Id: 12455156637696
-    m_Localized: "Sensibilidade de \xD3rbita"
+    m_Localized: "Sensibilidade de \xF3rbita"
     m_Metadata:
       m_Items: []
   - m_Id: 12455160832000
-    m_Localized: Sensibilidade de giro
+    m_Localized: Sensibilidade Pan
     m_Metadata:
       m_Items: []
   - m_Id: 12455160832001
-    m_Localized: Sensibilidade de zoom
+    m_Localized: Sensibilidade do Zoom
     m_Metadata:
       m_Items: []
   references:

@@ -1,31 +1,41 @@
 using Unity.AppUI.UI;
-using Unity.Industry.Viewer.AppSettings;
+using Unity.Industry.Viewer.Shared;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.UIElements;
-using static System.Collections.Specialized.BitVector32;
 
 namespace Unity.Industry.Viewer.Streaming
 {
     [DefaultExecutionOrder(101)]
     public abstract class NavigationOptionUI : MonoBehaviour
     {
+        [SerializeField]
+        private Texture2D navigationIcon;
         public Texture2D NavigationIcon => navigationIcon;
 
         [SerializeField]
-        protected Texture2D navigationIcon;
+        private LocalizedString navigationName;
+        public LocalizedString NavigationName => navigationName;
+
+        [SerializeField]
+        protected VisualTreeAsset navigationOptionUIAsset;
+        public VisualTreeAsset NavigationOptionUIAsset => navigationOptionUIAsset;
 
         protected VisualElement m_SettingsPanel;
         protected VisualElement m_Title;
 
-        public VisualTreeAsset NavigationOptionUIAsset => navigationOptionUIAsset;
-
-        [SerializeField]
-        protected VisualTreeAsset navigationOptionUIAsset;
-
         protected abstract void InitialUI(VisualElement panel);
 
-        public abstract void CreatePanel();
+        public virtual void CreatePanel()
+        {
+            // Do nothing by default
+        }
+
+        protected virtual void ChangeCameraTitle(VisualTreeAsset titleTemplate)
+        {
+            var titleText = m_Title.Q<Text>("Title");
+            titleText.text = navigationName.GetTitleLocalizedStringForAppUI();
+        }
 
         protected void SettingsPanelUp(VisualElement settingsWindow, VisualTreeAsset titleTemplate)
         {
@@ -38,8 +48,5 @@ namespace Unity.Industry.Viewer.Streaming
             m_Title.Q<VisualElement>("Content").Add(m_CameraSettings);
             InitialUI(m_CameraSettings);
         }
-
-        protected virtual void ChangeCameraTitle(VisualTreeAsset titleTemplate)
-        { }
     }
 }

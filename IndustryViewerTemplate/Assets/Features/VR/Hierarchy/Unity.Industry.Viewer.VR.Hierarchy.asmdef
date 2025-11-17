@@ -1,0 +1,20 @@
+{
+    "name": "Unity.Industry.Viewer.VR.Hierarchy",
+    "rootNamespace": "",
+    "references": [
+        "GUID:2f101f87087d58f4ba92ca00188e763d",
+        "GUID:5ce5a8cebbe6bdb4eb890164dc9b8f64",
+        "GUID:99dd42aa5d1431f49bc323220378000e",
+        "GUID:7652355c4d73b47e78a66a1e0890152f",
+        "GUID:c5a5b73654d2d422383b51fb8dfbb105"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

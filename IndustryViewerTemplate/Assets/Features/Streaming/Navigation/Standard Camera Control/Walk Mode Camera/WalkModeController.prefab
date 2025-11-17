@@ -161,8 +161,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _camera: {fileID: 0}
   m_ClampVerticalRotation: 1
-  m_MinimumX: -90
-  m_MaximumX: 90
+  m_MinimumX: -85
+  m_MaximumX: 85
   m_Smooth: 1
   m_SmoothTime: 5
   m_LockCursor: 1
@@ -179,21 +179,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c18df4e013b1cc40b0a347314bc4430, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  navigationName:
-    m_TableReference:
-      m_TableCollectionName: GUID:3bf1a8307fe86b8418904feee1cddd02
-    m_TableEntryReference:
-      m_KeyId: 1804204157
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
   navigationCamera: {fileID: 0}
   navigationOptionUIComponent: {fileID: 4352762533182393798}
   cameraController: {fileID: 4451487896038914834}
-  references:
-    version: 2
-    RefIds: []
+  walkModeCameraController: {fileID: 3455216703056824975}
 --- !u!114 &4352762533182393798
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -207,14 +196,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   navigationIcon: {fileID: 2800000, guid: 5163dd911972c3043aa9a636425fd13a, type: 3}
+  navigationName:
+    m_TableReference:
+      m_TableCollectionName: GUID:3bf1a8307fe86b8418904feee1cddd02
+    m_TableEntryReference:
+      m_KeyId: 1804204157
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   navigationOptionUIAsset: {fileID: 9197481963319205126, guid: 14a981c3b7ee6444ca263f11cfbb7c45,
     type: 3}
-  m_WalkCameraNavigationController: {fileID: 8238130249653941019}
-  m_CameraInputSystemController: {fileID: 4451487896038914834}
   m_UIDocument: {fileID: 0}
+  leftStickEnabled: 1
   initialLeftStickMultiplier: 1
   invertLeftStickYAxis: 1
   invertLeftStickXAxis: 0
+  rightStickEnabled: 1
   initialRightStickMultiplier: 2
   invertRightStickYAxis: 0
   invertRightStickXAxis: 0
+  m_WalkCameraNavigationController: {fileID: 8238130249653941019}
+  m_CameraInputSystemController: {fileID: 4451487896038914834}
+  references:
+    version: 2
+    RefIds: []

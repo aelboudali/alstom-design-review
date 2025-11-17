@@ -23,15 +23,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5998956765184
-    m_Localized: Geen metagegevens gevonden
-    m_Metadata:
-      m_Items: []
-  - m_Id: 19319819894513664
-    m_Localized: Zoekopdracht
+    m_Localized: Geen metadata gevonden
     m_Metadata:
       m_Items: []
   - m_Id: 42351695571705856
-    m_Localized: Offlinemodus wordt niet ondersteund
+    m_Localized: Offline-modus wordt niet ondersteund
     m_Metadata:
       m_Items: []
   - m_Id: 42379094405406720

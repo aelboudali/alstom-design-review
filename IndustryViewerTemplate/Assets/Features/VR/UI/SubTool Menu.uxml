@@ -1,0 +1,6 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Features/VR/UI/SubToolMenuStyle.uss?fileID=7433441132597879392&amp;guid=b98db52ed2f604531b6bde9193a35889&amp;type=3#SubToolMenuStyle" />
+    <ui:VisualElement name="root-panel" picking-mode="Ignore" style="align-content: flex-start; background-color: rgba(0, 0, 0, 0); transform-origin: bottom; flex-grow: 0; flex-direction: column-reverse; justify-content: center; display: none;">
+        <ui:VisualElement name="MenuPanel" style="background-color: rgba(27, 27, 27, 0.85); border-top-left-radius: 36px; border-top-right-radius: 36px; border-bottom-right-radius: 36px; border-bottom-left-radius: 36px; padding-top: 16px; padding-right: 6px; padding-bottom: 16px; padding-left: 6px; flex-direction: row; justify-content: flex-start; align-items: center; min-height: 72px; max-height: 72px;" />
+    </ui:VisualElement>
+</ui:UXML>

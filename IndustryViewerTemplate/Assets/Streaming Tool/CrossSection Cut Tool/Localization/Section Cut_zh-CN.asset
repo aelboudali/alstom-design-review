@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Section Cut_zh-CN
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: zh-CN
+  m_SharedData: {fileID: 11400000, guid: 88f5d7360291544fd8b69234e98f8fa3, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 8400134144
+    m_Localized: "\u5256\u9762\u5207\u5272"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2586893165256704
+    m_Localized: "\u79FB\u52A8"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2586893173645312
+    m_Localized: "\u65CB\u8F6C"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2586893173645313
+    m_Localized: "\u89C4\u6A21"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2586893173645314
+    m_Localized: "\u53CD\u8F6C\u5207\u5272"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2586893173645315
+    m_Localized: "\u663E\u793A Gizmo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2586893173645316
+    m_Localized: "\u90E8\u5206\u6846\u89C6\u89C9"
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

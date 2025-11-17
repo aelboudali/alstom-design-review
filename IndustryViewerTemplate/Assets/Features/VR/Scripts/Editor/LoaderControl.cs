@@ -2,19 +2,21 @@ using UnityEditor;
 using UnityEngine;
 using System;
 using System.Linq;
-using Unity.XR.Oculus;
+//Enable this if want to use Oculus Loader
+//using Unity.XR.Oculus;
 using UnityEngine.XR.Management;
 using UnityEditor.XR.Management;
 using UnityEditor.XR.Management.Metadata;
 using UnityEngine.XR.ARCore;
 using UnityEngine.XR.OpenXR;
 
-namespace Unity.Industry.Viewer.Navigation.VR.Editor
+namespace Unity.Industry.Viewer.VR.Editor
 {
     public static class LoaderControl
     {
         const string k_ARCoreLoader = "ARCoreLoader";
-        const string k_OculusLoader = "OculusLoader";
+        //Enable this if want to use Oculus Loader
+        //const string k_OculusLoader = "OculusLoader";
         const string k_OpenXRLoader = "OpenXRLoader";
 
         static void GetXRManagerSettings(BuildTarget buildTarget, out BuildTargetGroup buildTargetGroup, out XRManagerSettings manager)
@@ -54,9 +56,10 @@ namespace Unity.Industry.Viewer.Navigation.VR.Editor
                     loaderName = k_ARCoreLoader;
                     break;
                 
-                case not null when loaderType == typeof(OculusLoader):
+                //Enable this if want to use Oculus Loader
+                /*case not null when loaderType == typeof(OculusLoader):
                     loaderName = k_OculusLoader;
-                    break;
+                    break;*/
                 
                 case not null when loaderType == typeof(OpenXRLoader):
                     loaderName = k_OpenXRLoader;
@@ -84,9 +87,10 @@ namespace Unity.Industry.Viewer.Navigation.VR.Editor
                     loaderName = k_ARCoreLoader;
                     break;
                 
-                case not null when loaderType == typeof(OculusLoader):
+                //Enable this if want to use Oculus Loader
+                /*case not null when loaderType == typeof(OculusLoader):
                     loaderName = k_OculusLoader;
-                    break;
+                    break;*/
                 
                 case not null when loaderType == typeof(OpenXRLoader):
                     loaderName = k_OpenXRLoader;

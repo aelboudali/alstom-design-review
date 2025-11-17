@@ -57,12 +57,24 @@ MonoBehaviour:
     - Locale-nl-NL
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 371ceba2d73bd4747a8786d3f1912156
+    m_Address: MeasureTool_nl-NL
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-nl-NL
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4105ced82cb9d40088f4bd515b22e58b
     m_Address: InAppSettings_nl-NL
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-nl-NL
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 47ba48da6c0d241188db8dba26da0b9d
+    m_Address: Section Cut_nl-NL
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-nl-NL
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 49b8a5aeaaf0240b083b1a5f63efcb0d
     m_Address: Fly Camera_nl-NL
@@ -78,8 +90,20 @@ MonoBehaviour:
     - Locale-nl-NL
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5d5dbd3e1c57a4b438989ec5d0fd5faf
+    m_Address: UI_nl-NL
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-nl-NL
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 753c3d968aa8d444ca20bdd9fb5427c3
     m_Address: Walk Camera_nl-NL
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-nl-NL
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 79ffee4038a224806947a5428697e3f9
+    m_Address: Collaboration_nl-NL
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-nl-NL
@@ -98,6 +122,12 @@ MonoBehaviour:
     - Locale-nl-NL
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 899c64d98d7e2498ea1bea6f411a6cbd
+    m_Address: Shared_nl-NL
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-nl-NL
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 917ed5ce423214d85b3574500d2b7b1e
     m_Address: Identity_nl-NL
     m_ReadOnly: 1
@@ -105,12 +135,24 @@ MonoBehaviour:
     - Locale-nl-NL
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a3b7f46994e265243826e5ed99c767ed
+    m_Address: Deep Linking_nl-NL
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-nl-NL
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: cb8985459b5164218899dbd1197a75e7
     m_Address: Multiplay_nl-NL
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-nl-NL
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dc0a3b96ce80a474a87f409b5866d62d
+    m_Address: Environment Tool_nl-NL
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-nl-NL
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: bf5713deec68845209684f81a71bb85a, type: 2}

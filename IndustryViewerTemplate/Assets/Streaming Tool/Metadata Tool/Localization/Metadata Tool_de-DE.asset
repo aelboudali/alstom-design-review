@@ -26,10 +26,6 @@ MonoBehaviour:
     m_Localized: Keine Metadaten gefunden
     m_Metadata:
       m_Items: []
-  - m_Id: 19319819894513664
-    m_Localized: Suchen
-    m_Metadata:
-      m_Items: []
   - m_Id: 42351695571705856
     m_Localized: "Der Offline-Modus wird nicht unterst\xFCtzt"
     m_Metadata:

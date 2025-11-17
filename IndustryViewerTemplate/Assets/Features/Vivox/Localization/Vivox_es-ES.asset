@@ -39,7 +39,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 482419400708
-    m_Localized: Dejar de silenciar
+    m_Localized: Activar el silencio
     m_Metadata:
       m_Items: []
   references:

@@ -162,7 +162,7 @@
                     "id": "e12b4368-51b3-487e-98f8-d08de03e2448",
                     "path": "OneModifier(overrideModifiersNeedToBePressedFirst=true)",
                     "interactions": "",
-                    "processors": "InvertVector2(invertX=false)",
+                    "processors": "InvertVector2(invertX=false),ScaleVector2(x=0.2,y=0.2)",
                     "groups": "",
                     "action": "Rotation",
                     "isComposite": true,

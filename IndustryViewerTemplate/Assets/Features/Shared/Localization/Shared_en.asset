@@ -1,0 +1,229 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Shared_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 2a6c1c34211344e798bb376d8fa80190, type: 2}
+  m_Metadata:
+    m_Items:
+    - rid: 8258937041623712612
+  m_TableData:
+  - m_Id: 53019499552768
+    m_Localized: Cancel
+    m_Metadata:
+      m_Items:
+      - rid: 535153508054205198
+  - m_Id: 53019528912896
+    m_Localized: Search
+    m_Metadata:
+      m_Items:
+      - rid: 535153508054205199
+  - m_Id: 53019528912898
+    m_Localized: Download
+    m_Metadata:
+      m_Items:
+      - rid: 535153508054205200
+  - m_Id: 53019528912899
+    m_Localized: Offload
+    m_Metadata:
+      m_Items:
+      - rid: 535153508054205201
+  - m_Id: 53019533107200
+    m_Localized: Remove
+    m_Metadata:
+      m_Items:
+      - rid: 535153508054205202
+  - m_Id: 53019533107201
+    m_Localized: Stream
+    m_Metadata:
+      m_Items:
+      - rid: 535153508054205203
+  - m_Id: 53019533107202
+    m_Localized: Load Layout
+    m_Metadata:
+      m_Items:
+      - rid: 535153508054205204
+  - m_Id: 53019533107203
+    m_Localized: Cloud
+    m_Metadata:
+      m_Items:
+      - rid: 535153508054205205
+  - m_Id: 53019533107204
+    m_Localized: Local
+    m_Metadata:
+      m_Items:
+      - rid: 535153508054205206
+  - m_Id: 53019533107205
+    m_Localized: Version
+    m_Metadata:
+      m_Items:
+      - rid: 535153508054205207
+  - m_Id: 53019533107206
+    m_Localized: Loading
+    m_Metadata:
+      m_Items:
+      - rid: 535153508054205208
+  - m_Id: 54834492334080
+    m_Localized: Update
+    m_Metadata:
+      m_Items:
+      - rid: 535153508054205209
+  - m_Id: 53019533107208
+    m_Localized: OK
+    m_Metadata:
+      m_Items:
+      - rid: 535153508054205210
+  - m_Id: 53019533107209
+    m_Localized: Exit
+    m_Metadata:
+      m_Items:
+      - rid: 535153508054205211
+  - m_Id: 53019533107212
+    m_Localized: Save
+    m_Metadata:
+      m_Items:
+      - rid: 535153508054205212
+  - m_Id: 53948906987520
+    m_Localized: Version {num}
+    m_Metadata:
+      m_Items:
+      - rid: 8258937041623712612
+      - rid: 535153508054205213
+  - m_Id: 40851833860644867
+    m_Localized: Select
+    m_Metadata:
+      m_Items:
+      - rid: 535153508054205214
+  - m_Id: 27292174277140480
+    m_Localized: Link
+    m_Metadata:
+      m_Items:
+      - rid: 535153508054205215
+  - m_Id: 27292174281334784
+    m_Localized: Delete
+    m_Metadata:
+      m_Items:
+      - rid: 535153508054205216
+  - m_Id: 30929080184512512
+    m_Localized: Upload
+    m_Metadata:
+      m_Items:
+      - rid: 535153508054205217
+  - m_Id: 31232716568518656
+    m_Localized: Reset
+    m_Metadata:
+      m_Items:
+      - rid: 535153508054205218
+  - m_Id: 40974582780256256
+    m_Localized: You are logged out
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40974582784450560
+    m_Localized: Please exit this scene and login from there
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 535153508054205198
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is button for cancelling action
+    - rid: 535153508054205199
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: 'This is background text in search bar '
+    - rid: 535153508054205200
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is button for downloading assets/layouts
+    - rid: 535153508054205201
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is button for  deleting assets/layouts
+    - rid: 535153508054205202
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is button for  deleting assets/layouts
+    - rid: 535153508054205203
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is button for streaming assets
+    - rid: 535153508054205204
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is button for streaming layout
+    - rid: 535153508054205205
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is button for streaming from Cloud
+    - rid: 535153508054205206
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is button for streaming from local space
+    - rid: 535153508054205207
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is text for version dropdown
+    - rid: 535153508054205208
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is text for loading indicator
+    - rid: 535153508054205209
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is button in toast UI when old version of the asset is
+          downloaded in details view
+    - rid: 535153508054205210
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is button for accepting action
+    - rid: 535153508054205211
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is button for exiting from the streaming scene
+    - rid: 535153508054205212
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is button for saving
+    - rid: 535153508054205213
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is dropdown value of the version in Details view
+    - rid: 535153508054205214
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is background text for dropdown in Save pop-up
+    - rid: 535153508054205215
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is button for copying link to buffer
+    - rid: 535153508054205216
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: For delete button
+    - rid: 535153508054205217
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Button for upload asset
+    - rid: 535153508054205218
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Reset Button for example
+    - rid: 8258937041623712612
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 53948906987520

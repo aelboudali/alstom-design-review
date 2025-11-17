@@ -19,7 +19,16 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 376479670272
-    m_Localized: VR-lentotila
+    m_Localized: VR Fly Mode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 95971741896007680
+    m_Localized: "L\xE4pivienti"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119196761623355392
+    m_Localized: "Tryck p\xE5 avtryckaren eller nyp med fingret f\xF6r att placera
+      tillg\xE5ngen"
     m_Metadata:
       m_Items: []
   references:

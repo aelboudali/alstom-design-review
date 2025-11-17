@@ -6,7 +6,6 @@ using UnityEngine.UIElements;
 using Unity.AppUI.UI;
 using UnityEngine.Localization;
 using TextField = Unity.AppUI.UI.TextField;
-using Unity.Industry.Viewer.Assets;
 using Unity.Industry.Viewer.Shared;
 
 namespace Unity.Industry.Viewer.Streaming.Metadata
@@ -15,9 +14,13 @@ namespace Unity.Industry.Viewer.Streaming.Metadata
     {
         private const string k_MetadataScrollViewName = "MetadataScrollView";
         private const string k_SearchFieldName = "SearchField";
+        private const string k_SelectedClass = "Selected";
         
         private ScrollView m_MetadataScrollView;
         private TextField m_SearchField;
+        
+        [SerializeField]
+        private StyleSheet m_MetadataPanelStyleSheet;
         
         [SerializeField]
         private LocalizedString m_NoMetadataFoundLocalizedString;
@@ -44,6 +47,13 @@ namespace Unity.Industry.Viewer.Streaming.Metadata
                 m_Controller.ToolOpened -= OnToolOpened;
                 m_Controller.ToolClosed -= OnToolClosed;
             }
+            if (m_PanelDocument != null)
+            {
+                if (m_PanelDocument.rootVisualElement.styleSheets.Contains(m_MetadataPanelStyleSheet))
+                {
+                    m_PanelDocument.rootVisualElement.styleSheets.Remove(m_MetadataPanelStyleSheet);
+                }
+            }
             MetadataToolController.OfflineAssetSelected -= OnOfflineAssetSelected;
             MetadataToolController.MetadataFound -= OnMetadataFound;
             NetworkDetector.OnNetworkStatusChanged -= OnNetworkStatusChanged;
@@ -63,16 +73,20 @@ namespace Unity.Industry.Viewer.Streaming.Metadata
         private void OnOfflineMode()
         {
             CleanPanel();
-            var text = new Text();
-            text.SetBinding("text", m_OfflineModeNotSupportedLocalizedString);
+            var text = new Text
+            {
+                text = m_OfflineModeNotSupportedLocalizedString.GetTitleLocalizedStringForAppUI()
+            };
             m_MetadataScrollView.Add(text);
         }
 
         private void OnOfflineAssetSelected()
         {
             CleanPanel();
-            var text = new Text();
-            text.SetBinding("text", m_OfflineAssetNotSupportedLocalizedString);
+            var text = new Text
+            {
+                text = m_OfflineAssetNotSupportedLocalizedString.GetTitleLocalizedStringForAppUI()
+            };
             m_MetadataScrollView.Add(text);
         }
 
@@ -83,15 +97,20 @@ namespace Unity.Industry.Viewer.Streaming.Metadata
             m_MetadataScrollView?.Clear();
         }
 
-        public override void InitializeUI(VisualElement parent, GameObject controller)
+        public override void InitializeUI(UIDocument uiDocument, VisualElement parent, GameObject controller)
         {
-            var UIDocument = SharedUIManager.Instance.AssetsUIDocument;
-            if (UIDocument == null) return;
+            m_PanelDocument = uiDocument;
+            if (m_PanelDocument == null) return;
             
             if (controller.TryGetComponent(out m_Controller))
             {
                 m_Controller.ToolOpened += OnToolOpened;
                 m_Controller.ToolClosed += OnToolClosed;
+            }
+            
+            if (!m_PanelDocument.rootVisualElement.styleSheets.Contains(m_MetadataPanelStyleSheet))
+            {
+                m_PanelDocument.rootVisualElement.styleSheets.Add(m_MetadataPanelStyleSheet);
             }
             
             m_MetadataScrollView = parent.Q<ScrollView>(k_MetadataScrollViewName);
@@ -137,8 +156,10 @@ namespace Unity.Industry.Viewer.Streaming.Metadata
                 return;
             }
             
-            var text = new Text();
-            text.SetBinding("text", m_NoMetadataFoundLocalizedString);
+            var text = new Text
+            {
+                text = m_NoMetadataFoundLocalizedString.GetTitleLocalizedStringForAppUI()
+            };
             m_MetadataScrollView.Add(text);
         }
         
@@ -192,32 +213,14 @@ namespace Unity.Industry.Viewer.Streaming.Metadata
         
         private void GetMetadataObjectContent(string key, IMetadataValue value, VisualElement parent)
         {
-            var newMetadataContainer = new VisualElement
-            {
-                style =
-                {
-                    paddingBottom = new Length(10f, LengthUnit.Pixel)
-                }
-            };
+            var newMetadataContainer = new VisualElement();
+            newMetadataContainer.AddToClassList("MetadataEntry");
+            newMetadataContainer.RegisterCallback<ClickEvent>(OnMetadataEntryClicked);
 
-            var newKeyText = new Text($"{key}")
-            {
-                size = TextSize.L,
-                style =
-                {
-                    paddingBottom = new Length(5f, LengthUnit.Pixel),
-                    unityTextOutlineWidth = new StyleFloat(1f),
-                    unityTextOutlineColor = new StyleColor(Color.white),
-                    color = Color.white
-                }
-            };
-            var newValueText = new Text(value.ToString())
-            {
-                style =
-                {
-                    color = Color.white
-                }
-            };
+            var newKeyText = new Text($"{key}");
+            newKeyText.AddToClassList("MetadataKey");
+            var newValueText = new Text(value.ToString());
+            newValueText.AddToClassList("MetadataValue");
             newMetadataContainer.Add(newKeyText);
             newMetadataContainer.Add(newValueText);
 
@@ -228,6 +231,30 @@ namespace Unity.Industry.Viewer.Streaming.Metadata
             else
             {
                 parent.Add(newMetadataContainer);
+            }
+        }
+
+        private void OnMetadataEntryClicked(ClickEvent evt)
+        {
+            var allSelected = m_MetadataScrollView.Query(className: k_SelectedClass).ToList();;
+            foreach (var selected in allSelected)
+            {
+                selected.RemoveFromClassList(k_SelectedClass);
+            }
+            
+            var target = evt.currentTarget as VisualElement;
+            if (target == null)
+            {
+                return;
+            }
+            var isSelected = target.ClassListContains(k_SelectedClass);
+            if (isSelected)
+            {
+                target.RemoveFromClassList(k_SelectedClass);
+            }
+            else
+            {
+                target.AddToClassList(k_SelectedClass);
             }
         }
 
@@ -247,7 +274,7 @@ namespace Unity.Industry.Viewer.Streaming.Metadata
 
         public override void UninitializeUI()
         {
-            m_MetadataScrollView.Clear();
+            m_MetadataScrollView?.Clear();
             m_SearchField?.UnregisterValueChangedCallback(OnSearchFieldChanged);
             m_SearchField?.UnregisterValueChangingCallback(OnSearchFieldChanging);
         }

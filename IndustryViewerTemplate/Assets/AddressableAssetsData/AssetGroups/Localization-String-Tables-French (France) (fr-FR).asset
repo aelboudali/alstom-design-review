@@ -35,6 +35,18 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-fr-FR
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3b06381cb2cd9428493dce06f0be226e
+    m_Address: Section Cut_fr-FR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-fr-FR
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 407c2458677db2f41b6353385d7a73cf
+    m_Address: MeasureTool_fr-FR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-fr-FR
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 49a2a4cd46f3448a1a089799559eeb43
     m_Address: InAppSettings_fr-FR
     m_ReadOnly: 1
@@ -48,6 +60,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-fr-FR
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 51898f94cfcf4f445894d4848e93f1ef
+    m_Address: Environment Tool_fr-FR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-fr-FR
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6d27a2a0d6af74ede8b95e447a365379
     m_Address: Vivox_fr-FR
@@ -63,6 +81,12 @@ MonoBehaviour:
     - Locale-fr-FR
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8618686d0a8ad4a308732cd5f84a6ddd
+    m_Address: Collaboration_fr-FR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-fr-FR
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 949e756eed8d1473e8ffe4f7fabc9808
     m_Address: Orbit Camera_fr-FR
     m_ReadOnly: 1
@@ -76,6 +100,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-fr-FR
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a03a9705afbdc4ff6a6b413e69b080f3
+    m_Address: UI_fr-FR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-fr-FR
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a61cf7d16049b41a6a3ad836a33c25a5
     m_Address: Streaming_fr-FR
@@ -111,6 +141,18 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-fr-FR
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f5c97d136a280d946bc22b660ec13b58
+    m_Address: Deep Linking_fr-FR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-fr-FR
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f98e8c9c223c544749652602b76ab50e
+    m_Address: Shared_fr-FR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-fr-FR
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: bf5713deec68845209684f81a71bb85a, type: 2}

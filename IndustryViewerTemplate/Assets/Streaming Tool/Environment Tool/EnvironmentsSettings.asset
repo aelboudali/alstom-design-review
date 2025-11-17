@@ -1,0 +1,103 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a608469ad6c726b41b88a2a37525537b, type: 3}
+  m_Name: EnvironmentsSettings
+  m_EditorClassIdentifier: 
+  Scenes:
+  - id: default
+    Scene:
+      sceneAsset: {fileID: 0}
+      SceneName: 
+    DisplayName:
+      m_TableReference:
+        m_TableCollectionName: GUID:703df3e59d021674c90153354615d3d6
+      m_TableEntryReference:
+        m_KeyId: 327779180650496
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    Thumbnail: {fileID: 2800000, guid: dce71ff426d07074bbac3ec33687c1f6, type: 3}
+    MaxSizeX: 0
+    MaxSizeY: 0
+    MaxSizeZ: 0
+  - id: cad
+    Scene:
+      sceneAsset: {fileID: 102900000, guid: b5d5b2a34a05b3d4cadebd8b75d9fc05, type: 3}
+      SceneName: CAD
+    DisplayName:
+      m_TableReference:
+        m_TableCollectionName: GUID:703df3e59d021674c90153354615d3d6
+      m_TableEntryReference:
+        m_KeyId: 322245023014912
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    Thumbnail: {fileID: 2800000, guid: b00ac1b250ee57f4ea11156d9ef18bc4, type: 3}
+    MaxSizeX: 0
+    MaxSizeY: 0
+    MaxSizeZ: 0
+  - id: hangar
+    Scene:
+      sceneAsset: {fileID: 102900000, guid: 3da19286fb918ef4d85f4f14376a3911, type: 3}
+      SceneName: Hangar
+    DisplayName:
+      m_TableReference:
+        m_TableCollectionName: GUID:703df3e59d021674c90153354615d3d6
+      m_TableEntryReference:
+        m_KeyId: 322501349515264
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    Thumbnail: {fileID: 2800000, guid: babd40971476fd64f8078352e1c180db, type: 3}
+    MaxSizeX: 0
+    MaxSizeY: 0
+    MaxSizeZ: 0
+  - id: outdoor
+    Scene:
+      sceneAsset: {fileID: 102900000, guid: 5078fb58f61cc7149b1b2dc1c758b623, type: 3}
+      SceneName: Outdoor
+    DisplayName:
+      m_TableReference:
+        m_TableCollectionName: GUID:703df3e59d021674c90153354615d3d6
+      m_TableEntryReference:
+        m_KeyId: 322690957221888
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    Thumbnail: {fileID: 2800000, guid: 059cca7270f5f7b468e9efce2565c5ad, type: 3}
+    MaxSizeX: 0
+    MaxSizeY: 0
+    MaxSizeZ: 0
+  - id: studio
+    Scene:
+      sceneAsset: {fileID: 102900000, guid: 83d91d94550acfd489ac63604d6cc3c5, type: 3}
+      SceneName: Studio
+    DisplayName:
+      m_TableReference:
+        m_TableCollectionName: GUID:703df3e59d021674c90153354615d3d6
+      m_TableEntryReference:
+        m_KeyId: 323097712435200
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    Thumbnail: {fileID: 2800000, guid: b10f431cc56111846b152ed025474b06, type: 3}
+    MaxSizeX: 0
+    MaxSizeY: 0
+    MaxSizeZ: 0
+  references:
+    version: 2
+    RefIds: []

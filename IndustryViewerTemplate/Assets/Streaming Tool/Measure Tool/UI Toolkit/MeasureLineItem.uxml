@@ -1,0 +1,24 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:appui="Unity.AppUI.UI" editor-extension-mode="False">
+    <ui:VisualElement name="MeasureLineItem" class="container__line-list-item" style="flex-direction: row;">
+        <ui:VisualElement name="LineItemContainer" class="container__line-list-item-name" style="width: 310px; text-overflow: ellipsis; white-space: nowrap;">
+            <appui:Text name="LineItemName" text="Name" class="text__line-list-item-name" />
+        </ui:VisualElement>
+        <ui:VisualElement name="LineItemButtonContainer" class="container__line-list-item-button" style="flex-direction: row;">
+            <appui:ActionButton name="LineItemView" icon="eye" quiet="true" class="button__icon">
+                <Bindings>
+                    <UnityEngine.Localization.LocalizedString property="tooltip" table="GUID:8eb2735d8f73b4a4eac3389fed3a28cf" entry="Id(6510811243769856)" />
+                </Bindings>
+            </appui:ActionButton>
+            <appui:ActionButton name="LineItemEdit" icon="pen" quiet="true" class="button__icon">
+                <Bindings>
+                    <UnityEngine.Localization.LocalizedString property="tooltip" table="GUID:8eb2735d8f73b4a4eac3389fed3a28cf" entry="Id(664662128271360)" />
+                </Bindings>
+            </appui:ActionButton>
+            <appui:ActionButton name="LineItemDelete" icon="delete" quiet="true" class="button__icon">
+                <Bindings>
+                    <UnityEngine.Localization.LocalizedString property="tooltip" table="GUID:8eb2735d8f73b4a4eac3389fed3a28cf" entry="Id(1746492268544)" />
+                </Bindings>
+            </appui:ActionButton>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

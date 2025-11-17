@@ -1,0 +1,34 @@
+.mic {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    background-color: #444544;
+}
+
+.image__microphone-voice-level {
+    align-items: stretch;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    scale: 1 1;
+    transform-origin: center 67%;
+    background-image: url("../../../Vivox/UI/VoiceLevel.png");
+}
+
+.appui-icon--microphone {
+    width: 100%;
+    height: 100%;
+    --unity-image: url("../../../Vivox/UI/Microphone.png");
+    --unity-image-tint-color: rgb(255, 255, 255);
+}
+
+.appui-icon--microphone-slash {
+    width: 100%;
+    height: 100%;
+    --unity-image: url("../../../Vivox/UI/MicrophoneSlash.png");
+    --unity-image-tint-color: rgb(255, 255, 255);
+}
+
+.container__microphone{
+    align-items: center;
+}

@@ -26,16 +26,12 @@ MonoBehaviour:
     m_Localized: "Aucune m\xE9tadonn\xE9e trouv\xE9e"
     m_Metadata:
       m_Items: []
-  - m_Id: 19319819894513664
-    m_Localized: Recherche
-    m_Metadata:
-      m_Items: []
   - m_Id: 42351695571705856
     m_Localized: Le mode hors ligne n'est pas pris en charge
     m_Metadata:
       m_Items: []
   - m_Id: 42379094405406720
-    m_Localized: "Le mod\xE8le de diffusion locale n'est pas pris en charge"
+    m_Localized: "Le mod\xE8le de streaming local n'est pas pris en charge"
     m_Metadata:
       m_Items: []
   references:

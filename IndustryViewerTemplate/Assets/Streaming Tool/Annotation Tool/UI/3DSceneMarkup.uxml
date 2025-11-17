@@ -1,0 +1,8 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Streaming%20Tool/Annotation%20Tool/UI/3DSceneMarkupStyle.uss?fileID=7433441132597879392&amp;guid=cb16fdd2d429f461ebda86b5c9bb87fe&amp;type=3#3DSceneMarkupStyle" />
+    <ui:VisualElement picking-mode="Ignore" style="flex-grow: 0; width: 150px; height: 150px; min-width: 150px; min-height: 150px; max-width: 150px; max-height: 150px; align-items: center;">
+        <ui:VisualElement class="BG" style="flex-grow: 0; width: 150px; height: 150px; border-top-left-radius: 75px; border-top-right-radius: 75px; border-bottom-right-radius: 75px; border-bottom-left-radius: 75px; align-items: center; justify-content: center; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px; background-color: rgb(113, 62, 179);">
+            <ui:VisualElement picking-mode="Ignore" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/Streaming%20Tool/Annotation%20Tool/UI/ChatCenteredText.png?fileID=2800000&amp;guid=bd0b06a86dc2143beae7f403c743f4b0&amp;type=3#ChatCenteredText&quot;); width: 100%; height: 100%;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

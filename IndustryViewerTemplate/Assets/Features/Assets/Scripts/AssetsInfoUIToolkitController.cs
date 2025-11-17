@@ -7,14 +7,13 @@ using System.Threading.Tasks;
 using Unity.AppUI.UI;
 using Unity.Cloud.Assets;
 using Unity.Cloud.Common;
-using UnityEngine;
-using UnityEngine.UIElements;
 using Unity.Cloud.Identity;
 using Unity.Industry.Viewer.Identity;
 using Unity.Industry.Viewer.Shared;
+using UnityEngine;
 using UnityEngine.Localization;
-using UnityEngine.Localization.SmartFormat.PersistentVariables;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 using Button = Unity.AppUI.UI.Button;
 
 namespace Unity.Industry.Viewer.Assets
@@ -32,36 +31,6 @@ namespace Unity.Industry.Viewer.Assets
         private const string k_DatasetParentName = "DatasetParent";
         private const string k_SelectAllCheckBoxName = "SelectAllCheckBox";
         
-        private static readonly string[] pixyzSupportedFormats = new string[]
-        {
-            ".catpart", ".catproduct", ".cgr", ".3dxml",
-            ".jt", ".prt", ".asm", ".sldprt",
-            ".sldasm", ".igs", ".iges", ".stp",
-            ".step", ".x_t", ".x_b", ".par",
-            ".psm", ".3ds", ".obj", ".stl",
-            ".ply", ".fbx", ".dae", ".wrl",
-            ".vrml", ".u3d", ".ifc", ".rvt",
-            ".dwg", ".dxf", ".e57", ".las",
-            ".laz", ".pts", ".ptx", ".xyz",
-            ".pxz", ".sat", ".sab", ".wire",
-            ".ipt", ".iam", ".nwd", ".nwc",
-            ".rfa", ".rcp", ".rcs", ".vpb",
-            ".model", ".session", ".catshape",
-            ".neu", ".xas", ".xpr", ".pvs",
-            ".pvz", ".csb", ".glb", ".gltf",
-            ".gds", ".p_t", ".wrl", ".vrml",
-            ".p_b", ".xmt", ".xmt_txt", ".xmt_bin",
-            ".pdf", ".plmxml", ".prc", ".3dm",
-            ".rvm", ".skp", ".pwd", ".stpz",
-            ".stepz", ".stpx", ".stpxz", ".usd",
-            ".usdz", ".usda", ".usdc", ".vda"
-        };
-        
-        private static readonly string[] defaultImageFormats = new string[]
-        {
-            ".png", ".jpg", ".jpeg", ".bmp", ".tiff", ".tif", ".gif"
-        };
-
         // UI elements
         private ActionButton m_DownloadAssetButton;
         public VisualElement UpdateVersionVE => m_UpdateVersionVE;
@@ -73,7 +42,7 @@ namespace Unity.Industry.Viewer.Assets
         private Checkbox m_SelectAllCheckBox;
 
         public Action UpdateVersionButtonAction;
-        
+
         // Constructor to initialize the UI and register event handlers
         public AssetsInfoUIToolkitController() : base()
         {
@@ -96,14 +65,14 @@ namespace Unity.Industry.Viewer.Assets
             AssetsController.AssetSelected -= AssetSelected;
             AssetsController.AssetSelected += AssetSelected;
             
-            AssetsController.AssetVersionsLoaded -= OnAssetVersionsLoaded;
-            AssetsController.AssetVersionsLoaded += OnAssetVersionsLoaded;
-            
             SharedUIManager.OrganizationSelected -= OnOrganizationSelected;
             SharedUIManager.OrganizationSelected += OnOrganizationSelected;
             
             SharedUIManager.AssetProjectSelected -= OnAssetProjectSelected;
             SharedUIManager.AssetProjectSelected += OnAssetProjectSelected;
+
+            SharedUIManager.AssetCollectionSelected -= OnAssetCollectionSelected;
+            SharedUIManager.AssetCollectionSelected += OnAssetCollectionSelected;
             
             AssetsController.AssetDeselected -= OnDeselectAsset;
             AssetsController.AssetDeselected += OnDeselectAsset;
@@ -146,11 +115,11 @@ namespace Unity.Industry.Viewer.Assets
         public override void UnregisterCallbacks()
         {
             AssetsController.AssetSelected -= AssetSelected;
-            AssetsController.AssetVersionsLoaded -= OnAssetVersionsLoaded;
             SharedUIManager.OrganizationSelected -= OnOrganizationSelected;
             AssetsController.AssetDeselected -= OnDeselectAsset;
             SharedUIManager.AssetProjectSelected -= OnAssetProjectSelected;
-            
+            SharedUIManager.AssetCollectionSelected -= OnAssetCollectionSelected;
+
             m_AssetVersionDropdown.bindTitle -= AssetVersionDropdownBindTitle;
             m_AssetVersionDropdown.bindItem -= AssetVersionDropdownBindItem;
             m_DownloadAssetButton.clicked -= OnDownloadAssetButtonPressed;
@@ -275,7 +244,8 @@ namespace Unity.Industry.Viewer.Assets
                         break;
                     case AssetStatus.Published:
                         break;
-                    case AssetStatus.Withdrawn:
+                    case AssetStatus.Withdrawn when newStatus == AssetStatus.Published:
+                        _ = UpdateAssetStatus(newStatus, true);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -307,6 +277,18 @@ namespace Unity.Industry.Viewer.Assets
                 var assetProject = await repository.GetAssetProjectAsync(SharedUIManager.SelectedAsset.Value.Asset.Descriptor.ProjectDescriptor, CancellationToken.None);
                 var latestVersion = await assetProject.GetAssetWithLatestVersionAsync(SharedUIManager.SelectedAsset.Value.Asset.Descriptor.AssetId, CancellationToken.None);
                 var property = await latestVersion.GetPropertiesAsync(CancellationToken.None);
+                
+                var sourceItems = SharedUIManager.Instance.AssetGridView.itemsSource as List<AssetInfo>;
+                var itemIndex = sourceItems.FindIndex(x => x.Asset.Descriptor == latestVersion.Descriptor);
+                if (itemIndex >= 0)
+                {
+                    (SharedUIManager.Instance.AssetGridView.itemsSource as List<AssetInfo>)[itemIndex] = new AssetInfo()
+                    {
+                        Asset = latestVersion,
+                        Properties = property
+                    };
+                }
+                
                 AssetsController.AssetSelected?.Invoke(new AssetInfo()
                 {
                     Asset = latestVersion,
@@ -348,6 +330,11 @@ namespace Unity.Industry.Viewer.Assets
             CloseInfoPanel();
         }
 
+        private void OnAssetCollectionSelected(IAssetCollection collection)
+        {
+            if (IsVisible()) CloseInfoPanel();
+        }
+
         // Handles organization selection
         private void OnOrganizationSelected(IOrganization arg1)
         {
@@ -379,13 +366,14 @@ namespace Unity.Industry.Viewer.Assets
         // Handles asset versions loading
         private void OnAssetVersionsLoaded(List<AssetInfo> assets)
         {
-            if(AssetsController.SelectedParentAsset.HasValue) return;
+            if (AssetsController.SelectedParentAsset.HasValue) return;
+
             m_AssetVersionDropdown.SetEnabled(assets.Count > 1);
             if (assets.Count == 0)
             {
-                m_AssetVersionDropdown.defaultMessage = string.Empty;
                 return;
             }
+
             m_AssetVersionDropdown.SetValueWithoutNotify(null);
             m_AssetVersionDropdown.userData = null;
             m_AssetVersionDropdown.sourceItems = null;
@@ -393,6 +381,8 @@ namespace Unity.Industry.Viewer.Assets
             m_AssetVersionDropdown.sourceItems = assets;
             m_AssetVersionDropdown.SetEnabled(true);
             m_AssetVersionDropdown.SetValueWithoutNotify(new [] {0});
+
+            RaiseAssetVersionsLoadedEvent(assets);
         }
 
         // Handles the download asset button press
@@ -436,7 +426,11 @@ namespace Unity.Industry.Viewer.Assets
         
         private void AssetVersionDropdownBindTitle(DropdownItem arg1, IEnumerable<int> arg2)
         {
-            if(arg2 == null || !arg2.Any()) return;
+            if (arg2 == null || !arg2.Any())
+            {
+                arg1.label = m_AssetVersionDropdown.defaultMessage;
+                return;
+            }
             AssetVersionDropdownBindItem(arg1, arg2.First());
         }
 
@@ -457,11 +451,17 @@ namespace Unity.Industry.Viewer.Assets
             if(!asset.Properties.HasValue) return;
             
             int verNum = asset.Properties.Value.FrozenSequenceNumber;
-            var localVersionLocalizedString = new LocalizedString(k_AssetLocalisedTable, k_VersionKey);
-            localVersionLocalizedString.Add("num", new IntVariable{ Value = verNum});
+            var localVersionLocalizedString = new LocalizedString(k_SharedLocalisedTable, k_VersionKey);
             
             var text = arg1.Q<LocalizedTextElement>();
-            text.SetBinding("text", localVersionLocalizedString);
+            text.text = localVersionLocalizedString.GetTitleLocalizedStringForAppUI();
+            text.variables = new object[]
+            {
+                new Dictionary<string, object>()
+                {
+                    { "num", verNum }
+                }
+            };
         }
 
         // Handles the close button press
@@ -480,22 +480,24 @@ namespace Unity.Industry.Viewer.Assets
         {
             if (!AssetsController.SelectedParentAsset.HasValue)
             {
-                m_AssetVersionDropdown.SetValueWithoutNotify(null);
+                m_AssetVersionDropdown.value = null;
                 m_AssetVersionDropdown.userData = null;
                 m_AssetVersionDropdown.sourceItems = null;
                 m_AssetVersionDropdown.SetEnabled(false);
             }
             
             base.AssetSelected(assetInfo);
-            m_UpdateVersionVE.style.display = DisplayStyle.None;
+            m_UpdateVersionVE.DisplayOff();
             m_UpdateVersionVE.ClearClassList();
+
+            if (!AssetsController.SelectedParentAsset.HasValue)
+            {
+                AssetsController.AssetVersionRequest?.Invoke(assetInfo.Asset, OnAssetVersionsLoaded);
+            }
+
+            if(SharedUIManager.Instance.AssetsContainer.resolvedStyle.display == DisplayStyle.None) return;
             if (SceneManager.GetActiveScene() == SharedUIManager.Instance.AssetsUIDocument.gameObject.scene)
             {
-                if (!AssetsController.SelectedParentAsset.HasValue)
-                {
-                    AssetsController.AssetVersionRequest?.Invoke(assetInfo.Asset);
-                }
-                if(SharedUIManager.Instance.AssetsRoot.resolvedStyle.display == DisplayStyle.None) return;
                 AssetsController.NewVersionAvailable += NewVersionAvailable;
             }
         }
@@ -504,11 +506,14 @@ namespace Unity.Industry.Viewer.Assets
         private void NewVersionAvailable(AssetInfo newVersion)
         {
             AssetsController.NewVersionAvailable -= NewVersionAvailable;
+
             ShowNewVersionVE();
         }
 
         public void ShowNewVersionVE()
         {
+            if(SceneManager.GetActiveScene() != SharedUIManager.Instance.AssetsUIDocument.gameObject.scene) return;
+
             m_UpdateVersionVE.style.display = DisplayStyle.Flex;
             var existingClasses = m_UpdateVersionVE.GetClasses().ToList();
             if (existingClasses.Count != 0) return;
@@ -518,11 +523,9 @@ namespace Unity.Industry.Viewer.Assets
             UpdateVersionButtonAction = UpdateVersion;
             m_UpdateVersionVE.Q<Icon>().iconName = "info";
             var text = m_UpdateVersionVE.Q<Text>();
-            text.ClearBinding("text");
-            text.SetBinding("text", SharedUIManager.Instance.NewVersionAvailable);
+            text.text = SharedUIManager.Instance.NewVersionAvailable.GetTitleLocalizedStringForAppUI();
             var reviewButton = m_UpdateVersionVE.Q<Button>();
-            reviewButton.ClearBinding("title");
-            reviewButton.SetBinding("title", SharedUIManager.Instance.ViewNewVersion);
+            reviewButton.title = SharedUIManager.Instance.ViewNewVersion.GetTitleLocalizedStringForAppUI();
         }
         
         // Updates to the latest version of the asset
@@ -599,7 +602,8 @@ namespace Unity.Industry.Viewer.Assets
         {
             base.UpdateAssetUI(assetInfo);
             m_AssetNameLabel.text = assetInfo.Properties.Value.Name;
-            m_AssetTypeLabel.SetBinding("text", assetInfo.Properties.Value.Type.GetAssetTypeAsString());
+            m_AssetTypeLabel.text =
+                assetInfo.Properties.Value.Type.GetAssetTypeAsString().GetTitleLocalizedStringForAppUI();
             AssignTags(assetInfo.Properties.Value.Tags.ToList());
             var fileTabs = m_Tabs.items[2];
             (fileTabs as TabItem)?.SetEnabled(true);
@@ -616,6 +620,8 @@ namespace Unity.Industry.Viewer.Assets
             UpdateAssetUpdateLabel(assetInfo.Properties.Value.AuthoringInfo.Updated);
             
             UpdateAssetCreationLabel(assetInfo.Properties.Value.AuthoringInfo.Created);
+
+            m_versionBox.text = $"Ver.{assetInfo.Properties.Value.FrozenSequenceNumber}";
             
             _ = GetAssetFilesInformation();
             
@@ -654,8 +660,8 @@ namespace Unity.Industry.Viewer.Assets
                     {
                         label = datasetProperty.Name,
                     };
+                    newDatasetButton.icon = "Down-Arrow";
                     newDatasetButton.AddToClassList("datasetTitle");
-                    newDatasetButton.AddToClassList(SharedUIManager.k_ActionButtonArrowClass);
                     newDatasetButton.AddToClassList(SharedUIManager.k_ProjectButtonCloseClass);
 
                     newDatasetButton.name = dataset.Descriptor.DatasetId.ToString();
@@ -705,10 +711,10 @@ namespace Unity.Industry.Viewer.Assets
                         
                         var fileExtension = Path.GetExtension(file.Descriptor.Path);
                         
-                        if(pixyzSupportedFormats.Contains(fileExtension))
+                        if(FileBrowser.IsSupportedStreamingFileExtension(fileExtension))
                         {
                             newFileCheckBox.AddToClassList("file-selection-model");
-                        } else if(defaultImageFormats.Contains(fileExtension))
+                        } else if(FileBrowser.IsDefaultImageFileExtension(fileExtension))
                         {
                             newFileCheckBox.AddToClassList("file-selection-pic");
                         }

@@ -8,7 +8,6 @@ using UnityEngine.UIElements;
 using UnityEngine.Localization.Settings;
 using UnityEngine.Localization;
 using Unity.Industry.Viewer.Shared;
-using UnityEngine.SceneManagement;
 using Toggle = Unity.AppUI.UI.Toggle;
 
 namespace Unity.Industry.Viewer.AppSettings
@@ -21,7 +20,7 @@ namespace Unity.Industry.Viewer.AppSettings
         
         private const string k_SettingsButton = "SettingsButton";
         private const string k_VersionLabel = "VersionLabel";
-        private const string k_RefreshRateSlider = "RefreshRateSlider";
+        protected const string k_RefreshRateSlider = "RefreshRateSlider";
         private const string k_FPSToggle = "FPSToggle";
         private const string k_FPSLabel = "FPSLabel";
         private const string k_LanguageDropdownName = "LanguageDropdown";
@@ -31,12 +30,12 @@ namespace Unity.Industry.Viewer.AppSettings
         [SerializeField] private UIDocument m_FPSUIDocument;
 
         [SerializeField]
-        private VisualTreeAsset settingPanel;
+        protected VisualTreeAsset settingPanel;
         
         [SerializeField]
-        private VisualTreeAsset m_SettingsUITitleTemplate;
+        protected VisualTreeAsset m_SettingsUITitleTemplate;
         
-        private IconButton m_SettingsButton;
+        protected IconButton SettingsButton;
         
         [SerializeField]
         private VisualTreeAsset m_GeneralSettingsTemplate;
@@ -58,14 +57,14 @@ namespace Unity.Industry.Viewer.AppSettings
         [SerializeField] private LocalizedString m_GeneralLocalizedString;
         [SerializeField] private LocalizedString m_FPSTextLocalizedString;
 
-        private void Start()
+        protected virtual void Start()
         {
             if (!m_UIDocument.rootVisualElement.styleSheets.Contains(m_StyleSheet))
             {
                 m_UIDocument.rootVisualElement.styleSheets.Add(m_StyleSheet);
             }
-            m_SettingsButton = m_UIDocument.rootVisualElement.Q<IconButton>(k_SettingsButton);
-            m_SettingsButton.clickable.clicked += OnSettingsButtonClicked;
+            SettingsButton = m_UIDocument.rootVisualElement.Q<IconButton>(k_SettingsButton);
+            SettingsButton.clickable.clicked += OnSettingsButtonClicked;
             SettingsPanelShow += OnSettingsPanelShow;
             m_FPSTextLocalizedString.StringChanged += FPSTextLocalizedStringOnStringChanged;
             Application.targetFrameRate = (int) Screen.currentResolution.refreshRateRatio.value;
@@ -73,19 +72,16 @@ namespace Unity.Industry.Viewer.AppSettings
 
         private void Update()
         {
-            
             if(!showFPS) return;
-            
-            
             deltaTime += (Time.unscaledDeltaTime - deltaTime) * 0.1f;
             currentFPS = 1.0f / deltaTime;
             m_FPSLabel.text = $"{m_FPSLocalizedString}: {currentFPS:0.}";
         }
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             m_FPSTextLocalizedString.StringChanged -= FPSTextLocalizedStringOnStringChanged;
-            m_SettingsButton.clickable.clicked -= OnSettingsButtonClicked;
+            SettingsButton.clickable.clicked -= OnSettingsButtonClicked;
             SettingsPanelShow -= OnSettingsPanelShow;
         }
 
@@ -101,21 +97,12 @@ namespace Unity.Industry.Viewer.AppSettings
 
             m_VersionLabel = generalSettings.Q<Text>(k_VersionLabel);
             m_VersionLabel.text = $"{Application.version}";
-            
-            m_RefreshRateSlider = generalSettings.Q<TouchSliderInt>(k_RefreshRateSlider);
-            m_RefreshRateSlider.highValue = (int)Screen.currentResolution.refreshRateRatio.value;
-            m_RefreshRateSlider.SetValueWithoutNotify(Application.targetFrameRate == -1 ? (int)Screen.currentResolution.refreshRateRatio.value : Application.targetFrameRate);
-            m_RefreshRateSlider.RegisterValueChangingCallback(OnRefreshRateChanging);
-            m_RefreshRateSlider.RegisterValueChangedCallback(OnRefreshRateChanged);
+
+            UpdateRefreshRateSlider(generalSettings);
             
             m_FPSToggle = generalSettings.Q<Checkbox>(k_FPSToggle);
             m_FPSToggle.SetValueWithoutNotify(showFPS ? CheckboxState.Checked : CheckboxState.Unchecked);
-            m_FPSToggle.RegisterValueChangedCallback(evt =>
-            {
-                showFPS = evt.newValue == CheckboxState.Checked;
-                m_FPSLabel ??= m_FPSUIDocument.rootVisualElement.Q<Text>(k_FPSLabel);
-                m_FPSLabel.style.display = showFPS ? DisplayStyle.Flex : DisplayStyle.None;
-            });
+            m_FPSToggle.RegisterValueChangedCallback(OnFPSToggleValueChanged);
             
             m_LanguageDropdown = generalSettings.Q<Dropdown>(k_LanguageDropdownName);
             m_LanguageDropdown.bindItem = LanguageDropdownBindItem;
@@ -152,6 +139,22 @@ namespace Unity.Industry.Viewer.AppSettings
             }
         }
         
+        protected virtual void UpdateRefreshRateSlider(VisualElement content)
+        {
+            m_RefreshRateSlider = content.Q<TouchSliderInt>(k_RefreshRateSlider);
+            m_RefreshRateSlider.highValue = (int)Screen.currentResolution.refreshRateRatio.value;
+            m_RefreshRateSlider.SetValueWithoutNotify(Application.targetFrameRate == -1 ? (int)Screen.currentResolution.refreshRateRatio.value : Application.targetFrameRate);
+            m_RefreshRateSlider.RegisterValueChangingCallback(OnRefreshRateChanging);
+            m_RefreshRateSlider.RegisterValueChangedCallback(OnRefreshRateChanged);
+        }
+
+        private void OnFPSToggleValueChanged(ChangeEvent<CheckboxState> evt)
+        {
+            showFPS = evt.newValue == CheckboxState.Checked;
+            m_FPSLabel ??= m_FPSUIDocument.rootVisualElement.Q<Text>(k_FPSLabel);
+            m_FPSLabel.style.display = showFPS ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+
         private void OnOfflineModeRequestValueChanged(ChangeEvent<bool> evt)
         {
             NetworkDetector.RequestedOfflineMode = evt.newValue;
@@ -162,15 +165,15 @@ namespace Unity.Industry.Viewer.AppSettings
             Application.targetFrameRate = evt.newValue;
         }
         
-        private void OnRefreshRateChanged(ChangeEvent<int> evt)
+        protected void OnRefreshRateChanged(ChangeEvent<int> evt)
         {
             Application.targetFrameRate = evt.newValue;
         }
 
-        private void OnSettingsButtonClicked()
+        protected virtual void OnSettingsButtonClicked()
         {
             var settingsPanelClone = settingPanel.Instantiate().Children().First();
-            var popover = Popover.Build(m_SettingsButton, settingsPanelClone).SetOutsideClickDismiss(true)
+            var popover = Popover.Build(SettingsButton, settingsPanelClone).SetOutsideClickDismiss(true)
                 .SetArrowVisible(false);
             
             popover.shown += PopoverOnShown;
@@ -199,8 +202,7 @@ namespace Unity.Industry.Viewer.AppSettings
         public static void InitializeSection(LocalizedString localizedString, ref VisualElement section, VisualElement content)
         {
             var titleText = section.Q<Text>("Title");
-            titleText.ClearBinding("text");
-            titleText.SetBinding("text", localizedString);
+            titleText.text = localizedString.GetTitleLocalizedStringForAppUI();
             section.Q<VisualElement>("Content").Add(content);
         }
     }

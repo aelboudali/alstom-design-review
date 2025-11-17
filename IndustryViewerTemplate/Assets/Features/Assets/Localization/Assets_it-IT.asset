@@ -16,23 +16,14 @@ MonoBehaviour:
     m_Code: it-IT
   m_SharedData: {fileID: 11400000, guid: e57257823a7964becb6eb06d6181f15a, type: 2}
   m_Metadata:
-    m_Items:
-    - rid: 7555826606608744552
+    m_Items: []
   m_TableData:
-  - m_Id: 20735582208
-    m_Localized: Cerca...
-    m_Metadata:
-      m_Items: []
   - m_Id: 3047743807488
     m_Localized: Nuova versione disponibile
     m_Metadata:
       m_Items: []
   - m_Id: 4032537026560
     m_Localized: Nome
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4496284442624
-    m_Localized: Versione
     m_Metadata:
       m_Items: []
   - m_Id: 4881900363776
@@ -59,30 +50,21 @@ MonoBehaviour:
     m_Localized: Creato da
     m_Metadata:
       m_Items: []
-  - m_Id: 7216613548032
-    m_Localized: Scaricamento
-    m_Metadata:
-      m_Items: []
-  - m_Id: 11727306481664
-    m_Localized: Versione {num}
-    m_Metadata:
-      m_Items:
-      - rid: 7555826606608744552
   - m_Id: 35648491741184
-    m_Localized: "\xC8 disconibile una nuova versione dell'asset. Vuoi passare alla
-      nuova versione?"
+    m_Localized: "\xC8 disponibile una nuova versione della risorsa. Vuoi passare
+      alla nuova versione?"
     m_Metadata:
       m_Items: []
   - m_Id: 35994052059136
-    m_Localized: Cambia
+    m_Localized: Interruttore
     m_Metadata:
       m_Items: []
   - m_Id: 36144556269568
-    m_Localized: Ignora
+    m_Localized: Congedare
     m_Metadata:
       m_Items: []
   - m_Id: 41819579604992
-    m_Localized: Seleziona Organizzazione
+    m_Localized: Seleziona organizzazione
     m_Metadata:
       m_Items: []
   - m_Id: 41959505780736
@@ -118,7 +100,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 83968589291520
-    m_Localized: Asset 2D
+    m_Localized: Risorsa 2D
     m_Metadata:
       m_Items: []
   - m_Id: 84109517905920
@@ -138,7 +120,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 84533826281472
-    m_Localized: Script
+    m_Localized: Sceneggiatura
     m_Metadata:
       m_Items: []
   - m_Id: 84673161060352
@@ -146,11 +128,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 84751309332480
-    m_Localized: Editor Unity
+    m_Localized: Unity Editor
     m_Metadata:
       m_Items: []
   - m_Id: 113148827787264
-    m_Localized: Caricamento Asset
+    m_Localized: Aggiungi Asset
     m_Metadata:
       m_Items: []
   - m_Id: 113743160664064
@@ -166,7 +148,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 114765505486848
-    m_Localized: Percorso file
+    m_Localized: Percorso del file
     m_Metadata:
       m_Items: []
   - m_Id: 115961192505344
@@ -177,24 +159,20 @@ MonoBehaviour:
     m_Localized: Rimuovi selezione
     m_Metadata:
       m_Items: []
-  - m_Id: 116427913682944
-    m_Localized: Caricamento asset
-    m_Metadata:
-      m_Items: []
-  - m_Id: 117455979536384
-    m_Localized: Carica asset
+  - m_Id: 103408215129104384
+    m_Localized: Creazione
     m_Metadata:
       m_Items: []
   - m_Id: 126885479571456
-    m_Localized: Asset creato
+    m_Localized: Risorsa creata
     m_Metadata:
       m_Items: []
   - m_Id: 129700784496640
-    m_Localized: Seleziona File
+    m_Localized: Seleziona file
     m_Metadata:
       m_Items: []
   - m_Id: 25800459972239360
-    m_Localized: Dimensione file
+    m_Localized: Dimensione del/i file
     m_Metadata:
       m_Items: []
   - m_Id: 25800460005793792
@@ -202,7 +180,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 25801326007934976
-    m_Localized: Tag
+    m_Localized: Etichette
     m_Metadata:
       m_Items: []
   - m_Id: 25802025936609280
@@ -233,12 +211,55 @@ MonoBehaviour:
     m_Localized: Revisione
     m_Metadata:
       m_Items: []
+  - m_Id: 98637747977232384
+    m_Localized: Stato
+    m_Metadata:
+      m_Items: []
+  - m_Id: 102582021617917952
+    m_Localized: '    Pronto per lo streaming di dati 3D'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 102589537559027712
+    m_Localized: Aggiungi Nuovo Asset
+    m_Metadata:
+      m_Items: []
+  - m_Id: 102911663331647488
+    m_Localized: "La creazione dell'asset non \xE8 riuscita"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 102916677815017472
+    m_Localized: "La risorsa apparir\xE0 dopo essere stata completamente caricata
+      e trasformata, il che potrebbe richiedere del tempo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103410122987970560
+    m_Localized: Caricamento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103437425314930688
+    m_Localized: Caricamento completato
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103438020864155648
+    m_Localized: Caricamento fallito
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103438847884435456
+    m_Localized: Trasformando
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103439357110689792
+    m_Localized: Trasformazione completata
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103439907755696128
+    m_Localized: Trasformazione fallita
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103803189238734848
+    m_Localized: "Il tipo di file non \xE8 supportato"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
-    RefIds:
-    - rid: 7555826606608744552
-      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
-      data:
-        m_Entries: 
-        m_SharedEntries:
-        - id: 11727306481664
+    RefIds: []

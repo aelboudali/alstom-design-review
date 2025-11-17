@@ -1,0 +1,10 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="root-panel" picking-mode="Ignore" style="align-content: flex-start; background-color: rgba(0, 0, 0, 0); transform-origin: bottom; flex-grow: 1; flex-direction: column-reverse;">
+        <Unity.Industry.Viewer.VR.XRRoundButton name="MenuTrigger" top-padding="20" class="main-menu" style="flex-grow: 0; height: 88px; border-top-left-radius: 44px; border-top-right-radius: 44px; border-bottom-right-radius: 44px; border-bottom-left-radius: 44px; width: 88px; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0;" />
+        <ui:VisualElement name="MenuPanel" style="background-color: rgba(27, 27, 27, 0.85); border-top-left-radius: 44px; border-top-right-radius: 44px; border-bottom-right-radius: 44px; border-bottom-left-radius: 44px; padding-top: 6px; padding-right: 6px; padding-bottom: 6px; padding-left: 6px; flex-direction: column-reverse; min-width: 88px;">
+            <ui:VisualElement name="BottomContainer" style="flex-grow: 0; flex-direction: column-reverse; justify-content: center; align-items: center;" />
+            <ui:VisualElement style="flex-grow: 0; border-top-color: rgb(255, 255, 255); margin-right: 10px; margin-left: 10px; height: 2px; background-color: rgb(255, 255, 255); margin-top: 30px; margin-bottom: 30px;" />
+            <ui:VisualElement name="TopContainer" style="flex-grow: 0; align-items: center; justify-content: center;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

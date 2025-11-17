@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4704d895b3cb8448fb27a262bdde1285, type: 3}
+  m_Name: Measure Tool
+  m_EditorClassIdentifier: Unity.Industry.Viewer.Streaming::Unity.Industry.Viewer.Streaming.StreamingToolAsset
+  toolName:
+    m_TableReference:
+      m_TableCollectionName: GUID:8eb2735d8f73b4a4eac3389fed3a28cf
+    m_TableEntryReference:
+      m_KeyId: 5386313474048
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  toolIcon: {fileID: 2800000, guid: 4135bab1183f42f449f1a8b3395a5121, type: 3}
+  toolPrefab: {fileID: 8978391603294358345, guid: 3796360851fa446df8cd2e694ff93acb,
+    type: 3}
+  sceneListener: {fileID: 4573482869683907101, guid: 1b4946bcd7e734e69a2ae272f88ef539,
+    type: 3}
+  resizablePanel: 0
+  references:
+    version: 2
+    RefIds: []

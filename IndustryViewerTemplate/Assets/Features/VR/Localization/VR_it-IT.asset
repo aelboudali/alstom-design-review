@@ -19,7 +19,16 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 376479670272
-    m_Localized: "Modalit\xE0 volo in VR"
+    m_Localized: "Modalit\xE0 volo VR"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 95971741896007680
+    m_Localized: Passthrough
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119196761623355392
+    m_Localized: Premere il grilletto o pizzicare con il dito per posizionare la
+      risorsa
     m_Metadata:
       m_Items: []
   references:

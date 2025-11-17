@@ -1,0 +1,25 @@
+{
+    "name": "Unity.Industry.Viewer.Streaming.CrossSection",
+    "rootNamespace": "Unity.Industry.Viewer.Streaming.CrossSection",
+    "references": [
+        "GUID:786a25291c56430c910c997c4a7e195b",
+        "GUID:7652355c4d73b47e78a66a1e0890152f",
+        "GUID:1a0fdbb751e584dc8b7a979eb83ba5ce",
+        "GUID:d8b63aba1907145bea998dd612889d6b",
+        "GUID:99dd42aa5d1431f49bc323220378000e",
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:2f101f87087d58f4ba92ca00188e763d",
+        "GUID:c5a5b73654d2d422383b51fb8dfbb105",
+        "GUID:38d1c5034be268d48a630c30f89cde1a",
+        "GUID:477e259429f454941bdb6d66e3c49a05"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

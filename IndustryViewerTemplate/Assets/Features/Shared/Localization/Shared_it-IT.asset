@@ -1,0 +1,123 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Shared_it-IT
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: it-IT
+  m_SharedData: {fileID: 11400000, guid: 2a6c1c34211344e798bb376d8fa80190, type: 2}
+  m_Metadata:
+    m_Items:
+    - rid: 8258937041623712619
+  m_TableData:
+  - m_Id: 53019499552768
+    m_Localized: Cancellare
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019528912896
+    m_Localized: Ricerca
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019528912898
+    m_Localized: Scaricamento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019528912899
+    m_Localized: Scaricare
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019533107200
+    m_Localized: Rimuovere
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019533107201
+    m_Localized: Flusso
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019533107202
+    m_Localized: Layout di carico
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019533107203
+    m_Localized: Nuvola
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019533107204
+    m_Localized: Locale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019533107205
+    m_Localized: Versione
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019533107206
+    m_Localized: Caricamento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 54834492334080
+    m_Localized: Aggiornamento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019533107208
+    m_Localized: OK
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019533107209
+    m_Localized: Uscita
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019533107212
+    m_Localized: Salva
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53948906987520
+    m_Localized: Versione {num}
+    m_Metadata:
+      m_Items:
+      - rid: 8258937041623712619
+  - m_Id: 40851833860644867
+    m_Localized: Selezionare
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27292174277140480
+    m_Localized: Collegamento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27292174281334784
+    m_Localized: Eliminare
+    m_Metadata:
+      m_Items: []
+  - m_Id: 30929080184512512
+    m_Localized: Carica
+    m_Metadata:
+      m_Items: []
+  - m_Id: 31232716568518656
+    m_Localized: Reset
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40974582780256256
+    m_Localized: Hai effettuato il logout
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40974582784450560
+    m_Localized: "Per favore, esci da questa scena e accedi da l\xEC"
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 8258937041623712619
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 53948906987520

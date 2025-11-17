@@ -23,19 +23,19 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 482419400704
-    m_Localized: Inmatningsvolym
+    m_Localized: "Ing\xE5ngsvolym"
     m_Metadata:
       m_Items: []
   - m_Id: 482419400705
-    m_Localized: Utmatningsenhet
+    m_Localized: "Utg\xE5ngsenhet"
     m_Metadata:
       m_Items: []
   - m_Id: 482419400706
-    m_Localized: Utmatningsvolym
+    m_Localized: "Utg\xE5ngsvolym"
     m_Metadata:
       m_Items: []
   - m_Id: 482419400707
-    m_Localized: "St\xE4ng av ljudet"
+    m_Localized: Stum
     m_Metadata:
       m_Items: []
   - m_Id: 482419400708

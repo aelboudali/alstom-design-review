@@ -13,7 +13,8 @@ using Unity.Industry.Viewer.Identity;
 using Unity.Industry.Viewer.Shared;
 using UnityEngine.EventSystems;
 #if VR_MODE
-using Unity.Industry.Viewer.Navigation.VR;
+using Unity.Industry.Viewer.VR;
+using Unity.Mathematics;
 #endif
 
 namespace Unity.Industry.Viewer.Streaming.Metadata
@@ -104,7 +105,7 @@ namespace Unity.Industry.Viewer.Streaming.Metadata
         private void OnSingleActivateActionInvoked(Ray ray, int controllerInstanceID)
         {
             if(m_StreamingModelController == null) return;
-            RaycastStreamingModel(ray);
+            RaycastStreamingModel(ray, true);
         }
         #endif
         
@@ -126,26 +127,27 @@ namespace Unity.Industry.Viewer.Streaming.Metadata
         // - RaycastStreamingModel: Initiates the raycast process.
         //   - Raycast: Resets the highlight modifier, performs the raycast, and if an instance is detected, it queries the metadata.
         //   - QueryMetadata: Fetches metadata for the detected instance and its ancestors, updates the highlight modifier, and invokes the MetadataFound event with the retrieved metadata.
-        private void RaycastStreamingModel(Ray ray)
+        private void RaycastStreamingModel(Ray ray, bool checkWorldSpaceUI = false)
         {
             if(m_StreamingModelController == null) return;
-            if(IsPointerOverUI()) return;
-            
             _ = Raycast();
             
             return;
 
             async Task Raycast()
             {
-                MetadataFound?.Invoke(null);
-                InstanceSelected?.Invoke(default, InstanceId.None);
-                m_HighlightModifier?.Reset();
                 try
                 {
-                    var raycastResult = await m_StreamingModelController.Stage.RaycastAsync((DoubleRay) ray, m_StreamingModelController.ActiveCamera.farClipPlane, RaycastOptions.ExcludeHidden);
+                    var raycastResult = await m_StreamingModelController.Stage.RaycastAsync((DoubleRay) ray, m_StreamingModelController.ActiveCamera.farClipPlane, RaycastOptions.ExcludeHiddenInstances | RaycastOptions.ExcludeNormalFromResult);
+                    RaycastHit hit;
                     if (raycastResult.InstanceId == InstanceId.None)
                     {
-                        return;
+                        if (!checkWorldSpaceUI || !Physics.Raycast(ray, out hit, m_StreamingModelController.ActiveCamera.farClipPlane,
+                                LayerMask.GetMask("UI")))
+                        {
+                            ResetAll();
+                            return;
+                        }
                     }
                     
                     if (NetworkDetector.RequestedOfflineMode)
@@ -153,6 +155,30 @@ namespace Unity.Industry.Viewer.Streaming.Metadata
                         return;
                     }
                     
+                    if (checkWorldSpaceUI)
+                    {
+                        if (Physics.Raycast(ray, out hit, m_StreamingModelController.ActiveCamera.farClipPlane, LayerMask.GetMask("UI")))
+                        {
+                            if (raycastResult.InstanceId != InstanceId.None)
+                            {
+                                var stageRaycastPoint = raycastResult.Point.ToVector3();
+                                var uiRaycastPoint = hit.point;
+                        
+                                // Calculate distances along the ray using dot product
+                                float uiDistance = Vector3.Dot(uiRaycastPoint - ray.origin, ray.direction);
+                                float stageDistance = Vector3.Dot(stageRaycastPoint - ray.origin, ray.direction);
+
+                                bool isUIInFront = uiDistance < stageDistance;
+
+                                if (isUIInFront) return;
+                            }
+                            else
+                            {
+                                return;
+                            }
+                        }
+                    }
+                    ResetAll();
                     ModelStreamId modelStreamId = raycastResult.ModelId;
                     await QueryMetadata(modelStreamId, raycastResult.InstanceId);
                 }
@@ -162,11 +188,13 @@ namespace Unity.Industry.Viewer.Streaming.Metadata
                     throw;
                 }
             }
-        }
-        
-        private static bool IsPointerOverUI()
-        {
-            return EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(-1);
+
+            void ResetAll()
+            {
+                MetadataFound?.Invoke(null);
+                InstanceSelected?.Invoke(default, InstanceId.None);
+                m_HighlightModifier?.Reset();
+            }
         }
         
         private async Task QueryMetadata(ModelStreamId modelID, InstanceId id)
@@ -195,7 +223,8 @@ namespace Unity.Industry.Viewer.Streaming.Metadata
             
             var found = new List<MetadataInstance>();
             
-            if (firstQuery.AncestorIds is {Count: > 0})
+            //Uncomment this if you want to include ancestors in the metadata found.
+            /*if (firstQuery.AncestorIds is {Count: > 0})
             {
                 var ancestors = new Dictionary<InstanceId, MetadataInstance>();
                 
@@ -212,7 +241,7 @@ namespace Unity.Industry.Viewer.Streaming.Metadata
                     if (ancestors.TryGetValue(ancestorId, out var ancestor))
                         found.Add(ancestor);
                 }
-            }
+            }*/
             found.Add(firstQuery);
                 
             m_HighlightModifier.Update(modelID, id);

@@ -19,7 +19,7 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 751689523200
-    m_Localized: Mobiili-AR
+    m_Localized: "F\xF6rst\xE4rkt verklighet"
     m_Metadata:
       m_Items: []
   - m_Id: 3464783454209
@@ -27,39 +27,39 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3464783454210
-    m_Localized: Peitto
+    m_Localized: Okkluusio
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648512
-    m_Localized: <u>Paikkasidos</u>
+    m_Localized: Tila-ankkuri
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648513
-    m_Localized: Tallenna paikkasidos
+    m_Localized: Tallenna ankkuri
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648514
-    m_Localized: Lataa paikkasidos
+    m_Localized: Lataa ankkuri
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648515
-    m_Localized: "Siirr\xE4"
+    m_Localized: Liikkua
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648516
-    m_Localized: "K\xE4\xE4nn\xE4"
+    m_Localized: "Kiert\xE4\xE4"
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648517
-    m_Localized: Skaalaa
+    m_Localized: Mittakaava
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648518
-    m_Localized: "Lis\xE4\xE4"
+    m_Localized: "Lis\xE4ys"
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648519
-    m_Localized: Palauta oletusasentoon
+    m_Localized: Palauta oletusarvo
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648520
@@ -75,11 +75,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506306
-    m_Localized: "AR-ankkurin tallennus ep\xE4onnistui - Tuntematon"
+    m_Localized: Fail Save AR Anchor - Tuntematon
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506307
-    m_Localized: Skannaa ja napauta alustaaksesi resurssin sijainnin
+    m_Localized: Skannaa ja napauta alustaaksesi omaisuuden sijaintia
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506308
@@ -108,6 +108,26 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 45568947439788032
     m_Localized: Sinulla ei ole kirjoitusoikeutta.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084964016128
+    m_Localized: Rumsligt ankare hittat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084972404736
+    m_Localized: Ett tidigare sparat spatial ankare hittades. Vill du ladda det?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084972404737
+    m_Localized: Ignorera
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084972404738
+    m_Localized: Ladda
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119205759076524032
+    m_Localized: "Tryck p\xE5 punkten f\xF6r att placera tillg\xE5ngen"
     m_Metadata:
       m_Items: []
   references:

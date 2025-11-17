@@ -1,9 +1,15 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" appui="Unity.AppUI.UI" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:VisualElement name="ToolPanel" style="width: 420px; height: auto; background-color: rgba(19, 19, 19, 0.9); border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; align-self: center; align-items: stretch; position: relative; flex-grow: 1; display: none;">
-        <ui:VisualElement style="flex-grow: 0; height: 60px; width: 100%; flex-direction: row; justify-content: center; border-bottom-width: 1px; border-left-color: rgb(48, 48, 48); border-right-color: rgb(48, 48, 48); border-top-color: rgb(48, 48, 48); border-bottom-color: rgb(48, 48, 48); padding-top: 8px; padding-right: 8px; padding-left: 8px;">
-            <Unity.AppUI.UI.IconButton name="ToolCloseButton" size="L" icon="x" style="width: 40px; height: 40px; left: 8px; position: absolute;" />
-            <Unity.AppUI.UI.Text name="ToolTitle" style="width: 300px; -unity-text-align: middle-center; font-size: 30px; overflow: hidden; white-space: nowrap; height: 40px;" />
+    <ui:VisualElement name="ToolPanel" style="width: 420px; height: auto; background-color: rgba(19, 19, 19, 0.9); border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; align-self: center; align-items: stretch; position: relative; flex-grow: 1; display: flex; transform-origin: right;">
+        <ui:VisualElement style="flex-grow: 0; width: 100%; flex-direction: row; justify-content: center; border-bottom-width: 1px; border-left-color: rgb(48, 48, 48); border-right-color: rgb(48, 48, 48); border-top-color: rgb(48, 48, 48); border-bottom-color: rgb(48, 48, 48); padding-top: 8px; padding-right: 8px; padding-left: 8px; min-height: 60px;">
+            <Unity.AppUI.UI.Text name="ToolTitle" style="-unity-text-align: middle-center; font-size: 28px; overflow: visible; -unity-font-style: bold; color: rgb(255, 255, 255); min-width: 300px; min-height: 40px; max-width: 300px;" />
+            <Unity.AppUI.UI.IconButton name="ToolCloseButton" size="L" icon="x" style="width: 40px; height: 40px; position: absolute; left: 8px;" />
         </ui:VisualElement>
         <ui:VisualElement name="Content" style="flex-grow: 1; padding-right: 8px; padding-left: 8px; padding-bottom: 2px; padding-top: 16px;" />
+        <ui:VisualElement name="ResizeHandle" class="cursor--pointer" style="flex-grow: 1; position: absolute; top: 50%; left: -28px; width: 56px; height: 56px;">
+            <ui:VisualElement picking-mode="Ignore" style="flex-grow: 1; width: 28px; height: 56px; overflow: hidden;">
+                <ui:VisualElement picking-mode="Ignore" style="flex-grow: 0; height: 56px; width: 56px; background-color: rgba(19, 19, 19, 0.9); border-top-left-radius: 28px; border-bottom-left-radius: 28px;" />
+            </ui:VisualElement>
+            <ui:VisualElement picking-mode="Ignore" style="flex-grow: 1; background-image: url(&quot;project://database/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ArrowsInLineHorizontal.png?fileID=2800000&amp;guid=ad8f08df1302b48de86d9c4fc331138a&amp;type=3#ArrowsInLineHorizontal&quot;); position: absolute; top: 0%; left: 0%; bottom: 0%; right: 0%; -unity-background-scale-mode: scale-to-fit; background-size: 32px 32px;" />
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

@@ -26,10 +26,6 @@ MonoBehaviour:
     m_Localized: Nessun metadato trovato
     m_Metadata:
       m_Items: []
-  - m_Id: 19319819894513664
-    m_Localized: Ricerca
-    m_Metadata:
-      m_Items: []
   - m_Id: 42351695571705856
     m_Localized: "La modalit\xE0 offline non \xE8 supportata"
     m_Metadata:

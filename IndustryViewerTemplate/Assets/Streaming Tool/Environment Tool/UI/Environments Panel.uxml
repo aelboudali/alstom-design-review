@@ -1,0 +1,3 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:ListView name="EnvironmentsListView" allow-add="false" allow-remove="false" item-template="project://database/Assets/Streaming%20Tool/Environment%20Tool/UI/Environment%20List%20Item.uxml?fileID=9197481963319205126&amp;guid=024e8aae878028d4aa04b73b832eb07f&amp;type=3#Environment List Item" virtualization-method="DynamicHeight" style="width: 100%; height: 100%; padding-top: 0; padding-right: 0; padding-bottom: 10px; padding-left: 0;" />
+</ui:UXML>

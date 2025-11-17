@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +12,6 @@ using Unity.Industry.Viewer.Identity;
 using Unity.Industry.Viewer.Shared;
 using Unity.Industry.Viewer.Streaming;
 using UnityEngine.Localization;
-using UnityEngine.Localization.SmartFormat.PersistentVariables;
 using Unity.Industry.Viewer.Assets;
 using Unity.Services.Multiplayer;
 
@@ -25,46 +25,48 @@ namespace Unity.Industry.Viewer.Multiplay
     public class MultiplayUIController : MonoBehaviour
     {
         // Constants for UI elements and classes
-        private const string k_AvatarName = "IdentityAvatar";
+        protected const string k_AvatarName = "IdentityAvatar";
         private const string k_TopRightBarName = "TopRightBar";
         private const string k_MultiplayIconClass = "MultiplayIcon";
         
         // Variables for UI elements and styles
         private UIDocument m_UIDocument => SharedUIManager.Instance.AssetsUIDocument;
-        private IconButton m_PresentationModeButton;
-        private Dictionary<ulong, Avatar> m_PlayerAvatars;
-        private Avatar m_MyAvatar;
+        protected IconButton m_PresentationModeButton;
+        protected Dictionary<ulong, Avatar> m_PlayerAvatars;
+        protected Avatar m_MyAvatar;
         private const float DoubleClickTime = 0.3f;
         private float m_LastClickTime;
         private IEventHandler m_LastClickedElement;
 
         [SerializeField]
-        private StyleSheet m_MultiplayStyleSheet;
+        protected StyleSheet m_MultiplayStyleSheet;
         
         Modal m_PresentationModal;
-        private bool isModalOpened;
+        protected bool isModalOpened;
         
-        private Color m_OriginalAvatarColor;
+        protected Color m_OriginalAvatarColor;
+        
+        private VisualElement m_Divider;
 
         #region Localisation
 
         [SerializeField]
-        private LocalizedString m_Toast_SessionFullLocalizedString;
+        protected LocalizedString m_Toast_SessionFullLocalizedString;
 
         [SerializeField]
-        private LocalizedString m_Toast_SessionJoinFailedLocalizedString;
+        protected LocalizedString m_Toast_SessionJoinFailedLocalizedString;
 
         [SerializeField]
-        private LocalizedString m_JoinPresentationTitleLocalizedString;
+        protected LocalizedString m_JoinPresentationTitleLocalizedString;
 
         [SerializeField]
-        private LocalizedString m_JoinPresentationDescriptionLocalizedString;
+        protected LocalizedString m_JoinPresentationDescriptionLocalizedString;
 
         [SerializeField]
-        private LocalizedString m_JoinLocalizedString;
+        protected LocalizedString m_JoinLocalizedString;
 
         [SerializeField]
-        private LocalizedString m_DismissLocalizedString;
+        protected LocalizedString m_DismissLocalizedString;
 
         [SerializeField]
         private LocalizedString m_PresentationModeLocalizedString;
@@ -94,27 +96,27 @@ namespace Unity.Industry.Viewer.Multiplay
         private LocalizedString m_AskToJoinPresentationDescriptionLocalizedString;
 
         [SerializeField]
-        private LocalizedString m_StartPresentationTitleLocalizedString;
+        protected LocalizedString m_StartPresentationTitleLocalizedString;
 
         [SerializeField]
-        private LocalizedString m_StartPresentationDescriptionLocalizedString;
+        protected LocalizedString m_StartPresentationDescriptionLocalizedString;
 
         [SerializeField]
-        private LocalizedString m_StartLocalizedString;
+        protected LocalizedString m_StartLocalizedString;
 
         [SerializeField]
-        private LocalizedString m_CancelLocalizedString;
+        protected LocalizedString m_CancelLocalizedString;
         
         [SerializeField]
-        private LocalizedString m_JoinNewLayoutSessionTitleLocalizedString;
+        protected LocalizedString m_JoinNewLayoutSessionTitleLocalizedString;
         
         [SerializeField]
-        private LocalizedString m_JoinNewLayoutSessionDescriptionLocalizedString;
+        protected LocalizedString m_JoinNewLayoutSessionDescriptionLocalizedString;
 
         #endregion
         
         // initialization of the UI elements and event handlers
-        void Start()
+        protected virtual void Start()
         {
             m_PlayerAvatars ??= new Dictionary<ulong, Avatar>();
             MultiplayController.AskToJoinLayout += OnAskToJoinLayout;
@@ -142,7 +144,7 @@ namespace Unity.Industry.Viewer.Multiplay
         }
 
         // cleanup of event handlers and UI elements
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             NetworkManager.Singleton.OnClientStopped -= OnClientStopped;
             NetworkPlayerController.OnColorChanged -= OnColorChanged;
@@ -152,8 +154,11 @@ namespace Unity.Industry.Viewer.Multiplay
             MultiplayController.OnClientConnected -= OnClientConnected;
             MultiplayController.OnClientDisconnected -= OnClientDisconnected;
             MultiplayController.OnSessionJoinedFailed -= OnSessionJoinedFailed;
-            MultiplayerService.Instance.SessionAdded -= OnSessionAdded;
-            MultiplayerService.Instance.SessionRemoved -= OnSessionRemoved;
+            if (MultiplayerService.Instance != null)
+            {
+                MultiplayerService.Instance.SessionAdded -= OnSessionAdded;
+                MultiplayerService.Instance.SessionRemoved -= OnSessionRemoved;
+            }
             if (m_PresentationModeButton != null)
             {
                 m_PresentationModeButton.clicked -= OnPresentationModeButtonClicked;
@@ -163,6 +168,9 @@ namespace Unity.Industry.Viewer.Multiplay
             {
                 m_MyAvatar.backgroundColor = new Optional<Color>(m_OriginalAvatarColor);
             }
+            
+            m_Divider?.RemoveFromHierarchy();
+            m_Divider = null;
 
             if (m_PlayerAvatars != null)
             {
@@ -204,27 +212,28 @@ namespace Unity.Industry.Viewer.Multiplay
             }
         }
 
-        private void OnAskToJoinLayout(AssetInfo assetInfo)
+        protected virtual void OnAskToJoinLayout(AssetInfo assetInfo)
         {
-            var askToChangeDialog = new CustomAlertDialog(m_JoinNewLayoutSessionTitleLocalizedString, 
-                m_JoinNewLayoutSessionDescriptionLocalizedString)
+            var askToChangeDialog = new AlertDialog()
             {
-                title = " ",
-                description = string.Empty,
+                title = m_JoinNewLayoutSessionTitleLocalizedString.GetTitleLocalizedStringForAppUI(),
+                description = m_JoinNewLayoutSessionDescriptionLocalizedString.GetTitleLocalizedStringForAppUI(),
                 variant = AlertSemantic.Default
             };
-            askToChangeDialog.SetPrimaryAction(m_JoinLocalizedString, true, () =>
+            
+            askToChangeDialog.SetPrimaryAction(99, m_JoinLocalizedString.GetTitleLocalizedStringForAppUI(), () =>
             {
                 AssetsController.AssetSelected?.Invoke(assetInfo);
             });
-            askToChangeDialog.SetCancelAction(m_CancelLocalizedString);
             
-            var modal = Modal.Build(SharedUIManager.Instance.AssetsRoot, askToChangeDialog);
+            askToChangeDialog.SetCancelAction(0, m_CancelLocalizedString.GetTitleLocalizedStringForAppUI());
+            
+            var modal = Modal.Build(SharedUIManager.Instance.AssetsContainer, askToChangeDialog);
 
             modal.Show();
         }
 
-        private void OnClientStopped(bool obj)
+        protected virtual void OnClientStopped(bool obj)
         {
             foreach (var mPlayerAvatar in m_PlayerAvatars.Keys)
             {
@@ -236,42 +245,19 @@ namespace Unity.Industry.Viewer.Multiplay
             {
                 m_MyAvatar.backgroundColor = new Optional<Color>(m_OriginalAvatarColor);
             }
-            
+            m_Divider?.RemoveFromHierarchy();
+            m_Divider = null;
             m_PlayerAvatars?.Clear();
         }
 
         // event handler for session join failure
-        private void OnSessionJoinedFailed(string message)
+        protected virtual void OnSessionJoinedFailed(string message)
         {
-            if (message.Contains("lobby is full"))
-            {
-                var toast = Toast.Build(m_MyAvatar, string.Empty, NotificationDuration.Long).SetStyle(NotificationStyle.Negative);
-                
-                toast.shown += FullToastShown;
+            var textMessage = message.Contains("lobby is full") ? m_Toast_SessionFullLocalizedString.GetTitleLocalizedStringForAppUI() : m_Toast_SessionJoinFailedLocalizedString.GetTitleLocalizedStringForAppUI();
 
-                toast.Show();
-            } else {
-                var toast = Toast.Build(m_MyAvatar, string.Empty, NotificationDuration.Long).SetStyle(NotificationStyle.Negative);
-                
-                toast.shown += FailToastShown;
+            var toast = Toast.Build(m_MyAvatar, textMessage, NotificationDuration.Long).SetStyle(NotificationStyle.Negative);
 
-                toast.Show();
-            }
-            
-            return;
-            void FullToastShown(Toast obj)
-            {
-                obj.shown -= FullToastShown;
-                var text = obj.view.Q<LocalizedTextElement>("appui-toast__message");
-                text.SetBinding("text", m_Toast_SessionFullLocalizedString);
-            }
-            
-            void FailToastShown(Toast obj)
-            {
-                obj.shown -= FailToastShown;
-                var text = obj.view.Q<LocalizedTextElement>("appui-toast__message");
-                text.SetBinding("text", m_Toast_SessionJoinFailedLocalizedString);
-            }
+            toast.Show();
         }
 
         // event handler for request to join presentation
@@ -279,52 +265,67 @@ namespace Unity.Industry.Viewer.Multiplay
         {
             foreach (var avater in m_PlayerAvatars.Values)
             {
-                GameObject playerObject = (GameObject) avater.userData;
-                if (playerObject == null) return;
-                if(!playerObject.TryGetComponent(out NetworkPlayerController playerController)) continue;
-                if (playerController.IsPresenter.Value)
-                {
-                    m_PresentationModal?.Dismiss();
+                NetworkPlayerController playerController = (NetworkPlayerController) avater.userData;
+                if (!playerController.IsPresenter.Value) continue;
+                ShowRequestToJoinDialog(playerController, JoinAction);
+                return;
                 
-                    if (m_JoinPresentationDescriptionLocalizedString.TryGetValue("name", out var nameValue))
-                    {
-                        ((StringVariable) nameValue).Value = playerController.PlayerName.Value.Value;
-                    }
-                    else
-                    {
-                        m_JoinPresentationDescriptionLocalizedString.Add("name", new StringVariable() {Value = playerController.PlayerName.Value.Value});
-                    }
-                    
-                    var requestToJoinDialog = new CustomAlertDialog(m_JoinPresentationTitleLocalizedString, m_JoinPresentationDescriptionLocalizedString)
-                    {
-                        title = " ",
-                        description = string.Empty,
-                        variant = AlertSemantic.Default
-                    };
-                    requestToJoinDialog.SetPrimaryAction(m_JoinLocalizedString, true, () =>
-                    {
-                        //Make sure the player is still the presenter, there is a case that presenter might have end
-                        //presentation before the client joined
-                        if(!playerController.IsPresenter.Value) return;
-                        MultiplayController.JoinPresentation?.Invoke(playerController.OwnerClientId);
-                    });
-                    requestToJoinDialog.SetCancelAction(m_DismissLocalizedString);
-                    m_PresentationModal = Modal.Build(m_PresentationModeButton, requestToJoinDialog);
-                    m_PresentationModal.shown += OnModalShown;
-
-                    m_PresentationModal.Show();
+                void JoinAction()
+                {
+                    //Make sure the player is still the presenter, there is a case that presenter might have end
+                    //presentation before the client joined
+                    if (!playerController.IsPresenter.Value) return;
+                    MultiplayController.JoinPresentation?.Invoke(playerController.OwnerClientId);
                 }
             }
         }
 
+        protected virtual void ShowRequestToJoinDialog(NetworkPlayerController playerController, Action joinAction)
+        {
+            m_PresentationModal?.Dismiss();
+            
+            var requestToJoinDialog = new AlertDialog()
+            {
+                title = m_JoinPresentationTitleLocalizedString.GetTitleLocalizedStringForAppUI(),
+                description = m_JoinPresentationDescriptionLocalizedString.GetTitleLocalizedStringForAppUI(),
+                variant = AlertSemantic.Default
+            };
+
+            var descriptionLabel = requestToJoinDialog.Q<LocalizedTextElement>("appui-dialog__content");
+            descriptionLabel.variables = new object[]
+            {
+                new Dictionary<string, object>()
+                {
+                    {"name", playerController.PlayerName.Value.Value}
+                }
+            };
+                    
+            requestToJoinDialog.SetPrimaryAction(98, m_JoinLocalizedString.GetTitleLocalizedStringForAppUI(), joinAction);
+                    
+            requestToJoinDialog.SetCancelAction(0, m_CancelLocalizedString.GetTitleLocalizedStringForAppUI());
+                    
+            m_PresentationModal = Modal.Build(m_PresentationModeButton, requestToJoinDialog);
+            m_PresentationModal.shown += OnModalShown;
+
+            m_PresentationModal.Show();
+        }
+
         // event handler for client disconnection
-        private void OnClientDisconnected(ulong id)
+        protected virtual void OnClientDisconnected(ulong id)
         {
             if (!m_PlayerAvatars.TryGetValue(id, out var avatar)) return;
             avatar.UnregisterCallback<ClickEvent>(OnAvatarIconClick);
             avatar.RemoveFromHierarchy();
             m_PlayerAvatars.Remove(id);
-            m_PresentationModeButton.style.display = m_PlayerAvatars.Count > 1 ? DisplayStyle.Flex : DisplayStyle.None;
+            if (m_PresentationModeButton != null)
+            {
+                m_PresentationModeButton.style.display = m_PlayerAvatars.Count > 1 ? DisplayStyle.Flex : DisplayStyle.None;
+            }
+            if(m_PlayerAvatars.Count <= 1)
+            {
+                m_Divider?.RemoveFromHierarchy();
+                m_Divider = null;
+            }
         }
 
         // event handler for color change
@@ -354,7 +355,7 @@ namespace Unity.Industry.Viewer.Multiplay
         }
         
         // event handler for name change
-        private void OnNameChanged(ulong id, string username)
+        protected virtual void OnNameChanged(ulong id, string username)
         {
             if (m_PlayerAvatars.TryGetValue(id, out var avatar))
             {
@@ -381,29 +382,48 @@ namespace Unity.Industry.Viewer.Multiplay
         }
 
         // event handler for client connection
-        private void OnClientConnected(ulong id, GameObject playerObject)
+        protected virtual void OnClientConnected(ulong id, GameObject playerObject)
         {
             if(m_MyAvatar == null) return;
+            
+            var networkPlayerController = playerObject.GetComponent<NetworkPlayerController>();
+            
             if (m_PlayerAvatars.TryGetValue(id, out var playerAvatar))
             {
-                playerAvatar.userData = playerObject;
+                playerAvatar.userData = networkPlayerController;
                 UpdateAvatarUI(playerObject);
                 return;
             }
 
             if (NetworkManager.Singleton.LocalClientId == id)
             {
-                m_MyAvatar.userData = playerObject;
+                m_MyAvatar.userData = networkPlayerController;
                 m_PlayerAvatars.Add(id, m_MyAvatar);
-                m_PresentationModeButton.style.display = m_PlayerAvatars.Count > 1 ? DisplayStyle.Flex : DisplayStyle.None;
             }
             else
             {
-                var avatar = CreateAvatar(id, playerObject);
-                var avatarParent = m_MyAvatar.parent;
-                avatarParent.Insert(avatarParent.childCount, avatar);
+                AddOtherClientAvatar(id, networkPlayerController);
             }
+
+            if (m_PresentationModeButton != null)
+            {
+                m_PresentationModeButton.style.display = m_PlayerAvatars.Count > 1 ? DisplayStyle.Flex : DisplayStyle.None;
+            }
+            
             UpdateAvatarUI(playerObject);
+        }
+
+        protected virtual void AddOtherClientAvatar(ulong id, NetworkPlayerController playerObject)
+        {
+            var avatar = CreateAvatar(id, playerObject);
+            var avatarParent = m_MyAvatar.parent;
+            if (m_Divider == null)
+            {
+                m_Divider = new VisualElement();
+                m_Divider.AddToClassList("AvatarDivider");
+                avatarParent.Add(m_Divider);
+            }
+            avatarParent.Add(avatar);
         }
         
         // update the UI for the player avatar
@@ -446,10 +466,17 @@ namespace Unity.Industry.Viewer.Multiplay
             var currentTime = Time.time;
             if (m_LastClickedElement != null && m_LastClickedElement == evt.target && currentTime - m_LastClickTime < DoubleClickTime)
             {
-                GameObject playerObject = (evt.target as VisualElement)?.userData as GameObject;
+                NetworkPlayerController playerObject = (evt.target as VisualElement)?.userData as NetworkPlayerController;
                 if (playerObject == null)
                 {
                     return;
+                }
+                
+                Vector3 targetPosition = playerObject.transform.position;
+                
+                if (playerObject.IsInVR.Value && playerObject.EyeLevelInVR.Value > 0)
+                {
+                    targetPosition.y -= playerObject.EyeLevelInVR.Value;
                 }
                 NavigationController.PlayerTranslateTo?.Invoke(playerObject.transform.position, playerObject.transform.rotation);
             }
@@ -458,7 +485,7 @@ namespace Unity.Industry.Viewer.Multiplay
         }
 
         // create the player avatar
-        private Avatar CreateAvatar(ulong id, GameObject playerObject)
+        protected Avatar CreateAvatar(ulong id, NetworkPlayerController playerObject)
         {
             var avatar = new Avatar
             {
@@ -470,8 +497,6 @@ namespace Unity.Industry.Viewer.Multiplay
             m_PlayerAvatars.Add(id, avatar);
 
             avatar.AddToClassList(k_MultiplayIconClass);
-            
-            m_PresentationModeButton.style.display = m_PlayerAvatars.Count > 1 ? DisplayStyle.Flex : DisplayStyle.None;
             
             var avatarNameLabel = new Text
             {
@@ -487,7 +512,7 @@ namespace Unity.Industry.Viewer.Multiplay
             return avatar;
         }
 
-        private void InitializeUI()
+        protected virtual void InitializeUI()
         {
             if (!m_UIDocument.rootVisualElement.styleSheets.Contains(m_MultiplayStyleSheet))
             {
@@ -510,15 +535,16 @@ namespace Unity.Industry.Viewer.Multiplay
 
             m_PresentationModeButton.clicked += OnPresentationModeButtonClicked;
             
-            m_MyAvatar.parent.Add(m_PresentationModeButton);
+            int avatarIndex = m_MyAvatar.parent.IndexOf(m_MyAvatar);
+            m_MyAvatar.parent.Insert(avatarIndex, m_PresentationModeButton);
             m_PresentationModeButton.style.display = DisplayStyle.None;
             
-            m_PresentationModeButton.ClearBinding("tooltip");
-            m_PresentationModeButton.SetBinding("tooltip", m_PresentationModeLocalizedString);
+            m_PresentationModeButton.tooltip =
+                m_PresentationModeLocalizedString.GetTitleLocalizedStringForAppUI();
         }
 
         // event handler for presentation mode button click
-        private void OnPresentationModeButtonClicked()
+        protected virtual void OnPresentationModeButtonClicked()
         {
             m_PresentationModal?.Dismiss();
             
@@ -532,8 +558,10 @@ namespace Unity.Industry.Viewer.Multiplay
                     Debug.Log("Player avatar user data is null ");
                     continue;
                 }
-
-                if (!((GameObject) playerAvatar.userData).TryGetComponent(out NetworkPlayerController playerController))
+                
+                NetworkPlayerController playerController = (NetworkPlayerController) playerAvatar.userData;
+                
+                if (playerController == null)
                 {
                     Debug.Log("Player controller is null ");
                     continue;
@@ -558,84 +586,87 @@ namespace Unity.Industry.Viewer.Multiplay
             
             if (isPresenting)
             {
-                CustomAlertDialog newDialog = null;
                 //If there is an ongoing presentation
-
                 LocalizedString title = null; 
                 LocalizedString description = null;
                 LocalizedString primaryButtonText = null;
-                
-                if (myOwnPlayerObject.IsPresenter.Value)
-                {
-                    title = m_EndPresentationTitleLocalizedString;
-                    description = m_EndPresentationDescriptionLocalizedString;
-                    primaryButtonText = m_EndLocalizedString;
-                } else if (myOwnPlayerObject.InPresentation.Value)
-                {
-                    title = m_LeavePresentationTitleLocalizedString;
-                    description = m_LeavePresentationDescriptionLocalizedString;
-                    primaryButtonText = m_LeaveLocalizedString;
-                }
-                else
-                {
-                    title = m_AskToJoinPresentationTitleLocalizedString;
-                    description = m_AskToJoinPresentationDescriptionLocalizedString;
-                    primaryButtonText = m_JoinLocalizedString;
-                }
-                
-                newDialog = new CustomAlertDialog(title, description)
-                {
-                    variant = AlertSemantic.Default
-                };
+                Action primaryAction = null;
                 
                 if (myOwnPlayerObject.IsPresenter.Value)
                 {
                     //End presentation mode
-                    newDialog.SetPrimaryAction(primaryButtonText, true, () =>
-                    {
-                        MultiplayController.EndPresentation?.Invoke(myOwnPlayerObject.OwnerClientId);
-                    });
-                }
-                else if(myOwnPlayerObject.InPresentation.Value)
+                    title = m_EndPresentationTitleLocalizedString;
+                    description = m_EndPresentationDescriptionLocalizedString;
+                    primaryButtonText = m_EndLocalizedString;
+                    primaryAction = () => MultiplayController.EndPresentation?.Invoke(myOwnPlayerObject.OwnerClientId);
+                } else if (myOwnPlayerObject.InPresentation.Value)
                 {
                     //Leave presentation mode
-                    newDialog.SetPrimaryAction(primaryButtonText, true, () =>
-                    {
-                        MultiplayController.EndPresentation?.Invoke(myOwnPlayerObject.OwnerClientId);
-                    });
+                    title = m_LeavePresentationTitleLocalizedString;
+                    description = m_LeavePresentationDescriptionLocalizedString;
+                    primaryButtonText = m_LeaveLocalizedString;
+                    primaryAction = () => MultiplayController.EndPresentation?.Invoke(myOwnPlayerObject.OwnerClientId);
                 }
                 else
                 {
                     //Ask to join presentation mode
-                    newDialog.SetPrimaryAction(primaryButtonText, true, () =>
-                    {
-                        MultiplayController.JoinPresentation?.Invoke(presenter.OwnerClientId);
-                    });
+                    title = m_AskToJoinPresentationTitleLocalizedString;
+                    description = m_AskToJoinPresentationDescriptionLocalizedString;
+                    primaryButtonText = m_JoinLocalizedString;
+                    primaryAction = () => MultiplayController.JoinPresentation?.Invoke(presenter.OwnerClientId);
                 }
-                newDialog.SetCancelAction(m_DismissLocalizedString);
                 
-                if(newDialog == null) return;
-                
-                m_PresentationModal = Modal.Build(m_PresentationModeButton, newDialog);
-                m_PresentationModal.shown += OnModalShown;
-                m_PresentationModal.Show();
+                ShowPresentationDialog(myOwnPlayerObject, presenter, title, description, primaryButtonText, primaryAction);
                 return;
             }
             
             //Initial presentation
-            
-            var presentationModeDialog = new CustomAlertDialog(m_StartPresentationTitleLocalizedString, m_StartPresentationDescriptionLocalizedString)
+            InitializePresentationDialog();
+        }
+
+        protected virtual void InitializePresentationDialog()
+        {
+            var presentationModeDialog = new AlertDialog()
             {
+                title = m_StartPresentationTitleLocalizedString.GetTitleLocalizedStringForAppUI(),
+                description = m_StartPresentationDescriptionLocalizedString.GetTitleLocalizedStringForAppUI(),
                 variant = AlertSemantic.Default
             };
-            presentationModeDialog.SetPrimaryAction(m_StartLocalizedString, true, () =>
-            {
-                MultiplayController.InitializePresentationMode?.Invoke();
-            });
-            presentationModeDialog.SetCancelAction(m_CancelLocalizedString);
+            
+            presentationModeDialog.SetPrimaryAction(96, m_StartLocalizedString.GetTitleLocalizedStringForAppUI(),
+                () =>
+                {
+                    MultiplayController.InitializePresentationMode?.Invoke();
+                });
+            
+            presentationModeDialog.SetCancelAction(0, m_CancelLocalizedString.GetTitleLocalizedStringForAppUI());
+            
             m_PresentationModal = Modal.Build(m_PresentationModeButton, presentationModeDialog);
             m_PresentationModal.shown += OnModalShown;
             
+            m_PresentationModal.Show();
+        }
+
+        protected virtual void ShowPresentationDialog(NetworkPlayerController myOwnPlayerObject, 
+            NetworkPlayerController presenter, LocalizedString title, LocalizedString description, 
+            LocalizedString primaryButtonText, Action primaryAction)
+        {
+            AlertDialog newDialog = null;
+                
+            newDialog = new AlertDialog()
+            {
+                title = title.GetTitleLocalizedStringForAppUI(),
+                description = description.GetTitleLocalizedStringForAppUI(),
+                variant = AlertSemantic.Default
+            };
+            
+            
+            newDialog.SetPrimaryAction(97, primaryButtonText.GetTitleLocalizedStringForAppUI(), primaryAction);
+                
+            newDialog.SetCancelAction(0, m_DismissLocalizedString.GetTitleLocalizedStringForAppUI());
+                
+            m_PresentationModal = Modal.Build(m_PresentationModeButton, newDialog);
+            m_PresentationModal.shown += OnModalShown;
             m_PresentationModal.Show();
         }
 

@@ -23,15 +23,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 40541884567773184
-    m_Localized: "Tama\xF1o de cuadr\xEDcula"
+    m_Localized: "Tama\xF1o de la cuadr\xEDcula"
     m_Metadata:
       m_Items: []
   - m_Id: 1428906041346
     m_Localized: "Restablecer posici\xF3n"
     m_Metadata:
       m_Items: []
-  - m_Id: 42677741605085184
-    m_Localized: Cargando
+  - m_Id: 115508050741207040
+    m_Localized: Restablecer toda la Visibilidad
     m_Metadata:
       m_Items: []
   references:

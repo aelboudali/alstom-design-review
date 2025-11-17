@@ -19,15 +19,15 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 620487499776
-    m_Localized: "C\xE1mara voladora"
+    m_Localized: "C\xE1mara de mosca"
     m_Metadata:
       m_Items: []
   - m_Id: 620508471296
-    m_Localized: Sensibilidad de movimiento
+    m_Localized: Sensibilidad al movimiento
     m_Metadata:
       m_Items: []
   - m_Id: 620508471297
-    m_Localized: "Sensibilidad de rotaci\xF3n"
+    m_Localized: "Sensibilidad a la rotaci\xF3n"
     m_Metadata:
       m_Items: []
   references:

@@ -1,21 +1,25 @@
 .BottomLeftIconButton > #appui-button__leadingcontainer > #appui-button__leadingicon {
-    width: 60%;
-    height: 60%;
+    width: 56px;
+    height: 56px;
 }
 
 .BottomLeftIconButton {
-    width: 90px;
-    height: 90px;
-    background-color: rgb(48, 48, 48);
+    width: 88px;
+    height: 88px;
+    background-color: #1D1D1D;
     border-top-left-radius: 45px;
     border-top-right-radius: 45px;
     border-bottom-right-radius: 45px;
     border-bottom-left-radius: 45px;
 }
 
+.TopBarLabel {
+    color: #1D1D1D;
+}
+
 .MainToolIcon {
-    width: 60px;
-    height: 60px;
+    width: 56px;
+    height: 56px;
     padding-top: 0;
     padding-right: 0;
     padding-bottom: 0;
@@ -34,24 +38,41 @@
 
 .MainToolIcon > #appui-actionbutton__icon {
     display: flex;
-    width: 50px;
-    height: 50px;
+    width: 42px;
+    height: 42px;
 }
 
-.appui-icon--upload {
-    background-image: url("project://database/Assets/UI/Textures/Upload.png");
+.SubToolIcon {
+    width: 40px;
+    height: 40px;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+    margin-bottom: 7px;
+    margin-top: 7px;
+}
+
+.SubToolIcon > #appui-actionbutton__icon {
+    display: flex;
+    width: 33px;
+    height: 33px;
+}
+
+.appui-icon--exit-streaming--regular{
+    --unity-image: url("project://database/Assets/UI/Textures/Exit.png");
 }
 
 #SceneBackButton{
     width: 40px;
     height: 40px;
     margin-left: 16px;
-}
-
-#SceneBackButton > #appui-button__leadingcontainer > #appui-button__leadingicon {
-    background-image: url("project://database/Assets/UI/Textures/Exit.png");
-}
-
-#SceneBackButton > #appui-button__leadingcontainer {
-    display: flex;
 }

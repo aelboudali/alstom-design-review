@@ -15,14 +15,6 @@ MonoBehaviour:
   m_TableCollectionName: Add Model Tool
   m_TableCollectionNameGuidString: 82f30657e69ff493294e966d632ba729
   m_Entries:
-  - m_Id: 511469150208
-    m_Key: Add Model Tool Name
-    m_Metadata:
-      m_Items: []
-  - m_Id: 40570196551786496
-    m_Key: Select
-    m_Metadata:
-      m_Items: []
   - m_Id: 40570196551786497
     m_Key: Selected
     m_Metadata:

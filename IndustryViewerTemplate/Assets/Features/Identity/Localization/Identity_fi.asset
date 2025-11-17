@@ -27,35 +27,31 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 9303762132992
-    m_Localized: Tai
+    m_Localized: tai
     m_Metadata:
       m_Items: []
   - m_Id: 9420774825984
-    m_Localized: Jatka vieraana
+    m_Localized: "G\xE4stl\xE4ge"
     m_Metadata:
       m_Items: []
   - m_Id: 15982369169408
     m_Localized: Kirjaudu ulos
     m_Metadata:
       m_Items: []
-  - m_Id: 32483335725056
-    m_Localized: Peruuta
-    m_Metadata:
-      m_Items: []
   - m_Id: 33199882231808
-    m_Localized: Vahvista uloskirjautuminen
+    m_Localized: Kirjaudutaan ulos...
     m_Metadata:
       m_Items: []
   - m_Id: 33283562790912
-    m_Localized: Haluatko varmasti kirjautua ulos
+    m_Localized: "Oletko varma, ett\xE4 kirjaudut ulos?"
     m_Metadata:
       m_Items: []
   - m_Id: 33349040070656
-    m_Localized: Odottaa
+    m_Localized: Odottaa kirjautumista...
     m_Metadata:
       m_Items: []
   - m_Id: 33437661519872
-    m_Localized: Alustetaan
+    m_Localized: Alustetaan...
     m_Metadata:
       m_Items: []
   - m_Id: 29800713151307776
@@ -69,10 +65,6 @@ MonoBehaviour:
   - m_Id: 58408840381587456
     m_Localized: "Olet t\xE4ll\xE4 hetkell\xE4 offline-tilassa. Haluatko vaihtaa
       takaisin online-tilaan ja kirjautua sis\xE4\xE4n?"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 58409243970101248
-    m_Localized: OK
     m_Metadata:
       m_Items: []
   references:

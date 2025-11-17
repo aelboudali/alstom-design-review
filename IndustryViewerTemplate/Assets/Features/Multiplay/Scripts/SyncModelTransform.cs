@@ -43,6 +43,7 @@ namespace Unity.Industry.Viewer.Multiplay
         
         public override void OnNetworkSpawn()
         {
+            TransformController.ModelRemoved += OnModelRemoved;
             m_ModelName.OnValueChanged += OnNameValueChanged;
             m_Position.OnValueChanged += OnPositionValueChanged;
             m_Rotation.OnValueChanged += OnRotationValueChanged;
@@ -53,11 +54,21 @@ namespace Unity.Industry.Viewer.Multiplay
 
         public override void OnNetworkDespawn()
         {
+            TransformController.ModelRemoved += OnModelRemoved;
             m_ModelName.OnValueChanged -= OnNameValueChanged;
             m_Position.OnValueChanged -= OnPositionValueChanged;
             m_Rotation.OnValueChanged -= OnRotationValueChanged;
             NetworkManager.OnSessionOwnerPromoted -= OnSessionOwnerPromoted;
             RuntimeTransformHandleCreated -= OnRunTimeHandleCreated;
+        }
+
+        private void OnModelRemoved(StreamingModel obj)
+        {
+            if(!IsOwner) return;
+            if (obj.gameObject.name == m_ModelName.Value.ToString())
+            {
+                NetworkObject.Despawn();
+            }
         }
 
         private void Update()

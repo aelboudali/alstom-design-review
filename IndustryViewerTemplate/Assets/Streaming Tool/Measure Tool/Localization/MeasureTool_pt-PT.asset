@@ -1,0 +1,119 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: MeasureTool_pt-PT
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: pt-PT
+  m_SharedData: {fileID: 11400000, guid: 8eb2735d8f73b4a4eac3389fed3a28cf, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 225092378624
+    m_Localized: "Dist\xE2ncia"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 427803090944
+    m_Localized: Nome
+    m_Metadata:
+      m_Items: []
+  - m_Id: 542022377472
+    m_Localized: Insira um nome...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 859606687744
+    m_Localized: Limpar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1375766126592
+    m_Localized: "Op\xE7\xF5es de medi\xE7\xE3o:"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1746492268544
+    m_Localized: Excluir
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5386313474048
+    m_Localized: "Ferramenta de medi\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 277985614438400
+    m_Localized: Unidades
+    m_Metadata:
+      m_Items: []
+  - m_Id: 654966306709504
+    m_Localized: Guardar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 655053812473856
+    m_Localized: Cancelar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 655106979471360
+    m_Localized: Aplicar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 655162302341120
+    m_Localized: Descartar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 664662128271360
+    m_Localized: Editar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6510811243769856
+    m_Localized: Visualizar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 33364848032079872
+    m_Localized: Modo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 33364930869583872
+    m_Localized: Dois pontos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 33365092069269504
+    m_Localized: Ortogonal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 33729162475724800
+    m_Localized: 'Linha infinita: escolha outro ponto.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 31547921792032768
+    m_Localized: Metros
+    m_Metadata:
+      m_Items: []
+  - m_Id: 31548081163001856
+    m_Localized: "Cent\xEDmetros"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 31548152310980608
+    m_Localized: "P\xE9s"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 31548238633951232
+    m_Localized: Polegadas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 31548370645475328
+    m_Localized: "P\xE9s e polegadas"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 31554595147800576
+    m_Localized: Como sistema
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

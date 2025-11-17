@@ -1,0 +1,157 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: Collaboration Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: Collaboration
+  m_TableCollectionNameGuidString: 5a5b0fdb44e374c3f950b188f7c8b8cd
+  m_Entries:
+  - m_Id: 1301378228224
+    m_Key: Annotation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421797892096
+    m_Key: FollowThread
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421802086400
+    m_Key: Unfollow Thread
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421802086401
+    m_Key: Copy Link
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280704
+    m_Key: Delete Thread
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280705
+    m_Key: Delete Thread Description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280706
+    m_Key: Start a thread placeholder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280707
+    m_Key: Select Attachment
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9766184659443712
+    m_Key: Reply
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280708
+    m_Key: Replies
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280709
+    m_Key: Add Attachment
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280710
+    m_Key: Edit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280711
+    m_Key: Unknown User
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9758374261415936
+    m_Key: Has resolved thread
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280713
+    m_Key: Has reopened thread
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280714
+    m_Key: Attachment
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280715
+    m_Key: All Threads
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280716
+    m_Key: Open threads only
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280717
+    m_Key: Add Reply Placeholder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280718
+    m_Key: Resolved
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280719
+    m_Key: Duplicate file name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280720
+    m_Key: Same File Path Error message
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280721
+    m_Key: Spatial Attachment
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280722
+    m_Key: Unknown Attachment
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280723
+    m_Key: Delete Attachment
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280724
+    m_Key: Confirm Delete Attachment message
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280725
+    m_Key: Save Attachment
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280726
+    m_Key: Offline Message
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280727
+    m_Key: Guest Message
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9825352548343808
+    m_Key: Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9825352552538112
+    m_Key: New Comment
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9827055381241856
+    m_Key: Thread
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 5739021005465322028
+  references:
+    version: 2
+    RefIds:
+    - rid: 5739021005465322028
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables,
+        asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1757429391045

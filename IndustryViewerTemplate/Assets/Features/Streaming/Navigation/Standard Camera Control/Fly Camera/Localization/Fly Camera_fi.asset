@@ -19,7 +19,7 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 620487499776
-    m_Localized: "Lent\xE4v\xE4 kamera"
+    m_Localized: "Lenn\xE4 kamera"
     m_Metadata:
       m_Items: []
   - m_Id: 620508471296
@@ -27,7 +27,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 620508471297
-    m_Localized: "Py\xF6rimisen herkkyys"
+    m_Localized: "Py\xF6rimisherkkyys"
     m_Metadata:
       m_Items: []
   references:

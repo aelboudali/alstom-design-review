@@ -1,7 +1,6 @@
 using Unity.Industry.Viewer.Streaming;
-using UnityEngine;
 using Unity.Netcode;
-using UnityEngine.SceneManagement;
+using UnityEngine;
 
 namespace Unity.Industry.Viewer.Multiplay
 {
@@ -34,8 +33,8 @@ namespace Unity.Industry.Viewer.Multiplay
                 }
             }
         }
-        
-        private void OnDestroy()
+
+        public override void OnDestroy()
         {
             MultiplayController.OnClientConnected -= OnClientConnected;
         }
@@ -43,7 +42,8 @@ namespace Unity.Industry.Viewer.Multiplay
         public override void OnNetworkDespawn()
         {
             NetworkManager.OnSessionOwnerPromoted -= OnSessionOwnerPromoted;
-            if (SceneManager.GetActiveScene() == gameObject.scene)
+            
+            if (!SceneUtility.IsMainSceneActive)
             {
                 GameObject newTransformController = new GameObject("Stage Transform");
                 newTransformController.transform.SetPositionAndRotation(transform.position, transform.rotation);

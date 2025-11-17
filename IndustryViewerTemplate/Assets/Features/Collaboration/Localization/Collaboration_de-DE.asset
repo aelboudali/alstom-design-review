@@ -1,0 +1,162 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Collaboration_de-DE
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: de-DE
+  m_SharedData: {fileID: 11400000, guid: 5a5b0fdb44e374c3f950b188f7c8b8cd, type: 2}
+  m_Metadata:
+    m_Items:
+    - rid: 8052603406888206654
+  m_TableData:
+  - m_Id: 1301378228224
+    m_Localized: Anmerkung
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421797892096
+    m_Localized: Thread folgen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421802086400
+    m_Localized: Thread entfolgen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421802086401
+    m_Localized: Link kopieren
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280704
+    m_Localized: "Thread l\xF6schen"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280705
+    m_Localized: "Sind Sie sicher, dass Sie diesen Thread und alle Antworten l\xF6schen
+      m\xF6chten? Dies kann nicht r\xFCckg\xE4ngig gemacht werden."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280706
+    m_Localized: Einen neuen Thread starten...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280707
+    m_Localized: "Anlage ausw\xE4hlen"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280708
+    m_Localized: "<color=#0892FF>{reply_count:plural:1\_Antwort|{}\_Antworten}</color>"
+    m_Metadata:
+      m_Items:
+      - rid: 8052603406888206654
+  - m_Id: 9757421806280709
+    m_Localized: "Anlage hinzuf\xFCgen"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280710
+    m_Localized: Bearbeiten
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280711
+    m_Localized: Unbekannter Benutzer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280714
+    m_Localized: "{attachment_count:plural:1\_Anhang|{}\_Anh\xE4nge}"
+    m_Metadata:
+      m_Items:
+      - rid: 8052603406888206654
+  - m_Id: 9757421806280715
+    m_Localized: Alle Threads
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280716
+    m_Localized: Nur offene Threads
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280717
+    m_Localized: "Eine Antwort zu diesem Thread hinzuf\xFCgen..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280718
+    m_Localized: "Gel\xF6st"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280719
+    m_Localized: Doppelter Dateiname
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280720
+    m_Localized: "Diese Anlage wurde bereits hinzugef\xFCgt."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280721
+    m_Localized: "R\xE4umliche Anlage"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280722
+    m_Localized: Unbekannte Anlage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280723
+    m_Localized: "Anlage l\xF6schen"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280724
+    m_Localized: "Sind Sie sicher, dass Sie diese Anlage l\xF6schen m\xF6chten?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280725
+    m_Localized: Anlage speichern
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280726
+    m_Localized: Sie sind derzeit offline.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280727
+    m_Localized: Sie sind im Gastmodus.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9758374261415936
+    m_Localized: "<i>hat diesen Thread gel\xF6st.</i>"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280713
+    m_Localized: "<i>hat diesen Thread wieder ge\xF6ffnet.</i>"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9766184659443712
+    m_Localized: Antwort
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9825352548343808
+    m_Localized: "Zur\xFCck"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9825352552538112
+    m_Localized: Neuer Kommentar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9827055381241856
+    m_Localized: Thread
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 8052603406888206654
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 9757421806280714
+        - id: 9757421806280708

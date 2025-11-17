@@ -26,12 +26,8 @@ MonoBehaviour:
     m_Localized: Nenhum metadado encontrado
     m_Metadata:
       m_Items: []
-  - m_Id: 19319819894513664
-    m_Localized: Procurar
-    m_Metadata:
-      m_Items: []
   - m_Id: 42351695571705856
-    m_Localized: "O modo offline n\xE3o \xE9 compat\xEDvel"
+    m_Localized: "O modo offline n\xE3o \xE9 suportado"
     m_Metadata:
       m_Items: []
   - m_Id: 42379094405406720

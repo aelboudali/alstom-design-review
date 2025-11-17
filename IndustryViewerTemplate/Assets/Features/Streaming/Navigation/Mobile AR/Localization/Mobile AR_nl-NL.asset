@@ -19,11 +19,11 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 751689523200
-    m_Localized: Mobiele AR
+    m_Localized: Augmented Reality
     m_Metadata:
       m_Items: []
   - m_Id: 3464783454209
-    m_Localized: Positie vergrendelen
+    m_Localized: Vergrendelingspositie
     m_Metadata:
       m_Items: []
   - m_Id: 3464783454210
@@ -31,7 +31,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648512
-    m_Localized: <u>Ruimtelijk anker</u>
+    m_Localized: Ruimtelijk anker
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648513
@@ -39,7 +39,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648514
-    m_Localized: Anker laden
+    m_Localized: Laadanker
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648515
@@ -55,11 +55,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648518
-    m_Localized: Verhogen
+    m_Localized: Verhoging
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648519
-    m_Localized: Terugzetten naar standaard
+    m_Localized: Resetten naar standaardinstellingen
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648520
@@ -75,15 +75,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506306
-    m_Localized: Mislukt AR-anker opslaan - onbekend
+    m_Localized: Mislukte AR-ankeropslag - Onbekend
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506307
-    m_Localized: Scan en tik om de activapositie te initialiseren
+    m_Localized: Scan en tik om de positie van het bezit te initialiseren
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506308
-    m_Localized: U kunt uw asset nauwkeurig aanpassen en op Lock Position drukken
+    m_Localized: U kunt uw asset nauwkeurig afstellen en op Vergrendelpositie klikken
     m_Metadata:
       m_Items: []
   - m_Id: 41362627148898304
@@ -99,7 +99,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 44105927752671232
-    m_Localized: Ontgrendel positie
+    m_Localized: Positie ontgrendelen
     m_Metadata:
       m_Items: []
   - m_Id: 45568947435593728
@@ -107,7 +107,28 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 45568947439788032
-    m_Localized: U heeft geen schrijfrechten.
+    m_Localized: U hebt geen schrijfrechten.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084964016128
+    m_Localized: Ruimtelijk anker gevonden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084972404736
+    m_Localized: Er is een eerder opgeslagen ruimtelijk anker gevonden. Wilt u dit
+      laden?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084972404737
+    m_Localized: Negeren
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084972404738
+    m_Localized: Laden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119205759076524032
+    m_Localized: Tik op het punt om het item te plaatsen
     m_Metadata:
       m_Items: []
   references:

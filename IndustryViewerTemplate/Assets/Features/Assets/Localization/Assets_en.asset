@@ -16,95 +16,94 @@ MonoBehaviour:
     m_Code: en
   m_SharedData: {fileID: 11400000, guid: e57257823a7964becb6eb06d6181f15a, type: 2}
   m_Metadata:
-    m_Items:
-    - rid: 7555826606608744546
+    m_Items: []
   m_TableData:
-  - m_Id: 20735582208
-    m_Localized: Search...
-    m_Metadata:
-      m_Items: []
   - m_Id: 3047743807488
     m_Localized: New Version Available
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217389
   - m_Id: 4032537026560
     m_Localized: Name
     m_Metadata:
-      m_Items: []
-  - m_Id: 4496284442624
-    m_Localized: Version
-    m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217390
   - m_Id: 4881900363776
     m_Localized: Type
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217391
   - m_Id: 5355433091072
     m_Localized: Status
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217392
   - m_Id: 5697486970880
     m_Localized: Last modified
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217393
   - m_Id: 5951284305920
     m_Localized: Last edit by
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217394
   - m_Id: 6460099518464
     m_Localized: Upload date
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217395
   - m_Id: 6667159724032
     m_Localized: Created by
     m_Metadata:
-      m_Items: []
-  - m_Id: 7216613548032
-    m_Localized: Download
-    m_Metadata:
-      m_Items: []
-  - m_Id: 11727306481664
-    m_Localized: Version {num}
-    m_Metadata:
       m_Items:
-      - rid: 7555826606608744546
+      - rid: 8258937048882217396
   - m_Id: 35648491741184
     m_Localized: A new version of the asset is available. Do you want to switch to
       the new version?
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217397
   - m_Id: 35994052059136
     m_Localized: Switch
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217398
   - m_Id: 36144556269568
     m_Localized: Dismiss
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217399
   - m_Id: 41819579604992
     m_Localized: Select Organisation
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217400
   - m_Id: 41959505780736
     m_Localized: No Project Found
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217401
   - m_Id: 42129496727552
     m_Localized: No Organisation Found
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217402
   - m_Id: 52814918180864
     m_Localized: Name
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217403
   - m_Id: 52882140291072
     m_Localized: Upload Date
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217404
   - m_Id: 53070703616000
     m_Localized: Last Modified
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217405
   - m_Id: 53211988746240
     m_Localized: Description
     m_Metadata:
@@ -112,63 +111,76 @@ MonoBehaviour:
   - m_Id: 53544890654720
     m_Localized: Status
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217406
   - m_Id: 71435971190784
     m_Localized: 'Sort by:'
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217407
   - m_Id: 83968589291520
     m_Localized: 2D Asset
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217408
   - m_Id: 84109517905920
     m_Localized: 3D Model
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217409
   - m_Id: 84218850828288
     m_Localized: Audio
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217410
   - m_Id: 84421402157056
     m_Localized: Material
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217411
   - m_Id: 84497860124672
     m_Localized: Other
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217412
   - m_Id: 84533826281472
     m_Localized: Script
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217413
   - m_Id: 84673161060352
     m_Localized: Video
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217414
   - m_Id: 84751309332480
     m_Localized: Unity Editor
     m_Metadata:
       m_Items: []
   - m_Id: 113148827787264
-    m_Localized: Asset Upload
+    m_Localized: Add Asset
     m_Metadata:
       m_Items: []
   - m_Id: 113743160664064
     m_Localized: Organisation
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217415
   - m_Id: 113829009678336
     m_Localized: Project
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217416
   - m_Id: 114272427302912
     m_Localized: Collection
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217417
   - m_Id: 114765505486848
     m_Localized: File Path
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217418
   - m_Id: 115961192505344
     m_Localized: Select the File for Uploading
     m_Metadata:
@@ -177,16 +189,12 @@ MonoBehaviour:
     m_Localized: Remove Selection
     m_Metadata:
       m_Items: []
-  - m_Id: 116427913682944
-    m_Localized: Asset Uploading
-    m_Metadata:
-      m_Items: []
-  - m_Id: 117455979536384
-    m_Localized: Upload Asset
+  - m_Id: 103408215129104384
+    m_Localized: Creating
     m_Metadata:
       m_Items: []
   - m_Id: 126885479571456
-    m_Localized: Asset Created
+    m_Localized: Asset created
     m_Metadata:
       m_Items: []
   - m_Id: 129700784496640
@@ -196,49 +204,263 @@ MonoBehaviour:
   - m_Id: 25800459972239360
     m_Localized: File(s) size
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217419
   - m_Id: 25800460005793792
     m_Localized: Total file(s)
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217420
   - m_Id: 25801326007934976
     m_Localized: Tags
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217421
   - m_Id: 25802025936609280
     m_Localized: Asset ID
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217422
   - m_Id: 26945938399420416
     m_Localized: Info
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217423
   - m_Id: 26945938407809024
     m_Localized: Comments
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217424
   - m_Id: 26945938407809025
     m_Localized: Files
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217425
   - m_Id: 26945938407809026
     m_Localized: Coming Soon...
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217426
   - m_Id: 26945938407809027
     m_Localized: Select All
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217427
   - m_Id: 26946288296648704
     m_Localized: Review
+    m_Metadata:
+      m_Items:
+      - rid: 8258937048882217428
+  - m_Id: 98637747977232384
+    m_Localized: Status
+    m_Metadata:
+      m_Items: []
+  - m_Id: 102582021617917952
+    m_Localized: '    Prepared for 3D Data Streaming'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 102589537559027712
+    m_Localized: Add New Asset
+    m_Metadata:
+      m_Items: []
+  - m_Id: 102911663331647488
+    m_Localized: Asset creation failed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 102916677815017472
+    m_Localized: The resource will appear after it has been fully uploaded and transformed,
+      which may take some time.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103410122987970560
+    m_Localized: Uploading
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103437425314930688
+    m_Localized: Upload completed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103438020864155648
+    m_Localized: Upload failed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103438847884435456
+    m_Localized: Transforming
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103439357110689792
+    m_Localized: Transformation completed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103439907755696128
+    m_Localized: Transformation failed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103803189238734848
+    m_Localized: FIle type is not supported
     m_Metadata:
       m_Items: []
   references:
     version: 2
     RefIds:
-    - rid: 7555826606608744546
-      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+    - rid: 8258937048882217389
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_Entries: 
-        m_SharedEntries:
-        - id: 11727306481664
+        m_CommentText: This is header of the New Version Available pop-up
+    - rid: 8258937048882217390
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is simple text in Details view
+    - rid: 8258937048882217391
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is simple text in Details view
+    - rid: 8258937048882217392
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is simple text for dropdown in Details
+    - rid: 8258937048882217393
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is simple text in Details view
+    - rid: 8258937048882217394
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is simple text in Details view
+    - rid: 8258937048882217395
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is simple text in Details view
+    - rid: 8258937048882217396
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is simple text in Details view
+    - rid: 8258937048882217397
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is text of the New Version Available pop-up
+    - rid: 8258937048882217398
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is button of the New Version Available pop-up
+    - rid: 8258937048882217399
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is buttonof the New Version Available pop-up
+    - rid: 8258937048882217400
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is text-icon selection
+    - rid: 8258937048882217401
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is simple text (inactive)
+    - rid: 8258937048882217402
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is simple text (inactive)
+    - rid: 8258937048882217403
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is sorting value in the "Sort by:" dropdown
+    - rid: 8258937048882217404
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is sorting value in the "Sort by:" dropdown
+    - rid: 8258937048882217405
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is sorting value in the "Sort by:" dropdown
+    - rid: 8258937048882217406
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is sorting value in the "Sort by:" dropdown
+    - rid: 8258937048882217407
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is simple text for dropdown
+    - rid: 8258937048882217408
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is type label of the asset
+    - rid: 8258937048882217409
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is type label of the asset
+    - rid: 8258937048882217410
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is type label of the asset
+    - rid: 8258937048882217411
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is type label of the asset
+    - rid: 8258937048882217412
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is type label of the asset
+    - rid: 8258937048882217413
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is type label of the asset
+    - rid: 8258937048882217414
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is type label of the asset
+    - rid: 8258937048882217415
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is clickable text of the name of the organisation
+    - rid: 8258937048882217416
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is simple text for dropdown in Details
+    - rid: 8258937048882217417
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is name of the collection
+    - rid: 8258937048882217418
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is breadcrumbs for file path of the asset
+    - rid: 8258937048882217419
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is simple text in Details view
+    - rid: 8258937048882217420
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is simple text in Details view
+    - rid: 8258937048882217421
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is simple text in Details view
+    - rid: 8258937048882217422
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is simple text in Details view
+    - rid: 8258937048882217423
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is header of the tab in Details view
+    - rid: 8258937048882217424
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is header of the tab in Details view
+    - rid: 8258937048882217425
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is header of the tab in Details view
+    - rid: 8258937048882217426
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is simple text in Details view in Comments tab
+    - rid: 8258937048882217427
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is simple text for checkbox in Details view in Files
+          tab
+    - rid: 8258937048882217428
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is button for toast UI when New version is available

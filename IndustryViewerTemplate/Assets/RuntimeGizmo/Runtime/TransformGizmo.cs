@@ -1,10 +1,13 @@
 /* Modified version of https://github.com/HiddenMonk/Unity3DRuntimeTransformGizmo */
-using UnityEngine;
-using System.Collections.Generic;
-using System.Collections;
 using CommandUndoRedo;
-using UnityEngine.InputSystem;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
+using System.Linq;
 
 namespace RuntimeGizmos
 {
@@ -48,6 +51,11 @@ namespace RuntimeGizmos
             {
                 ClearAndAddTarget(overrideTarget);
             }
+        }
+        
+        public void SetDistanceMultiplier(float distanceMultiplier)
+        {
+            DistanceMultiplier = distanceMultiplier;
         }
 
         public static TransformGizmo CreateHandle(Camera targetCamera, Transform targetTransform)
@@ -93,9 +101,12 @@ namespace RuntimeGizmos
         public TransformPivot pivot = TransformPivot.Pivot;
         public CenterType centerType = CenterType.All;
         public ScaleType scaleType = ScaleType.FromPoint;
-        
+        public float DistanceMultiplier { get; private set; } = 1f;
         private InputAction _inputMoveAction;
         private InputAction _selectAction;
+        
+        private Coroutine UICheckCoroutine;
+        private WaitForEndOfFrame waitForEndOfFrame = new WaitForEndOfFrame();
 
         //These are the same as the unity editor hotkeys
         /*private Key SetSpaceToggle = Key.X;
@@ -193,8 +204,7 @@ namespace RuntimeGizmos
         List<Transform> childrenBuffer = new List<Transform>();
         List<Renderer> renderersBuffer = new List<Renderer>();
         List<Material> materialsBuffer = new List<Material>();
-
-        WaitForEndOfFrame waitForEndOFFrame = new WaitForEndOfFrame();
+        
         Coroutine forceUpdatePivotCoroutine;
 
         static Material lineMaterial;
@@ -305,7 +315,7 @@ namespace RuntimeGizmos
             {
                 if(customRay.HasValue && customRay.Value.Id == rayId)
                 {
-                    SetNearAxis(ray);
+                    SetNearAxis(ray, false);
                     if (nearAxis != Axis.None)
                     {
                         CustomRay updatedRay = customRay.Value;
@@ -320,7 +330,7 @@ namespace RuntimeGizmos
                 }
                 return;
             }
-            SetNearAxis(ray);
+            SetNearAxis(ray, true);
 
             if (nearAxis == Axis.None) return;
             customRay = new CustomRay(ray, rayId, false);
@@ -343,7 +353,7 @@ namespace RuntimeGizmos
             {
                 if (nearAxis == Axis.None)
                 {
-                    SetNearAxis(ray);
+                    SetNearAxis(ray, true);
                 }
                 if(nearAxis == Axis.None) return;
                 StartCoroutine(TransformSelected(translatingType));
@@ -361,11 +371,19 @@ namespace RuntimeGizmos
             selecting = inputActionContext.ReadValueAsButton();
             if (selecting && mainTargetRoot != null)
             {
+                StartCoroutine(Selection());
+            }
+            return;
+
+            IEnumerator Selection()
+            {
                 if (nearAxis == Axis.None)
                 {
-                    SetNearAxis(GetInputRay());
+                    SetNearAxis(GetInputRay(), true);
                 }
-                if(nearAxis == Axis.None) return;
+
+                yield return null;
+                if(nearAxis == Axis.None) yield break;
                 StartCoroutine(TransformSelected(translatingType));
             }
         }
@@ -373,7 +391,7 @@ namespace RuntimeGizmos
         private void InputMoveActionOnperformed(InputAction.CallbackContext inputActionContext)
         {
             if (!inputActionContext.performed) return;
-            SetNearAxis(GetInputRay());
+            SetNearAxis(GetInputRay(), true);
             Vector2 currentPointerPosition = inputActionContext.ReadValue<Vector2>();
             _previousPointerPosition = currentPointerPosition;
         }
@@ -1113,7 +1131,7 @@ namespace RuntimeGizmos
 #if UNITY_WEBGL
                 yield return null;
 #else
-                yield return waitForEndOFFrame;
+                yield return waitForEndOfFrame;
 #endif
             }
         }
@@ -1164,56 +1182,110 @@ namespace RuntimeGizmos
             return currentAxisInfo;
         }
 
-        void SetNearAxis(Ray inputRay)
+        void SetNearAxis(Ray inputRay, bool checkUI)
         {
             if (isTransforming)
                 return;
 
-            SetTranslatingAxis(transformType, Axis.None);
-
-            if (mainTargetRoot == null)
-                return;
-
-            float distanceMultiplier = GetDistanceMultiplier();
-            float handleMinSelectedDistanceCheck = (this.minSelectedDistanceCheck + handleWidth) * distanceMultiplier;
-
-            if (nearAxis == Axis.None && (TransformTypeContains(TransformType.Move) || TransformTypeContains(TransformType.Scale)))
+            if (EventSystem.current == null || !checkUI)
             {
-                //Important to check scale lines before move lines since in TransformType.All the move planes would block the scales center scale all gizmo.
-                if (nearAxis == Axis.None && TransformTypeContains(TransformType.Scale))
+                SetAction();
+                return;
+            }
+            
+            //Temp. work around for VR
+#if !VR_MODE
+            if (UICheckCoroutine != null)
+            {
+                StopCoroutine(UICheckCoroutine);
+            }
+            UICheckCoroutine = StartCoroutine(CheckForUI());
+#else
+            // First check if we hit anything on UI layer specifically
+            if (Physics.Raycast(inputRay, out RaycastHit uiHit, myCamera.farClipPlane, LayerMask.GetMask("UI")))
+            {
+                // UI is in the way, check if there's a gizmo handle behind it
+                if (Physics.Raycast(inputRay, out RaycastHit gizmoHit, myCamera.farClipPlane, selectionMask))
                 {
-                    float tipMinSelectedDistanceCheck = (this.minSelectedDistanceCheck + boxSize) * distanceMultiplier;
-                    HandleNearestPlanes(TransformType.Scale, handleSquares, tipMinSelectedDistanceCheck, inputRay);
-                }
-
-                if (nearAxis == Axis.None && TransformTypeContains(TransformType.Move))
-                {
-                    //Important to check the planes first before the handle tip since it makes selecting the planes easier.
-                    float planeMinSelectedDistanceCheck = (this.minSelectedDistanceCheck + planeSize) * distanceMultiplier;
-                    HandleNearestPlanes(TransformType.Move, handlePlanes, planeMinSelectedDistanceCheck, inputRay);
-
-                    if (nearAxis != Axis.None)
+                    // Only block if UI is closer than gizmo
+                    if (uiHit.distance < gizmoHit.distance)
                     {
-                        planeAxis = nearAxis;
-                    }
-                    else
-                    {
-                        float tipMinSelectedDistanceCheck = (this.minSelectedDistanceCheck + triangleSize) * distanceMultiplier;
-                        HandleNearestLines(TransformType.Move, handleTriangles, tipMinSelectedDistanceCheck, inputRay);
+                        return;
                     }
                 }
-
-                if (nearAxis == Axis.None)
+                else
                 {
-                    //Since Move and Scale share the same handle line, we give Move the priority.
-                    TransformType transType = transformType == TransformType.All ? TransformType.Move : transformType;
-                    HandleNearestLines(transType, handleLines, handleMinSelectedDistanceCheck, inputRay);
+                    return; // UI hit but no gizmo behind it
                 }
             }
+            SetAction();
+#endif
+            return;
 
-            if (nearAxis == Axis.None && TransformTypeContains(TransformType.Rotate))
+            IEnumerator CheckForUI()
             {
-                HandleNearestLines(TransformType.Rotate, circlesLines, handleMinSelectedDistanceCheck, inputRay);
+#if UNITY_WEBGL
+                yield return null;
+#else
+                yield return waitForEndOfFrame;
+#endif
+                
+                if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(-1))
+                {
+                    SetTranslatingAxis(transformType, Axis.None);
+                    yield break;
+                }
+                SetAction();
+            }
+
+            void SetAction()
+            {
+                SetTranslatingAxis(transformType, Axis.None);
+
+                if (mainTargetRoot == null)
+                    return;
+
+                float distanceMultiplier = GetDistanceMultiplier();
+                float handleMinSelectedDistanceCheck = (this.minSelectedDistanceCheck + handleWidth) * distanceMultiplier;
+
+                if (nearAxis == Axis.None && (TransformTypeContains(TransformType.Move) || TransformTypeContains(TransformType.Scale)))
+                {
+                    //Important to check scale lines before move lines since in TransformType.All the move planes would block the scales center scale all gizmo.
+                    if (nearAxis == Axis.None && TransformTypeContains(TransformType.Scale))
+                    {
+                        float tipMinSelectedDistanceCheck = (this.minSelectedDistanceCheck + boxSize) * distanceMultiplier;
+                        HandleNearestPlanes(TransformType.Scale, handleSquares, tipMinSelectedDistanceCheck, inputRay);
+                    }
+
+                    if (nearAxis == Axis.None && TransformTypeContains(TransformType.Move))
+                    {
+                        //Important to check the planes first before the handle tip since it makes selecting the planes easier.
+                        float planeMinSelectedDistanceCheck = (this.minSelectedDistanceCheck + planeSize) * distanceMultiplier;
+                        HandleNearestPlanes(TransformType.Move, handlePlanes, planeMinSelectedDistanceCheck, inputRay);
+
+                        if (nearAxis != Axis.None)
+                        {
+                            planeAxis = nearAxis;
+                        }
+                        else
+                        {
+                            float tipMinSelectedDistanceCheck = (this.minSelectedDistanceCheck + triangleSize) * distanceMultiplier;
+                            HandleNearestLines(TransformType.Move, handleTriangles, tipMinSelectedDistanceCheck, inputRay);
+                        }
+                    }
+
+                    if (nearAxis == Axis.None)
+                    {
+                        //Since Move and Scale share the same handle line, we give Move the priority.
+                        TransformType transType = transformType == TransformType.All ? TransformType.Move : transformType;
+                        HandleNearestLines(transType, handleLines, handleMinSelectedDistanceCheck, inputRay);
+                    }
+                }
+
+                if (nearAxis == Axis.None && TransformTypeContains(TransformType.Rotate))
+                {
+                    HandleNearestLines(TransformType.Rotate, circlesLines, handleMinSelectedDistanceCheck, inputRay);
+                }
             }
         }
 
@@ -1333,8 +1405,11 @@ namespace RuntimeGizmos
                 return 0f;
 
             if (myCamera.orthographic)
-                return Mathf.Max(.01f, myCamera.orthographicSize * 2f);
-            return Mathf.Max(.01f, Mathf.Abs(ExtVector3.MagnitudeInDirection(pivotPoint - transform.position, myCamera.transform.forward)));
+            {
+                return Mathf.Max(.01f, myCamera.orthographicSize * 2f) * DistanceMultiplier;
+            }
+                
+            return Mathf.Max(.01f, Mathf.Abs(ExtVector3.MagnitudeInDirection(pivotPoint - transform.position, myCamera.transform.forward))) * DistanceMultiplier;
         }
 
         void SetLines()
@@ -1653,11 +1728,15 @@ namespace RuntimeGizmos
             if (mr == null)
             {
                 GameObject go = new GameObject(name);
-                
+                if (go.scene != gameObject.scene)
+                {
+                    SceneManager.MoveGameObjectToScene(go, gameObject.scene);
+                }
+
                 int layer = selectionMask.value > 0 && Mathf.IsPowerOfTwo(selectionMask.value)
                     ? (int)Mathf.Log(selectionMask.value, 2)
                     : LayerMask.NameToLayer("Default");
-                
+
                 go.layer = layer >= 0 && layer < 32 ? layer : LayerMask.NameToLayer("Default");
                 mr = go.AddComponent<MeshRenderer>();
                 go.AddComponent<MeshFilter>();
@@ -1718,6 +1797,11 @@ namespace RuntimeGizmos
             if (mr == null)
             {
                 GameObject go = new GameObject(name);
+                if (go.scene != gameObject.scene)
+                {
+                    SceneManager.MoveGameObjectToScene(go, gameObject.scene);
+                }
+
                 int layer = selectionMask.value > 0 && Mathf.IsPowerOfTwo(selectionMask.value)
                     ? (int)Mathf.Log(selectionMask.value, 2)
                     : LayerMask.NameToLayer("Default");

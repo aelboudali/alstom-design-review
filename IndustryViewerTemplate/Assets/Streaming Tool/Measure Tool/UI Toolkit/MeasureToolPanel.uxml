@@ -1,0 +1,72 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:appui="Unity.AppUI.UI" editor-extension-mode="False">
+    <Style src="project://database/Assets/Streaming%20Tool/Measure%20Tool/UI%20Toolkit/MeasureToolPanel.uss?fileID=7433441132597879392&amp;guid=c6b8de3d72eadbe4ba0a65b35db8498c&amp;type=3#MeasureToolPanel" />
+    <ui:VisualElement name="main_panel">
+        <ui:VisualElement name="container__menu-panel" class="container__menu-panel">
+            <ui:VisualElement name="line_creator_container" class="container__line-creator" style="flex-direction: column; flex-wrap: nowrap;">
+                <ui:VisualElement name="line_creator_name_container" class="container__line-creator-name">
+                    <appui:Text name="line_creator_name_label" style="width: 50%;">
+                        <Bindings>
+                            <UnityEngine.Localization.LocalizedString property="text" table="GUID:8eb2735d8f73b4a4eac3389fed3a28cf" entry="Id(427803090944)" />
+                        </Bindings>
+                    </appui:Text>
+                    <appui:TextField name="line_creator_name_value" text="Measure Line" class="text-field__line-creator-name-value">
+                        <Bindings>
+                            <UnityEngine.Localization.LocalizedString property="placeholder" table="GUID:8eb2735d8f73b4a4eac3389fed3a28cf" entry="Id(542022377472)" />
+                        </Bindings>
+                    </appui:TextField>
+                </ui:VisualElement>
+                <ui:VisualElement name="line_creator_distance_text_container" class="container__line-creator-distance">
+                    <appui:Text name="line_creator_distance_label">
+                        <Bindings>
+                            <UnityEngine.Localization.LocalizedString property="text" table="GUID:8eb2735d8f73b4a4eac3389fed3a28cf" entry="Id(225092378624)" />
+                        </Bindings>
+                    </appui:Text>
+                    <appui:Text name="line_creator_distance_value" />
+                </ui:VisualElement>
+                <ui:VisualElement name="line_creator_unit_container" class="container__line-creator-unit">
+                    <appui:Text name="line_creator_unit_label">
+                        <Bindings>
+                            <UnityEngine.Localization.LocalizedString property="text" table="GUID:8eb2735d8f73b4a4eac3389fed3a28cf" entry="Id(277985614438400)" />
+                        </Bindings>
+                    </appui:Text>
+                    <appui:Dropdown focusable="true" name="line_creator_unit_dropdown" class="dropdown__line-creator-unit" />
+                </ui:VisualElement>
+                <ui:VisualElement name="line_creator_mode_container" class="container__line-creator-unit">
+                    <appui:Text name="line_creator_mode_label">
+                        <Bindings>
+                            <UnityEngine.Localization.LocalizedString property="text" table="GUID:8eb2735d8f73b4a4eac3389fed3a28cf" entry="Id(33364848032079872)" />
+                        </Bindings>
+                    </appui:Text>
+                    <appui:Dropdown focusable="true" name="line_creator_mode_dropdown" class="dropdown__line-creator-unit" />
+                </ui:VisualElement>
+                <ui:VisualElement name="line_creator_confirmation_container" class="container__line-creator-confirmation">
+                    <appui:ActionButton name="line_creator_confirmation_clear" class="button__line-creator-confirmation">
+                        <Bindings>
+                            <UnityEngine.Localization.LocalizedString property="label" table="GUID:8eb2735d8f73b4a4eac3389fed3a28cf" entry="Id(859606687744)" />
+                        </Bindings>
+                    </appui:ActionButton>
+                    <appui:ActionButton name="line_creator_confirmation_save" class="button__line-creator-confirmation">
+                        <Bindings>
+                            <UnityEngine.Localization.LocalizedString property="label" table="GUID:2a6c1c34211344e798bb376d8fa80190" entry="Id(53019533107212)" />
+                        </Bindings>
+                    </appui:ActionButton>
+                </ui:VisualElement>
+                <ui:VisualElement name="line_creator_edit_confirmation_container" class="container__line-creator-edit-confirmation">
+                    <appui:ActionButton name="line_creator_edit_confirmation_discard" class="button__line-creator-confirmation">
+                        <Bindings>
+                            <UnityEngine.Localization.LocalizedString property="label" table="GUID:8eb2735d8f73b4a4eac3389fed3a28cf" entry="Id(655162302341120)" />
+                        </Bindings>
+                    </appui:ActionButton>
+                    <appui:ActionButton name="line_creator_edit_confirmation_apply" class="button__line-creator-confirmation">
+                        <Bindings>
+                            <UnityEngine.Localization.LocalizedString property="label" table="GUID:8eb2735d8f73b4a4eac3389fed3a28cf" entry="Id(655106979471360)" />
+                        </Bindings>
+                    </appui:ActionButton>
+                </ui:VisualElement>
+                <ui:VisualElement name="line_list_container" class="container__line-list">
+                    <ui:ScrollView name="line_list_scrollview" class="scrollview__line-list" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

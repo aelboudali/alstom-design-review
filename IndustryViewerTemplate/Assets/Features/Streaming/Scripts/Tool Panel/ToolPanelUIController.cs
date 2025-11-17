@@ -3,32 +3,43 @@ using Unity.AppUI.UI;
 using UnityEngine;
 using UnityEngine.Localization;
 using Unity.Industry.Viewer.Assets;
+using Unity.Industry.Viewer.Shared;
 using UnityEngine.UIElements;
+using System.Collections;
 
 namespace Unity.Industry.Viewer.Streaming
 {
     public class ToolPanelUIController : MonoBehaviour
     {
-        public static Action<LocalizedString, VisualElement> OpenToolPanel;
+        public static Action<LocalizedString, VisualElement, bool> OpenToolPanel;
         public static Action CloseToolPanel;
+        public static bool IsOpened;
         
-        private const string k_ToolPanelName = "ToolPanel";
-        private const string k_ToolTitleName = "ToolTitle";
-        private const string k_ToolCloseButtonName = "ToolCloseButton";
-        private const string k_ToolContentName = "Content";
+        protected const string k_ToolPanelName = "ToolPanel";
+        protected const string k_ToolTitleName = "ToolTitle";
+        protected const string k_ToolCloseButtonName = "ToolCloseButton";
+        protected const string k_ToolContentName = "Content";
         
-        private VisualElement m_ToolPanelRoot;
-        private IconButton m_CloseToolPanelButton;
-        private Text m_ToolPanelTitle;
-        private VisualElement m_ToolPanelContent;
-        private VisualElement m_ContentPanel;
+        protected VisualElement m_ToolPanelRoot;
+        protected IconButton m_CloseToolPanelButton;
+        protected Text m_ToolPanelTitle;
+        protected VisualElement m_ToolPanelContent;
+        protected VisualElement m_ContentPanel;
+        
+        private VisualElement m_ResizeHandle;
+        private bool m_Resizing = false;
+        private float m_StartWidth;
+        private Vector2 m_StartPointer;
+        private float m_OriginalWidth;
+        private bool m_InitializedHandle = false;
         
         [SerializeField]
-        UIDocument m_UIDocument;
+        protected UIDocument m_UIDocument;
         
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
+            IsOpened = false;
             OpenToolPanel += OnOpenToolPanel;
             CloseToolPanel += OnCloseToolPanel;
             InitializeUI();
@@ -36,13 +47,18 @@ namespace Unity.Industry.Viewer.Streaming
 
         private void OnDestroy()
         {
+            IsOpened = false;
             OpenToolPanel -= OnOpenToolPanel;
             CloseToolPanel -= OnCloseToolPanel;
             m_ToolPanelContent?.RemoveFromHierarchy();
             m_CloseToolPanelButton.clickable.clicked -= OnCloseToolPanelButtonClicked;
+            
+            m_ResizeHandle?.RegisterCallback<PointerDownEvent>(OnPointerDown);
+            m_ResizeHandle?.RegisterCallback<PointerMoveEvent>(OnPointerMove);
+            m_ResizeHandle?.RegisterCallback<PointerUpEvent>(OnPointerUp);
         }
 
-        void InitializeUI()
+        protected virtual void InitializeUI()
         {
             var UIDocument = m_UIDocument == null? SharedUIManager.Instance.AssetsUIDocument : m_UIDocument;
             if (UIDocument == null) return;
@@ -54,30 +70,105 @@ namespace Unity.Industry.Viewer.Streaming
             m_ToolPanelTitle = m_ToolPanelRoot.Q<Text>(k_ToolTitleName);
             m_ContentPanel = m_ToolPanelRoot.Q<VisualElement>(k_ToolContentName);
         }
-        
-        private void OnOpenToolPanel(LocalizedString title, VisualElement content)
+
+        protected void AddContentToPanel(LocalizedString title, VisualElement content)
         {
-            m_ToolPanelContent?.RemoveFromHierarchy();
+            if (m_ToolPanelContent != null)
+            {
+                m_ToolPanelContent.RemoveFromHierarchy();
+            }
             
             m_ToolPanelRoot.style.display = DisplayStyle.Flex;
-            m_ToolPanelTitle.ClearBinding("text");
-            m_ToolPanelTitle.SetBinding("text", title);
+            m_ToolPanelTitle.text = title.GetTitleLocalizedStringForAppUI();
             m_ToolPanelContent = content;
             m_ContentPanel.Add(content);
+        }
+        
+        protected virtual void OnOpenToolPanel(LocalizedString title, VisualElement content, bool resizable)
+        {
+            IsOpened = true;
+            AddContentToPanel(title, content);
+
+            m_ResizeHandle = m_ToolPanelRoot.Q<VisualElement>("ResizeHandle");
+            if (resizable)
+            {
+                if (!m_InitializedHandle)
+                {
+                    m_InitializedHandle = true;
+                    m_ResizeHandle.RegisterCallback<PointerDownEvent>(OnPointerDown);
+                    m_ResizeHandle.RegisterCallback<PointerMoveEvent>(OnPointerMove);
+                    m_ResizeHandle.RegisterCallback<PointerUpEvent>(OnPointerUp);
+                }
+                m_ResizeHandle.style.display = DisplayStyle.Flex;
+            }
+            else
+            {
+                m_ResizeHandle.style.display = DisplayStyle.None;
+            }
+            
+            StartCoroutine(WaitForUIRefresh());
+            return;
+            
+            IEnumerator WaitForUIRefresh()
+            {
+                yield return new WaitForEndOfFrame();
+                m_OriginalWidth = m_ToolPanelRoot.resolvedStyle.width;
+            }
+        }
+        
+        void OnPointerMove(PointerMoveEvent evt)
+        {
+            if (!m_Resizing) return;
+            float delta = m_StartPointer.x - evt.position.x; // Invert direction
+            m_ToolPanelRoot.style.width = Mathf.Clamp(m_StartWidth + delta, m_OriginalWidth,
+                m_OriginalWidth * 2.5f);
+        }
+
+        void OnPointerUp(PointerUpEvent evt)
+        {
+            m_Resizing = false;
+            m_ResizeHandle.ReleasePointer(evt.pointerId); // Release pointer
+        }
+        
+        void OnPointerDown(PointerDownEvent evt)
+        {
+            m_Resizing = true;
+            if (m_OriginalWidth == 0)
+            {
+                m_OriginalWidth = m_StartWidth;
+            }
+            m_StartWidth = m_ToolPanelRoot.resolvedStyle.width;
+            m_StartPointer = evt.position;
+            m_ResizeHandle.CapturePointer(evt.pointerId); // Capture pointer
+            evt.StopPropagation();
         }
         
         private void OnCloseToolPanel()
         {
             m_ToolPanelRoot.style.display = DisplayStyle.None;
+            ContentReset();
+        }
+
+        protected virtual void ContentReset()
+        {
+            IsOpened = false;
+            if (m_OriginalWidth != 0)
+            {
+                m_ToolPanelRoot.style.width = m_OriginalWidth;
+            }
             m_ToolPanelContent?.RemoveFromHierarchy();
             m_ToolPanelContent = null;
+            if(m_ResizeHandle != null)
+            {
+                m_ResizeHandle.style.display = DisplayStyle.None;
+            }
         }
         
-        private void OnCloseToolPanelButtonClicked()
+        protected virtual void OnCloseToolPanelButtonClicked()
         {
-            m_ToolPanelContent?.RemoveFromHierarchy();
-            m_ToolPanelContent = null;
+            ContentReset();
             CloseToolPanel?.Invoke();
+            StreamToolsController.DisableAllTools?.Invoke(false);
         }
     }
 }

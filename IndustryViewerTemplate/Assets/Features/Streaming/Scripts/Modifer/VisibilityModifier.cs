@@ -11,6 +11,8 @@ namespace Unity.Industry.Viewer.Streaming
     public class VisibilityModifier : Modifier, IDisposable
     {
         private Dictionary<ModelStreamId, HashSet<InstanceId>> m_CurrentExistingInstances;
+        
+        private Dictionary<ModelStreamId, IMetadataRepository> m_Repositories;
 
         public HashSet<InstanceData> HiddenInstances => m_HiddenInstances;
         
@@ -40,7 +42,7 @@ namespace Unity.Industry.Viewer.Streaming
                 {
                     m_CurrentExistingInstances.Add(modelStreamId, new HashSet<InstanceId>());
                 }
-
+                //Store the instance ID in the current existing instances.
                 m_CurrentExistingInstances[modelStreamId].Add(errorState.InstanceId);
             }
             
@@ -52,7 +54,8 @@ namespace Unity.Industry.Viewer.Streaming
                 leafNodes.Add(state.InstanceId);
             }
             
-            _ = UpdateFilter(modelStreamId, leafNodes);
+            //Update the visibility in case we have loaded some new instances whose ancestors are hidden.
+            _ = UpdateFilter(modelStreamId, leafNodes, false, InstanceData.Placeholder);
             
             return Task.CompletedTask;
         }
@@ -82,8 +85,12 @@ namespace Unity.Industry.Viewer.Streaming
                 {
                     m_CurrentExistingInstances[modelStreamId].Remove(state.InstanceId);
                 }
-                if(m_CurrentExistingInstances[modelStreamId].Count == 0)
+
+                if (m_CurrentExistingInstances[modelStreamId].Count == 0)
+                {
                     m_CurrentExistingInstances.Remove(modelStreamId);
+                    m_Repositories?.Remove(modelStreamId);
+                }
             }
             
             InstanceUpdater.SetVisibility(modelStreamId, leafNodes, true);
@@ -108,21 +115,29 @@ namespace Unity.Industry.Viewer.Streaming
                 Reset();
                 return;
             }
-
+            
             var modelStreamId = instanceData.StreamingModel.ModelStream.Id;
+            m_Repositories ??= new Dictionary<ModelStreamId, IMetadataRepository>();
+            m_Repositories.TryAdd(modelStreamId, instanceData.Repository);
+            //If it is a branch node, we need to update the filter for all its leaf nodes.
+            //Get all the leaf nodes
             var leafNodes = instanceData.Instance.HasChildren? 
                 m_CurrentExistingInstances[modelStreamId] : 
                 new HashSet<InstanceId>() {instanceData.Instance.Id};
-            _ = UpdateFilter(modelStreamId, leafNodes);
+            _ = UpdateFilter(modelStreamId, leafNodes, instanceData.Instance.HasChildren, instanceData);
         }
         
-        private async Task UpdateFilter(ModelStreamId modelStreamId, HashSet<InstanceId> leafNodes)
+        private async Task UpdateFilter(ModelStreamId modelStreamId, HashSet<InstanceId> leafNodes, bool isBranchNode, InstanceData node)
         {
-            if (m_CurrentExistingInstances == null || !m_CurrentExistingInstances.ContainsKey(modelStreamId)) return;
-
-            var repository = GetFirstHiddenInstance(modelStreamId)?.Repository;
-
-            if (repository == null) return;
+            if (m_CurrentExistingInstances == null || !m_CurrentExistingInstances.ContainsKey(modelStreamId))
+            {
+                return;
+            }
+            
+            if(m_Repositories == null || m_Repositories.Count == 0 || !m_Repositories.TryGetValue(modelStreamId, out var repository))
+            {
+                return;
+            }
 
             var instanceAncestry = await repository
                 .Query()
@@ -132,14 +147,11 @@ namespace Unity.Industry.Viewer.Streaming
 
             var hiddenInstances = new HashSet<InstanceId>();
             var showInstances = new HashSet<InstanceId>();
-
-            foreach (var metadataInstance in instanceAncestry)
+            
+            if (isBranchNode && node != InstanceData.Placeholder)
             {
-                if (AnyHiddenInstanceMatches(x => x.Instance.Id == metadataInstance.Id))
-                {
-                    hiddenInstances.Add(metadataInstance.Id);
-                }
-                else
+                //We need to check if any of the leaf nodes' ancestors are hidden.
+                foreach (var metadataInstance in instanceAncestry)
                 {
                     bool ancestorHidden = false;
                     foreach (var ancestorId in metadataInstance.AncestorIds)
@@ -157,27 +169,53 @@ namespace Unity.Industry.Viewer.Streaming
                     }
                     else
                     {
-                        showInstances.Add(metadataInstance.Id);
+                        if(AnyHiddenInstanceMatches(x => x.StreamingModel.ModelStream.Id == modelStreamId && x.Instance.Id == metadataInstance.Id))
+                        {
+                            hiddenInstances.Add(metadataInstance.Id);
+                        }
+                        else
+                        {
+                            showInstances.Add(metadataInstance.Id);
+                        }
+                    }
+                }
+            } else if (!isBranchNode)
+            {
+                //We need to check if any of the leaf nodes' ancestors are hidden.
+                foreach (var metadataInstance in instanceAncestry)
+                {
+                    bool ancestorHidden = false;
+                    foreach (var ancestorId in metadataInstance.AncestorIds)
+                    {
+                        if (AnyHiddenInstanceMatches(x => x.Instance.Id == ancestorId && x.StreamingModel.ModelStream.Id == modelStreamId))
+                        {
+                            ancestorHidden = true;
+                            break;
+                        }
+                    }
+
+                    if (ancestorHidden)
+                    {
+                        hiddenInstances.Add(metadataInstance.Id);
+                    }
+                    else
+                    {
+                        if(AnyHiddenInstanceMatches(x => x.StreamingModel.ModelStream.Id == modelStreamId && x.Instance.Id == metadataInstance.Id))
+                        {
+                            hiddenInstances.Add(metadataInstance.Id);
+                            m_HiddenInstances.Add(new InstanceData(metadataInstance, node.StreamingModel, node.Repository));
+                        }
+                        else
+                        {
+                            showInstances.Add(metadataInstance.Id);
+                            m_HiddenInstances.RemoveWhere(x => x.StreamingModel.ModelStream.Id == modelStreamId && x.Instance.Id == metadataInstance.Id);
+                        }
                     }
                 }
             }
-
+            
             InstanceUpdater.SetVisibility(modelStreamId, showInstances, true);
             InstanceUpdater.SetVisibility(modelStreamId, hiddenInstances, false);
-        }
-        
-        private InstanceData GetFirstHiddenInstance(ModelStreamId modelStreamId)
-        {
-            if(m_HiddenInstances == null) return null;
-            
-            foreach (var instance in m_HiddenInstances)
-            {
-                if (instance.StreamingModel.ModelStream.Id == modelStreamId)
-                {
-                    return instance;
-                }
-            }
-            return null;
         }
 
         private bool AnyHiddenInstanceMatches(Func<InstanceData, bool> predicate)

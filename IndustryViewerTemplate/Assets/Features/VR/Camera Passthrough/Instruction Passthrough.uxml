@@ -1,0 +1,7 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Unity.AppUI.UI.Text size="XXXL" picking-mode="Ignore" style="-unity-text-align: middle-center; color: rgb(255, 255, 255);">
+        <Bindings>
+            <UnityEngine.Localization.LocalizedString property="text" table="GUID:75b7202b47b6842be8d6b5d609ec08e7" entry="Id(119196761623355392)" />
+        </Bindings>
+    </Unity.AppUI.UI.Text>
+</ui:UXML>

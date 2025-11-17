@@ -35,6 +35,7 @@ namespace Unity.Industry.Viewer.Multiplay
         public static Action<string> OnSessionJoinedFailed;
         public static Action<string, string, string, string> SearchNewLayout;
         public static Action<AssetInfo> AskToJoinLayout;
+        public static bool IsInStreaming;
         
         private string m_SessionName;// = "TestSession";
         [SerializeField, Range(2, 8)]
@@ -57,6 +58,16 @@ namespace Unity.Industry.Viewer.Multiplay
         
         NetworkObject m_ModelSyncNetworkObject;
         
+        [SerializeField]
+        private GameObject presentationControllerObjectPrefab;
+        
+        NetworkObject m_PresentationControllerNetworkObject;
+
+        private void OnEnable()
+        {
+            Application.wantsToQuit += ApplicationOnWantsToQuit;
+        }
+
         /// <summary>
         /// Initializes the multiplayer session by checking offline mode, streaming asset, and Unity services state.
         /// If not in offline mode and streaming asset is available, it initializes Unity services and signs in anonymously if not already signed in.
@@ -64,12 +75,18 @@ namespace Unity.Industry.Viewer.Multiplay
         /// </summary>
         private void Start()
         {
+            IsInStreaming = true;
             SearchNewLayout += OnSearchNewLayout;
             NetworkDetector.OnNetworkStatusChanged += NetworkStatusChanged;
             if(NetworkDetector.RequestedOfflineMode) return;
             _ = Initializing();
         }
-        
+
+        private void OnDisable()
+        {
+            Application.wantsToQuit -= ApplicationOnWantsToQuit;
+        }
+
         /// <summary>
         /// Cleans up event handlers and network connections when the object is destroyed.
         /// If the application is in offline mode, it returns early.
@@ -78,9 +95,14 @@ namespace Unity.Industry.Viewer.Multiplay
         /// </summary>
         private void OnDestroy()
         {
+            IsInStreaming = false;
+            AssetsController.AssetSelected -= OnAssetSelected;
+            if (MultiplayerService.Instance != null)
+            {
+                MultiplayerService.Instance.SessionRemoved -= OnSessionRemoved;
+            }
             NetworkDetector.OnNetworkStatusChanged -= NetworkStatusChanged;
             SearchNewLayout -= OnSearchNewLayout;
-            AssetsController.AssetSelected -= OnAssetSelected;
             if(NetworkDetector.IsOffline) return;
             if (NetworkManager.Singleton != null)
             {
@@ -91,11 +113,43 @@ namespace Unity.Industry.Viewer.Multiplay
             OnClientDisconnected -= OnRemoveClientGameObject;
             EndPresentation -= OnEndPresentation;
             
-            InitializePresentationMode -= OnInitializePresentationMode;
             JoinPresentation -= OnJoinPresentation;
             
             LeaveSession().Forget();
         }
+        
+        private bool ApplicationOnWantsToQuit()
+        {
+            if (m_CurrentSession != null)
+            {
+                _ = LeaveAndQuit();
+                return false;
+            }
+            return true;
+            
+            async Task LeaveAndQuit()
+            {
+                await LeaveSession();
+                Application.Quit();
+            }
+        }
+
+        private void OnSessionRemoved(ISession obj)
+        {
+            m_CurrentSession = null;
+            if(NetworkDetector.IsOffline || NetworkDetector.RequestedOfflineMode) return;
+            _ = Initializing();
+        }
+
+        /*private void OnApplicationFocus(bool hasFocus)
+        {
+            if (MultiplayerService.Instance.Sessions.Count == 0 && hasFocus)
+            {
+                Debug.Log("Application regained focus, reinitializing session.");
+                m_CurrentSession = null;
+                _ = Initializing();
+            }
+        }*/
 
         private void NetworkStatusChanged(bool connected)
         {
@@ -104,12 +158,16 @@ namespace Unity.Industry.Viewer.Multiplay
 
         private async Task Initializing()
         {
+            if(!PlatformServices.IsUserLoggedIn) return;
             if (UnityServices.State != ServicesInitializationState.Initialized &&
                 UnityServices.State != ServicesInitializationState.Initializing)
             {
                 await UnityServices.InitializeAsync();
             }
-
+            
+            MultiplayerService.Instance.SessionRemoved -= OnSessionRemoved;
+            MultiplayerService.Instance.SessionRemoved += OnSessionRemoved;
+            
             if (!AuthenticationService.Instance.IsSignedIn)
             {
                 await AuthenticationService.Instance.SignInAnonymouslyAsync();
@@ -165,8 +223,10 @@ namespace Unity.Industry.Viewer.Multiplay
         /// </summary>
         private async Task CreateOrJoinSession()
         {
-            if(m_CurrentSession != null) return;
-            
+            if (m_CurrentSession != null)
+            {
+                await LeaveSession();
+            }
             var options = new SessionOptions()
             {
                 Name = m_SessionName,
@@ -175,9 +235,6 @@ namespace Unity.Industry.Viewer.Multiplay
             
             NetworkManager.Singleton.OnConnectionEvent -= OnConnectionEvent;
             NetworkManager.Singleton.OnConnectionEvent += OnConnectionEvent;
-            
-            InitializePresentationMode -= OnInitializePresentationMode;
-            InitializePresentationMode += OnInitializePresentationMode;
             
             JoinPresentation -= OnJoinPresentation;
             JoinPresentation += OnJoinPresentation;
@@ -195,8 +252,18 @@ namespace Unity.Industry.Viewer.Multiplay
             {
                 MultiplayerService.Instance.SessionAdded -= InstanceOnSessionAdded;
                 MultiplayerService.Instance.SessionAdded += InstanceOnSessionAdded;
+                var joined = await MultiplayerService.Instance.GetJoinedSessionIdsAsync();
+                if (joined.Count > 0)
+                {
+                    if (joined.Contains(m_SessionName))
+                    {
+                        await MultiplayerService.Instance.ReconnectToSessionAsync(m_SessionName);
+                        return;
+                    }
+                }
                 await MultiplayerService.Instance.CreateOrJoinSessionAsync(m_SessionName, options);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 OnSessionJoinedFailed.Invoke(e.Message);
                 Debug.LogError("Failed to create or join session: " + e.Message);
@@ -207,6 +274,13 @@ namespace Unity.Industry.Viewer.Multiplay
             void InstanceOnSessionAdded(ISession session)
             {
                 MultiplayerService.Instance.SessionAdded -= InstanceOnSessionAdded;
+
+                if (!IsInStreaming)
+                {
+                    m_CurrentSession = session;
+                    LeaveSession().Forget();
+                    return;
+                }
                 
                 AssetsController.AssetSelected -= OnAssetSelected;
                 AssetsController.AssetSelected += OnAssetSelected;
@@ -220,13 +294,25 @@ namespace Unity.Industry.Viewer.Multiplay
                 if (NetworkDetector.IsOffline)
                 {
                     LeaveSession().Forget();
+                    return;
                 }
+
+                AssetsController.IsCheckingForNewVersionEnabled = true;
             }
         }
 
         private void OnAssetSelected(AssetInfo assetInfo)
         {
+            if (!IsInStreaming)
+            {
+                AssetsController.AssetSelected -= OnAssetSelected;
+                return;
+            }
+
             if(m_CurrentSession == null) return;
+
+            AssetsController.IsCheckingForNewVersionEnabled = false;
+
             var sessionName = StreamingUtils.ReturnHashName(assetInfo.Asset) + StreamingModelController.StreamingAssetVersion;;
             //New session needed leave current session and rejoin
             var syncModelTransform = FindFirstObjectByType<SyncModelTransform>();
@@ -298,16 +384,6 @@ namespace Unity.Industry.Viewer.Multiplay
                 playerController.JoinPresentation(presenterObject);
             }
         }
-        
-        private void OnInitializePresentationMode()
-        {
-            foreach (var playerObject in m_PlayerObjects.Values)
-            {
-                if (!playerObject.TryGetComponent(out NetworkPlayerController playerController)) continue;
-                if(!playerController.IsOwner)continue;
-                playerController.InitializePresentationMode();
-            }
-        }
 
         // Handles the removal of a client game object by removing the player object from the dictionary.
         private void OnRemoveClientGameObject(ulong key)
@@ -344,7 +420,10 @@ namespace Unity.Industry.Viewer.Multiplay
         {
             if (eventData.EventType == ConnectionEvent.ClientConnected)
             {
-                if (!NetworkManager.Singleton.LocalClient.IsSessionOwner || m_TransformNetworkObject != null || m_ModelSyncNetworkObject != null) return;
+                if (!NetworkManager.Singleton.LocalClient.IsSessionOwner 
+                    || m_TransformNetworkObject != null 
+                    || m_ModelSyncNetworkObject != null
+                    || m_PresentationControllerNetworkObject != null) return;
 
                 var transformController = Instantiate(transformControllerObjectPrefab);
                 SceneManager.MoveGameObjectToScene(transformController, gameObject.scene);
@@ -354,9 +433,17 @@ namespace Unity.Industry.Viewer.Multiplay
                 }
                 
                 var modelSyncObject = Instantiate(modelSyncPrefab);
-                if(modelSyncObject.TryGetComponent(out m_ModelSyncNetworkObject))
+                SceneManager.MoveGameObjectToScene(modelSyncObject, gameObject.scene);
+                if (modelSyncObject.TryGetComponent(out m_ModelSyncNetworkObject))
                 {
                     m_ModelSyncNetworkObject.Spawn(true);
+                }
+                
+                var presentationController = Instantiate(presentationControllerObjectPrefab);
+                SceneManager.MoveGameObjectToScene(presentationController, gameObject.scene);
+                if (presentationController.TryGetComponent(out m_PresentationControllerNetworkObject))
+                {
+                    m_PresentationControllerNetworkObject.Spawn(true);
                 }
             }
 
@@ -372,8 +459,10 @@ namespace Unity.Industry.Viewer.Multiplay
             if (m_CurrentSession == null) return;
             try
             {
+                MultiplayerService.Instance.SessionRemoved -= InstanceOnSessionRemoved;
                 MultiplayerService.Instance.SessionRemoved += InstanceOnSessionRemoved;
                 await m_CurrentSession.LeaveAsync();
+                Debug.Log("Left session");
             }
             catch (Exception e)
             {
@@ -384,11 +473,11 @@ namespace Unity.Industry.Viewer.Multiplay
             
             void InstanceOnSessionRemoved(ISession obj)
             {
-                MultiplayerService.Instance.SessionRemoved -= InstanceOnSessionRemoved;
-                m_PlayerObjects?.Clear();
                 m_TransformNetworkObject = null;
                 m_ModelSyncNetworkObject = null;
                 m_CurrentSession = null;
+                MultiplayerService.Instance.SessionRemoved -= InstanceOnSessionRemoved;
+                m_PlayerObjects?.Clear();
             }
         }
         

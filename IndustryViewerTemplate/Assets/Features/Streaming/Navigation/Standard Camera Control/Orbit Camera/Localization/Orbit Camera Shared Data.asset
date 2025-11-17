@@ -31,10 +31,6 @@ MonoBehaviour:
     m_Key: Zoom Sensitivity
     m_Metadata:
       m_Items: []
-  - m_Id: 24770781306626048
-    m_Key: New Entry
-    m_Metadata:
-      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

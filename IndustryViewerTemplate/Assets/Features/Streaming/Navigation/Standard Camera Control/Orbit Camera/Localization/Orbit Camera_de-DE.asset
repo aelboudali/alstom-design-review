@@ -27,11 +27,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 12455160832000
-    m_Localized: Pan-Empfindlichkeit
+    m_Localized: Schwenkempfindlichkeit
     m_Metadata:
       m_Items: []
   - m_Id: 12455160832001
-    m_Localized: Zoom-Empfindlichkeit
+    m_Localized: Zoomempfindlichkeit
     m_Metadata:
       m_Items: []
   references:

@@ -1,0 +1,6 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:VisualElement name="Background" class="EnvironmentEntry" style="flex-grow: 1; margin-bottom: 10px; border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; height: 250px; justify-content: space-between; min-height: 250px; max-height: 250px;">
+        <engine:VisualElement name="EnvironmentPreviewElement" picking-mode="Ignore" style="flex-grow: 1; width: 100%; -unity-background-scale-mode: scale-and-crop; border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 0; border-bottom-left-radius: 0; height: 212px; min-height: 212px; max-height: 212px;" />
+        <Unity.AppUI.UI.Text text="Name" name="EnvironmentNameText" picking-mode="Ignore" size="L" style="-unity-text-align: middle-center; font-size: 18px; width: 100%; height: 40px; -unity-font-style: bold;" />
+    </engine:VisualElement>
+</engine:UXML>

@@ -8,7 +8,6 @@ using Unity.Cloud.Common;
 using Unity.Cloud.DataStreaming.Runtime;
 using Unity.Cloud.DataStreaming.Metadata;
 using Unity.Cloud.DataStreaming.Runtime.AssetManager;
-using Unity.Industry.Viewer.Assets;
 using Unity.Industry.Viewer.Identity;
 using Unity.Industry.Viewer.Shared;
 #if ENABLE_MULTIPLAY
@@ -17,6 +16,13 @@ using Unity.Netcode;
 
 namespace Unity.Industry.Viewer.Streaming.Hierarchy
 {
+    public class InstanceState
+    {
+        public readonly Dictionary<Color, List<InstanceId>> Highlighted = new();
+        public readonly List<InstanceData> Hidden = new();
+        public InstanceId Isolated = InstanceId.None;
+    }
+    
     // This script listens for and manages hierarchy-related events in a Unity project.
     // It handles the visibility and highlighting of streaming models based on user interactions and metadata queries.
     // The script supports asynchronous operations to fetch and update instance data from metadata repositories.
@@ -24,6 +30,7 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
     // The script provides user feedback through various events and updates the UI accordingly.
     public class HierarchyToolSceneListener : MonoBehaviour
     {
+        
         [SerializeField] private GameObject hierarchyMultiplaySyncPrefab;
         
         public StreamingModelController StreamingModelController => m_StreamingModelController;
@@ -39,14 +46,15 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
         
         private Dictionary<StreamingModel, IMetadataRepository> m_StreamModelRepositoriesMapping = new();
         
+        public Dictionary<ModelStreamId, InstanceState> InstanceStates => m_InstanceStates;
+        private Dictionary<ModelStreamId, InstanceState> m_InstanceStates = new();
+        
         [SerializeField]
         private Color highlightColor = new Color(0, 200, 255, 127);
         
-        public VisibilityModifier VisibilityModifier => m_VisibilityModifier;
-        private VisibilityModifier m_VisibilityModifier;
+        private HierarchyModifier m_hierarchyModifier;
         
-        public HighlightModifier HighlightModifier => m_HighlightModifier;
-        private HighlightModifier m_HighlightModifier;
+        public CancellationTokenSource QueryTokenSource;
         
 #if ENABLE_MULTIPLAY
         NetworkObject m_hierarchyNetworkObject;
@@ -57,16 +65,14 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
         {
             TransformController.ModelAdded += OnNewModelAdded;
             TransformController.ModelRemoved += OnModelRemoved;
-            
             HierarchyToolController.InstanceVisibilityChanged += OnInstanceVisibilityChanged;
-            
+            HierarchyToolController.VisibilityReset += OnVisibilityReset;
+            NetworkDetector.OnNetworkStatusChanged += OnNetworkStatusChanged;
+
             m_StreamingModelController = FindAnyObjectByType<StreamingModelController>(FindObjectsInactive.Include);
-            
-            m_VisibilityModifier = new VisibilityModifier();
-            m_HighlightModifier = new HighlightModifier(highlightColor);
-            
-            m_StreamingModelController.Stage.InstanceModifiers.Add(m_VisibilityModifier);
-            m_StreamingModelController.Stage.InstanceModifiers.Add(m_HighlightModifier);
+
+            m_hierarchyModifier = new HierarchyModifier();
+            m_StreamingModelController.Stage.InstanceModifiers.Add(m_hierarchyModifier);
             
             _ = CreateRepositories();
             
@@ -83,17 +89,18 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
             TransformController.ModelAdded -= OnNewModelAdded;
             TransformController.ModelRemoved -= OnModelRemoved;
             HierarchyToolController.InstanceVisibilityChanged -= OnInstanceVisibilityChanged;
-            
-            m_VisibilityModifier.Reset();
-            m_HighlightModifier.Reset();
-            
+            HierarchyToolController.VisibilityReset -= OnVisibilityReset;
+            NetworkDetector.OnNetworkStatusChanged -= OnNetworkStatusChanged;
+
             if (m_StreamingModelController != null)
             {
-                m_StreamingModelController.Stage.InstanceModifiers.Remove(m_VisibilityModifier);
-                m_StreamingModelController.Stage.InstanceModifiers.Remove(m_HighlightModifier);
+                m_StreamingModelController.Stage.InstanceModifiers.Remove(m_hierarchyModifier);
             }
-            
-            m_VisibilityModifier.Dispose();
+
+            foreach (var value in m_StreamModelRepositoriesMapping.Keys)
+            {
+                m_hierarchyModifier.RemoveMetadataRepository(value.ModelStream.Id);
+            }
             
 #if ENABLE_MULTIPLAY
             if (NetworkManager.Singleton != null)
@@ -109,7 +116,7 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
         {
             if (!NetworkManager.Singleton.LocalClient.IsSessionOwner || m_hierarchyNetworkObject != null) return;
             var addModelSyncObject = Instantiate(hierarchyMultiplaySyncPrefab);
-            if(addModelSyncObject.TryGetComponent(out m_hierarchyNetworkObject))
+            if (addModelSyncObject.TryGetComponent(out m_hierarchyNetworkObject))
             {
                 m_hierarchyNetworkObject.Spawn(true);
             }
@@ -123,16 +130,7 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
         // The function also manages the HidingList to keep track of hidden instances.
         private void OnInstanceVisibilityChanged(InstanceData data, bool visible)
         {
-            if (data.Instance == null || data.Instance.AncestorIds.Count == 0)
-            {
-                HierarchyToolController.UpdateToggleUI?.Invoke(data, visible);
-                data.StreamingModel.gameObject.SetActive(visible);
-            }
-            else
-            {
-                HierarchyToolController.UpdateToggleUI?.Invoke(data, visible);
-                m_VisibilityModifier.UpdateVisibility(data, visible);
-            }
+            UpdateVisibility(data.StreamingModel, data.Instance == null || data.Instance.AncestorIds.Count == 0, data, visible);
         }
         
         private void OnNewModelAdded(GameObject newGameObject, ITransformValuesAccessor newTransform)
@@ -145,7 +143,10 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
         
         private void OnModelRemoved(StreamingModel obj)
         {
-            if (!m_StreamModelRepositoriesMapping.ContainsKey(obj)) return;
+            if (!m_StreamModelRepositoriesMapping.ContainsKey(obj))
+            {
+                return;
+            }
             m_StreamModelRepositoriesMapping.Remove(obj);
         }
         
@@ -167,15 +168,19 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
         
         public async Task<List<InstanceData>> QueryHierarchyData(InstanceId instanceId, IMetadataRepository repository)
         {
-            return await GetChildItems().ToListAsync(CancellationToken.None);
+            ResetToken();
+            
+            return await GetChildItems().ToListAsync(QueryTokenSource.Token);
 
             async IAsyncEnumerable<InstanceData> GetChildItems()
             {
+                ResetToken();
+                
                 var query = repository
                     .Query()
                     .Select(MetadataPathCollection.All)
                     .WhereHasAncestor(instanceId, 0)
-                    .WithCancellation(CancellationToken.None);
+                    .WithCancellation(QueryTokenSource.Token);
                 
                 StreamingModel streamingModel = null;
 
@@ -192,9 +197,20 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
                 
                 await foreach (var each in query)
                 {
+                    if (QueryTokenSource.IsCancellationRequested)
+                    {
+                        yield break;
+                    }
                     yield return new InstanceData(each, streamingModel, repository);
                 }
             }
+        }
+
+        public void ResetToken()
+        {
+            QueryTokenSource?.Cancel();
+            QueryTokenSource?.Dispose();
+            QueryTokenSource = new CancellationTokenSource();
         }
         
         private async Task NewRepository(StreamingModel model)
@@ -208,52 +224,179 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
             }
             var metadataRepository = newFactory.Create(model.Dataset, m_ServiceHttpClient, m_ServiceHostResolver);
             m_StreamModelRepositoriesMapping.Add(model, metadataRepository);
+            m_hierarchyModifier.AddMetadataRepository(model.ModelStream.Id, metadataRepository, CancellationToken.None);
+        }
+        
+        public void HighlightInstance(ModelStreamId modelId, InstanceId instanceId)
+        {
+            foreach (var state in m_InstanceStates.Values)
+            {
+                state.Highlighted.Clear();
+            }
+            
+            if (!m_InstanceStates.TryGetValue(modelId, out var instanceState))
+            {
+                instanceState = new InstanceState();
+                m_InstanceStates.Add(modelId, instanceState);
+            }
+            
+            if (!instanceState.Highlighted.TryGetValue(highlightColor, out var ids))
+            {
+                ids = new List<InstanceId>();
+                instanceState.Highlighted.Add(highlightColor, ids);
+            }
+            
+            ids.Add(instanceId);
+            _ = ApplyModifiersNoThrow();
         }
 
-        public void UpdateVisibility(StreamingModel model, bool root, InstanceId instanceId, bool visibility)
+        public void ResetHierarchyModifiers(bool resetHighlighted, bool resetHidden)
+        {
+            foreach (var state in m_InstanceStates.Values)
+            {
+                if (resetHighlighted)
+                {
+                    state.Highlighted.Clear();
+                }
+
+                if (resetHidden)
+                {
+                    state.Hidden.Clear();
+                    state.Isolated = InstanceId.None;
+                }
+            }
+
+            _ = ApplyModifiersNoThrow();
+        }
+
+        public void ResetHighlight()
+        {
+            foreach (var state in m_InstanceStates.Values)
+            {
+                state.Highlighted.Clear();
+            }
+            
+            _ = ApplyModifiersNoThrow();
+        }
+
+        public bool IsCurrentlyHidden(ModelStreamId modelStreamId, InstanceId instanceId)
+        {
+            if (!m_InstanceStates.TryGetValue(modelStreamId, out var instanceState)) return false;
+            return instanceState.Hidden != null && instanceState.Hidden.Any(x => x.Instance.Id == instanceId);
+        }
+        
+        async Task ApplyModifiersNoThrow()
+        {
+            try
+            {
+                var tasks = new List<Task>();
+                foreach (var (modelStreamId, instanceState) in m_InstanceStates)
+                {
+                    tasks.Add(m_hierarchyModifier.SetModifiers(
+                        modelStreamId,
+                        instanceState.Highlighted,
+                        instanceState.Hidden.Select(x => x.Instance.Id),
+                        instanceState.Isolated));
+                }
+                await Task.WhenAll(tasks);
+            }
+            catch (OperationCanceledException)
+            {
+                // the operation was canceled, no need to propagate the exception further
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
+        }
+
+        private void OnNetworkStatusChanged(bool connected)
+        {
+            if (!connected && !NetworkDetector.RequestedOfflineMode) return;
+
+            HierarchyToolController.ResetVisibility(true);
+        }
+
+        private void OnVisibilityReset(bool resetHighlighted)
+        {
+#if ENABLE_MULTIPLAY
+            // Assuming MP code handles this. If we go offline or in Guest mode, anyway need to reset locally.
+            if (!NetworkDetector.RequestedOfflineMode && !IdentityController.GuestMode)
+            {
+                return;
+            }
+#endif
+
+            foreach (var streamingModel in TransformController.Instance.GetComponentsInChildren<StreamingModel>(true))
+            {
+                streamingModel.gameObject.SetActive(true);
+            }
+
+            ResetHierarchyModifiers(resetHighlighted, true);
+            _ = ApplyModifiersNoThrow();
+        }
+
+        public async Task UpdateVisibility(StreamingModel model, bool root, InstanceId instanceId, bool visible)
         {
             if (root)
             {
-                HierarchyToolController.UpdateToggleUI?.Invoke(new InstanceData(null, model, null), visibility);
-                model.gameObject.SetActive(visibility);
+                UpdateVisibility(model, true, InstanceData.Placeholder, visible);
                 return;
             }
             
-            if (!visibility)
+            var repository = m_StreamModelRepositoriesMapping[model];
+            if (repository == null)
             {
-                if (m_VisibilityModifier.HiddenInstances != null && m_VisibilityModifier.HiddenInstances.Any(x => 
-                        x.StreamingModel.ModelStream.Id == model.ModelStream.Id 
-                        && x.Instance.Id == instanceId))
-                {
-                    return;
-                }
-            }
-            
-            if (!m_StreamModelRepositoriesMapping.TryGetValue(model, out var repository))
-            {
+                Debug.LogWarning($"No metadata repository found for model {model.name}");
                 return;
             }
-            
-            _ = QueryData();
-            
-            return;
 
-            async Task QueryData()
+            var query = await repository
+                .Query()
+                .Select(MetadataPathCollection.None, new OptionalData(OptionalData.Fields.Id))
+                .WhereInstanceEquals(instanceId)
+                .GetFirstOrDefaultAsync(CancellationToken.None);
+            
+            if (query == null) return;
+
+            var instanceData = new InstanceData(query, model, repository);
+            UpdateVisibility(model, false, instanceData, visible);
+        }
+
+        public void UpdateVisibility(StreamingModel model, bool root, InstanceData instanceData, bool visible)
+        {
+            if (root)
             {
-                var query = await repository
-                    .Query()
-                    .Select(MetadataPathCollection.None, new OptionalData(OptionalData.Fields.Id | OptionalData.Fields.AncestorIds | OptionalData.Fields.HasChildren))
-                    .WhereInstanceEquals(instanceId)
-                    .GetFirstOrDefaultAsync(CancellationToken.None);
-                
-                if (query == null)
-                {
-                    return;
-                }
-                
-                var newInstanceData = new InstanceData(query, model, repository);
-                OnInstanceVisibilityChanged(newInstanceData, visibility);
+                HierarchyToolController.UpdateToggleUI?.Invoke(new InstanceData(null, model, null), visible);
+                model.gameObject.SetActive(visible);
+                return;
             }
+
+            HierarchyToolController.UpdateToggleUI?.Invoke(instanceData, visible);
+
+            if (!m_InstanceStates.TryGetValue(instanceData.StreamModel.Id, out var instanceState))
+            {
+                instanceState = new InstanceState();
+                m_InstanceStates.Add(instanceData.StreamModel.Id, instanceState);
+            }
+
+            if (visible)
+            {
+                var index = instanceState.Hidden.FindIndex(x => x.Instance.Id == instanceData.Instance.Id);
+                if (index >= 0)
+                {
+                    instanceState.Hidden.RemoveAt(index);
+                }
+            }
+            else
+            {
+                if (instanceState.Hidden.All(x => x.Instance.Id != instanceData.Instance.Id))
+                {
+                    instanceState.Hidden.Add(instanceData);
+                }
+            }
+            
+            _ = ApplyModifiersNoThrow();
         }
     }
 }

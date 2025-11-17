@@ -19,11 +19,11 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 1804204157
-    m_Localized: Loopcamera
+    m_Localized: Wandelcamera
     m_Metadata:
       m_Items: []
   - m_Id: 29980151459840
-    m_Localized: Gevoeligheid verplaatsen
+    m_Localized: Bewegingsgevoeligheid
     m_Metadata:
       m_Items: []
   - m_Id: 29980151459841

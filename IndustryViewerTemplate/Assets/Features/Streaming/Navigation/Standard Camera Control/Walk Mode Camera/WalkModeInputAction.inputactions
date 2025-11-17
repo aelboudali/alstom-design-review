@@ -279,7 +279,7 @@
                     "id": "258dcaef-abe6-4a29-90fe-3c2b0e5f262c",
                     "path": "OneModifier",
                     "interactions": "",
-                    "processors": "InvertVector2(invertX=false)",
+                    "processors": "InvertVector2(invertX=false),ScaleVector2(x=0.2,y=0.2)",
                     "groups": "",
                     "action": "Camera Rotate Action",
                     "isComposite": true,

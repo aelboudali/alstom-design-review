@@ -314,7 +314,7 @@ namespace Unity.Industry.Viewer.Streaming
 
                     var property = await asset.GetPropertiesAsync(_cancellationTokenSource.Token);
                     
-                    if (StreamingUtils.CheckHasLocalAsset(asset, out var ver))
+                    if (StreamingUtils.CheckHasLocalAsset(asset, false, out var ver))
                     {
                         var offlineAssetInfo = StreamingUtils.ReturnOfflineAssetInfo(asset);
                         if (!string.Equals(offlineAssetInfo.OfflineAssetInfo.assetVersionId, asset.Descriptor.AssetVersion.ToString()))

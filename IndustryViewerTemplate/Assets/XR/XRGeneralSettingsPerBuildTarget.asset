@@ -52,7 +52,7 @@ MonoBehaviour:
   m_AutomaticLoading: 0
   m_AutomaticRunning: 0
   m_Loaders:
-  - {fileID: 11400000, guid: 1f4159d63dd174ea98a31475fcae3242, type: 2}
+  - {fileID: 11400000, guid: 67a0fc52025764b21b63348faa63402e, type: 2}
 --- !u!114 &-7822911634567533144
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -385,23 +385,8 @@ MonoBehaviour:
   m_AutomaticLoading: 0
   m_AutomaticRunning: 0
   m_Loaders:
-  - {fileID: 894983006889929137}
-  - {fileID: -2453363487726711582}
-  - {fileID: 5262115640769532500}
-  - {fileID: 7909500831281626898}
-  - {fileID: -2883655082756954332}
-  - {fileID: -4767006540200363645}
-  - {fileID: -4211469147191807551}
-  - {fileID: -5208081790249558904}
-  - {fileID: -826269360781378204}
-  - {fileID: -5258622098271326539}
-  - {fileID: 1487357021517308225}
-  - {fileID: -8639491645252384214}
-  - {fileID: -7465497104705037302}
-  - {fileID: 3936089747121316222}
-  - {fileID: 2814680848118149238}
-  - {fileID: -2287772235916295925}
-  - {fileID: 8472838570541149436}
+  - {fileID: 11400000, guid: 67a0fc52025764b21b63348faa63402e, type: 2}
+  - {fileID: 11400000, guid: 1e1cef9416287444fbc71758e18203a4, type: 2}
 --- !u!114 &1487357021517308225
 MonoBehaviour:
   m_ObjectHideFlags: 0

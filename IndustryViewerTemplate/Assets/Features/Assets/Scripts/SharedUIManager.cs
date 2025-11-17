@@ -7,6 +7,7 @@ using Unity.AppUI.Core;
 using Unity.Cloud.Assets;
 using Unity.Cloud.Identity;
 using Unity.Industry.Viewer.Identity;
+using Unity.Industry.Viewer.Shared;
 using UnityEngine;
 
 namespace Unity.Industry.Viewer.Assets
@@ -41,6 +42,7 @@ namespace Unity.Industry.Viewer.Assets
         private const string k_PathTextName = "PathText";
         private const string k_AssetSearchSortDropdownName = "AssetSearchSortDropdown";
         private const string k_OrganizationButton = "OrganizationButton";
+        private const string k_AssetTopBarName = "AssetTopBar";
         
         private const string k_NewAssetButtonName = "NewAssetButton";
         private const string k_RefreshAssetButtonName = "RefreshAssetButton";
@@ -72,8 +74,10 @@ namespace Unity.Industry.Viewer.Assets
         
         public UIDocument AssetsUIDocument => m_AssetsUIDocument;
         private readonly UIDocument m_AssetsUIDocument;
-        public VisualElement AssetsRoot { get; private set; }
+        public VisualElement AssetsContainer { get; private set; }
         public VisualElement IdentityContainer { get; private set; }
+        
+        private VisualElement m_AssetTopBar;
         
         public Popover OrganizationPopover;
 
@@ -84,10 +88,17 @@ namespace Unity.Industry.Viewer.Assets
                 if (m_OrganizationButton != null) return m_OrganizationButton;
                 m_OrganizationButton = new ActionButton
                 {
-                    name = k_OrganizationButton
+                    name = k_OrganizationButton,
+                    icon = "three-persons"
                 };
                 var topLeftBar = m_AssetsUIDocument.rootVisualElement.Q<VisualElement>(k_TopLeftBarName);
                 topLeftBar.Add(m_OrganizationButton);
+
+                if (NetworkDetector.IsOffline)
+                {
+                    m_OrganizationButton.DisplayOff();
+                }
+                
                 return m_OrganizationButton;
             }
         }
@@ -98,7 +109,7 @@ namespace Unity.Industry.Viewer.Assets
         public SearchBar SearchBar { get; private set; }
         public Dropdown SortingDropdown { get; private set; }
         public Text PathText { get; private set; }
-        public IconButton NewAssetButton { get; private set; }
+        public ActionButton NewAssetButton { get; private set; }
         public IconButton RefreshAssetButton { get; private set; }
         public IconButton AMButton { get; private set; }
 
@@ -163,14 +174,17 @@ namespace Unity.Industry.Viewer.Assets
                 m_SelectedAsset = null;
                 if (value != null)
                 {
+                    Instance.m_AssetTopBar?.SetEnabled(true);
                     OrganizationSelected?.Invoke(m_Organization);
+                }
+                else
+                {
+                    Instance.m_AssetTopBar?.SetEnabled(false);
                 }
             }
         }
         
         private static IOrganization m_Organization;
-        
-        private static Modal m_LoadingModal;
         
         public AssetPlaceHolderScriptableObject AssetPlaceHolderScriptableObject { get; private set; }
         
@@ -198,16 +212,17 @@ namespace Unity.Industry.Viewer.Assets
             MaxAssetPerRow = k_MaxAssetPerRow;
             MaxAssetPerRowWithInfo = k_MaxAssetPerRowWithInfo;
             m_AssetsUIDocument = assetsUIDocument;
-            AssetsRoot = assetsUIDocument.rootVisualElement.Q<VisualElement>(k_AssetRootName);
-            AssetsRoot.RegisterCallback<GeometryChangedEvent>(OnAssetsRootChanged);
-            AssetProjectScrollList = AssetsRoot.Q<ScrollView>(k_AssetProjecetScrollListName);
-            AssetGridView = AssetsRoot.Q<GridView>(k_AssetGridViewName);
-            SearchBar = AssetsRoot.Q<SearchBar>(k_SearchBarName);
-            SortingDropdown = AssetsRoot.Q<Dropdown>(k_AssetSearchSortDropdownName);
-            PathText = AssetsRoot.Q<Text>(k_PathTextName);
-            NewAssetButton = AssetsRoot.Q<IconButton>(k_NewAssetButtonName);
-            RefreshAssetButton = AssetsRoot.Q<IconButton>(k_RefreshAssetButtonName);
-            AMButton = AssetsRoot.Q<IconButton>(k_AMButtonButtonName);
+            AssetsContainer = assetsUIDocument.rootVisualElement.Q<VisualElement>(k_AssetRootName);
+            AssetsContainer.RegisterCallback<GeometryChangedEvent>(OnAssetsRootChanged);
+            m_AssetTopBar = AssetsContainer.Q<VisualElement>(k_AssetTopBarName);
+            AssetProjectScrollList = AssetsContainer.Q<ScrollView>(k_AssetProjecetScrollListName);
+            AssetGridView = AssetsContainer.Q<GridView>(k_AssetGridViewName);
+            SearchBar = AssetsContainer.Q<SearchBar>(k_SearchBarName);
+            SortingDropdown = AssetsContainer.Q<Dropdown>(k_AssetSearchSortDropdownName);
+            PathText = AssetsContainer.Q<Text>(k_PathTextName);
+            NewAssetButton = AssetsContainer.Q<ActionButton>(k_NewAssetButtonName);
+            RefreshAssetButton = AssetsContainer.Q<IconButton>(k_RefreshAssetButtonName);
+            AMButton = AssetsContainer.Q<IconButton>(k_AMButtonButtonName);
             NoProjectsFound = noProjectsFound;
             NoOrganizationsFound = noOrganizationsFound;
             SelectOrganization = selectOrganization;
@@ -253,42 +268,6 @@ namespace Unity.Industry.Viewer.Assets
         private VisualElement AssetGridViewItem()
         {
             return m_AssetItemTemplate.Instantiate().Children().First();
-        }
-
-        public static void ShowLoadingModal(Action onShownCallback = null)
-        {
-            m_LoadingModal?.Dismiss();
-            var process = new CircularProgress
-            {
-                size = Size.L
-            };
-            m_LoadingModal = Modal.Build(SharedUIManager.Instance.AssetsRoot, process);
-            m_LoadingModal.shown += LoadingModalOnShown;
-
-            m_LoadingModal.Show();
-            return;
-            
-            void LoadingModalOnShown(Modal modal)
-            {
-                modal.shown -= LoadingModalOnShown;
-                modal.contentView.parent.RemoveFromClassList("appui-modal__content");
-                onShownCallback?.Invoke();
-            }
-        }
-
-        public static void HideLoadingModal(Action callback = null)
-        {
-            if(m_LoadingModal == null) return;
-            m_LoadingModal.dismissed += LoadingModalOnDismissed;
-            m_LoadingModal?.Dismiss();
-            return;
-            
-            void LoadingModalOnDismissed(Modal modal, DismissType dismissType)
-            {
-                modal.dismissed -= LoadingModalOnDismissed;
-                m_LoadingModal = null;
-                callback?.Invoke();
-            }
         }
         
         public static void ClearSelectionOnGrid()
@@ -338,9 +317,9 @@ namespace Unity.Industry.Viewer.Assets
         
         public void Dispose()
         {
-            AssetsRoot.UnregisterCallback<GeometryChangedEvent>(OnAssetsRootChanged);
+            AssetsContainer.UnregisterCallback<GeometryChangedEvent>(OnAssetsRootChanged);
             m_Instance = null;
-            AssetsRoot = null;
+            AssetsContainer = null;
             AssetProjectScrollList = null;
             AssetGridView = null;
             SearchBar = null;

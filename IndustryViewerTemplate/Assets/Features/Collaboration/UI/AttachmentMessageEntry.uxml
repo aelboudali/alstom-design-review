@@ -1,0 +1,9 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement style="flex-grow: 0; height: 52px; min-height: 52px; max-height: 52px; background-color: rgb(39, 39, 39); border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding-top: 6px; padding-right: 6px; padding-bottom: 6px; padding-left: 6px; flex-direction: row; align-items: center; justify-content: space-between;">
+        <ui:VisualElement style="flex-grow: 1; height: 40px; min-height: 40px; max-height: 40px; flex-direction: row;">
+            <ui:VisualElement name="AttachmentPreview" style="flex-grow: 1; border-left-color: rgb(99, 99, 99); border-right-color: rgb(99, 99, 99); border-top-color: rgb(99, 99, 99); border-bottom-color: rgb(99, 99, 99); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; width: 40px; max-width: 40px; min-width: 40px; background-size: 30px 30px; margin-right: 8px; -unity-background-scale-mode: scale-to-fit;" />
+            <Unity.AppUI.UI.Text name="AttachmentNameLabel" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 80%; flex-grow: 1;" />
+        </ui:VisualElement>
+        <Unity.AppUI.UI.IconButton quiet="true" name="AttachmentMoreIconButton" icon="dots-three" size="S" style="height: 24px; width: 24px; min-width: 24px;" />
+    </ui:VisualElement>
+</ui:UXML>

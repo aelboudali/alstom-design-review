@@ -19,7 +19,7 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 751689523200
-    m_Localized: "RA m\xF3vil"
+    m_Localized: Realidad Aumentada
     m_Metadata:
       m_Items: []
   - m_Id: 3464783454209
@@ -31,7 +31,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648512
-    m_Localized: <u>Ancla espacial</u>
+    m_Localized: Anclaje espacial
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648513
@@ -39,7 +39,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648514
-    m_Localized: Ancla de carga
+    m_Localized: Anclaje de carga
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648515
@@ -59,7 +59,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648519
-    m_Localized: Restablecer los valores predeterminados
+    m_Localized: Restablecer a valores predeterminados
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648520
@@ -67,7 +67,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506304
-    m_Localized: Ancla AR alineada
+    m_Localized: Anclaje AR alineado
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506305
@@ -75,11 +75,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506306
-    m_Localized: 'Error al guardar anclaje AR: desconocido'
+    m_Localized: Error al guardar el ancla AR - Desconocido
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506307
-    m_Localized: "Escanee y toque para inicializar la posici\xF3n del recurso"
+    m_Localized: "Escanee y toque para inicializar la posici\xF3n del activo"
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506308
@@ -99,15 +99,36 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 44105927752671232
-    m_Localized: "Posici\xF3n de desbloqueo"
+    m_Localized: "Desbloquear posici\xF3n"
     m_Metadata:
       m_Items: []
   - m_Id: 45568947435593728
-    m_Localized: Error de carga
+    m_Localized: Fallo de carga
     m_Metadata:
       m_Items: []
   - m_Id: 45568947439788032
     m_Localized: No tienes permiso de escritura.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084964016128
+    m_Localized: Ancla espacial encontrada
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084972404736
+    m_Localized: "Se ha encontrado un ancla espacial guardada previamente. \xBFDesea
+      cargarla?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084972404737
+    m_Localized: Ignorar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084972404738
+    m_Localized: Carga
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119205759076524032
+    m_Localized: Toca el punto para colocar el activo.
     m_Metadata:
       m_Items: []
   references:

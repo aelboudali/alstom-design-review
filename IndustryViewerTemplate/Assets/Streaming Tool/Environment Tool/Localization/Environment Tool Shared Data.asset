@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: Environment Tool Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: Environment Tool
+  m_TableCollectionNameGuidString: 703df3e59d021674c90153354615d3d6
+  m_Entries:
+  - m_Id: 543537799168
+    m_Key: Environment Tool
+    m_Metadata:
+      m_Items: []
+  - m_Id: 322245023014912
+    m_Key: Environnment Name CAD
+    m_Metadata:
+      m_Items: []
+  - m_Id: 322501349515264
+    m_Key: Environnment Name Hangar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 322690957221888
+    m_Key: Environnment Name Outdoor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 323097712435200
+    m_Key: Environnment Name Studio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 327779180650496
+    m_Key: Environnment Name Default
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 7393548345225511111
+  references:
+    version: 2
+    RefIds:
+    - rid: 7393548345225511111
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables,
+        asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1751459477675

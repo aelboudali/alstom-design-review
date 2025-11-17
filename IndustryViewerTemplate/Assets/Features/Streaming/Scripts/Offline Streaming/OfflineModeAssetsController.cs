@@ -21,7 +21,7 @@ namespace Unity.Industry.Viewer.Streaming
     {
         public static AssetProjectInfo? SelectedAssetProject;
         public static Action<List<IOrganization>> AllOrganizationFound;
-        public static Action<List<AssetProjectInfo>> AssetProjectsLoaded;
+        public static Action<IOrganization, List<AssetProjectInfo>> AssetProjectsLoaded;
         public static Action<List<AssetInfo>> AssetsLoaded;
         public static Action<AssetInfo> AssetSelected;
         public static Action AssetDeselected;
@@ -239,7 +239,7 @@ namespace Unity.Industry.Viewer.Streaming
         private void RequestAssetProjects(bool allAssetProjects, string searchText)
         {
             if(m_OfflineAssets == null || m_OfflineAssets.Count == 0) return;
-            
+            m_SearchString = searchText;
             if (allAssetProjects)
             {
                 if (SceneManager.GetActiveScene() == gameObject.scene)
@@ -247,8 +247,6 @@ namespace Unity.Industry.Viewer.Streaming
                     SelectedAssetProject = null;
                     SelectedCollection = null;
                 }
-
-                m_SearchString = searchText;
                 var selectedOrganizationAssets = m_OfflineAssets.FindAll(x => x.Asset.Descriptor.OrganizationId == SharedUIManager.Organization.Id);
                 if(!string.IsNullOrEmpty(m_SearchString))
                 {
@@ -261,8 +259,7 @@ namespace Unity.Industry.Viewer.Streaming
                 var selectedAssetProjectAssets = m_OfflineAssets.FindAll(x => x.Asset.Descriptor.ProjectDescriptor == SharedUIManager.AssetProjectInfo.Value.AssetProject.Descriptor);
                 if(SharedUIManager.AssetCollection != null)
                 {
-                    selectedAssetProjectAssets = selectedAssetProjectAssets.FindAll(x => 
-                       string.Equals(SharedUIManager.AssetCollection.Descriptor.Path.ToString(), string.Join("/", ((OfflineAsset)x.Asset).OfflineAssetInfo.collectionPaths)));
+                    selectedAssetProjectAssets = selectedAssetProjectAssets.FindAll(x => ((OfflineAsset)x.Asset).OfflineAssetInfo.collectionPaths.Any(y => string.Equals(y, SharedUIManager.AssetCollection.Descriptor.Path.ToString())));
                 }
                 if(!string.IsNullOrEmpty(m_SearchString))
                 {
@@ -312,7 +309,7 @@ namespace Unity.Industry.Viewer.Streaming
                     }
                 );
             }
-            AssetProjectsLoaded?.Invoke(assetProjects.Distinct().ToList());
+            AssetProjectsLoaded?.Invoke(org, assetProjects.Distinct().ToList());
             RequestAssetProjects(true, string.Empty);
         }
     }

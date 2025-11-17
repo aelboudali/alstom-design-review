@@ -20,19 +20,19 @@ MonoBehaviour:
     - rid: 7555826618794508407
   m_TableData:
   - m_Id: 5081708617728
-    m_Localized: La session est pleine
+    m_Localized: "La session est compl\xE8te"
     m_Metadata:
       m_Items: []
   - m_Id: 5081977053184
-    m_Localized: "Impossible de cr\xE9er ou de rejoindre une session, veuillez r\xE9essayer"
+    m_Localized: "Impossible de cr\xE9er ou de rejoindre la session, veuillez r\xE9essayer"
     m_Metadata:
       m_Items: []
   - m_Id: 5081981247488
-    m_Localized: "Rejoindre la pr\xE9sentation\_?"
+    m_Localized: "Rejoindre la pr\xE9sentation ?"
     m_Metadata:
       m_Items: []
   - m_Id: 5081981247489
-    m_Localized: "{name} pr\xE9sente. Voulez-vous participer \xE0 la pr\xE9sentation?"
+    m_Localized: "{name} pr\xE9sente. Souhaitez-vous participer \xE0 la pr\xE9sentation\_?"
     m_Metadata:
       m_Items:
       - rid: 7555826618794508407
@@ -45,15 +45,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441794
-    m_Localized: "Mode Pr\xE9sentation"
+    m_Localized: "Mode de pr\xE9sentation"
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441795
-    m_Localized: "Fin de la pr\xE9sentation"
+    m_Localized: "Pr\xE9sentation finale"
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441796
-    m_Localized: "Voulez-vous terminer la pr\xE9sentation?"
+    m_Localized: "Voulez-vous terminer la pr\xE9sentation ?"
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441797
@@ -61,11 +61,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441798
-    m_Localized: "Quitter la pr\xE9sentation"
+    m_Localized: "Pr\xE9sentation de cong\xE9"
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441799
-    m_Localized: "Voulez-vous quitter la pr\xE9sentation actuelle\_?"
+    m_Localized: "Voulez-vous quitter la pr\xE9sentation actuelle ?"
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441800
@@ -77,32 +77,28 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441802
-    m_Localized: "Voulez-vous rejoindre la pr\xE9sentation actuelle?"
+    m_Localized: "Voulez-vous participer \xE0 la pr\xE9sentation actuelle ?"
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441803
-    m_Localized: "D\xE9marrer le mode pr\xE9sentation"
+    m_Localized: "D\xE9marrer le mode de pr\xE9sentation"
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441804
-    m_Localized: "Voulez-vous commencer une pr\xE9sentation?"
+    m_Localized: "Voulez-vous d\xE9marrer une pr\xE9sentation ?"
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441805
     m_Localized: Commencer
     m_Metadata:
       m_Items: []
-  - m_Id: 5081985441806
-    m_Localized: Annuler
-    m_Metadata:
-      m_Items: []
   - m_Id: 42058065896267776
-    m_Localized: "Nouvel \xE9l\xE9ment de mise en page"
+    m_Localized: Nouvelle mise en page
     m_Metadata:
       m_Items: []
   - m_Id: 42058065904656384
-    m_Localized: "Votre session a \xE9t\xE9 enregistr\xE9e comme nouvelle mise en
-      page. Rejoindre ?"
+    m_Localized: "Session enregistr\xE9e avec une nouvelle mise en page. Rejoindre
+      une nouvelle session avec d'autres personnes\_?"
     m_Metadata:
       m_Items: []
   references:

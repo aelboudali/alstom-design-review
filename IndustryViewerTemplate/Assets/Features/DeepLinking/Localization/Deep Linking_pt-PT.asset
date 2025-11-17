@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Deep Linking_pt-PT
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: pt-PT
+  m_SharedData: {fileID: 11400000, guid: df7e84428955d474eae3626a98b575a6, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 47728520850300928
+    m_Localized: "O link de convite foi copiado para a \xE1rea de transfer\xEAncia"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 86225446284337152
+    m_Localized: "Erro na cria\xE7\xE3o do link de convite"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019528912897
+    m_Localized: Convidar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2905052585984
+    m_Localized: "Criar um link de convite para a sess\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 298597604171776
+    m_Localized: "Ativa\xE7\xE3o do link de convite"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 299763431940096
+    m_Localized: "Convites para multijogador n\xE3o s\xE3o suportados no modo offline.
+      Volte para o modo online se precisar iniciar uma sess\xE3o multijogador."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1037017326592000
+    m_Localized: "Erro de acesso ao recurso atrav\xE9s do link de convite. Verifique
+      as permiss\xF5es."
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []
