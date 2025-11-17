@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Unity.AppUI.UI;
-using Unity.Cloud.Assets;
 using Unity.Cloud.Identity;
 using Unity.Industry.Viewer.Assets;
+using Unity.Industry.Viewer.Shared;
 using AssetInfo = Unity.Industry.Viewer.Assets.AssetInfo;
 using UnityEngine.UIElements;
 using UnityEngine.Localization;
@@ -50,11 +50,18 @@ namespace Unity.Industry.Viewer.Streaming
                 return;
             }
             int version = versions[arg2];
-            var localVersionLocalizedString = new LocalizedString(k_AssetLocalisedTable, k_VersionKey);
-            localVersionLocalizedString.Add("num", new IntVariable{ Value = version});
+            var localVersionLocalizedString = new LocalizedString(k_SharedLocalisedTable, k_VersionKey);
             
             var text = arg1.Q<LocalizedTextElement>();
-            text.SetBinding("text", localVersionLocalizedString);
+            text.text = localVersionLocalizedString.GetTitleLocalizedStringForAppUI();
+
+            text.variables = new object[]
+            {
+                new Dictionary<string, object>()
+                {
+                    { "num", version }
+                }
+            };
         }
 
         public override void DisposeUI()
@@ -118,8 +125,9 @@ namespace Unity.Industry.Viewer.Streaming
             OfflineAsset offlineAsset = (OfflineAsset)asset.Asset;
             OfflineAssetInfo offlineAssetInfo = offlineAsset.OfflineAssetInfo;
             m_AssetNameLabel.text = offlineAsset.OfflineAssetInfo.assetName;
-            
-            m_AssetTypeLabel.SetBinding("text", offlineAsset.OfflineAssetInfo.assetType.GetAssetTypeAsString());
+
+            m_AssetTypeLabel.text =
+                offlineAsset.OfflineAssetInfo.assetType.GetAssetTypeAsString().GetTitleLocalizedStringForAppUI();
             
             AssignTags(offlineAsset.OfflineAssetInfo.tags);
             
@@ -131,6 +139,8 @@ namespace Unity.Industry.Viewer.Streaming
             
             m_AssetVersionDropdown.sourceItems = new List<int>() {offlineAsset.OfflineAssetInfo.assetVersion};
             m_AssetVersionDropdown.SetValueWithoutNotify(new int[] {0});
+
+            m_versionBox.text = $"Ver.{offlineAssetInfo.assetVersion}";
             
             m_AssetStatusDropdown.sourceItems = new List<AssetStatus>()
             {
@@ -154,7 +164,7 @@ namespace Unity.Industry.Viewer.Streaming
             m_AssetUpdateByLabel.text = offlineAssetInfo.lastModifiedBy;
             m_AssetCreateByLabel.text = offlineAssetInfo.createdBy;
             
-            _ = TextureDownload.DownloadThumbnail(offlineAsset.Descriptor.AssetId.GetHashCode(), offlineAssetInfo.previewPic, OnTextureDownloaded);
+            _ = TextureDownload.DownloadThumbnail(offlineAsset.Descriptor.AssetId.GetHashCode(), offlineAsset.Descriptor.AssetVersion.ToString(), offlineAssetInfo.previewPic, OnTextureDownloaded);
         }
     }
 }

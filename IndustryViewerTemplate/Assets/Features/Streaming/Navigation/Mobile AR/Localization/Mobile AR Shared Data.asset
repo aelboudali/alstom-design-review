@@ -107,6 +107,26 @@ MonoBehaviour:
     m_Key: User has no write permission
     m_Metadata:
       m_Items: []
+  - m_Id: 119198084964016128
+    m_Key: Spatial Mapping Found
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084972404736
+    m_Key: Load Mapping Description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084972404737
+    m_Key: Ignore
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084972404738
+    m_Key: Load
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119205759076524032
+    m_Key: Tap Message
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

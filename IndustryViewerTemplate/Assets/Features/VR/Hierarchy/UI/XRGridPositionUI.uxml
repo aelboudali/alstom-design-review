@@ -1,0 +1,18 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Features/VR/Hierarchy/UI/XRGridPositionUIStyle.uss?fileID=7433441132597879392&amp;guid=55759514da8fa41e88541b133f2c64de&amp;type=3#XRGridPositionUIStyle" />
+    <ui:VisualElement style="flex-grow: 1; background-color: rgba(27, 27, 27, 0.85); border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; padding-top: 16px; padding-right: 24px; padding-bottom: 16px; padding-left: 24px; width: 352px; max-width: 352px; max-height: 120px; min-height: 120px; min-width: 352px; height: 120px;">
+        <ui:VisualElement style="flex-grow: 0; flex-direction: row; height: 40px; justify-content: space-around; margin-bottom: 8px;">
+            <Unity.AppUI.UI.Text style="margin-right: 5px; display: flex;">
+                <Bindings>
+                    <UnityEngine.Localization.LocalizedString property="text" table="GUID:48832e3252a4b48af8afab88b5bbc379" entry="Id(40541884567773184)" />
+                </Bindings>
+            </Unity.AppUI.UI.Text>
+            <Unity.AppUI.UI.SliderFloat display-value-label="Auto" format-string="F3" high-value="1000" low-value="0.001" show-input-field="true" value="1" style="flex-grow: 1;" />
+        </ui:VisualElement>
+        <Unity.AppUI.UI.ActionButton selected="true" accent="true" style="height: 40px;">
+            <Bindings>
+                <UnityEngine.Localization.LocalizedString property="label" table="GUID:48832e3252a4b48af8afab88b5bbc379" entry="Id(1428906041346)" />
+            </Bindings>
+        </Unity.AppUI.UI.ActionButton>
+    </ui:VisualElement>
+</ui:UXML>

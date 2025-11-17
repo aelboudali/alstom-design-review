@@ -19,7 +19,16 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 376479670272
-    m_Localized: Modo de voo VR
+    m_Localized: Modo VR Fly
+    m_Metadata:
+      m_Items: []
+  - m_Id: 95971741896007680
+    m_Localized: "Transpar\xEAncia"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119196761623355392
+    m_Localized: "Pressione o gatilho ou fa\xE7a o gesto de pin\xE7a com os dedos
+      para posicionar o recurso."
     m_Metadata:
       m_Items: []
   references:

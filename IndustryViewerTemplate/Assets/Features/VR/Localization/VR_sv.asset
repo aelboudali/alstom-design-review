@@ -19,7 +19,16 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 376479670272
-    m_Localized: "VR-flygl\xE4ge"
+    m_Localized: VR Fly Mode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 95971741896007680
+    m_Localized: "Genomstr\xF6mning"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119196761623355392
+    m_Localized: "Trykk p\xE5 avtrekkeren eller klyp med fingeren for \xE5 plassere
+      ressursen"
     m_Metadata:
       m_Items: []
   references:

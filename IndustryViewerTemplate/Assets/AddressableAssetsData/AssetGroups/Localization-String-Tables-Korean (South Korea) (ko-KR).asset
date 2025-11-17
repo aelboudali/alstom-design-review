@@ -15,6 +15,12 @@ MonoBehaviour:
   m_GroupName: Localization-String-Tables-Korean (South Korea) (ko-KR)
   m_GUID: a07f2bf820f8f40029ebb688400171ed
   m_SerializeEntries:
+  - m_GUID: 1f0c0837187144c15af65d5570434d92
+    m_Address: Collaboration_ko-KR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko-KR
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 33c77891442124be3a8a06d5577a0475
     m_Address: Metadata Tool_ko-KR
     m_ReadOnly: 1
@@ -42,6 +48,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-ko-KR
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 690b3611362e9574b9e7608d0513d0b6
+    m_Address: Deep Linking_ko-KR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko-KR
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7648335ac56964f1e87c03930cc5fbed
     m_Address: Add Model Tool_ko-KR
@@ -71,6 +83,24 @@ MonoBehaviour:
     - Locale-ko-KR
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8f93d3395928d4ee08f9387e3110e4c8
+    m_Address: Section Cut_ko-KR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko-KR
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9db191233badc45fe8de259c3703047f
+    m_Address: UI_ko-KR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko-KR
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a88dc5f2873666241bdd725f3dc2cd94
+    m_Address: MeasureTool_ko-KR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko-KR
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b06234d37ac1844d89a92dc3bac24445
     m_Address: Assets_ko-KR
     m_ReadOnly: 1
@@ -85,6 +115,12 @@ MonoBehaviour:
     - Locale-ko-KR
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c6b560d21377f2a48a27b86fa30b62bc
+    m_Address: Environment Tool_ko-KR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko-KR
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: dbfe25022d0c746ba855df939d5f1432
     m_Address: Mobile AR_ko-KR
     m_ReadOnly: 1
@@ -98,6 +134,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-ko-KR
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e0fbfead2867f45afad3451104995ad1
+    m_Address: Shared_ko-KR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko-KR
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e57acbef1d81a0149919b51a03c7e208
     m_Address: Walk Camera_ko-KR

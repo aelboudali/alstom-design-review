@@ -3,14 +3,13 @@ using System;
 
 namespace Unity.Industry.Viewer.Shared
 {
-    [CreateAssetMenu(fileName = "ServiceAccountCredentials", menuName = "UC/Assets/Service Account Credentials")]
+    [CreateAssetMenu(fileName = "ServiceAccountCredentials", menuName = "IVT/Assets/Service Account Credentials")]
     public class ServiceAccountCredentials : ScriptableObject
     {
         [SerializeField] private string serviceAccountKey;
         [SerializeField] private string serviceAccountSecret;
 
-        public string Credentials => string.IsNullOrEmpty(serviceAccountKey) || string.IsNullOrEmpty(serviceAccountSecret) ?
-            string.Empty : ToBase64($"{serviceAccountKey}:{serviceAccountSecret}");
+        public string Credentials => $"{serviceAccountKey}:{serviceAccountSecret}";
         
         public string OrganizationId => organizationId;
         public string OrganizationName => organizationName;

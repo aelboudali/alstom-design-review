@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using Unity.Netcode;
 using Unity.Industry.Viewer.Shared;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 using Unity.Industry.Viewer.Assets;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
+using Unity.Services.Multiplayer;
 using Unity.Services.Vivox;
 #if UNITY_ANDROID
 using UnityEngine.Android;
@@ -26,6 +28,7 @@ namespace Unity.Industry.Viewer.Vivox
         public static Action ChannelJoined;
         public static Action ChannelLeft;
         public static Action<double> ParticipantAudioEnergyChanged;
+        public bool IsInStreaming;
         private string m_SessionName;
 
 #if UNITY_EDITOR
@@ -40,26 +43,35 @@ namespace Unity.Industry.Viewer.Vivox
 #endif
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
+        IEnumerator Start()
         {
-            NetworkManager.Singleton.OnClientStarted += OnClientStarted;
-            NetworkManager.Singleton.OnClientStopped += OnClientStopped;
+            IsInStreaming = true;
+            while (MultiplayerService.Instance == null)
+            {
+                yield return null;
+            }
+            MultiplayerService.Instance.SessionAdded += InstanceOnSessionAdded;
+            MultiplayerService.Instance.SessionRemoved += InstanceOnSessionRemoved;
         }
 
         // Called when the MonoBehaviour is destroyed
         private void OnDestroy()
         {
-            if (NetworkManager.Singleton != null)
+            IsInStreaming = false;
+            if (MultiplayerService.Instance != null)
             {
-                NetworkManager.Singleton.OnClientStarted -= OnClientStarted;
-                NetworkManager.Singleton.OnClientStopped -= OnClientStopped;
+                MultiplayerService.Instance.SessionAdded -= InstanceOnSessionAdded;
+                MultiplayerService.Instance.SessionRemoved -= InstanceOnSessionRemoved;
             }
             AssetsController.AssetSelected -= OnAssetSelected;
             // Unsubscribe from Vivox events
-            VivoxService.Instance.ChannelJoined -= OnChannelJoined;
-            VivoxService.Instance.ChannelLeft -= OnChannelLeft;
-            VivoxService.Instance.ParticipantAddedToChannel -= OnParticipantAddedToChannel;
-            VivoxService.Instance.ParticipantRemovedFromChannel -= OnParticipantRemovedFromChannel;
+            if (VivoxService.Instance != null)
+            {
+                VivoxService.Instance.ChannelJoined -= OnChannelJoined;
+                VivoxService.Instance.ChannelLeft -= OnChannelLeft;
+                VivoxService.Instance.ParticipantAddedToChannel -= OnParticipantAddedToChannel;
+                VivoxService.Instance.ParticipantRemovedFromChannel -= OnParticipantRemovedFromChannel;
+            }
             if (m_LocalParticipant != null)
             {
                 m_LocalParticipant.ParticipantAudioEnergyChanged -= OnParticipantAudioEnergyChanged;
@@ -74,9 +86,13 @@ namespace Unity.Industry.Viewer.Vivox
             // Leave the session
             LeaveSession().Forget();
         }
+        
+        private void InstanceOnSessionRemoved(ISession obj)
+        {
+            _ = LeaveSession();
+        }
 
-        // Called when the client starts
-        private void OnClientStarted()
+        private void InstanceOnSessionAdded(ISession obj)
         {
 #if UNITY_ANDROID
             if(Permission.HasUserAuthorizedPermission(Permission.Microphone))
@@ -98,6 +114,12 @@ namespace Unity.Industry.Viewer.Vivox
             _ = InitializeService();
 #endif
         }
+
+        // Called when the client starts
+        private void OnClientStarted()
+        {
+
+        }
         
 
 #if UNITY_STANDALONE_OSX
@@ -118,6 +140,9 @@ namespace Unity.Industry.Viewer.Vivox
         // Called when the microphone permission is accepted
         private void OnPermissionAccepted(string featureName)
         {
+#if VR_MODE
+            NavigationController.RequestDefaultHomeView?.Invoke();
+#endif
             if (string.Equals(featureName, Permission.Microphone))
             {
                 _ = InitializeService();
@@ -200,6 +225,14 @@ namespace Unity.Industry.Viewer.Vivox
 
         private async Task InitializeChannel()
         {
+            if(!IsInStreaming) return;
+            if (VivoxService.Instance.ActiveChannels.Count > 0)
+            {
+                VivoxService.Instance.ChannelLeft += LocalChannelLeft;
+                await VivoxService.Instance.LeaveChannelAsync(VivoxService.Instance.ActiveChannels.Keys.First());
+                return;
+            }
+            
             // Subscribe to Vivox events
             VivoxService.Instance.ParticipantAddedToChannel -= OnParticipantAddedToChannel;
             VivoxService.Instance.ParticipantAddedToChannel += OnParticipantAddedToChannel;
@@ -213,7 +246,7 @@ namespace Unity.Industry.Viewer.Vivox
             VivoxService.Instance.ChannelLeft -= OnChannelLeft;
             VivoxService.Instance.ChannelLeft += OnChannelLeft;
 
-            m_SessionName = StreamingUtils.ReturnHashName(StreamingModelController.StreamingAsset.Value.Asset);
+            m_SessionName = StreamingUtils.ReturnHashName(StreamingModelController.StreamingAsset.Value.Asset) + StreamingModelController.StreamingAssetVersion;
 
 #if UNITY_EDITOR
             if (m_LocalTestMode)
@@ -239,6 +272,12 @@ namespace Unity.Industry.Viewer.Vivox
                         MakeActiveChannelUponJoining = true
                     });
 #endif
+            
+            void LocalChannelLeft(string obj)
+            {
+                VivoxService.Instance.ChannelLeft -= LocalChannelLeft;
+                _ = InitializeChannel();
+            }
         }
 
         // Called when a participant is removed from the channel
@@ -273,14 +312,15 @@ namespace Unity.Industry.Viewer.Vivox
         // Called when a channel is joined
         private void OnChannelJoined(string obj)
         {
+            if (NetworkDetector.RequestedOfflineMode || !IsInStreaming)
+            {
+                _ = LeaveSession();
+                return;
+            }
+            
             AssetsController.AssetSelected -= OnAssetSelected;
             AssetsController.AssetSelected += OnAssetSelected;
             ChannelJoined?.Invoke();
-            
-            if (NetworkDetector.IsOffline)
-            {
-                _ = LeaveSession();
-            }
         }
     }
 

@@ -87,10 +87,6 @@ MonoBehaviour:
     m_Key: Start
     m_Metadata:
       m_Items: []
-  - m_Id: 5081985441806
-    m_Key: Cancel
-    m_Metadata:
-      m_Items: []
   - m_Id: 42058065896267776
     m_Key: ChangeLayoutTitle
     m_Metadata:

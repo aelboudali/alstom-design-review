@@ -21,60 +21,112 @@ MonoBehaviour:
   - m_Id: 2213752594432
     m_Localized: "Unity Industry Viewer \nTemplate Project"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153593729417320
   - m_Id: 7997920108544
     m_Localized: Log in
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153593729417321
   - m_Id: 9303762132992
-    m_Localized: Or
+    m_Localized: or
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153593729417322
   - m_Id: 9420774825984
-    m_Localized: Continue as guest
+    m_Localized: Guest Mode
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153593729417323
   - m_Id: 15982369169408
     m_Localized: Log out
     m_Metadata:
-      m_Items: []
-  - m_Id: 32483335725056
-    m_Localized: Cancel
-    m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153593729417324
   - m_Id: 33199882231808
     m_Localized: Logging out...
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153593729417325
   - m_Id: 33283562790912
     m_Localized: Are you sure to logout?
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153593729417326
   - m_Id: 33349040070656
     m_Localized: Awaiting Log in...
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153593729417327
   - m_Id: 33437661519872
     m_Localized: Initializing...
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153593729417328
   - m_Id: 29800713151307776
     m_Localized: Developed and Designed by Unity Industry
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153593729417329
   - m_Id: 58408840369004544
     m_Localized: Offline Mode
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153593729417330
   - m_Id: 58408840381587456
     m_Localized: You are currently in offline mode. Want to switch back to online
       mode and log in?
     m_Metadata:
-      m_Items: []
-  - m_Id: 58409243970101248
-    m_Localized: OK
-    m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153593729417331
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 535153593729417320
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is header in the landing page
+    - rid: 535153593729417321
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is button to log in to the IVT
+    - rid: 535153593729417322
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is simple text
+    - rid: 535153593729417323
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is button to log in to the IVT as Guest
+    - rid: 535153593729417324
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is icon-button to logout from the IVT
+    - rid: 535153593729417325
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is button in pop-up logging out
+    - rid: 535153593729417326
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is text in pop-up logging out
+    - rid: 535153593729417327
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is inactive button when User clicks the log in button
+    - rid: 535153593729417328
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is button when user enters to IVT using cache
+    - rid: 535153593729417329
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is simple text in the bottom of landing page
+    - rid: 535153593729417330
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is header of the pop-up offline mode
+    - rid: 535153593729417331
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is simple text in pop-up Offline mode

@@ -1,0 +1,7 @@
+.appui-slider--horizontal > .appui-slider__input-field {
+    min-width: 32%;
+}
+
+.appui-slider--horizontal > #appui-slider__slider-control > #appui-slider__thumbs-container > #appui-slider__thumb > #appui-thumb__value-label-container > #appui-thumb__value-label {
+    color: rgb(255, 255, 255);
+}

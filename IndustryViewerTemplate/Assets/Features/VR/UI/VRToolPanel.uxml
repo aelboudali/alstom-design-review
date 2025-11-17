@@ -1,0 +1,11 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Unity.AppUI.UI.Panel style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+        <ui:VisualElement name="ToolPanel" style="flex-grow: 1; padding-top: 16px; padding-bottom: 16px; padding-right: 24px; padding-left: 24px; background-color: rgba(27, 27, 27, 0.85); border-top-left-radius: 24px; border-top-right-radius: 24px; border-bottom-right-radius: 24px; border-bottom-left-radius: 24px; min-width: 420px; min-height: 650px; display: flex;">
+            <ui:VisualElement style="flex-grow: 0; align-items: center; justify-content: center; border-bottom-width: 1px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); padding-bottom: 24px; margin-bottom: 24px; min-height: 64px;">
+                <Unity.AppUI.UI.Text name="ToolTitle" picking-mode="Ignore" style="font-size: 28px; color: rgb(255, 255, 255); -unity-text-align: upper-center; overflow: hidden; white-space: normal; max-width: 250px;" />
+                <Unity.AppUI.UI.IconButton icon="x" name="ToolCloseButton" quiet="true" size="L" style="position: absolute; width: 42px; height: 42px; top: 0; left: 0;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="Content" style="flex-grow: 1;" />
+        </ui:VisualElement>
+    </Unity.AppUI.UI.Panel>
+</ui:UXML>

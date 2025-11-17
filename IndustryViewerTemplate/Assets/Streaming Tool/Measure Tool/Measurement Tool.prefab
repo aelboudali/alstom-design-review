@@ -1,0 +1,401 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4762620951283189098
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3150225868422975653}
+  - component: {fileID: 1933976086399938852}
+  - component: {fileID: 1448103679479874689}
+  - component: {fileID: 7622192835055834418}
+  - component: {fileID: 493717038842438865}
+  m_Layer: 7
+  m_Name: Draggable Pad
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3150225868422975653
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4762620951283189098}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.33200073, z: -0.024993896}
+  m_LocalScale: {x: 0.65, y: 0.65, z: 0.65}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 7019758797392064191}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1933976086399938852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4762620951283189098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: fbc6a2d542a6f49a38c02214d4930000, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: d3b5228fb3b48b04680c03b005556eca,
+    type: 3}
+  m_SortingOrder: 0
+  m_Position: 0
+  m_WorldSpaceSizeMode: 0
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
+--- !u!114 &1448103679479874689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4762620951283189098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 747003e9c0cce4fd7832d4cc04f47ef7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Industry.Viewer.Shared::Unity.Industry.Viewer.Shared.Billboard
+  m_RotationOffset: {x: 0, y: 0, z: 0}
+--- !u!114 &7622192835055834418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4762620951283189098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 499a74128a8f0485b8a7f765405874d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Industry.Viewer.Shared::Unity.Industry.Viewer.Streaming.Annotation.ZoneScale
+  m_Size: 1
+  m_Smooth: 0.05
+  m_Clamp: 1
+  m_ClampValues: {x: 0.01, y: 10}
+--- !u!114 &493717038842438865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4762620951283189098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1fc7ce39a61b4b7192c34937b25a812, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Industry.Viewer.Streaming.Measurement::Unity.Industry.Viewer.Streaming.Measurement.DraggablePadController
+  m_DraggableDocument: {fileID: 1933976086399938852}
+--- !u!1 &8978391603294358345
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7019758797392064191}
+  - component: {fileID: 2805345474240315087}
+  - component: {fileID: 5228496526279870875}
+  m_Layer: 0
+  m_Name: Measurement Tool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7019758797392064191
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8978391603294358345}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3150225868422975653}
+  - {fileID: 6418476167426042975}
+  - {fileID: 2598362682742485113}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2805345474240315087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8978391603294358345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bbd63d4c507d46369157115b49ef727, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Industry.Viewer.Streaming.Measurement::Unity.Industry.Viewer.Streaming.Measurement.MeasurementToolController
+  m_UILayerMask:
+    serializedVersion: 2
+    m_Bits: 160
+  m_DefaultOrthogonalCheckDistance: 1000
+--- !u!114 &5228496526279870875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8978391603294358345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f16ad59764aaf4ed18ed2b42aaa2fded, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Industry.Viewer.Streaming.Measurement::Unity.Industry.Viewer.Streaming.Measurement.MeasurementToolUIController
+  m_toolUIAsset: {fileID: 9197481963319205126, guid: feb47b9869a6a7c40b957554dbab4fed,
+    type: 3}
+  m_measurementToolStyle: {fileID: 7433441132597879392, guid: c6b8de3d72eadbe4ba0a65b35db8498c,
+    type: 3}
+  m_SavedMeasureColor: {r: 0.03137255, g: 0.57254905, b: 1, a: 1}
+  m_SelectedMeasureColor: {r: 0.06666667, g: 0.65882355, b: 0.37254903, a: 1}
+  m_MeasurementItemTemplate: {fileID: 9197481963319205126, guid: d21b106e6b782aa49b3684f67580a121,
+    type: 3}
+  m_StartCursorController: {fileID: 5968845928674230369}
+  m_EndCursorController: {fileID: 3443466707784981575}
+  m_DraggablePadController: {fileID: 493717038842438865}
+  offsetScale: 0.33
+  m_MeasurementSavePanel: {fileID: 9197481963319205126, guid: ce1c3507aac0b2b4c9b87145830461da,
+    type: 3}
+  m_MeasurementSavePanelStyle: {fileID: 7433441132597879392, guid: 9a0ade8a96fa6144bb17489253f9aa99,
+    type: 3}
+  m_MeasureSegmentPrefab: {fileID: 5130099883071806795, guid: 7435401ac30829e489ba9c2340de7700,
+    type: 3}
+  m_MeasureToolStringTable:
+    m_TableReference:
+      m_TableCollectionName: GUID:8eb2735d8f73b4a4eac3389fed3a28cf
+  m_AsSystemString:
+    m_TableReference:
+      m_TableCollectionName: GUID:8eb2735d8f73b4a4eac3389fed3a28cf
+    m_TableEntryReference:
+      m_KeyId: 31554595147800576
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_InfiniteWarning:
+    m_TableReference:
+      m_TableCollectionName: GUID:8eb2735d8f73b4a4eac3389fed3a28cf
+    m_TableEntryReference:
+      m_KeyId: 33729162475724800
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
+--- !u!1001 &2400605362066617915
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7019758797392064191}
+    m_Modifications:
+    - target: {fileID: 387191698039490114, guid: cc1195a2748ab784186013d47d62f470,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 387191698039490114, guid: cc1195a2748ab784186013d47d62f470,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 387191698039490114, guid: cc1195a2748ab784186013d47d62f470,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 387191698039490114, guid: cc1195a2748ab784186013d47d62f470,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 387191698039490114, guid: cc1195a2748ab784186013d47d62f470,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 387191698039490114, guid: cc1195a2748ab784186013d47d62f470,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 387191698039490114, guid: cc1195a2748ab784186013d47d62f470,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 387191698039490114, guid: cc1195a2748ab784186013d47d62f470,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 387191698039490114, guid: cc1195a2748ab784186013d47d62f470,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 387191698039490114, guid: cc1195a2748ab784186013d47d62f470,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1051888903202056828, guid: cc1195a2748ab784186013d47d62f470,
+        type: 3}
+      propertyPath: m_MeasurementToolUIController
+      value: 
+      objectReference: {fileID: 5228496526279870875}
+    - target: {fileID: 8221591780515053672, guid: cc1195a2748ab784186013d47d62f470,
+        type: 3}
+      propertyPath: m_Name
+      value: Measure Cursor - End
+      objectReference: {fileID: 0}
+    - target: {fileID: 8221591780515053672, guid: cc1195a2748ab784186013d47d62f470,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: cc1195a2748ab784186013d47d62f470, type: 3}
+--- !u!4 &2598362682742485113 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 387191698039490114, guid: cc1195a2748ab784186013d47d62f470,
+    type: 3}
+  m_PrefabInstance: {fileID: 2400605362066617915}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3443466707784981575 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1051888903202056828, guid: cc1195a2748ab784186013d47d62f470,
+    type: 3}
+  m_PrefabInstance: {fileID: 2400605362066617915}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ca39adeb7fd342d6b365daf0d95406a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Industry.Viewer.Streaming.Measurement::Unity.Industry.Viewer.Streaming.Measurement.CursorController
+--- !u!1001 &6650856625972357661
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7019758797392064191}
+    m_Modifications:
+    - target: {fileID: 387191698039490114, guid: cc1195a2748ab784186013d47d62f470,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 387191698039490114, guid: cc1195a2748ab784186013d47d62f470,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 387191698039490114, guid: cc1195a2748ab784186013d47d62f470,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 387191698039490114, guid: cc1195a2748ab784186013d47d62f470,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 387191698039490114, guid: cc1195a2748ab784186013d47d62f470,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 387191698039490114, guid: cc1195a2748ab784186013d47d62f470,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 387191698039490114, guid: cc1195a2748ab784186013d47d62f470,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 387191698039490114, guid: cc1195a2748ab784186013d47d62f470,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 387191698039490114, guid: cc1195a2748ab784186013d47d62f470,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 387191698039490114, guid: cc1195a2748ab784186013d47d62f470,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1051888903202056828, guid: cc1195a2748ab784186013d47d62f470,
+        type: 3}
+      propertyPath: m_MeasurementToolUIController
+      value: 
+      objectReference: {fileID: 5228496526279870875}
+    - target: {fileID: 8221591780515053672, guid: cc1195a2748ab784186013d47d62f470,
+        type: 3}
+      propertyPath: m_Name
+      value: Measure Cursor - Start
+      objectReference: {fileID: 0}
+    - target: {fileID: 8221591780515053672, guid: cc1195a2748ab784186013d47d62f470,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: cc1195a2748ab784186013d47d62f470, type: 3}
+--- !u!114 &5968845928674230369 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1051888903202056828, guid: cc1195a2748ab784186013d47d62f470,
+    type: 3}
+  m_PrefabInstance: {fileID: 6650856625972357661}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ca39adeb7fd342d6b365daf0d95406a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Industry.Viewer.Streaming.Measurement::Unity.Industry.Viewer.Streaming.Measurement.CursorController
+--- !u!4 &6418476167426042975 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 387191698039490114, guid: cc1195a2748ab784186013d47d62f470,
+    type: 3}
+  m_PrefabInstance: {fileID: 6650856625972357661}
+  m_PrefabAsset: {fileID: 0}

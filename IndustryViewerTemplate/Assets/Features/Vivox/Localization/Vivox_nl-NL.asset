@@ -23,7 +23,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 482419400704
-    m_Localized: Invoervolume
+    m_Localized: Ingangsvolume
     m_Metadata:
       m_Items: []
   - m_Id: 482419400705
@@ -31,7 +31,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 482419400706
-    m_Localized: Uitgangsvolume
+    m_Localized: Uitvoervolume
     m_Metadata:
       m_Items: []
   - m_Id: 482419400707

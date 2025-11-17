@@ -1,0 +1,63 @@
+.xr-round-button-style.appui-button--size-m {
+    border-width: 0;
+    background-color: rgba(0,0,0,0);
+    border-color: rgba(0,0,0,0);
+    min-height: auto;
+    min-width: auto;
+    width: 76px !important;
+    height: 76px !important;
+    border-radius: 38px;
+}
+
+.xr-round-button-style:hover {
+    background-color: gray;
+}
+
+.xr-round-button-style.appui-button--size-m.appui-button--primary {
+    background-color: var(--appui-accent-100);
+}
+
+.xr-round-button-style .unity-image {
+    width: 56px;
+    height: 56px;
+}
+
+.main-menu.xr-round-button-style {
+    background-color: #2E2E2E;
+}
+
+.main-menu.xr-round-button-style:hover {
+    background-color: gray;
+}
+
+.main-menu.xr-round-button-style .unity-image {
+    width: 42px;
+    height: 42px;
+}
+
+.GeneralBlackBackground{
+    background-color: var(--general-transparent-background-color-light);
+}
+
+#AssetSearchSortDropdown {
+    background-color: var(--general-transparent-background-color-light);
+}
+
+#AssetInfoPanelRoot {
+    background-color: var(--general-transparent-background-color-dark);
+    border-radius: 12px;
+}
+
+.appui-avatar:hover {
+    border-width: 1px;
+    border-color: white;
+    background-color: white;
+}
+
+.appui-actionbutton--accent.is-selected:hover {
+    background-color: var(--appui-accent-50);
+}
+
+.appui-actionbutton--accent.is-selected:hover:disabled {
+    background-color: var(--appui-alias-actions-background-color-disabled);
+}

@@ -36,24 +36,38 @@ namespace Unity.Industry.Viewer.Streaming
         /// <summary>
         /// Text to display in the tree as the main label.
         /// </summary>
-        public string Name => Instance?.Name ?? "";
+        public string Name => Instance?.Name ?? string.Empty;
 
         public StreamingModel StreamingModel { get; }
         
-        public IModelStream StreamModel => StreamingModel.ModelStream;
+        public IModelStream StreamModel => StreamingModel?.ModelStream;
         
         public IMetadataRepository Repository { get; }
-        
+
         public override int GetHashCode()
         {
-            return HashCode.Combine(Instance?.Id, StreamModel);
+            return HashCode.Combine(Instance?.Id, StreamModel?.Id);
         }
-        
-        
+
+        public override bool Equals(object obj)
+        {
+            if (obj is not InstanceData instanceData) return false;
+
+            return Instance?.Id == instanceData.Instance?.Id
+                && StreamModel?.Id == instanceData.StreamModel?.Id;
+        }
+
         public bool Equals(InstanceData other)
         {
-            return Instance.Id == other.Instance.Id && StreamModel == other.StreamModel;
+            return Equals((object)other);
+        }
 
+        public override string ToString()
+        {
+            return $"ID: {StreamingModel?.OrgID}\\{StreamingModel?.ProjectID}\\{StreamingModel?.AssetId}\\{(Instance == null ? "NO INSTANCE" : Instance.Id)}\r\n" +
+                $" AncestorCount: '{Instance?.AncestorIds.Count}'\r\n" +
+                $" StreamingModel: '{StreamingModel?.gameObject.name ?? "NO MODEL"} ({StreamModel?.Id})'\r\n" +
+                $" Repository: {Repository != null}";
         }
     }
 }

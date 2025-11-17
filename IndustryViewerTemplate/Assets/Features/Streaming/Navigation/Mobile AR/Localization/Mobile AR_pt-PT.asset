@@ -19,7 +19,7 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 751689523200
-    m_Localized: "RA m\xF3vel"
+    m_Localized: Realidade Aumentada
     m_Metadata:
       m_Items: []
   - m_Id: 3464783454209
@@ -31,7 +31,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648512
-    m_Localized: "<u>\xC2ncora Espacial</u>"
+    m_Localized: "\xC2ncora Espacial"
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648513
@@ -67,24 +67,23 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506304
-    m_Localized: "\xC2ncora RA alinhada"
+    m_Localized: "\xC2ncora AR alinhada"
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506305
-    m_Localized: "\xC2ncora RA salva"
+    m_Localized: "\xC2ncora AR salva"
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506306
-    m_Localized: "Falha ao salvar \xE2ncora RA: Desconhecido"
+    m_Localized: "Falha ao salvar \xE2ncora AR - Desconhecido"
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506307
-    m_Localized: "Escaneie e prima para inicializar a posi\xE7\xE3o do recurso"
+    m_Localized: "Escaneie e toque para inicializar a posi\xE7\xE3o do ativo"
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506308
-    m_Localized: "Voc\xEA pode ajustar seu ativo com precis\xE3o e clicar em Bloquear
-      posi\xE7\xE3o"
+    m_Localized: "Voc\xEA pode ajustar seu ativo e clicar em Bloquear posi\xE7\xE3o"
     m_Metadata:
       m_Items: []
   - m_Id: 41362627148898304
@@ -109,6 +108,27 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 45568947439788032
     m_Localized: "Voc\xEA n\xE3o tem permiss\xE3o de grava\xE7\xE3o."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084964016128
+    m_Localized: "\xC2ncora espacial encontrada"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084972404736
+    m_Localized: "Foi encontrada uma \xE2ncora espacial previamente salva. Deseja
+      carreg\xE1-la?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084972404737
+    m_Localized: Ignorar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084972404738
+    m_Localized: Carregar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119205759076524032
+    m_Localized: Toque no ponto para posicionar o recurso.
     m_Metadata:
       m_Items: []
   references:

@@ -18,12 +18,8 @@ MonoBehaviour:
   m_Metadata:
     m_Items: []
   m_TableData:
-  - m_Id: 13261332480
-    m_Localized: Version
-    m_Metadata:
-      m_Items: []
   - m_Id: 642184634368
-    m_Localized: Taux d'actualisation
+    m_Localized: "Taux de rafra\xEEchissement"
     m_Metadata:
       m_Items: []
   - m_Id: 994900434944
@@ -48,6 +44,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 45987493470789632
     m_Localized: "Mode hors ligne activ\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 91376129548476416
+    m_Localized: "Param\xE8tres"
     m_Metadata:
       m_Items: []
   references:

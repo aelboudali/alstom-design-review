@@ -5,12 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using UnityEngine;
-using Unity.Cloud.Identity;
 using Unity.Cloud.Assets;
 using Unity.Cloud.Common;
+using Unity.Cloud.Identity;
 using Unity.Industry.Viewer.Identity;
 using Unity.Industry.Viewer.Shared;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Unity.Industry.Viewer.Assets
@@ -18,9 +18,23 @@ namespace Unity.Industry.Viewer.Assets
     // This script is the main controller for managing assets in the Unity Cloud environment.
     // It handles various operations related to organizations, asset projects, collections, assets, datasets, and files.
     // The script uses Unity's MonoBehaviour and integrates with Unity Cloud services for asset management.
-    
     public class AssetsController : MonoBehaviour
     {
+        public class AssetCreationParameters
+        {
+            public IOrganization Organization;
+            public IAssetProject Project;
+            public IAssetCollection Collection;
+
+            public string AssetName;
+            public string AssetDescription;
+            public AssetType AssetType;
+            public List<string> Tags;
+            public string FileName;
+
+            public bool DoVersionFreeze;
+        }
+
         private AuthenticationState m_AuthenticationState;
         
 #region Organizations
@@ -38,13 +52,14 @@ namespace Unity.Industry.Viewer.Assets
         // Handles asset project-related events and actions.
         List<AssetProjectInfo> m_AllAssetProjects = new();
         public static AssetProjectInfo? SelectedAssetProject;
-        public static Action<IOrganization, Action<List<AssetProjectInfo>>> RequestAssetProjects;
+        public static Action<IOrganization, Action<IOrganization, List<AssetProjectInfo>>> RequestAssetProjects;
+        private CancellationTokenSource m_ProjectCancellationTokenSource;
 #endregion
-        
+
 
         // Manages asset collections, including loading and selecting asset collections.
         // Handles asset collection-related events and actions.
-#region Collection
+        #region Collection
         public static IAssetCollection SelectedCollection;
         public static Action<AssetProjectInfo, Action<List<IAssetCollection>>> GetAssetCollectionsForProject;
         private CancellationTokenSource m_CollectionCancellationTokenSource;
@@ -55,10 +70,11 @@ namespace Unity.Industry.Viewer.Assets
         // Handles asset-related events and actions.
         public static Action<bool, string> RequestAssets;
         public static Action<ProjectDescriptor, Action<bool>> CheckHaveWriteAccess;
-        public static Action<string, string, AssetType, IOrganization, IAssetProject, IAssetCollection, List<string>> AssetCreation;
-        public static Action<float> AssetCreationProgress;
+        public static Action<AssetCreationParameters> AssetCreation;
+        public static Action<AssetCreationParameters, IAsset, float?, string, CancellationTokenSource> AssetCreationProgress;
         public static Action<AssetInfo> NewVersionAvailable;
         public static Action<SortingType, string> UpdateSortingType;
+        public static Action<bool> PauseResumeVersionChecking;
         
         public static Action<AssetInfo, Action<List<(string, string, bool)>>> GetLinkedProjects;
         
@@ -68,28 +84,40 @@ namespace Unity.Industry.Viewer.Assets
         public static AssetInfo? NewerVersionAsset => _newerVersionAsset;
         
         public static Action<List<AssetInfo>> AssetsLoaded;
+        public static Action<IAssetProject, CollectionDescriptor?> AllAssetsLoaded;
         public static Action<AssetInfo> AssetSelected;
         public static Action<AssetInfo?> ParentAssetSelected;
         public static Action AssetDeselected;
         public static Action<string> AssetSearch;
-        public static Action<IAsset> AssetVersionRequest;
-        public static Action<List<AssetInfo>> AssetVersionsLoaded;
+        public static Action<IAsset, Action<List<AssetInfo>>> AssetVersionRequest;
         private CancellationTokenSource m_AssetRepositoryCancellationTokenSource;
-        
-        private readonly float m_VersionCheckInterval = 10f;
-        private Coroutine m_VersionCheckCoroutine;
-        private WaitForSeconds m_WaitForSeconds;
         private CancellationTokenSource m_VersionQueryTokenSource;
-        private CancellationTokenSource m_VersionCheckerTokenSource;
+
+        private const float m_VersionCheckInterval = 10f;
+        private Coroutine m_VersionCheckCoroutine;
+        private static CancellationTokenSource m_VersionCheckerTokenSource;
+        private static bool m_IsCheckingForNewVersionEnabled = true;
+        public static bool IsCheckingForNewVersionEnabled
+        {
+            get => m_IsCheckingForNewVersionEnabled;
+            set
+            {
+                m_IsCheckingForNewVersionEnabled = value;
+                if (!value)
+                {
+                    TaskUtils.CancelTokenSource(ref m_VersionCheckerTokenSource);
+                }
+            }
+        }
+
         private SortingType m_SortingType;
-        private readonly Permission m_AssetManagerCreatorPermission = new Permission("amc.assets.create");
 #endregion
 
 #region Dataset
         // Manages datasets, including loading and selecting datasets.
         // Handles dataset-related events and actions.
         private CancellationTokenSource m_DatasetTokenSource;
-        public static Action<IAsset, Action<bool>> Trigger3DDSTransformation;
+        public static Action<IAsset, bool, Action<TransformationProperties?, string, CancellationTokenSource>> Trigger3DDSTransformation;
 #endregion
         
         IOrganizationRepository m_OrganizationRepository => PlatformServices.OrganizationRepository;
@@ -134,6 +162,7 @@ namespace Unity.Industry.Viewer.Assets
             SharedUIManager.AssetCollectionSelected -= OnCollectionSelected;
             RequestOrganizations -= OnRequestOrganizations;
             RequestAssetProjects -= OnRequestAssetProjects;
+            PauseResumeVersionChecking -= OnPauseResumeVersionChecking;
             RequestAssets -= OnRequestAssets;
             
             GetAssetCollectionsForProject -= OnGetAssetCollectionsForProject;
@@ -163,29 +192,12 @@ namespace Unity.Industry.Viewer.Assets
                     UnregisterActions();
                 }
                 
-                m_CollectionCancellationTokenSource?.Cancel();
-                m_CollectionCancellationTokenSource?.Dispose();
-                m_CollectionCancellationTokenSource = null;
-                
-                m_OrganizationCancellationTokenSource?.Cancel();
-                m_OrganizationCancellationTokenSource?.Dispose();
-                m_OrganizationCancellationTokenSource = null;
-                
-                m_AssetRepositoryCancellationTokenSource?.Cancel();
-                m_AssetRepositoryCancellationTokenSource?.Dispose();
-                m_AssetRepositoryCancellationTokenSource = null;
-                
-                m_VersionQueryTokenSource?.Cancel();
-                m_VersionQueryTokenSource?.Dispose();
-                m_VersionQueryTokenSource = null;
-                
-                m_VersionCheckerTokenSource?.Cancel();
-                m_VersionCheckerTokenSource?.Dispose();
-                m_VersionCheckerTokenSource = null;
-                
-                m_DatasetTokenSource?.Cancel();
-                m_DatasetTokenSource?.Dispose();
-                m_DatasetTokenSource = null;
+                TaskUtils.CancelTokenSource(ref m_CollectionCancellationTokenSource);
+                TaskUtils.CancelTokenSource(ref m_OrganizationCancellationTokenSource);
+                TaskUtils.CancelTokenSource(ref m_AssetRepositoryCancellationTokenSource);
+                TaskUtils.CancelTokenSource(ref m_VersionQueryTokenSource);
+                TaskUtils.CancelTokenSource(ref m_VersionCheckerTokenSource);
+                TaskUtils.CancelTokenSource(ref m_DatasetTokenSource);
                 return;
             }
 
@@ -198,6 +210,7 @@ namespace Unity.Industry.Viewer.Assets
                 RequestOrganizations += OnRequestOrganizations;
                 RequestAssetProjects += OnRequestAssetProjects;
                 RequestAssets += OnRequestAssets;
+                PauseResumeVersionChecking += OnPauseResumeVersionChecking;
                 
                 GetAssetCollectionsForProject += OnGetAssetCollectionsForProject;
             
@@ -217,6 +230,12 @@ namespace Unity.Industry.Viewer.Assets
             }
 
             m_SortingType = SortingType.Name;
+            if (_selectedAsset.HasValue)
+            {
+                CancelVersionChecking();
+
+                m_VersionCheckCoroutine = StartCoroutine(StartVersionChecking());
+            }
             
             if (m_AuthenticationState == AuthenticationState.LoggedIn)
             {
@@ -231,80 +250,152 @@ namespace Unity.Industry.Viewer.Assets
             }
         }
 
+        private void OnPauseResumeVersionChecking(bool pause)
+        {
+            if (pause)
+            {
+                CancelVersionChecking();
+            }
+            else
+            {
+                m_VersionCheckCoroutine = StartCoroutine(StartVersionChecking());
+            }
+        }
+
+        private void CancelVersionChecking()
+        {
+            if (m_VersionCheckCoroutine != null)
+            {
+                TaskUtils.CancelTokenSource(ref m_VersionCheckerTokenSource);
+                StopCoroutine(m_VersionCheckCoroutine);
+            }
+        }
+
         #region IDataset
 
         // Handles the request to trigger a 3D data streaming transformation for an asset.
-        private void Trigger3DdsTransformation(IAsset asset, Action<bool> callback)
+        private void Trigger3DdsTransformation(IAsset asset, bool waitForTransformationFinalState, Action<TransformationProperties?, string, CancellationTokenSource> callback)
         {
-            _ = TriggerTransformation();
+            var cancellationTokenSource = new CancellationTokenSource();
+            callback?.Invoke(null, null, cancellationTokenSource);
+            _ = TriggerTransformation(cancellationTokenSource.Token);
             return;
 
-            async Task TriggerTransformation()
+            async Task TriggerTransformation(CancellationToken cancellationToken)
             {
-                var listOfDatasets = asset.ListDatasetsAsync(Range.All, CancellationToken.None);
-                IDataset sourceDataset = null;
-                await foreach (var dataset in listOfDatasets)
+                try
                 {
-                    if (dataset.SystemTags.Contains("Source"))
+                    var sourceDataset = await asset.GetSourceDatasetAsync(cancellationToken);
+                    cancellationToken.ThrowIfCancellationRequested();
+                    if (sourceDataset == null)
                     {
-                        sourceDataset = dataset;
-                        break;
-                    }
-                }
-                
-                if (sourceDataset == null)
-                {
-                    callback?.Invoke(false);
-                    return;
-                }
-                
-                IAsyncEnumerable<ITransformation> transformations = sourceDataset.ListTransformationsAsync(Range.All, CancellationToken.None);
-                await foreach(var transformation in transformations)
-                {
-                    if (transformation.Status is TransformationStatus.Pending or TransformationStatus.Running && 
-                        transformation.WorkflowType == WorkflowType.Data_Streaming)
-                    {
-                        callback?.Invoke(false);
+                        callback?.Invoke(null, "Source dataset not found", null);
                         return;
                     }
-                }
-                
-                IAsset targetAsset = asset;
-                if (targetAsset.State == AssetState.Frozen)
-                {
-                    targetAsset = await asset.CreateUnfrozenVersionAsync(CancellationToken.None);
-                    float elapsed = 0f;
-                    while (elapsed < 1f)
+
+                    var transformations = sourceDataset.ListTransformationsAsync(Range.All, cancellationToken);
+                    cancellationToken.ThrowIfCancellationRequested();
+                    await foreach (var existingTransformation in transformations)
                     {
-                        await Task.Yield();
-                        elapsed += Time.deltaTime;
+                        var exisitingTransformationProperties = await existingTransformation.GetPropertiesAsync(cancellationToken);
+                        cancellationToken.ThrowIfCancellationRequested();
+
+                        if (exisitingTransformationProperties.WorkflowType == WorkflowType.Data_Streaming
+                            && (exisitingTransformationProperties.Status is TransformationStatus.Pending or TransformationStatus.Running or TransformationStatus.Queued))
+                        {
+                            callback?.Invoke(exisitingTransformationProperties, null, null);
+                            if (waitForTransformationFinalState) await WaitForTransaction(existingTransformation);
+                            return;
+                        }
                     }
-                }
-                
-                sourceDataset = null;
-                listOfDatasets = targetAsset.ListDatasetsAsync(Range.All, CancellationToken.None);
-                await foreach (var dataset in listOfDatasets)
-                {
-                    if (dataset.SystemTags.Contains("Source"))
+
+                    if (asset.State == AssetState.Frozen)
                     {
-                        sourceDataset = dataset;
-                        break;
+                        Debug.Log("Asset Creation: 3DDS, creating unfrozen version...");
+                        asset = await asset.CreateUnfrozenVersionAsync(cancellationToken);
+                        cancellationToken.ThrowIfCancellationRequested();
+
+                        sourceDataset = await asset.GetSourceDatasetAsync(cancellationToken);
+                        cancellationToken.ThrowIfCancellationRequested();
                     }
-                }
-                var transformationCreation = new TransformationCreation()
-                {
-                    WorkflowType = WorkflowType.Data_Streaming
-                };
-                var transformationDescriptor = await sourceDataset.StartTransformationAsync(transformationCreation, CancellationToken.None);
-                if (transformationDescriptor.Status == TransformationStatus.Pending)
-                {
-                    IAssetFreeze freeze = new AssetFreeze("Freeze after transformation")
+
+                    var transformationCreation = new TransformationCreation()
                     {
-                        Operation = AssetFreezeOperation.WaitOnTransformations,
-                        ChangeLog = "Freeze after transformation"
+                        WorkflowType = WorkflowType.Data_Streaming
                     };
-                    await targetAsset.FreezeAsync(freeze, CancellationToken.None);
-                    callback.Invoke(true);
+
+                    Debug.Log("Asset Creation: 3DDS, starting transformation...");
+                    var transformationDescriptor = await sourceDataset.StartTransformationAsync(transformationCreation, cancellationToken);
+                    cancellationToken.ThrowIfCancellationRequested();
+                    var transformation = await sourceDataset.GetTransformationAsync(transformationDescriptor.Descriptor.TransformationId, cancellationToken);
+                    cancellationToken.ThrowIfCancellationRequested();
+                    var transformationProperties = await transformation.GetPropertiesAsync(cancellationToken);
+                    cancellationToken.ThrowIfCancellationRequested();
+                    // This gives opportunity to cancel freezing from callback if needed
+                    callback.Invoke(transformationProperties, null, null);
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    Debug.Log($"Asset Creation: 3DDS, transformation started with status {transformationProperties.Status}");
+                    if (transformationProperties.Status is
+                           TransformationStatus.Pending
+                        or TransformationStatus.Running
+                        or TransformationStatus.Queued
+                        or TransformationStatus.Succeeded)
+                    {
+                        Debug.Log("Asset Creation: 3DDS, request freezing asset after transformation...");
+                        var freeze = new AssetFreeze("Freeze after transformation")
+                        {
+                            Operation = AssetFreezeOperation.WaitOnTransformations,
+                            ChangeLog = "Freeze after transformation"
+                        };
+
+                        await asset.FreezeAsync(freeze, cancellationToken);
+                        cancellationToken.ThrowIfCancellationRequested();
+                    }
+
+                    if (waitForTransformationFinalState) await WaitForTransaction(transformation);
+                }
+                catch (OperationCanceledException)
+                {
+                    Debug.Log($"Asset Creation: 3DDS Task for '{asset.Name}' was canceled.");
+                    callback?.Invoke(null, "Operation canceled", null);
+                    return;
+                }
+                catch (Exception exception)
+                {
+                    Debug.LogError($"Asset Creation: exception in 3DDS Task for '{asset.Name}': {exception}");
+                    callback?.Invoke(null, exception.Message, null);
+                    return;
+                }
+                finally
+                {
+                    Debug.Log($"Asset Creation: 3DDS Task for '{asset.Name}' was finished.");
+                }
+
+                async Task WaitForTransaction(ITransformation transformation)
+                {
+                    while (!cancellationToken.IsCancellationRequested)
+                    {
+                        await Task.Delay(1000, cancellationToken);
+                        cancellationToken.ThrowIfCancellationRequested();
+                        await transformation.RefreshAsync(cancellationToken);
+                        cancellationToken.ThrowIfCancellationRequested();
+                        var transformationProperites = await transformation.GetPropertiesAsync(cancellationToken);
+                        cancellationToken.ThrowIfCancellationRequested();
+                        callback?.Invoke(transformationProperites, null, null);
+
+                        if (transformationProperites.Status is
+                            TransformationStatus.Succeeded
+                            or TransformationStatus.Failed
+                            or TransformationStatus.Error
+                            or TransformationStatus.Terminated
+                            or TransformationStatus.Skipped
+                            or TransformationStatus.TimedOut)
+                        {
+                            Debug.Log($"Asset Creation: 3DDS, transformation ended with status {transformationProperites.Status}");
+                            break;
+                        }
+                    }
                 }
             }
         }
@@ -383,7 +474,7 @@ namespace Unity.Industry.Viewer.Assets
         /// Handles the request to retrieve all versions of a specified asset.
         /// </summary>
         /// <param name="asset">The asset for which to retrieve versions.</param>
-        private void OnAssetVersionRequest(IAsset asset)
+        private void OnAssetVersionRequest(IAsset asset, Action<List<AssetInfo>> callback)
         {
             _ = GetAssetVersions();
             
@@ -393,10 +484,11 @@ namespace Unity.Industry.Viewer.Assets
             // Only includes versions that are in the Frozen state.
             async Task GetAssetVersions()
             {
-                m_VersionQueryTokenSource?.Cancel();
+                TaskUtils.CancelTokenSource(ref m_VersionQueryTokenSource);
                 m_VersionQueryTokenSource = new CancellationTokenSource();
-                
-                var assetProject = await m_AssetRepository.GetAssetProjectAsync(asset.Descriptor.ProjectDescriptor, m_VersionQueryTokenSource.Token);
+                var cancellationToken = m_VersionQueryTokenSource.Token;
+
+                var assetProject = await m_AssetRepository.GetAssetProjectAsync(asset.Descriptor.ProjectDescriptor, cancellationToken);
 
                 var searchFilter = new AssetSearchFilter();
                 
@@ -408,135 +500,158 @@ namespace Unity.Industry.Viewer.Assets
                     CachePreviewUrl = true,
                 };
                 
-                var query = assetProject.QueryAssetVersions(asset.Descriptor.AssetId).
-                    OrderBy("versionNumber", SortingOrder.Descending).SelectWhereMatchesFilter(searchFilter).
-                    WithCacheConfiguration(cacheConfiguration).ExecuteAsync(m_VersionQueryTokenSource.Token);
-                
+                var query = assetProject.QueryAssetVersions(asset.Descriptor.AssetId)
+                    .OrderBy("versionNumber", SortingOrder.Descending)
+                    .SelectWhereMatchesFilter(searchFilter)
+                    .WithCacheConfiguration(cacheConfiguration)
+                    .ExecuteAsync(cancellationToken);
+
                 List<AssetInfo> resultVersions = new List<AssetInfo>();
                 await foreach (var version in query)
                 {
-                    var properties = await version.GetPropertiesAsync(m_VersionQueryTokenSource.Token);
+                    var properties = await version.GetPropertiesAsync(cancellationToken);
+
+                    if (cancellationToken.IsCancellationRequested) return;
+
                     resultVersions.Add(new AssetInfo()
                     {
                         Asset = version,
                         Properties = properties
                     });
                 }
-                AssetVersionsLoaded?.Invoke(resultVersions);
+
+                callback?.Invoke(resultVersions);
             }
         }
-        
+
+        private class FileUploadingProgress : IProgress<HttpProgress>
+        {
+            AssetCreationParameters m_Parameters;
+            IAsset m_Asset;
+
+            public FileUploadingProgress(AssetCreationParameters parameters, IAsset asset)
+            {
+                m_Parameters = parameters;
+                m_Asset = asset;
+            }
+
+            public void Report(HttpProgress value)
+            {
+                AssetCreationProgress?.Invoke(m_Parameters, m_Asset, value.UploadProgress, null, null);
+            }
+        }
+
         // Handles the creation of a new asset, including uploading associated files and freezing the asset.
         // The method first creates the asset, then uploads each file to the asset's dataset, and finally freezes the asset.
         // Progress of the asset creation is reported through the AssetCreationProgress event.
-        private void OnAssetCreation(string assetName, string description, AssetType type, IOrganization org,
-            IAssetProject project, IAssetCollection collection, List<string> files)
+        private void OnAssetCreation(AssetCreationParameters parameters)
         {
-            _ = CreateAsset();
+            if (parameters == null) throw new ArgumentNullException(nameof(parameters));
+
+            var cancellationTokenSource = new CancellationTokenSource();
+            AssetCreationProgress?.Invoke(parameters, null, null, null, cancellationTokenSource);
+            _ = CreateAsset(cancellationTokenSource.Token);
             return;
             
-            async Task CreateAsset()
+            async Task CreateAsset(CancellationToken cancellationToken)
             {
-                Debug.Log($"{org.Name} - {project.Name} - {assetName} - {description} - {type}");
-                
-                var newAssetCreation = new AssetCreation(assetName)
-                {
-                    Description = description,
-                    Type = type,
-                };
+                Debug.Log($"Asset Creation: {parameters.Organization.Name}\\{parameters.Project.Name}\\{parameters.Collection?.Descriptor.Path}\\{parameters.AssetName}" +
+                    $" - {parameters.AssetType} - {parameters.AssetDescription}");
 
-                if (collection != null)
+                IAsset newAsset = null;
+
+                try
                 {
-                    newAssetCreation.Collections = new List<CollectionPath>() {collection.Descriptor.Path};
-                }
-                
-                m_AssetRepositoryCancellationTokenSource?.Cancel();
-                m_AssetRepositoryCancellationTokenSource = new CancellationTokenSource();
-                
-                var newAsset = await project.CreateAssetAsync(newAssetCreation, m_AssetRepositoryCancellationTokenSource.Token);
-                if (newAsset == null || files == null || files.Count == 0)
-                {
-                    if (newAsset != null)
+                    var newAssetCreation = new AssetCreation(parameters.AssetName)
                     {
-                        await WaitToFreeze(newAsset, AssetFreezeOperation.CancelTransformations);
+                        Description = parameters.AssetDescription,
+                        Type = parameters.AssetType,
+                        Tags = parameters.Tags
+                    };
+
+                    if (parameters.Collection != null)
+                    {
+                        newAssetCreation.Collections = new List<CollectionPath>() { parameters.Collection.Descriptor.Path };
                     }
-                    AssetCreationProgress?.Invoke(1f);
+
+                    newAsset = await parameters.Project.CreateAssetAsync(newAssetCreation, cancellationToken);
+                    cancellationToken.ThrowIfCancellationRequested();
+                    if (newAsset == null)
+                    {
+                        Debug.LogError($"Asset Creation: failed to create asset '{parameters.AssetName}' in project '{parameters.Project.Name}'.");
+                        AssetCreationProgress?.Invoke(parameters, null, null, "Failed to create asset", null);
+                        return;
+                    }
+
+                    if (string.IsNullOrEmpty(parameters.FileName))
+                    {
+                        if (parameters.DoVersionFreeze)
+                        {
+                            await WaitToFreeze(newAsset, AssetFreezeOperation.WaitOnTransformations, cancellationToken);
+                            cancellationToken.ThrowIfCancellationRequested();
+                        }
+
+                        AssetCreationProgress?.Invoke(parameters, newAsset, 1f, null, null);
+                        return;
+                    }
+
+                    // this will tell tracking that asset is created and next step is file uploading
+                    AssetCreationProgress?.Invoke(parameters, newAsset, null, null, null);
+
+                    var sourceDataset = await newAsset.GetSourceDatasetAsync(cancellationToken);
+                    cancellationToken.ThrowIfCancellationRequested();
+                    if (sourceDataset == null)
+                    {
+                        Debug.LogError($"Asset Creation: source dataset not found for created asset '{newAsset.Name}'.");
+                        AssetCreationProgress?.Invoke(parameters, newAsset, null, "Source dataset not found", null);
+                        return;
+                    }
+
+                    var filepath = Path.GetFileName(parameters.FileName);
+                    var fileCreation = new FileCreation(filepath)
+                    {
+                        Path = filepath,
+                        Description = "",
+                        Tags = new List<string>() { parameters.AssetType.GetValueAsString() }
+                    };
+
+                    await using (var fileStream = File.OpenRead(parameters.FileName))
+                    {
+                        await sourceDataset.UploadFileAsync(fileCreation, fileStream, new FileUploadingProgress(parameters, newAsset), cancellationToken);
+                        cancellationToken.ThrowIfCancellationRequested();
+                    }
+
+                    if (parameters.DoVersionFreeze)
+                    {
+                        await WaitToFreeze(newAsset, AssetFreezeOperation.WaitOnTransformations, cancellationToken);
+                        cancellationToken.ThrowIfCancellationRequested();
+                    }
+                }
+                catch (OperationCanceledException)
+                {
+                    Debug.Log($"Asset Creation: asset creation Task for '{parameters.AssetName}' was canceled.");
+                    AssetCreationProgress?.Invoke(parameters, newAsset, null, "Operation canceled", null);
+                    return;
+                }
+                catch (Exception exception)
+                {
+                    Debug.LogError($"Asset Creation: exception in asset '{parameters.AssetName}' creation Task: {exception}");
+                    AssetCreationProgress?.Invoke(parameters, newAsset, null, exception.Message, null);
                     return;
                 }
 
-                var progress = 1f / ((float)files.Count + 1f);
-                AssetCreationProgress?.Invoke(progress);
-                
-                m_DatasetTokenSource?.Cancel();
-                m_DatasetTokenSource = new CancellationTokenSource();
-
-                var datasets = newAsset.ListDatasetsAsync(Range.All, m_DatasetTokenSource.Token);
-
-                var dataSetsList = new List<IDataset>();
-                
-                await foreach (var dataset in datasets)
-                {
-                    dataSetsList.Add(dataset);
-                }
-                
-                IDataset sourceDataset = dataSetsList.FirstOrDefault();
-
-                if (sourceDataset == null)
-                {
-                    Debug.LogError($"No datasets found for created asset {newAsset.Name}.");
-                    AssetCreationProgress?.Invoke(1f);
-                    return;
-                }
-                
-                for (var i = 0; i < files.Count; i++)
-                {
-                    try
-                    {
-                        var filepath = Path.GetFileName(files[i]);
-                        var fileCreation = new FileCreation(filepath)
-                        {
-                            Path = filepath,
-                            Description = "",
-                            Tags = new List<string>(){ newAsset.Type.GetValueAsString() }
-                        };
-                        //Debug.Log($"File Path: {filepath}, File:{files[i]}");
-                        
-                        m_DatasetTokenSource?.Cancel();
-                        m_DatasetTokenSource = new CancellationTokenSource();
-                        
-                        await using (var fileStream = File.OpenRead(files[i]))
-                        {
-                            await sourceDataset.UploadFileAsync(fileCreation, fileStream, null, m_DatasetTokenSource.Token);
-                        }
-                        var progressUpdate = 1 + i / ((float)files.Count + 1);
-                        if (progressUpdate < 1f)
-                        {
-                            AssetCreationProgress?.Invoke(progressUpdate);
-                        }
-                    } catch(UploadFailedException e)
-                    {
-                        Debug.LogError(e);
-                    }
-                    catch(Exception e)
-                    {
-                        Debug.LogError(e);
-                    }
-                }
-                
-                await WaitToFreeze(newAsset, AssetFreezeOperation.WaitOnTransformations);
-                
-                AssetCreationProgress?.Invoke(1f);
+                AssetCreationProgress?.Invoke(parameters, newAsset, 1f, null, null);
             }
 
-            async Task WaitToFreeze(IAsset newAsset, AssetFreezeOperation operation)
+            async Task WaitToFreeze(IAsset newAsset, AssetFreezeOperation operation, CancellationToken cancellationToken)
             {
                 IAssetFreeze newAssetFreeze = new AssetFreeze("Initial Version")
                 {
                     Operation = operation
                 };
-                m_AssetRepositoryCancellationTokenSource?.Cancel();
-                m_AssetRepositoryCancellationTokenSource = new CancellationTokenSource();
-                await newAsset.FreezeAsync(newAssetFreeze, m_AssetRepositoryCancellationTokenSource.Token);
+
+                Debug.Log("Asset Creation: freezing asset...");
+                await newAsset.FreezeAsync(newAssetFreeze, cancellationToken);
             }
         }
 
@@ -545,12 +660,8 @@ namespace Unity.Industry.Viewer.Assets
             _selectedAsset = null;
             _selectedParentAsset = null;
             _newerVersionAsset = null;
-            if (m_VersionCheckCoroutine != null)
-            {
-                m_VersionCheckerTokenSource?.Cancel();
-                m_VersionCheckerTokenSource = null;
-                StopCoroutine(m_VersionCheckCoroutine);
-            }
+
+            CancelVersionChecking();
         }
 
         /// <summary>
@@ -569,27 +680,21 @@ namespace Unity.Industry.Viewer.Assets
             _selectedAsset = asset;
             _selectedParentAsset = null;
             _newerVersionAsset = null;
-            
-            if (m_VersionCheckCoroutine != null)
-            {
-                m_VersionCheckerTokenSource?.Cancel();
-                m_VersionCheckerTokenSource = null;
-                StopCoroutine(m_VersionCheckCoroutine);
-            }
-
+            CancelVersionChecking();
             m_VersionCheckCoroutine = StartCoroutine(StartVersionChecking());
         }
-        
+
         private IEnumerator StartVersionChecking()
         {
-            m_WaitForSeconds ??= new WaitForSeconds(m_VersionCheckInterval);
             while (true)
             {
                 if (_selectedAsset == null)
                 {
                     yield break;
                 }
+
                 yield return new WaitForSeconds(m_VersionCheckInterval);
+
                 var versionCheckTask = CheckAssetVersionsAsync();
                 yield return new WaitUntil(() => versionCheckTask.IsCompleted);
                 if (versionCheckTask.Exception != null)
@@ -601,21 +706,34 @@ namespace Unity.Industry.Viewer.Assets
 
         private async Task CheckAssetVersionsAsync()
         {
-            m_VersionCheckerTokenSource?.Cancel();
-            m_VersionCheckerTokenSource = new CancellationTokenSource();
+            TaskUtils.CancelTokenSource(ref m_VersionCheckerTokenSource);
 
-            var currentAssetVersion = _selectedAsset.Value.Properties.Value.FrozenSequenceNumber;
+            var assetNullable = _selectedAsset;
+            if (assetNullable == null || !IsCheckingForNewVersionEnabled) return;
+            var selectedAsset = assetNullable.Value;
+
+            var newSource = new CancellationTokenSource();
+            var cancellationToken = newSource.Token;
+            m_VersionCheckerTokenSource = newSource;
+
+            var currentAssetVersion = selectedAsset.Properties.Value.FrozenSequenceNumber;
             
-            var assetProject = await 
-                m_AssetRepository.GetAssetProjectAsync(_selectedAsset.Value.Asset.Descriptor.ProjectDescriptor,
-                    CancellationToken.None);
-            if(m_VersionCheckerTokenSource.IsCancellationRequested) return;
-            var latestVersion = await 
-                assetProject.GetAssetWithLatestVersionAsync(_selectedAsset.Value.Asset.Descriptor.AssetId,
-                    CancellationToken.None);
-            if(m_VersionCheckerTokenSource.IsCancellationRequested) return;
-            var latestVersionAssetProperty = await latestVersion.GetPropertiesAsync(CancellationToken.None);
-            if(m_VersionCheckerTokenSource.IsCancellationRequested) return;
+            var assetProject = await m_AssetRepository.GetAssetProjectAsync(
+                selectedAsset.Asset.Descriptor.ProjectDescriptor,
+                cancellationToken);
+
+            if(cancellationToken.IsCancellationRequested || !IsCheckingForNewVersionEnabled) return;
+
+            var latestVersion = await assetProject.GetAssetWithLatestVersionAsync(
+                selectedAsset.Asset.Descriptor.AssetId,
+                cancellationToken);
+
+            if (cancellationToken.IsCancellationRequested || !IsCheckingForNewVersionEnabled) return;
+
+            var latestVersionAssetProperty = await latestVersion.GetPropertiesAsync(cancellationToken);
+
+            if (cancellationToken.IsCancellationRequested || !IsCheckingForNewVersionEnabled) return;
+
             if (latestVersionAssetProperty.FrozenSequenceNumber > currentAssetVersion)
             {
                 _newerVersionAsset = new AssetInfo()
@@ -623,6 +741,7 @@ namespace Unity.Industry.Viewer.Assets
                     Asset = latestVersion,
                     Properties = latestVersionAssetProperty
                 };
+
                 NewVersionAvailable?.Invoke(_newerVersionAsset.Value);
             }
         }
@@ -644,14 +763,15 @@ namespace Unity.Industry.Viewer.Assets
             IAsyncEnumerable<IAsset> assets = null;
             
             m_AssetRepositoryCancellationTokenSource = new CancellationTokenSource();
-            
+            var localAssetRepositoryCancellationTokenSource = m_AssetRepositoryCancellationTokenSource;
+
             var searchFilter = new AssetSearchFilter();
             
             if (!string.IsNullOrEmpty(assetName))
             {
                 searchFilter.Include().Name.WithValue(new StringPredicate(assetName, StringSearchOption.Wildcard));
             }
-            
+
             searchFilter.Any().Datasets.SystemTags.WithValue("Streamable");
             searchFilter.Any().Tags.WithValue("Layout");
 
@@ -660,7 +780,10 @@ namespace Unity.Industry.Viewer.Assets
                 CacheProperties = true,
                 CachePreviewUrl = true
             };
+
             SortingOrder sortingOrder = m_SortingType == SortingType.Upload_date || m_SortingType == SortingType.Last_modified? SortingOrder.Descending : SortingOrder.Ascending;
+            IAssetProject assetProject = null;
+            CollectionDescriptor? assetCollectionDescriptor = null;
             switch (allAssets)
             {
                 case true:
@@ -671,35 +794,37 @@ namespace Unity.Industry.Viewer.Assets
                         SelectedAssetProject = null;
                     }
 
-                    m_AllAssetProjects = await GetAssetProjects(SharedUIManager.Organization);
-                    
+                    m_AllAssetProjects = await GetAssetProjects(SharedUIManager.Organization, localAssetRepositoryCancellationTokenSource.Token);
+
                     assets = m_AssetRepository.QueryAssets(m_AllAssetProjects.Select(p => p.AssetProject.Descriptor))
                         .SelectWhereMatchesFilter(searchFilter).OrderBy(m_SortingType.GetPropertyName(), sortingOrder)
                         .WithCacheConfiguration(cacheConfiguration)
-                        .ExecuteAsync(m_AssetRepositoryCancellationTokenSource.Token);
+                        .ExecuteAsync(localAssetRepositoryCancellationTokenSource.Token);
                     break;
                 }
                 case false when SharedUIManager.AssetProjectInfo.HasValue && SharedUIManager.AssetCollection == null:
                 {
-                    assets = SharedUIManager.AssetProjectInfo.Value.AssetProject.QueryAssets().SelectWhereMatchesFilter(searchFilter)
+                    assetProject = SharedUIManager.AssetProjectInfo.Value.AssetProject;
+                    assets = assetProject.QueryAssets().SelectWhereMatchesFilter(searchFilter)
                         .OrderBy(m_SortingType.GetPropertyName(), sortingOrder)
                         .WithCacheConfiguration(cacheConfiguration)
-                        .ExecuteAsync(m_AssetRepositoryCancellationTokenSource.Token);
+                        .ExecuteAsync(localAssetRepositoryCancellationTokenSource.Token);
                     break;
                 }
-
                 case false when SharedUIManager.AssetProjectInfo.HasValue && SharedUIManager.AssetCollection != null:
                 {
-                    searchFilter.Collections.WhereContains(SharedUIManager.AssetCollection.Descriptor.Path);
-                    assets = SharedUIManager.AssetProjectInfo.Value.AssetProject.QueryAssets().SelectWhereMatchesFilter(searchFilter)
+                    assetProject = SharedUIManager.AssetProjectInfo.Value.AssetProject;
+                    assetCollectionDescriptor = SharedUIManager.AssetCollection.Descriptor;
+                    searchFilter.Collections.WhereContains(assetCollectionDescriptor.Value.Path);
+                    assets = assetProject.QueryAssets().SelectWhereMatchesFilter(searchFilter)
                         .OrderBy(m_SortingType.GetPropertyName())
                         .WithCacheConfiguration(cacheConfiguration)
-                        .ExecuteAsync(m_AssetRepositoryCancellationTokenSource.Token);
+                        .ExecuteAsync(localAssetRepositoryCancellationTokenSource.Token);
                     break;
                 }
             }
-            
-            if (m_AssetRepositoryCancellationTokenSource.IsCancellationRequested) return;
+
+            if (localAssetRepositoryCancellationTokenSource.IsCancellationRequested) return;
 
             List<AssetInfo> assetsToBatchProcess = new List<AssetInfo>();
             int count = 0;
@@ -708,23 +833,25 @@ namespace Unity.Industry.Viewer.Assets
             {
                 await foreach (var asset in assets)
                 {
-                    if (m_AssetRepositoryCancellationTokenSource.IsCancellationRequested) return;
+                    if (localAssetRepositoryCancellationTokenSource.IsCancellationRequested) return;
                     count++;
-                    var assetProperty = await asset.GetPropertiesAsync(m_AssetRepositoryCancellationTokenSource.Token);
+                    var assetProperty = await asset.GetPropertiesAsync(localAssetRepositoryCancellationTokenSource.Token);
                     assetsToBatchProcess.Add(new AssetInfo()
                     {
                         Asset = asset,
                         Properties = assetProperty
                     });
-                    if (m_AssetRepositoryCancellationTokenSource.IsCancellationRequested)
+                    if (localAssetRepositoryCancellationTokenSource.IsCancellationRequested)
                     {
                         return;
                     }
                     if (count % 98 == 0) AssetsLoaded?.Invoke(assetsToBatchProcess);
-                }
-                if (m_AssetRepositoryCancellationTokenSource.IsCancellationRequested) return;
+                    }
+                if (localAssetRepositoryCancellationTokenSource.IsCancellationRequested) return;
                 AssetsLoaded?.Invoke(assetsToBatchProcess.Count == 0 ? null : assetsToBatchProcess);
             }
+
+            AllAssetsLoaded?.Invoke(assetProject, assetCollectionDescriptor);
         }
 
 #endregion
@@ -742,52 +869,62 @@ namespace Unity.Industry.Viewer.Assets
 
 #region IAssetProject
 
-        private void OnRequestAssetProjects(IOrganization organization, Action<List<AssetProjectInfo>> callback)
+        private void OnRequestAssetProjects(IOrganization organization, Action<IOrganization, List<AssetProjectInfo>> callback)
         {
             _ = GetProjects();
             return;
 
             async Task GetProjects()
             {
-                var results = await GetAssetProjects(organization);
+                m_ProjectCancellationTokenSource?.Cancel();
+                m_ProjectCancellationTokenSource = new CancellationTokenSource();
+                var localProjectCancellationTokenSource = m_ProjectCancellationTokenSource;
+
+                var results = await GetAssetProjects(organization, localProjectCancellationTokenSource.Token);
+
+                localProjectCancellationTokenSource.Token.ThrowIfCancellationRequested();
+
                 if (SceneManager.GetActiveScene() == gameObject.scene)
                 {
                     m_AllAssetProjects = results;
                 }
-                callback?.Invoke(results);
+
+                callback?.Invoke(organization, results);
             }
         }
-        
+
         /// <summary>
         /// Retrieves a list of asset projects for the specified organization.
         /// </summary>
         /// <param name="selectedOrg">The organization for which to retrieve asset projects.</param>
+        /// <param name="cancelationToken">Cancellation token to cancel the operation if needed.</param>
         /// <returns>A list of asset projects associated with the specified organization.</returns>
-        private async Task<List<AssetProjectInfo>> GetAssetProjects(IOrganization selectedOrg)
+        private async Task<List<AssetProjectInfo>> GetAssetProjects(IOrganization selectedOrg, CancellationToken cancelationToken)
         {
             var tempAssetProjects = new List<AssetProjectInfo>();
-            
-            m_AssetRepositoryCancellationTokenSource?.Cancel();
-            m_AssetRepositoryCancellationTokenSource = new CancellationTokenSource();
-            
+
             var orgID = selectedOrg.Id;
             
             AssetProjectCacheConfiguration cacheConfiguration = new AssetProjectCacheConfiguration()
             {
                 CacheProperties = true,
             };
-            var assetProjectsAsyncEnumerable = m_AssetRepository.QueryAssetProjects(orgID)
-                .WithCacheConfiguration(cacheConfiguration).ExecuteAsync(CancellationToken.None);
-            
+
+            var assetProjectsAsyncEnumerable = m_AssetRepository
+                .QueryAssetProjects(orgID)
+                .WithCacheConfiguration(cacheConfiguration)
+                .ExecuteAsync(cancelationToken);
+
             await foreach (var assetProject in assetProjectsAsyncEnumerable)
             {
-                var assetProjectProperties =
-                    await assetProject.GetPropertiesAsync(m_AssetRepositoryCancellationTokenSource.Token);
+                var assetProjectProperties = await assetProject.GetPropertiesAsync(cancelationToken);
                 tempAssetProjects.Add(new AssetProjectInfo()
                 {
                     AssetProject = assetProject,
                     Properties = assetProjectProperties
                 });
+
+                cancelationToken.ThrowIfCancellationRequested();
             }
 
             return tempAssetProjects;
@@ -817,14 +954,18 @@ namespace Unity.Industry.Viewer.Assets
                 
                 m_CollectionCancellationTokenSource?.Cancel();
                 m_CollectionCancellationTokenSource = new CancellationTokenSource();
+                var localCollectionCancellationTokenSource = m_CollectionCancellationTokenSource;
 
                 var collectionsEnumerable = assetProject.AssetProject.QueryCollections()
-                    .ExecuteAsync(m_CollectionCancellationTokenSource.Token);
+                    .ExecuteAsync(localCollectionCancellationTokenSource.Token);
                 
                 await foreach (var collection in collectionsEnumerable)
                 {
+                    localCollectionCancellationTokenSource.Token.ThrowIfCancellationRequested();
                     collections.Add(collection);
                 }
+
+                localCollectionCancellationTokenSource.Token.ThrowIfCancellationRequested();
                 collectionsLoaded?.Invoke(collections);
             }
         }
@@ -906,29 +1047,12 @@ namespace Unity.Industry.Viewer.Assets
                 _selectedAsset = null;
                 AssetDeselected?.Invoke();
                 
-                m_AssetRepositoryCancellationTokenSource?.Cancel();
-                m_AssetRepositoryCancellationTokenSource?.Dispose();
-                m_AssetRepositoryCancellationTokenSource = null;
-                
-                m_VersionQueryTokenSource?.Cancel();
-                m_VersionQueryTokenSource?.Dispose();
-                m_VersionQueryTokenSource = null;
-                
-                m_VersionCheckerTokenSource?.Cancel();
-                m_VersionCheckerTokenSource?.Dispose();
-                m_VersionCheckerTokenSource = null;
-                
-                m_DatasetTokenSource?.Cancel();
-                m_DatasetTokenSource?.Dispose();
-                m_DatasetTokenSource = null;
-                
-                m_OrganizationCancellationTokenSource?.Cancel();
-                m_OrganizationCancellationTokenSource?.Dispose();
-                m_OrganizationCancellationTokenSource = null;
-                
-                m_CollectionCancellationTokenSource?.Cancel();
-                m_CollectionCancellationTokenSource?.Dispose();
-                m_CollectionCancellationTokenSource = null;
+                TaskUtils.CancelTokenSource(ref m_AssetRepositoryCancellationTokenSource);
+                TaskUtils.CancelTokenSource(ref m_VersionQueryTokenSource);
+                TaskUtils.CancelTokenSource(ref m_VersionCheckerTokenSource);
+                TaskUtils.CancelTokenSource(ref m_DatasetTokenSource);
+                TaskUtils.CancelTokenSource(ref m_OrganizationCancellationTokenSource);
+                TaskUtils.CancelTokenSource(ref m_CollectionCancellationTokenSource);
             }
         }
     }

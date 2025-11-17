@@ -16,23 +16,14 @@ MonoBehaviour:
     m_Code: fr-FR
   m_SharedData: {fileID: 11400000, guid: e57257823a7964becb6eb06d6181f15a, type: 2}
   m_Metadata:
-    m_Items:
-    - rid: 7555826606608744550
+    m_Items: []
   m_TableData:
-  - m_Id: 20735582208
-    m_Localized: Recherche...
-    m_Metadata:
-      m_Items: []
   - m_Id: 3047743807488
     m_Localized: Nouvelle version disponible
     m_Metadata:
       m_Items: []
   - m_Id: 4032537026560
     m_Localized: Nom
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4496284442624
-    m_Localized: Version
     m_Metadata:
       m_Items: []
   - m_Id: 4881900363776
@@ -59,18 +50,9 @@ MonoBehaviour:
     m_Localized: "Cr\xE9\xE9 par"
     m_Metadata:
       m_Items: []
-  - m_Id: 7216613548032
-    m_Localized: "T\xE9l\xE9charger"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 11727306481664
-    m_Localized: "Version\_{num}"
-    m_Metadata:
-      m_Items:
-      - rid: 7555826606608744550
   - m_Id: 35648491741184
-    m_Localized: "Une nouvelle version de l'actif est disponible. Voulez-vous passer
-      \xE0 la nouvelle version ?"
+    m_Localized: "Une nouvelle version de l'actif est disponible. Souhaitez-vous
+      la passer\_?"
     m_Metadata:
       m_Items: []
   - m_Id: 35994052059136
@@ -82,7 +64,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 41819579604992
-    m_Localized: "S\xE9lectionnez une organisation"
+    m_Localized: "S\xE9lectionnez l'organisation"
     m_Metadata:
       m_Items: []
   - m_Id: 41959505780736
@@ -118,7 +100,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 83968589291520
-    m_Localized: Actif 2D
+    m_Localized: Ressource 2D
     m_Metadata:
       m_Items: []
   - m_Id: 84109517905920
@@ -146,11 +128,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 84751309332480
-    m_Localized: "\xC9diteur d'unit\xE9"
+    m_Localized: "\xC9diteur Unity"
     m_Metadata:
       m_Items: []
   - m_Id: 113148827787264
-    m_Localized: "T\xE9l\xE9chargement d'\xE9l\xE9ments"
+    m_Localized: Ajouter un Actif
     m_Metadata:
       m_Items: []
   - m_Id: 113743160664064
@@ -177,12 +159,8 @@ MonoBehaviour:
     m_Localized: "Supprimer la s\xE9lection"
     m_Metadata:
       m_Items: []
-  - m_Id: 116427913682944
-    m_Localized: "T\xE9l\xE9chargement d'\xE9l\xE9ments"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 117455979536384
-    m_Localized: "T\xE9l\xE9charger l'\xE9l\xE9ment"
+  - m_Id: 103408215129104384
+    m_Localized: "Cr\xE9ation"
     m_Metadata:
       m_Items: []
   - m_Id: 126885479571456
@@ -190,19 +168,19 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 129700784496640
-    m_Localized: "S\xE9lectionner des fichiers"
+    m_Localized: "S\xE9lectionner les fichiers"
     m_Metadata:
       m_Items: []
   - m_Id: 25800459972239360
-    m_Localized: Taille du fichier(s)
+    m_Localized: Taille du(des) fichier(s)
     m_Metadata:
       m_Items: []
   - m_Id: 25800460005793792
-    m_Localized: Total fichier(s)
+    m_Localized: Nombre total de fichiers
     m_Metadata:
       m_Items: []
   - m_Id: 25801326007934976
-    m_Localized: Balises
+    m_Localized: "Mots cl\xE9s"
     m_Metadata:
       m_Items: []
   - m_Id: 25802025936609280
@@ -226,19 +204,62 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 26945938407809027
-    m_Localized: "S\xE9lectionner tout"
+    m_Localized: "Tout s\xE9lectionner"
     m_Metadata:
       m_Items: []
   - m_Id: 26946288296648704
     m_Localized: Revoir
     m_Metadata:
       m_Items: []
+  - m_Id: 98637747977232384
+    m_Localized: Statut
+    m_Metadata:
+      m_Items: []
+  - m_Id: 102582021617917952
+    m_Localized: "    Pr\xEAt pour le streaming de donn\xE9es 3D"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 102589537559027712
+    m_Localized: Ajouter un Nouvel Actif
+    m_Metadata:
+      m_Items: []
+  - m_Id: 102911663331647488
+    m_Localized: "La cr\xE9ation de l\u2019actif a \xE9chou\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 102916677815017472
+    m_Localized: "La ressource appara\xEEtra une fois qu'elle aura \xE9t\xE9 enti\xE8rement
+      t\xE9l\xE9charg\xE9e et transform\xE9e, ce qui peut prendre un certain temps."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103410122987970560
+    m_Localized: "T\xE9l\xE9chargement"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103437425314930688
+    m_Localized: "T\xE9l\xE9chargement termin\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103438020864155648
+    m_Localized: "\xC9chec de l'importation"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103438847884435456
+    m_Localized: En transformation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103439357110689792
+    m_Localized: "Transformation termin\xE9e"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103439907755696128
+    m_Localized: "La transformation a \xE9chou\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103803189238734848
+    m_Localized: Le type de fichier n'est pas pris en charge
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
-    RefIds:
-    - rid: 7555826606608744550
-      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
-      data:
-        m_Entries: 
-        m_SharedEntries:
-        - id: 11727306481664
+    RefIds: []

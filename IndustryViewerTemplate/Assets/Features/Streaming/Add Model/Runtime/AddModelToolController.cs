@@ -1,10 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using AssetInfo = Unity.Industry.Viewer.Assets.AssetInfo;
-#if VR_MODE
-using Unity.Industry.Viewer.Navigation.VR;
-#endif
 
 namespace Unity.Industry.Viewer.Streaming.AddModel
 {
@@ -13,8 +11,18 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
     // The script also includes VR-specific handling for interactions and model manipulation.
     public class AddModelToolController : MonoBehaviour
     {
+        public static Action<HashSet<AssetInfo>> OnSelectedAssetChanged;
+        
         // Events for tool lifecycle management
-        public HashSet<AssetInfo> SelectedAssets => m_SelectedAssets;
+        private HashSet<AssetInfo> SelectedAssets
+        {
+            get => m_SelectedAssets;
+            set
+            {
+                m_SelectedAssets = value;
+                OnSelectedAssetChanged?.Invoke(m_SelectedAssets);
+            }
+        }
         
         private HashSet<AssetInfo> m_SelectedAssets;
         
@@ -26,27 +34,73 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
             m_StreamingModelController = FindAnyObjectByType<StreamingModelController>(FindObjectsInactive.Include);
         }
 
+        public bool SelectedAssetsContainExactVersion(AssetInfo assetInfo)
+        {
+            return m_SelectedAssets.Any(selectedAsset =>
+                selectedAsset.Asset.Descriptor.AssetId == assetInfo.Asset.Descriptor.AssetId
+                && selectedAsset.Asset.Descriptor.AssetVersion == assetInfo.Asset.Descriptor.AssetVersion);
+        }
+
+        public bool SelectedAssetsContainAnyVersion(AssetInfo assetInfo)
+        {
+            return m_SelectedAssets.Any(selectedAsset => selectedAsset.Asset.Descriptor.AssetId == assetInfo.Asset.Descriptor.AssetId);
+        }
+
+        public AssetInfo? GetSelectedAssetVersion(AssetInfo assetInfo)
+        {
+            var result = m_SelectedAssets.FirstOrDefault(selectedAsset => selectedAsset.Asset.Descriptor.AssetId == assetInfo.Asset.Descriptor.AssetId);
+            return result.Asset != null ? result : null;
+        }
+
+        public int GetSelectedAssetCount()
+        {
+            return m_SelectedAssets.Count;
+        }
+
+        public bool RemoveExactVersionOfSelectedAsset(AssetInfo assetInfo)
+        {
+            return m_SelectedAssets.Remove(assetInfo);
+        }
+
         public bool ManageSelectedAssets(AssetInfo assetInfo, bool add)
         {
+            // NOTE currently only single version of an asset can be selected at a time
+            var existingAsset = m_SelectedAssets.FirstOrDefault(selectedAsset => selectedAsset.Asset.Descriptor.AssetId == assetInfo.Asset.Descriptor.AssetId);
+
             if (add)
             {
-                if (m_SelectedAssets.Any(x => x.Asset.Descriptor == assetInfo.Asset.Descriptor))
+                if (existingAsset.Asset != null
+                    && existingAsset.Asset.Descriptor.AssetId == assetInfo.Asset.Descriptor.AssetId
+                    && existingAsset.Asset.Descriptor.AssetVersion == assetInfo.Asset.Descriptor.AssetVersion)
                 {
+                    // Same version already selected, nothing to do
                     return true;
                 }
+
+                if (existingAsset.Asset == null)
+                {
+                    // Nothing selected, add it
+                    m_SelectedAssets.Add(assetInfo);
+                    return true;
+                }
+
+                // Different version selected, replace it
+                m_SelectedAssets.Remove(existingAsset);
                 m_SelectedAssets.Add(assetInfo);
                 return true;
             }
 
-            if (m_SelectedAssets.All(x => x.Asset.Descriptor != assetInfo.Asset.Descriptor))
+            // No version found, nothing to remove
+            if (existingAsset.Asset == null)
             {
                 return false;
             }
 
-            m_SelectedAssets.Remove(assetInfo);
+            // Remove any version of the asset
+            m_SelectedAssets.Remove(existingAsset);
             return false;
         }
-        
+
         public void ClearSelectedAssets()
         {
             m_SelectedAssets.Clear();
@@ -67,9 +121,11 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
                     version = selectedAsset.Properties?.FrozenSequenceNumber ?? 0,
                 });
             }
-            m_SelectedAssets.Clear();
+
+            ClearSelectedAssets();
+
             if (newLayoutJson.LayoutModels == null || newLayoutJson.LayoutModels.Count == 0) return;
-            _ = m_StreamingModelController.ProcessLayoutJson(newLayoutJson);
+            _ = m_StreamingModelController.ProcessLayoutJson(newLayoutJson, this);
         }
     }
 }

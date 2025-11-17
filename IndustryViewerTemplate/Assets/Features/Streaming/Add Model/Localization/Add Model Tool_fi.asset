@@ -18,14 +18,6 @@ MonoBehaviour:
   m_Metadata:
     m_Items: []
   m_TableData:
-  - m_Id: 511469150208
-    m_Localized: Pilviresurssi
-    m_Metadata:
-      m_Items: []
-  - m_Id: 40570196551786496
-    m_Localized: Valitse
-    m_Metadata:
-      m_Items: []
   - m_Id: 40570196551786497
     m_Localized: Valittu
     m_Metadata:

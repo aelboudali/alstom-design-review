@@ -1,0 +1,119 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: MeasureTool_fi
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: fi
+  m_SharedData: {fileID: 11400000, guid: 8eb2735d8f73b4a4eac3389fed3a28cf, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 225092378624
+    m_Localized: "Et\xE4isyys"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 427803090944
+    m_Localized: Nimi
+    m_Metadata:
+      m_Items: []
+  - m_Id: 542022377472
+    m_Localized: "Sy\xF6t\xE4 nimi..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 859606687744
+    m_Localized: "Tyhjenn\xE4"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1375766126592
+    m_Localized: 'Mittausasetukset:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1746492268544
+    m_Localized: Poista
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5386313474048
+    m_Localized: "Mittaty\xF6kalu"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 277985614438400
+    m_Localized: "Yksik\xF6t"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 654966306709504
+    m_Localized: Tallenna
+    m_Metadata:
+      m_Items: []
+  - m_Id: 655053812473856
+    m_Localized: Peruuta
+    m_Metadata:
+      m_Items: []
+  - m_Id: 655106979471360
+    m_Localized: "K\xE4yt\xE4"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 655162302341120
+    m_Localized: "Hylk\xE4\xE4"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 664662128271360
+    m_Localized: Muokkaa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6510811243769856
+    m_Localized: "N\xE4yt\xE4"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 33364848032079872
+    m_Localized: Tila
+    m_Metadata:
+      m_Items: []
+  - m_Id: 33364930869583872
+    m_Localized: "Kaksi pistett\xE4"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 33365092069269504
+    m_Localized: Ortogoninen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 33729162475724800
+    m_Localized: "\xC4\xE4rett\xF6m\xE4n pitk\xE4 viiva: Valitse toinen piste."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 31547921792032768
+    m_Localized: Metrit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 31548081163001856
+    m_Localized: Senttimetrit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 31548152310980608
+    m_Localized: Jalat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 31548238633951232
+    m_Localized: Tuumat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 31548370645475328
+    m_Localized: Jalat ja tuumat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 31554595147800576
+    m_Localized: "J\xE4rjestelm\xE4n\xE4"
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

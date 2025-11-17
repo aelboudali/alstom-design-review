@@ -18,12 +18,8 @@ MonoBehaviour:
   m_Metadata:
     m_Items: []
   m_TableData:
-  - m_Id: 13261332480
-    m_Localized: Versjon
-    m_Metadata:
-      m_Items: []
   - m_Id: 642184634368
-    m_Localized: "M\xE5l oppdateringsfrekvens"
+    m_Localized: Oppdateringsfrekvens
     m_Metadata:
       m_Items: []
   - m_Id: 994900434944
@@ -31,7 +27,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1747224354816
-    m_Localized: Generelt
+    m_Localized: General
     m_Metadata:
       m_Items: []
   - m_Id: 4932475281408
@@ -48,6 +44,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 45987493470789632
     m_Localized: "Frakoblet modus P\xE5"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 91376129548476416
+    m_Localized: Asetukset
     m_Metadata:
       m_Items: []
   references:

@@ -25,6 +25,7 @@ namespace Unity.Industry.Viewer.Streaming
         public string gameObjectName;
         public string versionID;
         public int version;
+        public int instanceNumber;
         public bool isStreaming;
 
         public float localPositionX;
@@ -47,9 +48,10 @@ namespace Unity.Industry.Viewer.Streaming
             datasetID = model.Dataset != null? model.Dataset.Descriptor.DatasetId.ToString() : string.Empty;
 
             version = model.Version;
-            
+
             gameObjectName = model.gameObject.name;
-            
+            instanceNumber = model.InstanceNumber;
+
             isStreaming = model.IsStreaming;
 
             localPositionX = model.transform.localPosition.x;
@@ -88,7 +90,7 @@ namespace Unity.Industry.Viewer.Streaming
             if (obj.GetType() != GetType()) return false;
             return Equals(obj as LayoutModelEntity);
         }
-        
+
         public override int GetHashCode()
         {
             return HashCode.Combine(orgID, projectID, assetID, versionID, gameObjectName);

@@ -29,8 +29,20 @@ MonoBehaviour:
     - Locale-ru-RU
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1d2f7cf1a19761c4296c96b4d1b24932
+    m_Address: Deep Linking_ru-RU
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ru-RU
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 25c5e1db25e439240976d9f3d16cf54b
     m_Address: Walk Camera_ru-RU
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ru-RU
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 329ed662a5ca44e3f879d54d04c585bd
+    m_Address: Section Cut_ru-RU
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-ru-RU
@@ -41,6 +53,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-ru-RU
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 36f77de49802c3343b90d58b566b00b3
+    m_Address: Environment Tool_ru-RU
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ru-RU
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3fc7f63254c9d4a77b652d810ea34cb7
     m_Address: Assets_ru-RU
@@ -56,12 +74,30 @@ MonoBehaviour:
     - Locale-ru-RU
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 626a5f1c12ac040ea8f807489fbcf0c8
+    m_Address: Shared_ru-RU
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ru-RU
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6534a26646844684ea01e85e30fa19b0
+    m_Address: MeasureTool_ru-RU
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ru-RU
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6848cc00fa1594daa95279a2116d2ce5
     m_Address: InAppSettings_ru-RU
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-ru-RU
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6fcb56bfd8eb3474a8872fc69371ca88
+    m_Address: UI_ru-RU
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ru-RU
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7b28ec6c7bda74402b2e2469f467427a
     m_Address: Orbit Camera_ru-RU
@@ -83,6 +119,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-ru-RU
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ab56c3667c27a447f85960fc9ea867c4
+    m_Address: Collaboration_ru-RU
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ru-RU
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d41dab39d0b6d4a21832b5e886113953
     m_Address: Hierarchy Tool_ru-RU

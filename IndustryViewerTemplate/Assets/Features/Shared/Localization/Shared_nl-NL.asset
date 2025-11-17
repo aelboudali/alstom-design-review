@@ -1,0 +1,123 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Shared_nl-NL
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: nl-NL
+  m_SharedData: {fileID: 11400000, guid: 2a6c1c34211344e798bb376d8fa80190, type: 2}
+  m_Metadata:
+    m_Items:
+    - rid: 8258937041623712616
+  m_TableData:
+  - m_Id: 53019499552768
+    m_Localized: Annuleren
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019528912896
+    m_Localized: Zoekopdracht
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019528912898
+    m_Localized: Download
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019528912899
+    m_Localized: Uitladen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019533107200
+    m_Localized: Verwijderen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019533107201
+    m_Localized: Stroom
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019533107202
+    m_Localized: Laad lay-out
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019533107203
+    m_Localized: Wolk
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019533107204
+    m_Localized: Lokaal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019533107205
+    m_Localized: Versie
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019533107206
+    m_Localized: Bezig met laden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 54834492334080
+    m_Localized: Update
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019533107208
+    m_Localized: OK
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019533107209
+    m_Localized: Uitgang
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019533107212
+    m_Localized: Redden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53948906987520
+    m_Localized: Versie {num}
+    m_Metadata:
+      m_Items:
+      - rid: 8258937041623712616
+  - m_Id: 40851833860644867
+    m_Localized: Selecteer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27292174277140480
+    m_Localized: Link
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27292174281334784
+    m_Localized: Verwijderen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 30929080184512512
+    m_Localized: Uploaden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 31232716568518656
+    m_Localized: Reset
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40974582780256256
+    m_Localized: Je bent uitgelogd
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40974582784450560
+    m_Localized: "Verlaat deze sc\xE8ne en log vanaf daar in"
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 8258937041623712616
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 53948906987520

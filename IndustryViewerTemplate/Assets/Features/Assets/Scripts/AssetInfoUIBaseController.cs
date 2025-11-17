@@ -5,8 +5,8 @@ using UnityEngine.Localization.Settings;
 using UnityEngine.UIElements;
 using Unity.AppUI.UI;
 using System.Collections.Generic;
+using Unity.Industry.Viewer.Shared;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Unity.Industry.Viewer.Assets
 {
@@ -28,7 +28,7 @@ namespace Unity.Industry.Viewer.Assets
         private const string k_AssetInfoPanelCloseButtonName = "CloseButton";
         private const string k_TabsName = "Tabs";
         
-        private const string k_InforContainerName = "InfoContainer";
+        private const string k_InfoContainerName = "InfoContainer";
         private const string k_CommentContainerName = "CommentsContainer";
         private const string k_FilesContainerName = "FilesContainer";
         private const string k_ProjectsContainerName = "ProjectsContainer";
@@ -44,13 +44,14 @@ namespace Unity.Industry.Viewer.Assets
         private const string k_AssetUpdateName = "AssetUpdate";
         private const string k_AssetUpdateByName = "AssetUpdateBy";
         private const string k_AssetCreateName = "AssetCreate";
-        private const string k_AssetCreateyName = "AssetCreateBy";
+        private const string k_AssetCreateByName = "AssetCreateBy";
         
         private const string k_AssetVersionDropdownName = "AssetVersionDropdown";
+        private const string k_VerBoxName = "VerBox";
         
         #region Localisation
-        protected const string k_AssetLocalisedTable = "Assets";
-        protected const string k_VersionKey = "Version";
+        protected const string k_SharedLocalisedTable = "Shared";
+        protected const string k_VersionKey = "Version Smart";
         #endregion
         
         protected VisualElement m_AssetInfoPanelRoot, m_Icon, m_infoContainer, m_commentContainer, m_filesContainer,
@@ -66,15 +67,18 @@ namespace Unity.Industry.Viewer.Assets
         public Dropdown AssetVersionDropdown => m_AssetVersionDropdown;
         public Dropdown AssetStatusDropdown => m_AssetStatusDropdown;
         public Tabs PanelTabs => m_Tabs;
-        
+
+        public event Action<List<AssetInfo>> AssetVersionsLoaded;
+
         protected Dropdown m_AssetVersionDropdown;
         protected Dropdown m_AssetStatusDropdown;
         protected Tabs m_Tabs;
+        protected Text m_versionBox;
 
         protected AssetInfoUIBaseController()
         {
             LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
-            m_AssetInfoPanelRoot = SharedUIManager.Instance.AssetsRoot.Q<VisualElement>(k_AssetInfoPanelRootName);
+            m_AssetInfoPanelRoot = SharedUIManager.Instance.AssetsContainer.Q<VisualElement>(k_AssetInfoPanelRootName);
             m_AssetInfoPanelRoot.style.display = DisplayStyle.None;
             
             m_CloseButton = m_AssetInfoPanelRoot.Q<IconButton>(k_AssetInfoPanelCloseButtonName);
@@ -87,17 +91,18 @@ namespace Unity.Industry.Viewer.Assets
             m_AssetUpdateLabel = m_AssetInfoPanelRoot.Q<Text>(k_AssetUpdateName);
             m_AssetUpdateByLabel = m_AssetInfoPanelRoot.Q<Text>(k_AssetUpdateByName);
             m_AssetCreateLabel = m_AssetInfoPanelRoot.Q<Text>(k_AssetCreateName);
-            m_AssetCreateByLabel = m_AssetInfoPanelRoot.Q<Text>(k_AssetCreateyName);
+            m_AssetCreateByLabel = m_AssetInfoPanelRoot.Q<Text>(k_AssetCreateByName);
             m_AssetIDLabel = m_AssetInfoPanelRoot.Q<Text>(k_AssetIDName);
             m_AssetFilesLabel = m_AssetInfoPanelRoot.Q<Text>(k_AssetFilesName);
             m_AssetFilesSizeLabel = m_AssetInfoPanelRoot.Q<Text>(k_AssetFilesSizeName);
             m_AssetStatusDropdown = m_AssetInfoPanelRoot.Q<Dropdown>(k_AssetStatusDropdownName);
             m_AssetVersionDropdown = m_AssetInfoPanelRoot.Q<Dropdown>(k_AssetVersionDropdownName);
+            m_versionBox = m_AssetInfoPanelRoot.Q<Text>(k_VerBoxName);
             
             m_Tabs = m_AssetInfoPanelRoot.Q<Tabs>(k_TabsName);
             m_Tabs.RegisterValueChangedCallback(OnTabsValueChanged);
             
-            m_infoContainer = m_AssetInfoPanelRoot.Q<VisualElement>(k_InforContainerName);
+            m_infoContainer = m_AssetInfoPanelRoot.Q<VisualElement>(k_InfoContainerName);
             m_commentContainer = m_AssetInfoPanelRoot.Q<VisualElement>(k_CommentContainerName);
             m_filesContainer = m_AssetInfoPanelRoot.Q<VisualElement>(k_FilesContainerName);
             
@@ -115,51 +120,61 @@ namespace Unity.Industry.Viewer.Assets
 
         protected virtual void OnDeselectAsset()
         {
-            if(SharedUIManager.Instance.AssetsRoot.resolvedStyle.display == DisplayStyle.None) return;
+            if(SharedUIManager.Instance.AssetsContainer.resolvedStyle.display == DisplayStyle.None) return;
             ClearUI();
         }
 
         protected virtual void UpdateAssetUI(AssetInfo assetInfo)
         {
             m_AssetIDLabel.text = assetInfo.Asset.Descriptor.AssetId.ToString();
-            m_AssetTypeLabel.ClearBinding("text");
+            m_AssetTypeLabel.text = string.Empty;
             m_AssetStatusDropdown.SetValueWithoutNotify(null);
             m_AssetStatusDropdown.sourceItems = null;
-            
+            m_AssetUpdateByLabel.text = string.Empty;
+            m_AssetCreateByLabel.text = string.Empty;
             m_Tabs.value = 0;
             m_Tabs.SetValueWithoutNotify(0);
+            m_Icon.parent.DisplayOn();
         }
-        
+
+        protected void RaiseAssetVersionsLoadedEvent(List<AssetInfo> assets)
+        {
+            AssetVersionsLoaded?.Invoke(assets);
+        }
+
         protected void OnRetrieveLinkedProjects(List<(string name, string id, bool source)> listOfProjects)
         {
             m_ProjectsContainer.Clear();
             if(listOfProjects == null) return;
             var sourceProject = listOfProjects.FirstOrDefault(x => x.source);
-                
-            Color randomColor = new Color(Random.value, Random.value, Random.value);
-                
-            m_ProjectsContainer.Add(new LinkedProjectVE
+
+            var linkedProjectVE = new LinkedProjectVE
             {
                 projectName = sourceProject.name,
                 isSourceProject = true,
-                projectIconColor = randomColor
-            });
+            };
+
+            linkedProjectVE.SetColorFromProjectId(sourceProject.id);
+            m_ProjectsContainer.Add(linkedProjectVE);
+
             foreach (var valueTuple in listOfProjects.Where(x => !x.source))
             {
-                m_ProjectsContainer.Add(new LinkedProjectVE
+                linkedProjectVE = new LinkedProjectVE
                 {
                     projectName = valueTuple.name,
                     isSourceProject = false,
-                    projectIconColor = randomColor,
                     style =
                     {
                         marginLeft = new Length(4, LengthUnit.Pixel),
                         marginRight = new Length(4, LengthUnit.Pixel)
                     }
-                });
+                };
+
+                linkedProjectVE.SetColorFromProjectId(valueTuple.id);
+                m_ProjectsContainer.Add(linkedProjectVE);
             }
         }
-        
+
         protected void AssignTags(List<string> tags)
         {
             m_TagsContainer.Clear();
@@ -290,17 +305,20 @@ namespace Unity.Industry.Viewer.Assets
         
         public virtual void ClearUI()
         {
+            m_Tabs.value = 0;
+            m_Tabs.SetValueWithoutNotify(0);
             m_AssetIDLabel.text = string.Empty;
             m_AssetFilesLabel.text = string.Empty;
             m_AssetFilesSizeLabel.text = string.Empty;
             m_AssetInfoPanelRoot.style.display = DisplayStyle.None;
-            m_AssetTypeLabel.ClearBinding("text");
+            m_AssetTypeLabel.text = string.Empty;
             
             m_ProjectsContainer?.Clear();
             m_TagsContainer?.Clear();
             
             if (m_Icon != null)
             {
+                m_Icon.parent.DisplayOn();
                 m_Icon.style.backgroundImage = null;
             }
 
@@ -325,7 +343,8 @@ namespace Unity.Industry.Viewer.Assets
         
         private void OnTabsValueChanged(ChangeEvent<int> evt)
         {
-            m_Icon.parent.style.display = evt.newValue is 0 or 2 ? DisplayStyle.Flex : DisplayStyle.None;
+            //m_AssetInfoScrollView.style.display = evt.newValue is 0 or 2 ? DisplayStyle.Flex : DisplayStyle.None;
+            m_Icon.parent.style.display = evt.newValue is 0 ? DisplayStyle.Flex : DisplayStyle.None;
             m_infoContainer.style.display = evt.newValue == 0 ? DisplayStyle.Flex : DisplayStyle.None;
             m_commentContainer.style.display = evt.newValue == 1 ? DisplayStyle.Flex : DisplayStyle.None;
             m_filesContainer.style.display = evt.newValue == 2 ? DisplayStyle.Flex : DisplayStyle.None;

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Unity.Industry.Viewer.Streaming
@@ -8,7 +9,7 @@ namespace Unity.Industry.Viewer.Streaming
         // Start is called before the first frame update
         void Start()
         {
-            StreamingModelController.AddStreamModel?.Invoke(StreamingModelController.StreamingAsset.Value);
+            StreamingModelController.AddStreamModel?.Invoke(StreamingModelController.StreamingAsset.Value, string.Empty, null);
         }
     }
 }

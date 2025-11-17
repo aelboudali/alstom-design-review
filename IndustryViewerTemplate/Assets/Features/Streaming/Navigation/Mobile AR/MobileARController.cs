@@ -1,6 +1,7 @@
 using System;
 using Unity.Industry.Viewer.Shared;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Unity.Industry.Viewer.Streaming;
 using UnityEngine.XR.ARFoundation;
@@ -19,6 +20,7 @@ using Unity.Industry.Viewer.Assets;
 using Unity.Cloud.Assets;
 using Unity.Cloud.HighPrecision.Runtime;
 using Unity.Cloud.DataStreaming.Runtime;
+using Unity.Mathematics;
 
 #if UNITY_IOS && !UNITY_EDITOR
 using AssetInfo = Unity.Industry.Viewer.Assets.AssetInfo;
@@ -78,6 +80,7 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
         public static Action<bool> RequestOcclusionOnOff;
         public static Action TwoFingerDragging;
         public static Action PinchScaling;
+        public static Action FoundMapping;
         
 #region AR Anchor
         public static Action<bool> WorldMapSaveReady;
@@ -103,12 +106,16 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
         AROcclusionManager m_AROcclusionManager;
         
         [SerializeField]
-        ARMeshManager m_ARMeshManager;
+        private ARRaycastManager m_ARRaycastManager;
+        
+        [SerializeField]
+        private ARMeshManager m_ARMeshManager;
 
         [SerializeField] private GameObject m_placingMakerPrefab;
         private GameObject m_placingMakerGO;
         
-        RaycastHit[] m_RaycastHit;
+        private List<ARRaycastHit> m_RaycastHit;
+        private ARPlane m_SelectedPlane;
         
         private bool m_Initialized = false;
         private bool m_IsSupported = false;
@@ -117,8 +124,6 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
         [Header("Input")]
         [SerializeField]
         XRRayInteractor m_ARInteractor;
-        
-        private ScreenSpaceSelectInput m_ScreenSpaceSelectInput;
         
         public ARState CurrentARState => m_ARState;
         
@@ -138,8 +143,6 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
         private Vector3 m_OriginalPosition;
         
         private DoubleBounds? m_CurrentBounds;
-
-        private float m_PlaceTimer = 0.0f;
         
         public bool MeshManagerSupported => m_ARMeshManager != null && m_ARMeshManager.subsystem != null;
 
@@ -154,7 +157,7 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
         SimpleTransformValues m_TargetTransformValues;
         private bool m_IsSavingMap;
         public bool isWorldMapFound { get; private set; } = false;
-        
+        public Transform TargetTrackable {get; private set;}
         IAssetRepository m_AssetRepository => PlatformServices.AssetRepository;
         
         string localWorldMapFilePath => Path.Combine(Application.persistentDataPath, StreamingModelController.StreamingAsset.Value.Asset.Descriptor.AssetId + k_WorldMapFileFormat);
@@ -178,14 +181,12 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
         public override void Initialize()
         {
             m_Utility = new CameraUtility(navigationCamera);
-            
             GameObject arChecker = new GameObject("AR Checker");
             CoroutineRunner coroutineRunner = arChecker.AddComponent<CoroutineRunner>();
             coroutineRunner.RunCoroutine(CheckARSupport(), () =>
             {
                 m_Initialized = true;
             });
-            m_ScreenSpaceSelectInput = m_ARInteractor.selectInput.GetObjectReference() as ScreenSpaceSelectInput;
             navigationOptionUIComponent ??= GetComponent<NavigationOptionUI>();
             ARStateChange += SwitchToState;
             RequestOcclusionOnOff += OnRequestOcclusionOnOff;
@@ -201,7 +202,7 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
         {
             TransformController.Instance.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
             TransformController.Instance.transform.localScale = Vector3.one;
-            StreamToolsController.DisableAllTools?.Invoke();
+            StreamToolsController.DisableAllTools?.Invoke(true);
             ToolPanelUIController.CloseToolPanel?.Invoke();
             //  instantiate the placeholder and hide it
             m_placingMakerGO = Instantiate(m_placingMakerPrefab, Vector3.zero, Quaternion.identity);
@@ -211,7 +212,6 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
 
         private void Start()
         {
-            m_ScreenSpaceSelectInput.tapStartPositionInput.inputActionReference.action.performed += OnTapInputPerformed;
             m_TwoFingerDragDelta.inputActionReference.action.performed += OnDragDeltaPerformed;
             m_TwoFingerDragDelta.inputActionReference.action.canceled += OnDragDeltaCancelled;
             m_PinchDelta.inputActionReference.action.performed += OnPinchDeltaPerformed;
@@ -224,47 +224,34 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
             {
                 var newBounds = StreamingUtils.ReturnBounds(m_CurrentBounds.Value);
                 m_Utility.SetClipPlane(newBounds);
+                Camera.main.nearClipPlane = 0.01f;
             }
             
             if (m_ARState == ARState.Placing)
             {
                 if (TransformController.Instance == null) return;
-                
-                m_RaycastHit ??= new RaycastHit[1];
-                var result = Physics.RaycastNonAlloc(navigationCamera.transform.position, navigationCamera.transform.forward, m_RaycastHit, 10f,
-                    m_ARPlaneLayerMask);
 
-                //  no hits
-                if (result == 0)
+                m_RaycastHit ??= new List<ARRaycastHit>();
+                var ray = new Ray(navigationCamera.transform.position, navigationCamera.transform.forward);
+                if (m_ARRaycastManager.Raycast(ray, m_RaycastHit, TrackableType.PlaneWithinBounds))
                 {
-                    if (m_ScreenSpaceSelectInput.tapStartPositionInput.inputActionReference.action.enabled)
+                    if (m_RaycastHit.Count == 0)
                     {
-                        m_ScreenSpaceSelectInput.tapStartPositionInput.inputActionReference.action.Disable();
-                    }
-
-                    if (m_PinchDelta.inputActionReference.action.enabled)
-                    {
-                        m_PinchDelta.inputActionReference.action.Disable();
+                        DisableMarker();
+                        return;
                     }
                     
-                    TransformController.Instance.gameObject.SetActive(false);
-                    return;
+                    //  display the placeholder duting ARState.Placing instead of the model itself
+                    m_placingMakerGO.SetActive(true);
+                    m_placingMakerGO.transform.position = m_RaycastHit[0].pose.position;
+                    m_SelectedPlane = m_RaycastHit[0].trackable as ARPlane;
                 }
-
-                //  display the placeholder duting ARState.Placing instead of the model itself
-                m_placingMakerGO.SetActive(true);
-                m_placingMakerGO.transform.position = m_RaycastHit[0].point;
-                if (!m_ScreenSpaceSelectInput.tapStartPositionInput.inputActionReference.action.enabled)
+                else
                 {
-                    m_ScreenSpaceSelectInput.tapStartPositionInput.inputActionReference.action.Enable();
-                }
-
-                if (!m_PinchDelta.inputActionReference.action.enabled)
-                {
-                    m_PinchDelta.inputActionReference.action.Enable();
+                    DisableMarker();
                 }
             }
-            
+            WorldMapSaveReady?.Invoke(true);
 #if UNITY_IOS && !UNITY_EDITOR
             var sessionSubsystem = (ARKitSessionSubsystem)ARSession.subsystem;
             if (sessionSubsystem == null)
@@ -274,30 +261,106 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
             }
             if (!m_IsSavingMap)
             {
-                bool isSaveMapReady = !m_IsSavingMap && sessionSubsystem.worldMappingStatus == ARWorldMappingStatus.Mapped && m_ARState == ARState.ConfirmPosition;
+                bool isSaveMapReady = !m_IsSavingMap && sessionSubsystem.worldMappingStatus == ARWorldMappingStatus.Mapped && (m_ARState == ARState.ConfirmPosition || m_ARState == ARState.Positioning);
                 WorldMapSaveReady?.Invoke(isSaveMapReady);
             }
 
-            if (sessionSubsystem.worldMappingStatus == ARWorldMappingStatus.Mapped && m_TargetTransformValues != null)
+            if (sessionSubsystem.worldMappingStatus == ARWorldMappingStatus.Mapped && m_TargetTransformValues != null
+                && TargetTrackable == null)
             {
-                Transform targetTrackable = null;
+                Debug.Log("Finding mapped trackable...");
                 foreach (var trackable in m_ARPlaneManager.trackables)
                 {
                     if (!string.Equals(trackable.trackableId.ToString(), m_TargetTransformValues.TrackableID)) continue;
-                    targetTrackable = trackable.transform;
+                    TargetTrackable = trackable.transform;
                 }
-                if (targetTrackable == null) return;
-                var targetPosition = targetTrackable.TransformPoint(new Vector3(m_TargetTransformValues.PositionX, m_TargetTransformValues.PositionY, m_TargetTransformValues.PositionZ));
-                Quaternion resultRotation = new Quaternion(m_TargetTransformValues.RotationX, m_TargetTransformValues.RotationY, m_TargetTransformValues.RotationZ, m_TargetTransformValues.RotationW);
-                TransformController.Instance.transform.transform.position = targetPosition;
-                TransformController.Instance.transform.transform.localRotation = resultRotation;
-                TransformController.Instance.transform.localScale = Vector3.one * m_TargetTransformValues.Scale;
-                
-                m_TargetTransformValues = null;
-                WorldAnchorAligned?.Invoke();
-                ARStateChange?.Invoke(ARState.ConfirmPosition);
+                if (TargetTrackable == null) return;
+                FoundMapping?.Invoke();
             }
 #endif
+
+            void DisableMarker()
+            {
+                m_PinchDelta.inputActionReference.action.Disable();
+                m_placingMakerGO?.SetActive(false);
+                m_SelectedPlane = null;
+                TransformController.Instance.gameObject.SetActive(false);
+            }
+        }
+
+        public void ConfirmMapping(bool confirm)
+        {
+            if (!confirm)
+            {
+                m_TargetTransformValues = null;
+                TargetTrackable = null;
+                return;
+            }
+            TransformController.Instance.gameObject.SetActive(true);
+            var targetPosition = TargetTrackable.TransformPoint(new Vector3(m_TargetTransformValues.PositionX, m_TargetTransformValues.PositionY, m_TargetTransformValues.PositionZ));
+            Quaternion resultRotation = new Quaternion(m_TargetTransformValues.RotationX, m_TargetTransformValues.RotationY, m_TargetTransformValues.RotationZ, m_TargetTransformValues.RotationW);
+            TransformController.Instance.transform.position = targetPosition;
+            TransformController.Instance.transform.localRotation = resultRotation;
+            TransformController.Instance.transform.localScale = Vector3.one * m_TargetTransformValues.Scale;
+            m_placingMakerGO.SetActive(false);
+            m_TargetTransformValues = null;
+            TargetTrackable = null;
+            WorldAnchorAligned?.Invoke();
+            ARStateChange?.Invoke(ARState.ConfirmPosition);
+        }
+
+        private void OnTapAction(Vector3 obj)
+        {
+            if(m_TargetTransformValues != null) return;
+            StartCoroutine(WaitForEndOfFrameTouch());
+            return;
+            
+            IEnumerator WaitForEndOfFrameTouch()
+            {
+                yield return m_WaitForEndOfFrame;
+                var isPointerOverUI = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(-1);
+                if (!isPointerOverUI)
+                {
+                    if (!m_placingMakerGO.activeSelf || m_SelectedPlane == null) yield break;
+
+                    if (!TransformController.Instance.gameObject.activeSelf)
+                    {
+                        m_OriginalPosition = m_placingMakerGO.transform.position;
+                        TransformController.Instance.transform.position = m_OriginalPosition;
+                        
+                        //Make sure object is facing the camera
+                        Vector3 directionToCamera = (navigationCamera.transform.position - m_OriginalPosition).normalized;
+                        directionToCamera.y = 0; // Keep the rotation on the horizontal plane
+                        m_OriginalRotation = Quaternion.LookRotation(-directionToCamera);
+                        
+                        TransformController.Instance.transform.rotation = m_OriginalRotation;
+                        
+                        TransformController.Instance.gameObject.SetActive(true);
+                        m_placingMakerGO.SetActive(false);
+
+                        //  get bound and AR plane size to compute better scale factor
+                        StreamingModelController streamingModelController = FindAnyObjectByType<StreamingModelController>(FindObjectsInactive.Include);
+                        DoubleBounds tmpBounds = streamingModelController.GetWorldBounds();
+                        double width = tmpBounds.Max.x - tmpBounds.Min.x;
+                        double depth = tmpBounds.Max.z - tmpBounds.Min.z;
+                        float planeWidth = m_SelectedPlane.size.x;
+                        float planeDepth = m_SelectedPlane.size.y;
+
+                        // Calculate the scale ratio for both width and depth
+                        float widthRatio = planeWidth / (float)width;
+                        float depthRatio = planeDepth / (float)depth;
+
+                        // Choose the smaller of the two ratios to ensure the model fits entirely
+                        float scaleFactor = Mathf.Min(widthRatio, depthRatio);
+                        scaleFactor = Mathf.Min(scaleFactor, 1f); // Optional: Limit the maximum scale factor to avoid excessively large models
+                        Debug.Log($"Calculated scale factor: {scaleFactor}");
+
+                        //  set the initial scale factor
+                        Scale(scaleFactor);
+                    }
+                    ARStateChange?.Invoke(ARState.Positioning);
+                }
+            }
         }
 
 
@@ -306,10 +369,15 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
             dataSetTokenSource?.Cancel();
             dataSetTokenSource?.Dispose();
             dataSetTokenSource = null;
-            TransformController.Instance.gameObject.SetActive(true);
-            TransformController.Instance.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
-            TransformController.Instance.transform.localScale = Vector3.one;
-            m_ScreenSpaceSelectInput.tapStartPositionInput.inputActionReference.action.Disable();
+            InteractionController.UnsubscribeTap(this);
+            var transformControllerInstance = TransformController.Instance;
+            if (transformControllerInstance != null)
+            {
+                transformControllerInstance.gameObject.SetActive(true);
+                transformControllerInstance.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+                transformControllerInstance.transform.localScale = Vector3.one;
+            }
+            
             m_TwoFingerDragDelta.inputActionReference.action.Disable();
             m_PinchDelta.inputActionReference.action.Disable();
             m_placingMakerGO.SetActive(false);
@@ -324,7 +392,6 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
         {
             ARStateChange -= SwitchToState;
             RequestOcclusionOnOff -= OnRequestOcclusionOnOff;
-            m_ScreenSpaceSelectInput.tapStartPositionInput.inputActionReference.action.performed -= OnTapInputPerformed;
             m_TwoFingerDragDelta.inputActionReference.action.performed -= OnDragDeltaPerformed;
             m_TwoFingerDragDelta.inputActionReference.action.canceled -= OnDragDeltaCancelled;
             m_PinchDelta.inputActionReference.action.performed -= OnPinchDeltaPerformed;
@@ -379,74 +446,6 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
                     {
                         m_TwoFingerDragDelta.inputActionReference.action.Enable();
                     }
-                }
-            }
-        }
-        
-        private void OnTapInputPerformed(InputAction.CallbackContext action)
-        {
-            if(!action.performed) return;
-            StartCoroutine(WaitForEndOfFrameTouch());
-            
-            IEnumerator WaitForEndOfFrameTouch()
-            {
-                yield return m_WaitForEndOfFrame;
-                var isPointerOverUI = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(-1);
-                if (!isPointerOverUI)
-                {
-                    if (!m_placingMakerGO.activeSelf) yield break;
-
-                    if (!TransformController.Instance.gameObject.activeSelf)
-                    {
-                        m_OriginalPosition = m_placingMakerGO.transform.position;
-                        TransformController.Instance.transform.position = m_OriginalPosition;
-                        
-                        //Make sure object is facing the camera
-                        Vector3 directionToCamera = (navigationCamera.transform.position - m_OriginalPosition).normalized;
-                        directionToCamera.y = 0; // Keep the rotation on the horizontal plane
-                        m_OriginalRotation = Quaternion.LookRotation(-directionToCamera);
-                        
-                        TransformController.Instance.transform.rotation = m_OriginalRotation;
-                        
-                        TransformController.Instance.gameObject.SetActive(true);
-                        m_placingMakerGO.SetActive(false);
-
-                        //  get bound and AR plane size to compute better scale factor
-                        MobileARUIController tempController = GetComponent<MobileARUIController>();
-                        if(tempController != null)
-                        {
-                            float tmpScaleFactor = 1.0f;
-
-                            //  get bounds
-                            StreamingModelController streamingModelController = FindAnyObjectByType<StreamingModelController>(FindObjectsInactive.Include);
-                            DoubleBounds tmpBounds = streamingModelController.GetWorldBounds();
-                            double width = tmpBounds.Max.x - tmpBounds.Min.x;
-                            double depth = tmpBounds.Max.z - tmpBounds.Min.z;
-                            float tmpModelArea = (float)(width * depth);
-
-                            //  get AR plane size
-                            float distance = 0f;
-                            float tmpPlaneSize = 0.0f;
-                            foreach (var trackable in m_ARPlaneManager.trackables)
-                            {
-                                var planeDistance = Vector3.Distance(trackable.transform.position, TransformController.Instance.transform.position);
-                                if (distance == 0 || planeDistance < distance)
-                                {
-                                    distance = planeDistance;
-                                    tmpPlaneSize = trackable.size.x * trackable.size.y;
-
-                                    tmpScaleFactor = Mathf.Sqrt(tmpPlaneSize / tmpModelArea);
-                                    
-                                    //Match to the UI lowest scale factor and highest scale factor
-                                    tmpScaleFactor = Mathf.Clamp(tmpScaleFactor, 0.01f, 2f);
-                                }
-                            }
-
-                            //  set the initial scale factor
-                            Scale(tmpScaleFactor);
-                        }
-                    }
-                    ARStateChange?.Invoke(ARState.Positioning);
                 }
             }
         }
@@ -534,13 +533,14 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
             IEnumerator SaveWorldMap()
             {
                 m_IsSavingMap = true;
-                
+                AssetsController.PauseResumeVersionChecking?.Invoke(true);
                 var sessionSubsystem = (ARKitSessionSubsystem)ARSession.subsystem;
                 if (sessionSubsystem == null)
                 {
                     WorldAnchorFileSave?.Invoke(false, "No subsystem available");
                     m_IsSavingMap = false;
                     Debug.LogError("No session subsystem available. Could not save.");
+                    AssetsController.PauseResumeVersionChecking?.Invoke(false);
                     yield break;
                 }
 
@@ -556,6 +556,7 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
                     WorldAnchorFileSave?.Invoke(false, "No AR Anchor available");
                     m_IsSavingMap = false;
                     Debug.LogError("No AR Anchor available");
+                    AssetsController.PauseResumeVersionChecking?.Invoke(false);
                     yield break;
                 }
                 
@@ -565,7 +566,8 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
                 ARPlane closestPlane = null;
                 foreach (var trackable in m_ARPlaneManager.trackables)
                 {
-                    var planeDistance = Vector3.Distance(trackable.transform.position, TransformController.Instance.transform.position);
+                    var planeDistance =
+ Vector3.Distance(trackable.transform.position, TransformController.Instance.transform.position);
                     if(distance == 0 || planeDistance < distance)
                     {
                         distance = planeDistance;
@@ -583,6 +585,7 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
                     WorldAnchorFileSave?.Invoke(false, "Session serialization failed");
                     m_IsSavingMap = false;
                     Debug.LogError($"Session serialization failed with status {request.status}");
+                    AssetsController.PauseResumeVersionChecking?.Invoke(false);
                     yield break;
                 }
                 
@@ -610,6 +613,7 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
                     WorldAnchorFileSave?.Invoke(false, "Failed to serialize ARWorldMap");
                     Debug.LogError(e);
                     m_IsSavingMap = false;
+                    AssetsController.PauseResumeVersionChecking?.Invoke(false);
                     yield break;
                 }
                 
@@ -638,12 +642,14 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
 
                     try
                     {
-                        unfrozenAsset = await StreamingModelController.StreamingAsset.Value.Asset.CreateUnfrozenVersionAsync(dataSetTokenSource.Token);
+                        unfrozenAsset =
+ await StreamingModelController.StreamingAsset.Value.Asset.CreateUnfrozenVersionAsync(dataSetTokenSource.Token);
                     } catch (Exception e)
                     {
                         WorldAnchorFileSave?.Invoke(false, e.Message);
                         Debug.LogError(e);
                         m_IsSavingMap = false;
+                        AssetsController.PauseResumeVersionChecking?.Invoke(false);
                         Destroy(arAnchor);
                         return;
                     }
@@ -671,6 +677,7 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
                     WorldAnchorFileSave?.Invoke(false, "Failed to get datasets");
                     Debug.LogError(e);
                     m_IsSavingMap = false;
+                    AssetsController.PauseResumeVersionChecking?.Invoke(false);
                     Destroy(arAnchor);
                     return;
                 }
@@ -684,12 +691,14 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
 
                     try
                     {
-                        m_ARAnchorMapDataSet = await unfrozenAsset.CreateDatasetAsync(newDataSet, dataSetTokenSource.Token);
+                        m_ARAnchorMapDataSet =
+ await unfrozenAsset.CreateDatasetAsync(newDataSet, dataSetTokenSource.Token);
                     } catch (Exception e)
                     {
                         WorldAnchorFileSave?.Invoke(false, "Failed to create dataset");
                         Debug.LogError(e);
                         m_IsSavingMap = false;
+                        AssetsController.PauseResumeVersionChecking?.Invoke(false);
                         Destroy(arAnchor);
                         return;
                     }
@@ -712,6 +721,7 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
                     WorldAnchorFileSave?.Invoke(false, "Failed to remove files");
                     Debug.LogError(e);
                     m_IsSavingMap = false;
+                    AssetsController.PauseResumeVersionChecking?.Invoke(false);
                     Destroy(arAnchor);
                     return;
                 }
@@ -732,14 +742,16 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
 
                 try
                 {
-                    m_WorldMapFile = await m_ARAnchorMapDataSet.UploadFileAsync(fileCreation, sourceStream, null, default);
+                    m_WorldMapFile =
+ await m_ARAnchorMapDataSet.UploadFileAsync(fileCreation, sourceStream, null, default);
                     //Debug.Log("Uploaded file");
                     if (File.Exists(localWorldMapFilePath))
                     {
                         File.Delete(localWorldMapFilePath);
                     }
                     
-                    var simpleTransformValues = new SimpleTransformValues(arAnchor, parent.transform, parent.trackableId.ToString());
+                    var simpleTransformValues =
+ new SimpleTransformValues(arAnchor, parent.transform, parent.trackableId.ToString());
                     var valueInJson = JsonConvert.SerializeObject(simpleTransformValues);
 
                     if (!await HasMetaDataField(k_MetaDataKey))
@@ -773,6 +785,7 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
                         WorldAnchorFileSave?.Invoke(false, "Failed to add metadata");
                         Debug.LogError(e);
                         m_IsSavingMap = false;
+                        AssetsController.PauseResumeVersionChecking?.Invoke(false);
                         Destroy(arAnchor);
                         return;
                     }
@@ -830,11 +843,13 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
                     catch (Exception e)
                     {
                         WorldAnchorFileSave?.Invoke(false, "Failed to freeze asset");
+                        AssetsController.PauseResumeVersionChecking?.Invoke(false);
                         Debug.LogError(e);
                     }
                 } catch (Exception e)
                 {
                     WorldAnchorFileSave?.Invoke(false, "Failed to save file");
+                    AssetsController.PauseResumeVersionChecking?.Invoke(false);
                     Debug.LogError(e);
                 }
             }
@@ -878,7 +893,7 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
                 {
                     File.Delete(localWorldMapFilePath);
                 }
-            
+                Debug.Log("Downloading ARWorldMap to local storage...");
                 var destinationPath = Path.Combine(Application.persistentDataPath, m_WorldMapFile.Descriptor.Path);
             
                 dataSetTokenSource?.Cancel();
@@ -901,7 +916,7 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
                 }
                 dataSetTokenSource?.Cancel();
                 dataSetTokenSource = new CancellationTokenSource();
-                m_TargetTransformValues = JsonConvert.DeserializeObject<SimpleTransformValues>(metadataValue.ToString());
+                
                 //Debug.Log(m_TargetTransformValues.Scale);
                 await using var destination = File.OpenWrite(destinationPath);
                 //Debug.Log("Downloading ARWorldMap...");
@@ -909,10 +924,10 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
                 await m_WorldMapFile.DownloadAsync(destination, null, dataSetTokenSource.Token);
                 destination.Close();
                 
-                StartCoroutine(LoadMapFromLocalStorage());
+                StartCoroutine(LoadMapFromLocalStorage(metadataValue));
             }
 
-            IEnumerator LoadMapFromLocalStorage()
+            IEnumerator LoadMapFromLocalStorage(MetadataValue metadataValue)
             {
                 var sessionSubsystem = (ARKitSessionSubsystem)ARSession.subsystem;
                 if(sessionSubsystem == null)
@@ -958,8 +973,9 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
                     yield break;
                 }
             
-                //Debug.Log("Apply ARWorldMap to current session.");
+                Debug.Log("Apply ARWorldMap to current session.");
                 sessionSubsystem.ApplyWorldMap(worldMap);
+                m_TargetTransformValues = JsonConvert.DeserializeObject<SimpleTransformValues>(metadataValue.ToString());
                 file.Close();
                 File.Delete(localWorldMapFilePath);
             }
@@ -986,46 +1002,40 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
             TransformController.Instance.transform.rotation = m_OriginalRotation;
         }
 
-        public void RotateZ(float newValue)
-        {
-            Quaternion rotation = TransformController.Instance.transform.rotation;
-            rotation.eulerAngles = new Vector3(rotation.eulerAngles.x, rotation.eulerAngles.z, newValue);
-            TransformController.Instance.transform.rotation = rotation;
-        }
-
-        public void RotateY(float newValue)
-        {
-            Quaternion rotation = TransformController.Instance.transform.rotation;
-            rotation.eulerAngles = new Vector3(rotation.eulerAngles.x, newValue, rotation.eulerAngles.z);
-            TransformController.Instance.transform.rotation = rotation;
-        }
-
-        public void RotateX(float newValue)
-        {
-            Quaternion rotation = TransformController.Instance.transform.rotation;
-            rotation.eulerAngles = new Vector3(newValue, rotation.eulerAngles.y, rotation.eulerAngles.z);
-            TransformController.Instance.transform.rotation = rotation;
-        }
-
         public void RotateZBy(float value)
         {
-            Quaternion rotation = TransformController.Instance.transform.rotation;
-            rotation.eulerAngles = new Vector3(rotation.eulerAngles.x, rotation.eulerAngles.y, rotation.eulerAngles.z + value);
-            TransformController.Instance.transform.rotation = rotation;
+            TransformController.Instance.transform.Rotate(0f, 0f, value, Space.Self);
         }
 
         public void RotateYBy(float value)
         {
-            Quaternion rotation = TransformController.Instance.transform.rotation;
-            rotation.eulerAngles = new Vector3(rotation.eulerAngles.x, rotation.eulerAngles.y + value, rotation.eulerAngles.z);
-            TransformController.Instance.transform.rotation = rotation;
+            TransformController.Instance.transform.Rotate(0f, value, 0f,Space.Self);
         }
 
         public void RotateXBy(float value)
         {
-            Quaternion rotation = TransformController.Instance.transform.rotation;
-            rotation.eulerAngles = new Vector3(rotation.eulerAngles.x + value, rotation.eulerAngles.y, rotation.eulerAngles.z);
-            TransformController.Instance.transform.rotation = rotation;
+            TransformController.Instance.transform.Rotate(value, 0f, 0f,Space.Self);
+        }
+
+        public void RotateZ(float newValue)
+        {
+            TransformController.Instance.transform.rotation = Quaternion.Euler(TransformController.Instance.transform.eulerAngles.x, 
+                TransformController.Instance.transform.eulerAngles.y, 
+                newValue);
+        }
+
+        public void RotateY(float newValue)
+        {
+            TransformController.Instance.transform.rotation = Quaternion.Euler(TransformController.Instance.transform.eulerAngles.x, 
+                newValue, 
+                TransformController.Instance.transform.eulerAngles.z);
+        }
+
+        public void RotateX(float newValue)
+        {
+            TransformController.Instance.transform.rotation = Quaternion.Euler(newValue, 
+                TransformController.Instance.transform.eulerAngles.y, 
+                TransformController.Instance.transform.eulerAngles.z);
         }
 
         public void MoveZPosition(float value)
@@ -1082,12 +1092,11 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
                     {
                         trackable.gameObject.SetActive(true);
                     }
-                    m_ScreenSpaceSelectInput.tapStartPositionInput.inputActionReference.action.Disable();
+                    InteractionController.SubscribeTap(this, OnTapAction);
                     m_TwoFingerDragDelta.inputActionReference.action.Disable();
                     m_PinchDelta.inputActionReference.action.Disable();
                     TransformController.Instance.transform.localScale = Vector3.one;
                     TransformController.Instance.gameObject.SetActive(false);
-                    m_PlaceTimer = Time.timeSinceLevelLoad;
                     break;
                 
                 case ARState.Positioning:
@@ -1096,7 +1105,7 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
                     {
                         trackable.gameObject.SetActive(true);
                     }
-                    m_ScreenSpaceSelectInput.tapStartPositionInput.inputActionReference.action.Disable();
+                    InteractionController.UnsubscribeTap(this);
                     m_TwoFingerDragDelta.inputActionReference.action.Enable();
                     m_PinchDelta.inputActionReference.action.Enable();
                     break;
@@ -1172,6 +1181,9 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
                 m_WorldMapFile = dataFile;
                 isWorldMapFound = true;
                 WorldAnchorFileLoad?.Invoke(true);
+#if UNITY_IOS && !UNITY_EDITOR
+                LoadSpatialAnchor();
+#endif
                 return;
             }
             WorldAnchorFileLoad?.Invoke(false);
@@ -1182,7 +1194,6 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
             ARSession.gameObject.SetActive(false);
             XROriginGO.SetActive(false);
             TransformController.Instance.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
-            m_ScreenSpaceSelectInput.tapStartPositionInput.inputActionReference.action.Disable();
             m_TwoFingerDragDelta.inputActionReference.action.Disable();
             m_PinchDelta.inputActionReference.action.Disable();
             TransformController.Instance.transform.localScale = Vector3.one;
@@ -1198,6 +1209,8 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
         {
             if(m_Initialized) yield break;
             m_Initialized = true;
+
+#if (UNITY_IOS || UNITY_ANDROID) && !UNITY_EDITOR
             yield return new WaitForEndOfFrame();
             if (!XRGeneralSettings.Instance.Manager.isInitializationComplete)
             {
@@ -1227,6 +1240,16 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
             {
                 m_IsSupported = true;
             }
+
+            yield break;
+#endif
+
+#if UNITY_EDITOR
+            m_IsSupported = true;
+            yield break;
+#endif
+            
+            m_IsSupported = false;
         }
 
         public override bool IsSupported()
@@ -1247,6 +1270,18 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
         public override void FocusToPoint(DoubleBounds bounds)
         {
             
+        }
+
+        public override void TranslateTo(Vector3 position, Quaternion rotation)
+        {
+            // No translation in AR mode
+            return;
+        }
+
+        public override void FollowPresenter(GameObject presenterObject)
+        {
+            // No following in AR mode
+            return;
         }
     }
 }

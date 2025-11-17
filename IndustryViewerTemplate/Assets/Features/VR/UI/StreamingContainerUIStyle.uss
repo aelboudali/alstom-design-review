@@ -1,0 +1,5 @@
+#VersionButton > #appui-actionbutton__icon {
+    display: flex;
+    background-image: url("project://database/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Info.png?fileID=2800000&guid=8f717f234a7724714a12be3e740dbb83&type=3#Info");
+    margin-right: 9px;
+}

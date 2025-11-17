@@ -5,9 +5,9 @@ using Unity.Industry.Viewer.Shared;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.UIElements;
-using Avatar = Unity.AppUI.UI.Avatar;
 using Color = UnityEngine.Color;
 using System;
+using UnityEngine.SceneManagement;
 
 namespace Unity.Industry.Viewer.Identity
 {
@@ -37,7 +37,7 @@ namespace Unity.Industry.Viewer.Identity
         // UI elements
         private ActionButton _loginButton, _guestButton, _logoutButton;
         private VisualElement _identityContainer, _guestContainer;
-        private Avatar _avatar;
+        private CustomAvatar _avatar;
         private Text _identityAvatarInitialLabel;
         
         // Authentication state
@@ -83,7 +83,7 @@ namespace Unity.Industry.Viewer.Identity
             _guestContainer = m_appUIDocument.rootVisualElement.Q<VisualElement>(k_GuestContainerName);
             _guestContainer.style.display = DisplayStyle.None;
             
-            _avatar = m_appUIDocument.rootVisualElement.Q<Avatar>(k_AvatarName);
+            _avatar = m_appUIDocument.rootVisualElement.Q<CustomAvatar>(k_AvatarName);
             _avatar.backgroundColor = new Optional<Color>(new Color(51f/255f, 110f/255f, 110f/255f, 1f));
             _avatar.style.display = DisplayStyle.None;
             
@@ -121,9 +121,8 @@ namespace Unity.Industry.Viewer.Identity
             {
                 _guestButton.clicked -= OnGuestButtonPressed;
             }
-            
-            _avatar.UnregisterCallback<ClickEvent>(OnAvatarClicked);
-            
+
+            _avatar.clicked -= OnAvatarClicked;
         }
 
         private void OnNetworkStatusChanged(bool connected)
@@ -141,8 +140,9 @@ namespace Unity.Industry.Viewer.Identity
                     _loginButton.clicked += OnLoginButtonPressed;
 
                     _guestButton.clicked += OnGuestButtonPressed;
-            
-                    _avatar.RegisterCallback<ClickEvent>(OnAvatarClicked);
+
+                    _avatar.clicked -= OnAvatarClicked;
+                    _avatar.clicked += OnAvatarClicked;
                 }
             }
             else
@@ -150,7 +150,10 @@ namespace Unity.Industry.Viewer.Identity
                 switch (_currentState)
                 {
                     case AuthenticationState.LoggedOut:
-                        _identityContainer.style.display = DisplayStyle.Flex;
+                        if (SceneManager.GetActiveScene() == gameObject.scene)
+                        {
+                            _identityContainer.style.display = DisplayStyle.Flex;
+                        }
                         OnAuthenticationStateChanged(_currentState);
                         break;
                 }
@@ -164,7 +167,7 @@ namespace Unity.Industry.Viewer.Identity
         }
 
         // handle avatar click event
-        private void OnAvatarClicked(ClickEvent evt)
+        private void OnAvatarClicked()
         {
             switch (_currentState)
             {
@@ -174,6 +177,11 @@ namespace Unity.Industry.Viewer.Identity
                     return;
                 
                 default:
+                    if (_identityPopover != null)
+                    {
+                        _identityPopover.Dismiss();
+                        return;
+                    }
                     var identityPopover = m_IdentityPopoverTemplate.Instantiate();
                     _logoutButton = identityPopover.Q<ActionButton>(k_LogoutButtonName);
                     
@@ -189,6 +197,7 @@ namespace Unity.Industry.Viewer.Identity
         private void OnPopoverDismissed(Popover popover, DismissType type)
         {
             _identityPopover.dismissed -= OnPopoverDismissed;
+            _identityPopover = null;
             _logoutButton.clicked -= OnLogoutButtonPressed;
         }
 
@@ -203,19 +212,23 @@ namespace Unity.Industry.Viewer.Identity
         private void OnLogoutButtonPressed()
         {
             _identityPopover?.Dismiss();
-            
-            var logoutDialog = new CustomAlertDialog(m_LocalizedLogoutTitle, m_LocalizedLogoutDescription)
+
+            var logoutMessage = new IdentityController.LogoutMessage();
+            IdentityController.GetLogoutMessage?.Invoke(logoutMessage);
+
+            var logoutDialog = new AlertDialog()
             {
-                title = " ",
-                description = string.Empty,
-                variant = AlertSemantic.Default
+                title = m_LocalizedLogoutTitle.GetTitleLocalizedStringForAppUI(),
+                variant = AlertSemantic.Default,
+                description = string.IsNullOrEmpty(logoutMessage.Value) ? m_LocalizedLogoutDescription.GetTitleLocalizedStringForAppUI() : logoutMessage.Value
             };
-            logoutDialog.SetPrimaryAction(m_LocalizedLogout, true, () =>
+            logoutDialog.SetPrimaryAction(99, m_LocalizedLogoutTitle.GetTitleLocalizedStringForAppUI(), () =>
             {
                 //Use true to clear cache on browser too when logging out, and this will force the user to log in again on the next session
                 IdentityController.TriggerLogout?.Invoke(false);
             });
-            logoutDialog.SetCancelAction(m_LocalizedCancel);
+            
+            logoutDialog.SetCancelAction(98, m_LocalizedCancel.GetTitleLocalizedStringForAppUI());
             
             var logoutModal = Modal.Build(_logoutButton, logoutDialog);
 
@@ -256,18 +269,21 @@ namespace Unity.Industry.Viewer.Identity
 
                 m_AttemptToLoginAfterReconnect = false;
                 
-                var offlineDialog = new CustomAlertDialog(m_OfflineModeTitle, m_LoginInOfflineModeDescription)
+                var offlineDialog = new AlertDialog()
                 {
+                    title = m_OfflineModeTitle.GetTitleLocalizedStringForAppUI(),
+                    description = m_LoginInOfflineModeDescription.GetTitleLocalizedStringForAppUI(),
                     variant = AlertSemantic.Default
                 };
-                offlineDialog.SetPrimaryAction(m_OK, true, () =>
+                
+                offlineDialog.SetPrimaryAction(97, m_LocalizedLogin.GetTitleLocalizedStringForAppUI(), () =>
                 {
                     m_AttemptToLoginAfterReconnect = true;
                     m_LoginAction = loginAction;
                     NetworkDetector.RequestedOfflineMode = false;
                 });
                 
-                offlineDialog.SetCancelAction(m_LocalizedCancel);
+                offlineDialog.SetCancelAction(98, m_LocalizedCancel.GetTitleLocalizedStringForAppUI());
                 
                 var offlineModal = Modal.Build(_loginButton, offlineDialog);
                 offlineModal.Show();
@@ -296,14 +312,18 @@ namespace Unity.Industry.Viewer.Identity
             switch (state)
             {
                 case AuthenticationState.LoggedOut:
-                    _identityContainer.style.display = DisplayStyle.Flex;
+                    if (SceneManager.GetActiveScene() == gameObject.scene)
+                    {
+                        _identityContainer.style.display = DisplayStyle.Flex;
+                    }
                     _avatar.style.display = DisplayStyle.None;
                     _identityAvatarInitialLabel.style.display = DisplayStyle.None;
                     _loginButton.accent = true;
+                    _loginButton.selected = true;
                     _loginButton.SetEnabled(true);
                     _loginButton.style.display = DisplayStyle.Flex;
 #if ENABLE_GUEST_MODE
-                    if (PlatformServices.ServiceAccountServiceHttpClient != null)
+                    if (PlatformServices.ServiceAccountCredentials != null)
                     {
                         _guestContainer.style.display = DisplayStyle.Flex;
                     }
@@ -312,7 +332,7 @@ namespace Unity.Industry.Viewer.Identity
                         Debug.LogError("You have enabled Guest Mode but the Service Account is not set up.");
                     }
 #endif
-                    _loginButton.SetBinding("label", m_LocalizedLogin);
+                    _loginButton.label = m_LocalizedLogin.GetTitleLocalizedStringForAppUI();
                     break;
                 
                 case AuthenticationState.AwaitingLogin:
@@ -320,12 +340,13 @@ namespace Unity.Industry.Viewer.Identity
                     _loginButton.style.display = DisplayStyle.Flex;
                     //_guestContainer.style.display = DisplayStyle.None;
                     _loginButton.accent = false;
-                    _loginButton.ClearBinding("label");
+                    _loginButton.selected = false;
+                    
 #if UNITY_WEBGL
-                    _loginButton.SetBinding("label",m_LocalizedAwaiting);
+                    _loginButton.label = m_LocalizedAwaiting.GetTitleLocalizedStringForAppUI();
                     _loginButton.SetEnabled(false);
 #else
-                    _loginButton.SetBinding("label", m_LocalizedCancel);
+                    _loginButton.label = m_LocalizedCancel.GetTitleLocalizedStringForAppUI();
                     _loginButton.SetEnabled(true);
 #endif
                     
@@ -349,26 +370,10 @@ namespace Unity.Industry.Viewer.Identity
                     _loginButton.style.display = DisplayStyle.Flex;
                     _loginButton.SetEnabled(false);
                     _loginButton.accent = false;
-                    if (_loginButton.TryGetBinding("label", out Binding binding))
-                    {
-                        var localizedString = binding as LocalizedString;
-                        if (!AreLocalizedStringsEqual(localizedString, m_LocalizedInitializing))
-                        {
-                            _loginButton.SetBinding("label", m_LocalizedInitializing);
-                        }
-                    }
-                    else
-                    {
-                        _loginButton.SetBinding("label", m_LocalizedInitializing);
-                    }
+                    _loginButton.selected = false;
+                    _loginButton.label = m_LocalizedInitializing.GetTitleLocalizedStringForAppUI();
                     _guestContainer.style.display = DisplayStyle.None;
                     break;
-            }
-            return;
-            
-            static bool AreLocalizedStringsEqual(LocalizedString str1, LocalizedString str2)
-            {
-                return str1.TableReference.Equals(str2.TableReference) && str1.TableEntryReference.Equals(str2.TableEntryReference);
             }
         }
     }

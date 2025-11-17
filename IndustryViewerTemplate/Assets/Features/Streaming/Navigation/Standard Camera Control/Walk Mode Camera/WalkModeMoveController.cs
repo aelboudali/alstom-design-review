@@ -58,10 +58,18 @@ namespace Unity.Industry.Viewer.Navigation.WalkModeCamera
         float m_StepUpTime;
         float sensitivityFactor = 1f;
         
+        bool m_PauseCameraControl;
+        
         void Awake()
         {
             m_Controller = GetComponent<CharacterController>();
             m_Controller.height = CharacterHeight;
+            NavigationController.PauseCameraControl += PauseCameraControl;
+        }
+
+        private void PauseCameraControl(bool pause)
+        {
+            m_PauseCameraControl = pause;
         }
 
         private void OnEnable()
@@ -72,6 +80,7 @@ namespace Unity.Industry.Viewer.Navigation.WalkModeCamera
 
         void FixedUpdate()
         {
+            if(m_PauseCameraControl) return;
             Move();
         }
 

@@ -3,9 +3,11 @@ using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine.XR.ARCore;
-using Unity.XR.Oculus;
+//Enable this if want to use Oculus Loader
+//using Unity.XR.Oculus;
+using UnityEngine.XR.OpenXR;
 
-namespace Unity.Industry.Viewer.Navigation.VR.Editor
+namespace Unity.Industry.Viewer.VR.Editor
 {
     public class BuildAutomation : IPreprocessBuildWithReport
     {
@@ -21,19 +23,33 @@ namespace Unity.Industry.Viewer.Navigation.VR.Editor
                 LoaderControl.DisableLoader(BuildTarget.Android, typeof(ARCoreLoader));
             }
                     
-            if (!LoaderControl.IsLoaderEnabled(BuildTarget.Android, typeof(OculusLoader)))
+            //Enable this if want to use Oculus Loader
+            /*if (!LoaderControl.IsLoaderEnabled(BuildTarget.Android, typeof(OculusLoader)))
             {
                 LoaderControl.EnableLoader(BuildTarget.Android, typeof(OculusLoader));
+            }*/
+            
+            if (!LoaderControl.IsLoaderEnabled(BuildTarget.Android, typeof(OpenXRLoader)))
+            {
+                LoaderControl.EnableLoader(BuildTarget.Android, typeof(OpenXRLoader));
             }
+            
+            
 #else
             if (!LoaderControl.IsLoaderEnabled(BuildTarget.Android, typeof(ARCoreLoader)))
             {
                 LoaderControl.EnableLoader(BuildTarget.Android, typeof(ARCoreLoader));
             }
         
-            if (LoaderControl.IsLoaderEnabled(BuildTarget.Android, typeof(OculusLoader)))
+            //Enable this if want to use Oculus Loader
+            /*if (LoaderControl.IsLoaderEnabled(BuildTarget.Android, typeof(OculusLoader)))
             {
                 LoaderControl.DisableLoader(BuildTarget.Android, typeof(OculusLoader));
+            }*/
+            
+            if (LoaderControl.IsLoaderEnabled(BuildTarget.Android, typeof(OpenXRLoader)))
+            {
+                LoaderControl.DisableLoader(BuildTarget.Android, typeof(OpenXRLoader));
             }
 #endif
         }

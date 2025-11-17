@@ -6,6 +6,8 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
 {
     public class GridViewManager : MonoBehaviour
     {
+        private const string GridSizeName = "Grid-Size";
+        
         [SerializeField] protected float m_fGridUnit;
         private bool m_bKeepRendering;
         private Material m_Material;
@@ -17,7 +19,15 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
 
         void Start()
         {
-            m_fGridUnit = 1.0f;
+            if (!PlayerPrefs.HasKey(GridSizeName))
+            {
+                m_fGridUnit = 0.1f;
+                PlayerPrefs.SetFloat(GridSizeName, m_fGridUnit);
+            }
+            else
+            {
+                m_fGridUnit  = PlayerPrefs.GetFloat(GridSizeName, 0.1f);
+            }
             m_bKeepRendering = false;
             m_MeshRenderer = GetComponent<MeshRenderer>();
             m_ARSession = FindAnyObjectByType<ARSession>(FindObjectsInactive.Include);
@@ -29,7 +39,7 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
         {
             if (m_ARSession != null)
             {
-                switch (m_ARSession.gameObject.activeSelf)
+                switch (m_ARSession.enabled && m_ARSession.gameObject.activeInHierarchy)
                 {
                     case true when m_IsGridVisible:
                         GridModelVisibility(false);
@@ -46,6 +56,7 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
         public void SetGridUnit(float gridSize)
         {
             m_fGridUnit = Mathf.Clamp(gridSize, 0.001f, 1000f);
+            PlayerPrefs.SetFloat(GridSizeName, m_fGridUnit);
             m_Material ??= GetComponent<MeshRenderer>().sharedMaterial;
             //m_Material.SetFloat(m_GridSizeId, gridSize * 0.01f);  // to mm (render in 10cm unit)
             m_Material.SetFloat(m_GridSizeId, m_fGridUnit * 10.0f);    // to M (render in 10cm unit)

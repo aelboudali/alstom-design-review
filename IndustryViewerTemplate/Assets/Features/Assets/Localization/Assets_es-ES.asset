@@ -16,23 +16,14 @@ MonoBehaviour:
     m_Code: es-ES
   m_SharedData: {fileID: 11400000, guid: e57257823a7964becb6eb06d6181f15a, type: 2}
   m_Metadata:
-    m_Items:
-    - rid: 7555826606608744557
+    m_Items: []
   m_TableData:
-  - m_Id: 20735582208
-    m_Localized: Buscar...
-    m_Metadata:
-      m_Items: []
   - m_Id: 3047743807488
     m_Localized: "Nueva versi\xF3n disponible"
     m_Metadata:
       m_Items: []
   - m_Id: 4032537026560
     m_Localized: Nombre
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4496284442624
-    m_Localized: "Versi\xF3n"
     m_Metadata:
       m_Items: []
   - m_Id: 4881900363776
@@ -52,25 +43,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6460099518464
-    m_Localized: fecha de carga
+    m_Localized: Fecha de subida
     m_Metadata:
       m_Items: []
   - m_Id: 6667159724032
     m_Localized: Creado por
     m_Metadata:
       m_Items: []
-  - m_Id: 7216613548032
-    m_Localized: Descargar
-    m_Metadata:
-      m_Items: []
-  - m_Id: 11727306481664
-    m_Localized: "Versi\xF3n {num}"
-    m_Metadata:
-      m_Items:
-      - rid: 7555826606608744557
   - m_Id: 35648491741184
-    m_Localized: "Hay una nueva versi\xF3n del recurso disponible. \xBFDesea cambiar
-      a la nueva versi\xF3n?"
+    m_Localized: "Hay una nueva versi\xF3n del recurso disponible. \xBFQuieres actualizarla?"
     m_Metadata:
       m_Items: []
   - m_Id: 35994052059136
@@ -78,7 +59,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 36144556269568
-    m_Localized: 'Rechazar '
+    m_Localized: Despedir
     m_Metadata:
       m_Items: []
   - m_Id: 41819579604992
@@ -118,7 +99,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 83968589291520
-    m_Localized: Recurso 2D
+    m_Localized: Activo 2D
     m_Metadata:
       m_Items: []
   - m_Id: 84109517905920
@@ -138,7 +119,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 84533826281472
-    m_Localized: Script
+    m_Localized: Guion
     m_Metadata:
       m_Items: []
   - m_Id: 84673161060352
@@ -146,11 +127,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 84751309332480
-    m_Localized: Editor de Uniy
+    m_Localized: Editor de Unity
     m_Metadata:
       m_Items: []
   - m_Id: 113148827787264
-    m_Localized: Carga de recursos
+    m_Localized: "A\xF1adir Activo"
     m_Metadata:
       m_Items: []
   - m_Id: 113743160664064
@@ -177,16 +158,12 @@ MonoBehaviour:
     m_Localized: "Eliminar selecci\xF3n"
     m_Metadata:
       m_Items: []
-  - m_Id: 116427913682944
-    m_Localized: Cargando recurso
-    m_Metadata:
-      m_Items: []
-  - m_Id: 117455979536384
-    m_Localized: Cargar recurso
+  - m_Id: 103408215129104384
+    m_Localized: "Creaci\xF3n"
     m_Metadata:
       m_Items: []
   - m_Id: 126885479571456
-    m_Localized: Recurso creado
+    m_Localized: Activo creado
     m_Metadata:
       m_Items: []
   - m_Id: 129700784496640
@@ -198,7 +175,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 25800460005793792
-    m_Localized: Total archivo(s)
+    m_Localized: Total de archivos
     m_Metadata:
       m_Items: []
   - m_Id: 25801326007934976
@@ -206,7 +183,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 25802025936609280
-    m_Localized: ID de activo
+    m_Localized: "Identificaci\xF3n del activo"
     m_Metadata:
       m_Items: []
   - m_Id: 26945938399420416
@@ -233,12 +210,55 @@ MonoBehaviour:
     m_Localized: Revisar
     m_Metadata:
       m_Items: []
+  - m_Id: 98637747977232384
+    m_Localized: Estado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 102582021617917952
+    m_Localized: "    Preparado para la transmisi\xF3n de datos en 3D"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 102589537559027712
+    m_Localized: "Agregar \u0422uevo Activo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 102911663331647488
+    m_Localized: "Fall\xF3 la creaci\xF3n del activo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 102916677815017472
+    m_Localized: "El recurso aparecer\xE1 despu\xE9s de haber sido completamente
+      cargado y transformado, lo que puede tomar algo de tiempo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103410122987970560
+    m_Localized: Subiendo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103437425314930688
+    m_Localized: Carga completada
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103438020864155648
+    m_Localized: Error de subida
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103438847884435456
+    m_Localized: Transformando
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103439357110689792
+    m_Localized: "Transformaci\xF3n completada"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103439907755696128
+    m_Localized: "La transformaci\xF3n fall\xF3"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103803189238734848
+    m_Localized: El tipo de archivo no es compatible
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
-    RefIds:
-    - rid: 7555826606608744557
-      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
-      data:
-        m_Entries: 
-        m_SharedEntries:
-        - id: 11727306481664
+    RefIds: []

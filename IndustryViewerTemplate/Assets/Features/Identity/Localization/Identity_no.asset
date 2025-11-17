@@ -27,35 +27,31 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 9303762132992
-    m_Localized: Eller
+    m_Localized: eller
     m_Metadata:
       m_Items: []
   - m_Id: 9420774825984
-    m_Localized: Fortsett som gjest
+    m_Localized: Vierastila
     m_Metadata:
       m_Items: []
   - m_Id: 15982369169408
     m_Localized: Logg ut
     m_Metadata:
       m_Items: []
-  - m_Id: 32483335725056
-    m_Localized: Avbryt
-    m_Metadata:
-      m_Items: []
   - m_Id: 33199882231808
-    m_Localized: Bekreft utlogging
+    m_Localized: Logger ut...
     m_Metadata:
       m_Items: []
   - m_Id: 33283562790912
-    m_Localized: "Er du sikker p\xE5 at du vil logge ut"
+    m_Localized: "Er du sikker p\xE5 \xE5 logge ut?"
     m_Metadata:
       m_Items: []
   - m_Id: 33349040070656
-    m_Localized: Venter
+    m_Localized: "Venter p\xE5 p\xE5logging..."
     m_Metadata:
       m_Items: []
   - m_Id: 33437661519872
-    m_Localized: Initialiserer
+    m_Localized: Initialiserer...
     m_Metadata:
       m_Items: []
   - m_Id: 29800713151307776
@@ -69,10 +65,6 @@ MonoBehaviour:
   - m_Id: 58408840381587456
     m_Localized: "Du er for \xF8yeblikket i frakoblet modus. Vil du bytte tilbake
       til online-modus og logge p\xE5?"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 58409243970101248
-    m_Localized: OK
     m_Metadata:
       m_Items: []
   references:

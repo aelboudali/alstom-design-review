@@ -23,23 +23,23 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 482419400704
-    m_Localized: Inndatastyrke
+    m_Localized: Inngangsvolum
     m_Metadata:
       m_Items: []
   - m_Id: 482419400705
-    m_Localized: Utdataenhet
+    m_Localized: Utgangsenhet
     m_Metadata:
       m_Items: []
   - m_Id: 482419400706
-    m_Localized: Utdatastyrke
+    m_Localized: Utgangsvolum
     m_Metadata:
       m_Items: []
   - m_Id: 482419400707
-    m_Localized: Demp
+    m_Localized: Stum
     m_Metadata:
       m_Items: []
   - m_Id: 482419400708
-    m_Localized: Opphev demping
+    m_Localized: "Sl\xE5 p\xE5 lyden"
     m_Metadata:
       m_Items: []
   references:

@@ -1,13 +1,13 @@
-#3DDSButton > #appui-actionbutton__icon {
-    display: flex;
-    background-image: url("project://database/Assets/UI/Textures/3DDS%20Play%20Icon.png?fileID=2800000&guid=bf14056b4f76b445f942f04334f45dd5&type=3#3DDS Play Icon");
-    -unity-background-image-tint-color: rgb(17, 168, 95);
+.appui-icon--3dds--regular {
+    --unity-image: url("project://database/Assets/UI/Textures/3DDS Play Icon.png");
+    --unity-image-tint-color: rgb(17, 168, 95);
     width: 10px;
     height: 10px;
 }
 
 #3DDSButton > #appui-actionbutton__label {
     color: rgb(255, 255, 255);
+    margin-left: 2px;
     font-size: 12px;
     -unity-text-align: middle-right;
     height: 12px;
@@ -19,20 +19,20 @@
     background-color: rgb(39, 39, 39);
 }
 
-.notDownloaded > #appui-button__leadingcontainer > #appui-button__leadingicon {
-    -unity-background-image-tint-color: rgb(188, 188, 188);
+.notDownloaded .appui-button__leadingicon {
+    --unity-image-tint-color: rgb(188, 188, 188);
 }
 
-.incorrectVersion > #appui-button__leadingcontainer > #appui-button__leadingicon {
-    -unity-background-image-tint-color: rgb(255, 255, 255);
+.incorrectVersion .appui-button__leadingicon {
+    --unity-image-tint-color: rgb(255, 255, 255);
 }
 
 .incorrectVersion {
     background-color: rgb(207, 112, 0);
 }
 
-.downloaded > #appui-button__leadingcontainer > #appui-button__leadingicon {
-    -unity-background-image-tint-color: rgb(255, 255, 255);
+.downloaded .appui-button__leadingicon {
+    --unity-image-tint-color: rgb(255, 255, 255);
 }
 
 .downloaded {
@@ -46,7 +46,7 @@
 .UpdateLocalVersion .appui-icon {
     width: 18px;
     height: 18px;
-    -unity-background-image-tint-color: rgb(255, 255, 255);
+    --unity-image-tint-color: rgb(255, 255, 255);
 }
 
 .LocalUpToUpdate {
@@ -56,5 +56,13 @@
 .LocalUpToUpdate .appui-icon {
     width: 18px;
     height: 18px;
-    -unity-background-image-tint-color: rgb(255, 255, 255);
+    --unity-image-tint-color: rgb(255, 255, 255);
+}
+
+.GridAssetSelected > #ItemUI {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.GridAssetNonSelected > #ItemUI {
+    background-color: #303030;
 }

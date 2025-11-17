@@ -1,12 +1,19 @@
+using System;
+using System.Reflection;
 using System.Threading.Tasks;
-using Unity.Cloud.Identity;
-using Unity.Cloud.Identity.Runtime;
-using Unity.Cloud.Common;
-using Unity.Cloud.Common.Runtime;
+using Unity.Cloud.AppLinking;
 using Unity.Cloud.AppLinking.Runtime;
 using Unity.Cloud.Assets;
+using Unity.Cloud.Common;
+using Unity.Cloud.Common.Runtime;
 using Unity.Cloud.DataStreaming.Runtime;
-using System.Reflection;
+using Unity.Cloud.DeepLinking;
+using Unity.Cloud.Identity;
+using Unity.Cloud.Identity.Runtime;
+using System.Net.Http.Headers;
+using System.Net.Http;
+using System.Threading;
+using Unity.Cloud.Collaboration;
 
 namespace Unity.Industry.Viewer.Shared
 {
@@ -16,9 +23,17 @@ namespace Unity.Industry.Viewer.Shared
     // It supports asynchronous initialization and proper shutdown of services.
     public static class PlatformServices
     {
-        static CompositeAuthenticator _sCompositeAuthenticator;
+        private const string k_ServiceAccountEnvVar = "UNITY_SERVICE_ACCOUNT_CREDENTIALS";
+        
+        static ICompositeAuthenticator _sCompositeAuthenticator;
         
         public static ICompositeAuthenticator CompositeAuthenticator => _sCompositeAuthenticator;
+        
+        public static bool IsUserLoggedIn => CompositeAuthenticator.AuthenticationState == AuthenticationState.LoggedIn || 
+                                             (ServiceAccountServiceAuthenticator != null && 
+                                              ServiceAccountServiceAuthenticator.AuthenticationState == AuthenticationState.LoggedIn);
+        
+        public static ServiceConnector ServiceConnector { get; private set; }
         
         #region Assets
         
@@ -44,7 +59,9 @@ namespace Unity.Industry.Viewer.Shared
         /// <summary>
         /// Returns a <see cref="IServiceHttpClient"/>.
         /// </summary>
-        public static IServiceHttpClient ServiceHttpClient { get; private set; }
+        public static IServiceHttpClient ServiceHttpClient => ServiceConnector.ServiceHttpClient
+            .WithApiSourceHeadersFromAssembly(Assembly.GetExecutingAssembly());
+
         
         /// <summary>
         /// Returns a <see cref="IDataStreamer"/>.
@@ -58,53 +75,117 @@ namespace Unity.Industry.Viewer.Shared
         #endregion
         
         #region Metadata
-        
+
         /// <summary>
         /// Returns a <see cref="IServiceHostResolver"/>.
         /// </summary>
-        public static IServiceHostResolver ServiceHostResolver { get; private set; }
+        public static IServiceHostResolver ServiceHostResolver => ServiceConnector.ServiceHostResolver;
         
         #endregion
 
-        #region Serviec Account
+        #region Service Account
         public static IServiceHttpClient ServiceAccountServiceHttpClient { get; private set; }
-        private static IServiceAuthorizer ServiceAccountServiceAuthorizer { get; set; }
+        public static ServiceAccountAuthenticator ServiceAccountServiceAuthenticator {get; set;}
         public static IAssetRepository ServiceAccountAssetRepository { get; private set; }
         public static ServiceAccountCredentials ServiceAccountCredentials { get; private set; }
         #endregion
+
+        #region Deep Linking
+
+        public static DeepLinkProvider DeepLinkProvider { get; private set; }
+
+        public static IUrlRedirectionInterceptor UrlRedirectionInterceptor => Unity.Cloud.AppLinking.Runtime.UrlRedirectionInterceptor.GetInstance();
+
+        #endregion
+
+        #region VPC
+
+        private static VPCCredentials _mVpcCredentials;
+
+        #endregion
         
-        public static void Create(ServiceAccountCredentials serviceAccountCredentials)
+        #region Collaboration
+
+        public static IAnnotationManagement AnnotationManagement { get; private set; }
+        
+        private static AnnotationManagementFactory m_aManagementFactory = new AnnotationManagementFactory();
+
+        #endregion
+
+        public static void Create(VPCCredentials vpcCredentials, ServiceAccountCredentials serviceAccountCredentials)
         {
             HttpClient = new UnityHttpClient();
-            ServiceAccountCredentials = serviceAccountCredentials;
             var playerSettings = UnityCloudPlayerSettings.Instance;
             var platformSupport = PlatformSupportFactory.GetAuthenticationPlatformSupport();
-            ServiceHostResolver = UnityRuntimeServiceHostResolverFactory.Create();
 
-            var compositeAuthenticatorSettings = new CompositeAuthenticatorSettingsBuilder(HttpClient, platformSupport, ServiceHostResolver, playerSettings)
-                .AddDefaultBrowserAuthenticatedAccessTokenProvider(playerSettings)
-                .AddDefaultPkceAuthenticator(playerSettings)
-                .Build();
-
-            _sCompositeAuthenticator = new CompositeAuthenticator(compositeAuthenticatorSettings);
+            if (vpcCredentials == null)
+            {
+                ServiceConnector = ServiceConnectorFactory.Create(platformSupport, HttpClient, playerSettings, playerSettings);
+            }
+            else
+            {
+                _mVpcCredentials = vpcCredentials;
+                ServiceConnector = ServiceConnectorFactory.CreateForFullyQualifiedDomainName(platformSupport, HttpClient, 
+                    playerSettings, playerSettings, vpcCredentials.DomainName, vpcCredentials.OpenIdConfigurationUrl, vpcCredentials.PathPrefixValue);
+            }
+            
+            _sCompositeAuthenticator = ServiceConnector.CompositeAuthenticator;
 
             #region Assets
-
-            ServiceHttpClient = new ServiceHttpClient(HttpClient, _sCompositeAuthenticator, playerSettings)
-                .WithApiSourceHeadersFromAssembly(Assembly.GetExecutingAssembly());
 
             AssetRepository = AssetRepositoryFactory.Create(ServiceHttpClient, ServiceHostResolver);
 
             #endregion
             
-            #region Service Account
-            if(serviceAccountCredentials == null || string.IsNullOrEmpty(serviceAccountCredentials.Credentials)) return;
-            ServiceAccountServiceAuthorizer = new ServiceAccountAuthorizer(serviceAccountCredentials);
-
-            ServiceAccountServiceHttpClient = new ServiceHttpClient(HttpClient, ServiceAccountServiceAuthorizer, playerSettings)
-                .WithApiSourceHeadersFromAssembly(Assembly.GetExecutingAssembly());
-            ServiceAccountAssetRepository = AssetRepositoryFactory.Create(ServiceAccountServiceHttpClient, ServiceHostResolver);
+            #region Deep Linking
+            DeepLinkProvider = new DeepLinkProvider(ServiceHttpClient, new QueryArgumentsProcessor(), ServiceHostResolver, new UnityRuntimeUrlProcessor(), playerSettings);
             #endregion
+            
+            #region Collaboration
+            AnnotationManagement = m_aManagementFactory.GetAnnotationManagement(ServiceHttpClient, ServiceHostResolver);
+            #endregion
+
+            #region Service Account
+            if (serviceAccountCredentials == null || string.IsNullOrEmpty(serviceAccountCredentials.Credentials))
+            {
+                return;
+            }
+            
+            ServiceAccountCredentials = serviceAccountCredentials;
+            #endregion
+        }
+
+        public static void ServiceAccountCreation()
+        {
+            if(ServiceAccountCredentials == null) return;
+            
+            Environment.SetEnvironmentVariable(k_ServiceAccountEnvVar, ServiceAccountCredentials.Credentials, EnvironmentVariableTarget.Process);
+            
+            var platformSupport = PlatformSupportFactory.GetAuthenticationPlatformSupport();
+            var playerSettings = UnityCloudPlayerSettings.Instance;
+            
+            var serviceAccountAuthenticatorSettingsBuilder =
+                new ServiceAccountAuthenticatorSettingsBuilder(HttpClient, ServiceHostResolver, platformSupport)
+                    .SetAppIdProvider(playerSettings);
+
+            if (_mVpcCredentials != null)
+            {
+                var pkceConfigurationProvider = PkceConfigurationProviderFactory.CreateForFullyQualifiedDomainName(ServiceHostResolver, HttpClient, _mVpcCredentials.OpenIdConfigurationUrl, "sdk");
+                serviceAccountAuthenticatorSettingsBuilder.SetServiceAccountCredentialsExchanger(
+                    pkceConfigurationProvider);
+            }
+            
+            ServiceAccountServiceAuthenticator =
+                new ServiceAccountAuthenticator(serviceAccountAuthenticatorSettingsBuilder.Build());
+            
+            ServiceAccountServiceHttpClient = new ServiceHttpClient(HttpClient, ServiceAccountServiceAuthenticator, UnityCloudPlayerSettings.Instance)
+                .WithApiSourceHeadersFromAssembly(Assembly.GetExecutingAssembly());;
+            ServiceAccountAssetRepository = AssetRepositoryFactory.Create(ServiceAccountServiceHttpClient, ServiceHostResolver);
+        }
+        
+        public static async Task InitializeServiceAccountAsync()
+        {
+            await ServiceAccountServiceAuthenticator.InitializeAsync();
         }
 
         public static async Task InitializeAsync()
@@ -114,16 +195,93 @@ namespace Unity.Industry.Viewer.Shared
 
         public static void Shutdown()
         {
-            _sCompositeAuthenticator?.Dispose();
+            (_sCompositeAuthenticator as IDisposable)?.Dispose();
             _sCompositeAuthenticator = null;
-            ServiceHttpClient = null;
             AssetRepository = null;
             HttpClient = null;
-            ServiceHostResolver = null;
             m_DataStreamer = null;
-            ServiceAccountServiceAuthorizer = null;
+            ServiceAccountLogout();
+            ServiceAccountServiceAuthenticator = null;
             ServiceAccountServiceHttpClient = null;
             ServiceAccountAssetRepository = null;
+        }
+
+        public static void ServiceAccountLogout()
+        {
+            var environmentVar = Environment.GetEnvironmentVariable(k_ServiceAccountEnvVar, EnvironmentVariableTarget.Process);
+            if (!string.IsNullOrEmpty(environmentVar))
+            {
+                // Clear the environment variable if it was set by this class, to avoid affecting other parts of the application or service account leakage.
+                Environment.SetEnvironmentVariable(k_ServiceAccountEnvVar, string.Empty, EnvironmentVariableTarget.Process);
+            }
+        }
+        
+        /// <summary>
+        /// Provides functionality to upload binary data to provided URL
+        /// </summary>
+        /// <param name="uploadUri">URL for data uploading</param>
+        /// <param name="source">Array of bytes to upload</param>
+        /// <param name="cancellationToken">Cancellation token for operation</param>
+        /// <exception cref="InvalidUrlException">Thrown when uploading URL is not provided</exception>
+        /// <exception cref="UploadFailedException">Thrown when uploading failed</exception>
+        public static async Task UploadContentAsync(Uri uploadUri, string filePath, CancellationToken cancellationToken)
+        {
+            const string blobTypeHeaderKey = "X-Ms-Blob-Type";
+            const string blobTypeHeaderValue = "BlockBlob";
+
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (uploadUri == null)
+            {
+                throw new InvalidUrlException("Upload url is null or empty");
+            }
+
+            using var httpRequestMessage = new HttpRequestMessage();
+            httpRequestMessage.Method = HttpMethod.Put;
+            httpRequestMessage.RequestUri = uploadUri;
+            var bytes = await System.IO.File.ReadAllBytesAsync(filePath, cancellationToken);
+            httpRequestMessage.Content = new ByteArrayContent(bytes);
+
+            httpRequestMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+
+            httpRequestMessage.Headers.Add(blobTypeHeaderKey, blobTypeHeaderValue);
+
+            using var response = await ServiceHttpClient.SendAsync(httpRequestMessage, HttpCompletionOption.ResponseContentRead, null, cancellationToken);
+            var result = response.EnsureSuccessStatusCode();
+
+            if (!result.IsSuccessStatusCode)
+            {
+                throw new UploadFailedException($"Upload of content stream for file id {uploadUri} failed.");
+            }
+        }
+        
+        /// <summary>
+        /// Provides functionality to download binary data from provided URL
+        /// </summary>
+        /// <param name="downloadUri">URL to download data from</param>
+        /// <param name="cancellationToken">Cancellation token for operation</param>
+        /// <returns></returns>
+        /// <exception cref="InvalidUrlException">Thrown when uploading URL is not provided</exception>
+        public static async Task<byte[]> DownloadContentAsync(Uri downloadUri, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (downloadUri == null)
+            {
+                throw new InvalidUrlException("Download url is null or empty");
+            }
+
+            using var httpRequestMessage = new HttpRequestMessage();
+            httpRequestMessage.Method = HttpMethod.Get;
+            httpRequestMessage.RequestUri = downloadUri;
+
+            using var response = await ServiceHttpClient.SendAsync(httpRequestMessage, HttpCompletionOption.ResponseContentRead, null, cancellationToken);
+            response.EnsureSuccessStatusCode();
+
+            byte[] result = await response.Content.ReadAsByteArrayAsync();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            return result;
         }
     }
 }

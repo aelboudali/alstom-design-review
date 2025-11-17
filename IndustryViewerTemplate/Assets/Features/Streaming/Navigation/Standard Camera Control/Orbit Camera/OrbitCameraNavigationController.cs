@@ -9,6 +9,9 @@ namespace Unity.Industry.Viewer.Navigation.OrbitCamera
         [SerializeField]
         private OrbitCameraInputSystemController cameraController;
 
+        [SerializeField]
+        private FreeOrbitCamera freeOrbitCamera;
+        
         DoubleBounds m_CurrentBounds;
         
         public override void Initialize()
@@ -52,6 +55,18 @@ namespace Unity.Industry.Viewer.Navigation.OrbitCamera
         public override void FocusToPoint(DoubleBounds bounds)
         {
             cameraController.SetLookAt(bounds, true);
+        }
+
+        public override void TranslateTo(Vector3 position, Quaternion rotation)
+        {
+            if(GetNavigationGameObject() == null) return;
+            freeOrbitCamera.TranslateTo(GetNavigationGameObject(), position, rotation);
+        }
+
+        public override void FollowPresenter(GameObject presenterObject)
+        {
+            if (GetNavigationGameObject() == null) return;
+            freeOrbitCamera.FollowPresenter(presenterObject, GetNavigationGameObject());
         }
 
         private void OnBoundsUpdated(DoubleBounds bounds, bool skipCameraUpdate)

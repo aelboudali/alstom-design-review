@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Deep Linking_no
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: no
+  m_SharedData: {fileID: 11400000, guid: df7e84428955d474eae3626a98b575a6, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 47728520850300928
+    m_Localized: Invitasjonslenke er kopiert til utklippstavlen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 86225446284337152
+    m_Localized: Feil ved oppretting av invitasjonslenke
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019528912897
+    m_Localized: Invitere
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2905052585984
+    m_Localized: "Opprett en invitasjonskobling til \xF8kten"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 298597604171776
+    m_Localized: Aktivering av invitasjonslenke
+    m_Metadata:
+      m_Items: []
+  - m_Id: 299763431940096
+    m_Localized: "Flerspillerinvitasjoner st\xF8ttes ikke i frakoblet modus. G\xE5
+      tilbake til online-modus dersom du vil starte en flerspillersesjon."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1037017326592000
+    m_Localized: Feil ved tilgang til ressurs via invitasjonslenke. Sjekk tillatelsene.
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

@@ -1,0 +1,12 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement class="thread-Popover-menu" style="flex-grow: 0; border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding-right: 8px; padding-left: 8px; padding-top: 2px; padding-bottom: 2px; min-height: 44px; align-items: center; justify-content: center; height: 40px; flex-direction: row;">
+        <Unity.AppUI.UI.IconButton quiet="true" icon="thumb-up" name="thumbup" primary="true" class="reaction" />
+        <Unity.AppUI.UI.IconButton quiet="true" icon="thumb-down" name="thumbdown" primary="true" class="reaction" />
+        <Unity.AppUI.UI.IconButton quiet="true" icon="check" name="check" primary="true" class="reaction" />
+        <Unity.AppUI.UI.IconButton quiet="true" icon="look" name="look" primary="true" class="reaction" />
+        <Unity.AppUI.UI.IconButton quiet="true" icon="hundred" name="hundred" primary="true" class="reaction" />
+        <Unity.AppUI.UI.IconButton quiet="true" icon="celebrate" name="celebrate" primary="true" class="reaction" />
+        <Unity.AppUI.UI.IconButton quiet="true" icon="fire" name="fire" primary="true" class="reaction" />
+        <Unity.AppUI.UI.IconButton quiet="true" icon="smiley" name="smiley" primary="true" class="reaction" />
+    </ui:VisualElement>
+</ui:UXML>

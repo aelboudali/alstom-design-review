@@ -18,10 +18,6 @@ MonoBehaviour:
   m_Metadata:
     m_Items: []
   m_TableData:
-  - m_Id: 13261332480
-    m_Localized: Versione
-    m_Metadata:
-      m_Items: []
   - m_Id: 642184634368
     m_Localized: Frequenza di aggiornamento
     m_Metadata:
@@ -47,7 +43,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 45987493470789632
-    m_Localized: "Modalit\xE0 offline attivata"
+    m_Localized: "Modalit\xE0 offline attiva"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 91376129548476416
+    m_Localized: Impostazioni
     m_Metadata:
       m_Items: []
   references:

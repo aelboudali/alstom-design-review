@@ -18,38 +18,73 @@ MonoBehaviour:
   m_Metadata:
     m_Items: []
   m_TableData:
-  - m_Id: 13261332480
-    m_Localized: Version
-    m_Metadata:
-      m_Items: []
   - m_Id: 642184634368
     m_Localized: Refresh Rate
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8052603653613420916
   - m_Id: 994900434944
     m_Localized: Show FPS
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8052603653613420917
   - m_Id: 1747224354816
     m_Localized: General
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8052603653613420918
   - m_Id: 4932475281408
     m_Localized: FPS
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8052603653613420919
   - m_Id: 53920947757056
     m_Localized: Language
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8052603653613420920
   - m_Id: 44170049240424448
     m_Localized: Offline Mode
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8052603653613420921
   - m_Id: 45987493470789632
     m_Localized: Offline Mode On
+    m_Metadata:
+      m_Items:
+      - rid: 8052603653613420922
+  - m_Id: 91376129548476416
+    m_Localized: Settings
     m_Metadata:
       m_Items: []
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 8052603653613420916
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Text in the settings for slider
+    - rid: 8052603653613420917
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Text in the settings for checkbox
+    - rid: 8052603653613420918
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Header in the settings
+    - rid: 8052603653613420919
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Icon when Show FPS is checked(true)
+    - rid: 8052603653613420920
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Text in the settings for the dropdown
+    - rid: 8052603653613420921
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Text in the settings for toggle(switcher)
+    - rid: 8052603653613420922
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Text in the UI when Offline mode is ON

@@ -19,15 +19,15 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 12604054429696
-    m_Localized: Rotationskamera
+    m_Localized: Orbit kamera
     m_Metadata:
       m_Items: []
   - m_Id: 12455156637696
-    m_Localized: "Rotationsk\xE4nslighet"
+    m_Localized: "Orbit k\xE4nslighet"
     m_Metadata:
       m_Items: []
   - m_Id: 12455160832000
-    m_Localized: "Panoreringsk\xE4nslighet"
+    m_Localized: "Pan k\xE4nslighet"
     m_Metadata:
       m_Items: []
   - m_Id: 12455160832001

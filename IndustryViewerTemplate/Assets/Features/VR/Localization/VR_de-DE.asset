@@ -22,6 +22,15 @@ MonoBehaviour:
     m_Localized: VR-Flugmodus
     m_Metadata:
       m_Items: []
+  - m_Id: 95971741896007680
+    m_Localized: Durchblick
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119196761623355392
+    m_Localized: "Dr\xFCcken Sie den Ausl\xF6ser oder f\xFChren Sie eine Fingerbewegung
+      aus, um das Objekt zu platzieren."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

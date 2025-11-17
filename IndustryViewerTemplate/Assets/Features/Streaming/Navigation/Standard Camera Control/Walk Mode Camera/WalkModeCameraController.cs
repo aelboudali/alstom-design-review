@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System.Collections;
+using Unity.Industry.Viewer.Streaming;
 
 namespace Unity.Industry.Viewer.Navigation.WalkModeCamera
 {
@@ -30,9 +32,14 @@ namespace Unity.Industry.Viewer.Navigation.WalkModeCamera
         Quaternion m_CharacterTargetRot;
         float globalRotationFactor = 0.25f; // Otherwise, rotation is just too fast even with runtime sensitivity
 
+        // Store yaw (Y axis) and pitch (X axis) separately for stable rotation
+        private float m_Yaw;
+        private float m_Pitch;
         // null if there is no input. Any value when we received input.
         // This helps to determine if the mouse button is still pressed to hide or show the cursor.
         Vector2? m_MoveInput;
+        
+        private Coroutine m_TranslationCoroutine;
 
         private void RotateCamera()
         {
@@ -42,15 +49,19 @@ namespace Unity.Industry.Viewer.Navigation.WalkModeCamera
                 var xRot = m_MoveInput.Value.y * globalRotationFactor;
                 m_MoveInput = null;
 
-                var currTrans = _camera.transform;
-                currTrans.Rotate(((isCameraInverted) ? -xRot : xRot), yRot, 0);
-                currTrans.rotation = Quaternion.Euler(currTrans.rotation.eulerAngles.x, currTrans.rotation.eulerAngles.y, 0);
-                m_CharacterTargetRot = currTrans.rotation;
+                // Update yaw and pitch
+                m_Yaw += yRot;
+                m_Pitch += (isCameraInverted ? -xRot : xRot);
 
+                // Clamp pitch
                 if (m_ClampVerticalRotation)
                 {
-                    m_CharacterTargetRot = ClampRotationAroundXAxis(m_CharacterTargetRot);
+                    m_Pitch = Mathf.Clamp(m_Pitch, m_MinimumX, m_MaximumX);
                 }
+
+                // Set rotation
+                Quaternion targetRot = Quaternion.Euler(m_Pitch, m_Yaw, 0);
+                m_CharacterTargetRot = targetRot;
 
                 if (m_Smooth)
                 {
@@ -123,9 +134,55 @@ namespace Unity.Industry.Viewer.Navigation.WalkModeCamera
         public void ApplyNewPositionRotation(Vector3 newPos, Vector3 newEuler)
         {
             m_MoveInput = null;
-            
             _camera.transform.position = newPos;
-            _camera.transform.rotation = Quaternion.Euler(newEuler.x, newEuler.y, 0f);
+            // Update yaw and pitch to match newEuler
+            m_Pitch = newEuler.x;
+            m_Yaw = newEuler.y;
+            _camera.transform.rotation = Quaternion.Euler(m_Pitch, m_Yaw, 0f);
+        }
+
+        public void ApplyNewPositionRotation(Vector3 newPos, Quaternion rotation)
+        {
+            if (m_TranslationCoroutine != null)
+            {
+                StopCoroutine(m_TranslationCoroutine);
+            }
+            _camera.transform.SetPositionAndRotation(newPos, rotation);
+            // Update yaw and pitch to match the new rotation
+            Vector3 euler = rotation.eulerAngles;
+            m_Pitch = euler.x;
+            m_Yaw = euler.y;
+        }
+        
+        public void TranslateTo(GameObject objectToTranslate, Vector3 targetPosition,
+            Quaternion targetRotation)
+        {
+            if (m_TranslationCoroutine != null)
+            {
+                StopCoroutine(m_TranslationCoroutine);
+            }
+
+            m_TranslationCoroutine = StartCoroutine(SmoothTranslateTo());
+
+            IEnumerator SmoothTranslateTo(float duration = 1.0f)
+            {
+                NavigationController.PauseCameraControl?.Invoke(true);
+                Vector3 startPosition = objectToTranslate.transform.position;
+                Quaternion startRotation = objectToTranslate.transform.rotation;
+                float elapsedTime = 0;
+
+                while (elapsedTime < duration)
+                {
+                    var finalPos = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
+                    var finalRot = Quaternion.Lerp(startRotation, targetRotation, elapsedTime / duration);
+                    objectToTranslate.transform.SetPositionAndRotation(finalPos, finalRot);
+                    elapsedTime += Time.deltaTime;
+                    yield return null;
+                }
+
+                objectToTranslate.transform.SetPositionAndRotation(targetPosition, targetRotation);
+                NavigationController.PauseCameraControl?.Invoke(false);
+            }
         }
     }
 }

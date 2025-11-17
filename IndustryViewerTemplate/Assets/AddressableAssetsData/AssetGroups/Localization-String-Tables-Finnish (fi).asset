@@ -22,6 +22,12 @@ MonoBehaviour:
     - Locale-fi
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 15e8f5efe4431754d81c5ba3cdb6e04f
+    m_Address: Deep Linking_fi
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-fi
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 1d0fec2c4d00b448ea619db6e38cc5a2
     m_Address: Streaming_fi
     m_ReadOnly: 1
@@ -64,6 +70,24 @@ MonoBehaviour:
     - Locale-fi
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 58dc0327ddfb149869a95856fc8ec82c
+    m_Address: Section Cut_fi
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-fi
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6fca22150e91f446e92f19dc5db604f2
+    m_Address: Shared_fi
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-fi
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7aaa196ba73d8294d86004fe26ad18aa
+    m_Address: MeasureTool_fi
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-fi
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8eb376ebda0ae40b6b78481ce68be2e3
     m_Address: Hierarchy Tool_fi
     m_ReadOnly: 1
@@ -91,6 +115,18 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-fi
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ca251dda68f114c0ab856b73cd1392e1
+    m_Address: Collaboration_fi
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-fi
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cc85ce339ad18ca49aee916da704955c
+    m_Address: Environment Tool_fi
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-fi
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ce2046f5b9e464fa18b23922c03f3c89
     m_Address: Metadata Tool_fi
     m_ReadOnly: 1
@@ -111,6 +147,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-fi
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ff273b9a4977946b990cb3be90fd5b07
+    m_Address: UI_fi
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-fi
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: bf5713deec68845209684f81a71bb85a, type: 2}

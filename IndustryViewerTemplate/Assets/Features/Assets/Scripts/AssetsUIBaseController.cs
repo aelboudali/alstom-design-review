@@ -1,18 +1,16 @@
 using System;
-using UnityEngine;
-using UnityEngine.Localization.Settings;
-using UnityEngine.Localization;
-using UnityEngine.UIElements;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Unity.AppUI.UI;
 using Unity.Cloud.Assets;
-using Unity.Industry.Viewer.Shared;
-using TextOverflow = UnityEngine.UIElements.TextOverflow;
-using System.Text;
 using Unity.Cloud.Identity;
 using Unity.Industry.Viewer.Identity;
-using UnityEngine.SceneManagement;
+using Unity.Industry.Viewer.Shared;
+using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
+using UnityEngine.UIElements;
 
 namespace Unity.Industry.Viewer.Assets
 {
@@ -31,14 +29,15 @@ namespace Unity.Industry.Viewer.Assets
     public abstract class AssetsUIBaseController : MonoBehaviour
     {
         public static Action<VisualElement, AssetType> AssetIconLoadFailed;
-        
+        public static event Action<IOrganization> OnAssetProjectsLoadedEvent;
+
         protected bool m_Initialized;
         
         public AssetInfoUIBaseController AssetInfoUIController => m_AssetInfoUIBaseController;
         
         protected AssetInfoUIBaseController m_AssetInfoUIBaseController;
         
-        protected void Awake()
+        protected virtual void Awake()
         {
             NetworkDetector.OnNetworkStatusChanged += OnNetworkStatusChanged;
         }
@@ -93,16 +92,19 @@ namespace Unity.Industry.Viewer.Assets
             SetPathText(null, SharedUIManager.AssetProjectInfo.Value, selectedCollection);
         }
 
-        protected void OnAssetProjectsLoaded(List<AssetProjectInfo> assetProjects)
+        protected void OnAssetProjectsLoaded(IOrganization organization, List<AssetProjectInfo> assetProjects)
         {
             //Clear asset Projects
             SharedUIManager.Instance.AssetProjectScrollList?.Clear();
             
             if(assetProjects == null || assetProjects.Count == 0)
             {
-                var text = new Text();
-                text.SetBinding("text", SharedUIManager.Instance.NoProjectsFound);
+                var text = new Text
+                {
+                    text = SharedUIManager.Instance.NoProjectsFound.GetTitleLocalizedStringForAppUI()
+                };
                 SharedUIManager.Instance.AssetProjectScrollList?.Add(text);
+                OnAssetProjectsLoadedEvent?.Invoke(organization);
                 return;
             }
 
@@ -118,29 +120,31 @@ namespace Unity.Industry.Viewer.Assets
                 firstItem = false;
 
                 var newAssetProjectButton = ReturnAssetProjectButton(assetProject);
-                
-                newAssetProjectButton.AddToClassList(SharedUIManager.k_ActionButtonArrowClass);
+                newAssetProjectButton.icon = "Down-Arrow";
                 newAssetProjectButton.AddToClassList(SharedUIManager.k_AssetProjectButtonClass);
 
                 newAssetProjectButton.AddToClassList(SharedUIManager.k_AssetProjectButtonNoSubLevelClass);
                 
                 newAssetProjectButton.AddToClassList(SharedUIManager.k_ProjectButtonCloseClass);
-                
-                newAssetProjectButton.AddToClassList(SharedUIManager.k_ProjectAssetActionButtonNotSelectedClass);
+                newAssetProjectButton.selected = false;
 
                 newAssetProjectButton.clicked += () =>
                 {
-                    RefreshListViewButton(newAssetProjectButton);
-                    
-                    SharedUIManager.Instance?.ClearGridView();
-                    
-                    SharedUIManager.Instance?.SearchBar?.SetValueWithoutNotify(string.Empty);
-                    
-                    AssetProjectSelected(assetProject);
+                    OnAssetProjectButtonClick(assetProject, newAssetProjectButton);
                 };
                 
                 SharedUIManager.Instance?.AssetProjectScrollList?.Add(newAssetProjectButton);
             }
+
+            OnAssetProjectsLoadedEvent?.Invoke(organization);
+        }
+
+        public void OnAssetProjectButtonClick(AssetProjectInfo assetProject, ActionButton newAssetProjectButton)
+        {
+            RefreshListViewButton(newAssetProjectButton);
+            SharedUIManager.Instance?.ClearGridView();
+            SharedUIManager.Instance?.SearchBar?.SetValueWithoutNotify(string.Empty);
+            AssetProjectSelected(assetProject);
         }
 
         protected abstract ActionButton ReturnAssetProjectButton(AssetProjectInfo assetProject);
@@ -154,177 +158,194 @@ namespace Unity.Industry.Viewer.Assets
         
         protected void OnCollectionsLoaded(List<IAssetCollection> collections)
         {
-            //Clear collection list
-            if(collections == null || collections.Count == 0)
+            if(collections == null || collections.Count == 0) return;
+            var projectId = collections.First().Descriptor.ProjectId;
+
+            var projectButton = SharedUIManager.Instance.AssetProjectScrollList
+                .Query<ActionButton>()
+                .ToList()
+                .First(button => button.userData is AssetProjectInfo project && project.AssetProject.Descriptor.ProjectId == projectId);
+
+            if (projectButton.ClassListContains(SharedUIManager.k_ProjectButtonCloseClass))
             {
-                return;
-            }
-            Dictionary<IAssetCollection, ActionButton> collectionButtonDict = new Dictionary<IAssetCollection, ActionButton>();
-            
-            var selected = SharedUIManager.Instance.AssetProjectScrollList.Query<ActionButton>().ToList().First(x =>
-                x.userData is AssetProjectInfo project && project.AssetProject.Descriptor.ProjectId ==
-                collections.First().Descriptor.ProjectId);
-
-            if (selected.ClassListContains(SharedUIManager.k_ProjectButtonCloseClass))
-            {
-                while (collections.Count > 0)
-                {
-                    var collection = collections.First();
-                    ActionButton parentCollectionButton = null;
-                    if (!collection.ParentPath.IsEmpty)
-                    {
-                        if (!collectionButtonDict.Keys.Any(x => string.Equals(x.Descriptor.Path, collection.ParentPath.ToString())))
-                        {
-                            collections.Remove(collection);
-                            collections.Insert(collections.Count, collection);
-                            continue;
-                        }
-                        var parentCollection = collectionButtonDict.Keys.First(x => string.Equals(x.Descriptor.Path, collection.ParentPath.ToString()));
-                        parentCollectionButton = collectionButtonDict[parentCollection];
-                    }
-                    
-                    var collectionButton = new ActionButton()
-                    {
-                        label = collection.Name,
-                        tooltip = collection.Name,
-                        userData = collection
-                    };
-                    
-                    collectionButton.AddToClassList(SharedUIManager.k_AssetProjectButtonSubLevelClass);
-                    collectionButton.AddToClassList(SharedUIManager.k_ProjectAssetActionButtonNotSelectedClass);
-                    collectionButton.AddToClassList(SharedUIManager.k_ProjectButtonCloseClass);
-                    collectionButton.AddToClassList(SharedUIManager.k_ActionButtonArrowClass);
-                    collectionButton.AddToClassList(SharedUIManager.k_AssetProjectButtonClass);
-
-                    if (!collections.Any(x => !x.ParentPath.IsEmpty && x.ParentPath == collection.Descriptor.Path))
-                    {
-                        collectionButton.AddToClassList(SharedUIManager.k_ProjectAssetActionButtonLastLevelClass);
-                    }
-                    
-                    int indentLevel = collection.ParentPath.IsEmpty? 1 : collection.ParentPath.GetPathComponents().Length + 1;
-                    
-                    collectionButton.style.paddingLeft = 10 + indentLevel * 20;
-                    
-                    collectionButton.clicked += () =>
-                    {
-                        RefreshListViewButton(collectionButton);
-                        
-                        if (collectionButton.ClassListContains(SharedUIManager.k_ProjectButtonCloseClass))
-                        {
-                            collectionButton.RemoveFromClassList(SharedUIManager.k_ProjectButtonCloseClass);
-                            collectionButton.AddToClassList(SharedUIManager.k_ProjectButtonOpenClass);
-                            
-                            var currentCollectionData = collectionButton.userData as IAssetCollection;
-                            
-                            var allCollectionsButton = SharedUIManager.Instance.AssetProjectScrollList.Query<ActionButton>().
-                                Where(x => x.userData is IAssetCollection assetCollection 
-                                           && !assetCollection.ParentPath.IsEmpty && assetCollection.ParentPath == currentCollectionData.Descriptor.Path).ToList();
-                            
-                            foreach (var btn in allCollectionsButton)
-                            {
-                                btn.style.display = DisplayStyle.Flex;
-                            }
-                        } else if (collectionButton.ClassListContains(SharedUIManager.k_ProjectButtonOpenClass))
-                        {
-                            collectionButton.RemoveFromClassList(SharedUIManager.k_ProjectButtonOpenClass);
-                            collectionButton.AddToClassList(SharedUIManager.k_ProjectButtonCloseClass);
-                            
-                            var allCollectionsButton = SharedUIManager.Instance.AssetProjectScrollList.Query<ActionButton>().Where(x => x.userData is IAssetCollection).ToList();
-                            
-                            var currentCollectionData = collectionButton.userData as IAssetCollection;
-                            
-                            foreach (var btn in allCollectionsButton)
-                            {
-                                var btnCollectionData = btn.userData as IAssetCollection;
-                                if (!btnCollectionData.ParentPath.IsEmpty &&
-                                    btnCollectionData.ParentPath.Contains(currentCollectionData.Descriptor.Path))
-                                {
-                                    if (btn.ClassListContains(SharedUIManager.k_ProjectButtonOpenClass))
-                                    {
-                                        btn.RemoveFromClassList(SharedUIManager.k_ProjectButtonOpenClass);
-                                    }
-
-                                    if (!btn.ClassListContains(SharedUIManager.k_ProjectButtonCloseClass))
-                                    {
-                                        btn.AddToClassList(SharedUIManager.k_ProjectButtonCloseClass);
-                                    }
-                                    btn.style.display = DisplayStyle.None;
-                                }
-                            }
-                        }
-
-                        SharedUIManager.Instance?.ClearGridView();
-                        SharedUIManager.Instance?.SearchBar?.SetValueWithoutNotify(string.Empty);
-                        
-                        SharedUIManager.SetAssetProjectInfoWithoutNotify(selected.userData as AssetProjectInfo?);
-                        SharedUIManager.AssetCollection = collection;
-                    };
-
-                    if (parentCollectionButton == null)
-                    {
-                        var index = SharedUIManager.Instance.AssetProjectScrollList.IndexOf(selected);
-                        SharedUIManager.Instance.AssetProjectScrollList.Insert(index + 1, collectionButton);
-                    }
-                    else
-                    {
-                        int index = SharedUIManager.Instance.AssetProjectScrollList.IndexOf(parentCollectionButton);
-                        SharedUIManager.Instance.AssetProjectScrollList.Insert(index + 1, collectionButton);
-                    }
-                    
-                    collectionButtonDict.Add(collection, collectionButton);
-                    collectionButton.style.display = collection.ParentPath.IsEmpty? DisplayStyle.Flex : DisplayStyle.None;
-                    collections.Remove(collection);
-                }
-
-                if (selected.ClassListContains(SharedUIManager.k_ProjectButtonCloseClass))
-                {
-                    selected.RemoveFromClassList(SharedUIManager.k_ProjectButtonCloseClass);
-                }
-
-                if (!selected.ClassListContains(SharedUIManager.k_ProjectButtonOpenClass))
-                {
-                    selected.AddToClassList(SharedUIManager.k_ProjectButtonOpenClass);
-                }
+                OpenProjectNode(collections, projectButton);
             }
             else
             {
-                //Close Collection List
-                var allCollectionsButton = SharedUIManager.Instance.AssetProjectScrollList.Query<ActionButton>().Where(x => x.userData is IAssetCollection).ToList();
+                CloseProjectNode(projectButton);
+            }
+        }
 
-                foreach (var collectionButton in allCollectionsButton)
+        public static void CloseProjectNode(ActionButton projectButton)
+        {
+            var allCollectionsButton = SharedUIManager.Instance.AssetProjectScrollList.Query<ActionButton>().Where(x => x.userData is IAssetCollection).ToList();
+
+            foreach (var collectionButton in allCollectionsButton)
+            {
+                var collection = collectionButton.userData as IAssetCollection;
+                var assetProject = projectButton.userData as AssetProjectInfo?;
+                if (collection.Descriptor.ProjectId == assetProject.Value.AssetProject.Descriptor.ProjectId)
                 {
-                    var collection = collectionButton.userData as IAssetCollection;
-                    var assetProject = selected.userData as AssetProjectInfo?;
-                    if (collection.Descriptor.ProjectId == assetProject.Value.AssetProject.Descriptor.ProjectId)
-                    {
-                        collectionButton.RemoveFromHierarchy();
-                    }
+                    collectionButton.RemoveFromHierarchy();
                 }
-                        
-                selected.RemoveFromClassList(SharedUIManager.k_ProjectButtonOpenClass);
-                if(!selected.ClassListContains(SharedUIManager.k_ProjectButtonCloseClass))
+            }
+
+            projectButton.RemoveFromClassList(SharedUIManager.k_ProjectButtonOpenClass);
+            if (!projectButton.ClassListContains(SharedUIManager.k_ProjectButtonCloseClass))
+            {
+                projectButton.AddToClassList(SharedUIManager.k_ProjectButtonCloseClass);
+            }
+        }
+
+        private static void OpenProjectNode(List<IAssetCollection> collections, ActionButton projectButton)
+        {
+            var collectionButtonDict = new Dictionary<IAssetCollection, ActionButton>();
+
+            while (collections.Count > 0)
+            {
+                var collection = collections.First();
+                ActionButton parentCollectionButton = null;
+                if (!collection.ParentPath.IsEmpty)
                 {
-                    selected.AddToClassList(SharedUIManager.k_ProjectButtonCloseClass);
+                    if (!collectionButtonDict.Keys.Any(x => string.Equals(x.Descriptor.Path, collection.ParentPath.ToString())))
+                    {
+                        collections.Remove(collection);
+                        collections.Insert(collections.Count, collection);
+                        continue;
+                    }
+                    var parentCollection = collectionButtonDict.Keys.First(x => string.Equals(x.Descriptor.Path, collection.ParentPath.ToString()));
+                    parentCollectionButton = collectionButtonDict[parentCollection];
+                }
+
+                var isEmpty = !collections.Any(x => !x.ParentPath.IsEmpty && x.ParentPath == collection.Descriptor.Path);
+                var collectionButton = CreateCollectionButton(projectButton, collection, isEmpty);
+
+                if (parentCollectionButton == null)
+                {
+                    var index = SharedUIManager.Instance.AssetProjectScrollList.IndexOf(projectButton);
+                    SharedUIManager.Instance.AssetProjectScrollList.Insert(index + 1, collectionButton);
+                }
+                else
+                {
+                    int index = SharedUIManager.Instance.AssetProjectScrollList.IndexOf(parentCollectionButton);
+                    SharedUIManager.Instance.AssetProjectScrollList.Insert(index + 1, collectionButton);
+                }
+
+                collectionButtonDict.Add(collection, collectionButton);
+                collectionButton.style.display = collection.ParentPath.IsEmpty ? DisplayStyle.Flex : DisplayStyle.None;
+                collections.Remove(collection);
+            }
+
+            if (projectButton.ClassListContains(SharedUIManager.k_ProjectButtonCloseClass))
+            {
+                projectButton.RemoveFromClassList(SharedUIManager.k_ProjectButtonCloseClass);
+            }
+
+            if (!projectButton.ClassListContains(SharedUIManager.k_ProjectButtonOpenClass))
+            {
+                projectButton.AddToClassList(SharedUIManager.k_ProjectButtonOpenClass);
+            }
+        }
+
+        private static ActionButton CreateCollectionButton(ActionButton projectButton, IAssetCollection collection, bool isEmpty)
+        {
+            var collectionButton = new ActionButton()
+            {
+                label = collection.Name,
+                tooltip = collection.Name,
+                userData = collection,
+                quiet = true
+            };
+
+            collectionButton.AddToClassList(SharedUIManager.k_AssetProjectButtonSubLevelClass);
+            collectionButton.selected = false;
+            collectionButton.AddToClassList(SharedUIManager.k_ProjectButtonCloseClass);
+            collectionButton.icon = isEmpty ? string.Empty : "Down-Arrow";
+            collectionButton.AddToClassList(SharedUIManager.k_AssetProjectButtonClass);
+
+            int indentLevel = collection.ParentPath.IsEmpty ? 1 : collection.ParentPath.GetPathComponents().Length + 1;
+
+            collectionButton.style.paddingLeft = 10 + indentLevel * 20;
+
+            collectionButton.clicked += () =>
+            {
+                RefreshListViewButton(collectionButton);
+
+                if (collectionButton.ClassListContains(SharedUIManager.k_ProjectButtonCloseClass))
+                {
+                    OpenCollectionNode(collectionButton);
+                }
+                else if (collectionButton.ClassListContains(SharedUIManager.k_ProjectButtonOpenClass))
+                {
+                    CloseCollectionNode(collectionButton);
+                }
+
+                SharedUIManager.Instance?.ClearGridView();
+                SharedUIManager.Instance?.SearchBar?.SetValueWithoutNotify(string.Empty);
+                SharedUIManager.SetAssetProjectInfoWithoutNotify(projectButton.userData as AssetProjectInfo?);
+                SharedUIManager.AssetCollection = collection;
+            };
+
+            return collectionButton;
+        }
+
+        public static void CloseCollectionNode(ActionButton collectionButton)
+        {
+            collectionButton.RemoveFromClassList(SharedUIManager.k_ProjectButtonOpenClass);
+            collectionButton.AddToClassList(SharedUIManager.k_ProjectButtonCloseClass);
+
+            var allCollectionsButton = SharedUIManager.Instance.AssetProjectScrollList.Query<ActionButton>().Where(x => x.userData is IAssetCollection).ToList();
+
+            var currentCollectionData = collectionButton.userData as IAssetCollection;
+
+            foreach (var btn in allCollectionsButton)
+            {
+                var btnCollectionData = btn.userData as IAssetCollection;
+                if (!btnCollectionData.ParentPath.IsEmpty &&
+                    btnCollectionData.ParentPath.Contains(currentCollectionData.Descriptor.Path))
+                {
+                    if (btn.ClassListContains(SharedUIManager.k_ProjectButtonOpenClass))
+                    {
+                        btn.RemoveFromClassList(SharedUIManager.k_ProjectButtonOpenClass);
+                    }
+
+                    if (!btn.ClassListContains(SharedUIManager.k_ProjectButtonCloseClass))
+                    {
+                        btn.AddToClassList(SharedUIManager.k_ProjectButtonCloseClass);
+                    }
+                    btn.style.display = DisplayStyle.None;
                 }
             }
         }
-        
-        protected static void RefreshListViewButton(ActionButton selectedButton)
+
+        public static void OpenCollectionNode(ActionButton collectionButton)
+        {
+            collectionButton.RemoveFromClassList(SharedUIManager.k_ProjectButtonCloseClass);
+            collectionButton.AddToClassList(SharedUIManager.k_ProjectButtonOpenClass);
+
+            var currentCollectionData = collectionButton.userData as IAssetCollection;
+
+            var childCollectionButtons = SharedUIManager.Instance.AssetProjectScrollList
+                .Query<ActionButton>()
+                .Where(button => button.userData is IAssetCollection assetCollection
+                       && !assetCollection.ParentPath.IsEmpty
+                       && assetCollection.ParentPath == currentCollectionData.Descriptor.Path)
+                .ToList();
+
+            foreach (var childCollectionButton in childCollectionButtons)
+            {
+                childCollectionButton.style.display = DisplayStyle.Flex;
+            }
+        }
+
+        public static void RefreshListViewButton(ActionButton selectedButton)
         {
             foreach (var actionButton in SharedUIManager.Instance.AssetProjectScrollList.Query<ActionButton>().ToList())
             {
-                if (actionButton.ClassListContains(SharedUIManager.k_ItemSelectedClass))
-                {
-                    actionButton.RemoveFromClassList(SharedUIManager.k_ItemSelectedClass);
-                }
-
-                if (!actionButton.ClassListContains(SharedUIManager.k_ProjectAssetActionButtonNotSelectedClass))
-                {
-                    actionButton.AddToClassList(SharedUIManager.k_ProjectAssetActionButtonNotSelectedClass);
-                }
+                actionButton.selected = false;
             }
-            selectedButton.RemoveFromClassList(SharedUIManager.k_ProjectAssetActionButtonNotSelectedClass);
-            selectedButton.AddToClassList(SharedUIManager.k_ItemSelectedClass);
+
+            selectedButton.selected = true;
         }
 
         protected virtual void OnAssetSelectedOnGrid(IEnumerable<object> obj)
@@ -360,7 +381,7 @@ namespace Unity.Industry.Viewer.Assets
         
         protected abstract void DeselectExisting(AssetInfo assetInfo);
 
-        protected abstract void SetPathText(AssetInfo? assetInfo, AssetProjectInfo? assetProject,
+        public abstract void SetPathText(AssetInfo? assetInfo, AssetProjectInfo? assetProject,
             IAssetCollection collection);
         
         private void RefreshGridItem(VisualElement item, int index)
@@ -402,23 +423,6 @@ namespace Unity.Industry.Viewer.Assets
         
         protected abstract void HandleAssetThumbnail(AssetInfo asset, VisualElement iconPlaceHolder);
         
-        private static VisualElement MakeOrganizationItem()
-        {
-            var newText = new Text()
-            {
-                size = TextSize.L,
-                style =
-                {
-                    paddingLeft = new Length(20f, LengthUnit.Pixel),
-                    overflow = Overflow.Hidden,
-                    flexWrap = Wrap.NoWrap,
-                    textOverflow = TextOverflow.Ellipsis,
-                    color = Color.white
-                },
-            };
-            return newText;
-        }
-        
         protected void OnGridGeometryChanged(GeometryChangedEvent evt)
         {
             RefreshGridViewSize();
@@ -441,7 +445,7 @@ namespace Unity.Industry.Viewer.Assets
         {
             SharedUIManager.Instance.AssetProjectScrollList?.Clear();
             SharedUIManager.Instance?.ClearGridView();
-            SharedUIManager.Instance.AssetsRoot.style.display = DisplayStyle.None;
+            SharedUIManager.Instance.AssetsContainer.style.display = DisplayStyle.None;
             SharedUIManager.Instance.OrganizationButton.style.display = DisplayStyle.None;
             SharedUIManager.Instance?.SearchBar?.SetValueWithoutNotify(string.Empty);
             SharedUIManager.Instance.PathText.text = string.Empty;
@@ -470,12 +474,12 @@ namespace Unity.Industry.Viewer.Assets
             {
                 return;
             }
-            text.ClearBinding("text");
-            text.SetBinding("text", localizedString);
+            text.text = localizedString.GetTitleLocalizedStringForAppUI();
         }
         
         protected void OnSortingDropdownValueChanged(ChangeEvent<IEnumerable<int>> evt)
         {
+            if(evt.newValue == null || !evt.newValue.Any()) return;
             SortingType sortingType = (SharedUIManager.Instance.SortingDropdown.sourceItems as SortingType[])[evt.newValue.First()];
             SharedUIManager.Instance?.ClearGridView();
             SharedUIManager.SelectedAsset = null;
@@ -515,7 +519,7 @@ namespace Unity.Industry.Viewer.Assets
             var assetNameLabel = item.Q<Text>();
             
             var assetTypeLabel = item.Q<Text>("AssetTypeLabel");
-            assetTypeLabel.SetBinding("text", assetType.GetAssetTypeAsString());
+            assetTypeLabel.text = assetType.GetAssetTypeAsString().GetTitleLocalizedStringForAppUI();
 
             var assetLastUpdateLabel = item.Q<Text>("AssetLastUpdatedLabel");
             var currentUtcTime = DateTime.UtcNow;
@@ -552,7 +556,6 @@ namespace Unity.Industry.Viewer.Assets
         protected virtual void OnOrganizationListReceived(List<IOrganization> listOfOrg)
         {
             SharedUIManager.Instance.OrganizationButton.userData = listOfOrg;
-            SharedUIManager.Instance.OrganizationButton.ClearBinding("label");
             
             SharedUIManager.Instance.AssetProjectScrollList.Clear();
             SharedUIManager.Instance.ClearGridView();
@@ -560,8 +563,9 @@ namespace Unity.Industry.Viewer.Assets
             if (listOfOrg == null || listOfOrg.Count == 0)
             {
                 SharedUIManager.Instance.OrganizationButton.SetEnabled(false);
-                SharedUIManager.Instance.OrganizationButton.SetBinding("label", SharedUIManager.Instance.NoOrganizationsFound);
-                SharedUIManager.Instance.AssetsRoot.style.display = DisplayStyle.None;
+                SharedUIManager.Instance.OrganizationButton.label =
+                    SharedUIManager.Instance.NoOrganizationsFound.GetTitleLocalizedStringForAppUI();
+                SharedUIManager.Instance.AssetsContainer.style.display = DisplayStyle.None;
                 return;
             }
             SharedUIManager.Instance.OrganizationButton.SetEnabled(true);
@@ -579,21 +583,31 @@ namespace Unity.Industry.Viewer.Assets
         
         protected void OnOrganizationButtonClicked()
         {
-            var organizationPopover = SharedUIManager.Instance.OrganizationPopoverTemplate.Instantiate();
+            var organizationPopover = SharedUIManager.Instance.OrganizationPopoverTemplate.Instantiate().Children().First();
             ListView organizationListView = organizationPopover.Q<ListView>();
-            
             organizationListView.makeItem = MakeOrganizationItem;
             organizationListView.bindItem = OrganizationListBindItem;
             List<IOrganization> listOfOrg = SharedUIManager.Instance.OrganizationButton.userData as List<IOrganization>;
             organizationListView.itemsSource = listOfOrg;
             organizationListView.selectionChanged += OnOrganizationSelectionChanged;
-            organizationListView.fixedItemHeight = 36;
-            
+            organizationListView.fixedItemHeight = 40;
+
             SharedUIManager.Instance.OrganizationPopover = Popover
                 .Build(SharedUIManager.Instance.OrganizationButton, organizationPopover).SetOutsideClickDismiss(true)
-                .SetArrowVisible(false).SetCrossOffset(-25);
+                .SetArrowVisible(false).SetPlacement(PopoverPlacement.BottomStart);
             
             SharedUIManager.Instance.OrganizationPopover?.Show();
+        }
+        
+        private static VisualElement MakeOrganizationItem()
+        {
+            var newText = new Text()
+            {
+                size = TextSize.L,
+            };
+            newText.AddToClassList("OrganizationSelection");
+            newText.AddToClassList("cursor--pointer");
+            return newText;
         }
         
         protected virtual void OnOrganizationSelectionChanged(IEnumerable<object> item)
@@ -601,7 +615,7 @@ namespace Unity.Industry.Viewer.Assets
             SharedUIManager.Instance.AssetsUIDocument.rootVisualElement.Q<VisualElement>("IdentityContainer").style.display = DisplayStyle.None;
             UpdateUIOnOrganizationSelected();
             TextureDownload.ClearCache();
-            SharedUIManager.Instance.OrganizationButton.ClearBinding("label");
+            SharedUIManager.Instance.OrganizationButton.label = string.Empty;
             IOrganization selectedOrg = item.First() as IOrganization;
             SharedUIManager.Organization = selectedOrg;
             SharedUIManager.AssetProjectInfo = null;
@@ -617,6 +631,7 @@ namespace Unity.Industry.Viewer.Assets
             var org = listOfOrg[index];
             var text = (veText as Text);
             text.text = org.Name;
+            text.tooltip = org.Name;
             SetOrganizationItemClass(org, veText);
         }
 

@@ -1,0 +1,102 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1617741581459444346
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7907978404326082385}
+  - component: {fileID: 3279752719110074892}
+  - component: {fileID: 5190543763581588521}
+  - component: {fileID: -479513245799500880}
+  m_Layer: 0
+  m_Name: Annotation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7907978404326082385
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1617741581459444346}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3279752719110074892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1617741581459444346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 396d7efef944c4675bd9a27c8500ffd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Industry.Viewer.Streaming.Annotation::Unity.Industry.Viewer.Streaming.Annotation.AnnotationToolController
+  CurrentFilterType: 0
+  m_UILayerMask:
+    serializedVersion: 2
+    m_Bits: 160
+--- !u!114 &5190543763581588521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1617741581459444346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0376a8ecea13e42af951f88aa9bda8a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Industry.Viewer.Streaming.Annotation::Unity.Industry.Viewer.Streaming.Annotation.AnnotationToolUIController
+  m_toolUIAsset: {fileID: 9197481963319205126, guid: fb856cffc3bf34a78987b62402319ab4,
+    type: 3}
+  m_StyleSheet: {fileID: 7433441132597879392, guid: e6d074899096e4136aa7abea6d8bf858,
+    type: 3}
+  m_CollaborationUIHelper: {fileID: -479513245799500880}
+  m_sceneMarkupPrefab: {fileID: 6645693777994104445, guid: 10ce753a11faa4564b2459f293f7bf0a,
+    type: 3}
+--- !u!114 &-479513245799500880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1617741581459444346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01a6cb6f6cc194a0c995e0c206a9976e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Industry.Viewer.Streaming.Annotation::Unity.Industry.Viewer.Streaming.Annotation.CollaborationUIHelper
+  AttachmentGridViewColumnCount: 3
+  annotationStylesheet: {fileID: 7433441132597879392, guid: 8a8cb0c5aad2043259d6a5ba65a4590e,
+    type: 3}
+  annotationItemTemplate: {fileID: 9197481963319205126, guid: 8d8e247931fd644d69e294ad4618a34c,
+    type: 3}
+  commentUITemplate: {fileID: 9197481963319205126, guid: fb856cffc3bf34a78987b62402319ab4,
+    type: 3}
+  reactionUITemplate: {fileID: 9197481963319205126, guid: 2103fa7559dd841c3afc0d634be8fe76,
+    type: 3}
+  attachmentMessageEntryTemplate: {fileID: 9197481963319205126, guid: cd9f6704c21c54641b61ac0f1b974db4,
+    type: 3}
+  attachmentUITemplate: {fileID: 9197481963319205126, guid: 426eb1b32899a47f8b7d5d1a57b5f147,
+    type: 3}
+  defaultFileIcon: {fileID: 2800000, guid: 9ba121993c313427cac1846ed52d3ab9, type: 3}
+  FilterType: 0
+  LocalizedStringAsset: {fileID: 11400000, guid: 13af8fb68cbcb40349f8cfe4a3a99289,
+    type: 2}
+  m_AnnotationToolUIController: {fileID: 5190543763581588521}
+  annotationToolController: {fileID: 3279752719110074892}

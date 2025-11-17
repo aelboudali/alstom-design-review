@@ -1,7 +1,8 @@
 using System;
+using System.Collections;
 using System.Linq;
-using UnityEngine;
 using Unity.Industry.Viewer.Assets;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using AssetInfo = Unity.Industry.Viewer.Assets.AssetInfo;
 
@@ -13,12 +14,17 @@ namespace Unity.Industry.Viewer.Streaming
         public static Action<StreamingToolAsset> ToolSelected;
         public static Action<StreamingToolAsset[]> ToolInitializing;
         public static Action<StreamingToolAsset, bool> ToolActiveChanged;
-        public static Action DisableAllTools;
+        public static Action<bool> DisableAllTools;
         
-        private (StreamingToolAsset toolAsset, GameObject toolInstance) m_currentActiveTool;
+        private (StreamingToolAsset toolAsset, GameObject toolInstance)? m_currentActiveTool;
         
         [SerializeField]
         private StreamingToolAsset[] streamingToolAssets;
+        
+        private StreamToolSubmenuController m_CurrentSubmenuController;
+        private int m_subToolAssetInstanceId = -1;
+        
+        private Guid m_toolPanelUpdateGuid = Guid.NewGuid();
         
         private void Start()
         {
@@ -52,70 +58,150 @@ namespace Unity.Industry.Viewer.Streaming
             StreamSceneController.ExitSceneConfirmed -= OnExitSceneConfirmed;
         }
 
-        private void OnDisableAllTools()
+        private void OnDisableAllTools(bool includeSubmenus)
         {
             foreach (var tool in streamingToolAssets)
             {
+                if (!includeSubmenus && m_CurrentSubmenuController != null && tool.GetInstanceID() == m_subToolAssetInstanceId)
+                {
+                    continue;
+                }
                 ToolActiveChanged?.Invoke(tool, false);
             }
+
+            if (m_CurrentSubmenuController != null && !includeSubmenus)
+            {
+                return;
+            }
             
-            if (m_currentActiveTool == default) return;
+            if (!m_currentActiveTool.HasValue) return;
             
-            if(m_currentActiveTool.toolInstance.TryGetComponent(out StreamToolControllerBase controller))
+            if (m_currentActiveTool.Value.toolAsset.GetInstanceID() == m_subToolAssetInstanceId &&
+                m_CurrentSubmenuController != null)
+            {
+                Destroy(m_currentActiveTool.Value.toolInstance);
+                m_CurrentSubmenuController = null;
+                m_subToolAssetInstanceId = -1;
+            }
+            
+            if(m_currentActiveTool.Value.toolInstance.TryGetComponent(out StreamToolControllerBase controller))
             {
                 controller.OnToolClosed();
             }
+
+            if (m_currentActiveTool.Value.toolInstance != null)
+            {
+                Destroy(m_currentActiveTool.Value.toolInstance);
+            }
             
-            Destroy(m_currentActiveTool.toolInstance);
-            m_currentActiveTool = default;
+            m_currentActiveTool = null;
         }
 
         // Turn off all tools when asset is updated
         private void OnAssetSelected(AssetInfo assetInfo)
         {
-            StreamToolsUIControllerBase.UpdateToolPanel?.Invoke(m_currentActiveTool.toolAsset, null, false);
-            OnDisableAllTools();
+            if (m_currentActiveTool.HasValue)
+            {
+                StreamToolsUIControllerBase.UpdateToolPanel?.Invoke(m_currentActiveTool.Value.toolAsset, null, false);
+            }
+            
+            OnDisableAllTools(true);
         }
 
         private void OnToolSelected(StreamingToolAsset toolAsset)
         {
             var pass = streamingToolAssets.Any(tool => tool == toolAsset);
 
-            if(!pass) return;
-
-            if (m_currentActiveTool != default)
+            if (!pass)
             {
-                if(m_currentActiveTool.toolInstance.TryGetComponent(out StreamToolControllerBase controller))
+                if (m_CurrentSubmenuController != null && m_CurrentSubmenuController.SubmenuToolAssets.Any(tool => tool == toolAsset))
+                {
+                    m_CurrentSubmenuController.SelectTool(toolAsset);
+                }
+                return;
+            }
+
+            if (m_currentActiveTool.HasValue)
+            {
+                if(m_currentActiveTool.Value.toolInstance.TryGetComponent(out StreamToolControllerBase controller))
                 {
                     controller.OnToolClosed();
                 }
-                Destroy(m_currentActiveTool.toolInstance);
-                var currentTool = m_currentActiveTool.toolAsset;
-                ToolActiveChanged?.Invoke(m_currentActiveTool.toolAsset, false);
-                StreamToolsUIControllerBase.UpdateToolPanel?.Invoke(m_currentActiveTool.toolAsset, null, false);
+
+                if (m_currentActiveTool.Value.toolInstance != null)
+                {
+                    Destroy(m_currentActiveTool.Value.toolInstance);
+                }
+                
+                var currentTool = m_currentActiveTool.Value.toolAsset;
+                ToolActiveChanged?.Invoke(m_currentActiveTool.Value.toolAsset, false);
+                if (m_CurrentSubmenuController == null || m_CurrentSubmenuController != null &&
+                    toolAsset.GetInstanceID() != m_subToolAssetInstanceId)
+                {
+                    StreamToolsUIControllerBase.UpdateToolPanel?.Invoke(m_currentActiveTool.Value.toolAsset, null, false);
+                }
+                
+                if (currentTool.GetInstanceID() == m_subToolAssetInstanceId && toolAsset.GetInstanceID() != m_subToolAssetInstanceId)
+                {
+                    m_CurrentSubmenuController = null;
+                    m_subToolAssetInstanceId = -1;
+                    StartCoroutine(WaitForUIUpdateAndSelectAgain());
+                    if (currentTool != toolAsset)
+                    {
+                        m_currentActiveTool = null;
+                        return;
+                    }
+                }
+                
                 if (currentTool == toolAsset)
                 {
-                    m_currentActiveTool = default;
+                    m_currentActiveTool = null;
                     return;
                 }
             }
-            m_currentActiveTool.toolInstance = Instantiate(toolAsset.toolPrefab);
-            SceneManager.MoveGameObjectToScene(m_currentActiveTool.toolInstance, gameObject.scene);
-            m_currentActiveTool.toolAsset = toolAsset;
+
+            var toolInstance = Instantiate(toolAsset.toolPrefab);
+            SceneManager.MoveGameObjectToScene(toolInstance, gameObject.scene);
+            if (toolInstance.TryGetComponent(out m_CurrentSubmenuController))
+            {
+                m_subToolAssetInstanceId = toolAsset.GetInstanceID();
+            }
+            
+            m_currentActiveTool = (toolAsset, toolInstance);
+            
             ToolActiveChanged?.Invoke(toolAsset, true);
-            StreamToolsUIControllerBase.UpdateToolPanel?.Invoke(toolAsset, m_currentActiveTool.toolInstance, true);
+            
+            m_toolPanelUpdateGuid = Guid.NewGuid(); // Generate new GUID for each selection
+            var currentVersion = m_toolPanelUpdateGuid;
+            
+            StartCoroutine(UpdateToolPanel(currentVersion));
+
+            IEnumerator UpdateToolPanel(Guid version)
+            {
+                yield return null; // Ensure the tool is fully initialized before invoking the controller
+                if (version == m_toolPanelUpdateGuid)
+                {
+                    StreamToolsUIControllerBase.UpdateToolPanel?.Invoke(toolAsset, m_currentActiveTool.Value.toolInstance, true);
+                }
+            }
+
+            IEnumerator WaitForUIUpdateAndSelectAgain()
+            {
+                yield return null;
+                OnToolSelected(toolAsset);
+            }
         }
-        
+
         private void OnExitSceneConfirmed()
         {
-            if (m_currentActiveTool == default) return;
-            if(m_currentActiveTool.toolInstance.TryGetComponent(out StreamToolControllerBase controller))
+            if (!m_currentActiveTool.HasValue) return;
+            if(m_currentActiveTool.Value.toolInstance.TryGetComponent(out StreamToolControllerBase controller))
             {
                 controller.OnToolClosed();
             }
-            Destroy(m_currentActiveTool.toolInstance);
-            ToolActiveChanged?.Invoke(m_currentActiveTool.toolAsset, false);
-            StreamToolsUIControllerBase.UpdateToolPanel?.Invoke(m_currentActiveTool.toolAsset, null, false);
+            Destroy(m_currentActiveTool.Value.toolInstance);
+            ToolActiveChanged?.Invoke(m_currentActiveTool.Value.toolAsset, false);
+            StreamToolsUIControllerBase.UpdateToolPanel?.Invoke(m_currentActiveTool.Value.toolAsset, null, false);
         }
     }
 }

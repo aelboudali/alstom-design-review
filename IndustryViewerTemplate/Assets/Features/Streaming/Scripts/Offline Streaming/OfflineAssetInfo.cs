@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Globalization;
 using System.IO;
 using Unity.Cloud.Assets;
-using Unity.Cloud.Identity;
 using UnityEngine.Networking;
 using Unity.Cloud.Common;
 using Unity.Industry.Viewer.Assets;

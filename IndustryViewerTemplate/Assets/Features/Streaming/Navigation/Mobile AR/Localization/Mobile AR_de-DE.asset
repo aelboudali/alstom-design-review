@@ -19,11 +19,11 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 751689523200
-    m_Localized: Mobile AR
+    m_Localized: "Erweiterte Realit\xE4t"
     m_Metadata:
       m_Items: []
   - m_Id: 3464783454209
-    m_Localized: Sperrposition
+    m_Localized: Position sperren
     m_Metadata:
       m_Items: []
   - m_Id: 3464783454210
@@ -31,35 +31,35 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648512
-    m_Localized: <u>Spatial Anchor</u>
+    m_Localized: AR-Anker
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648513
-    m_Localized: Spatial Anchor speichern
+    m_Localized: AR-Anker speichern
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648514
-    m_Localized: Spatial Anchor laden
+    m_Localized: AR-Anker laden
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648515
-    m_Localized: Bewegen
+    m_Localized: Position
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648516
-    m_Localized: Drehen
+    m_Localized: Rotation
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648517
-    m_Localized: Skalieren
+    m_Localized: Skalierung
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648518
-    m_Localized: Increment
+    m_Localized: Inkrement
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648519
-    m_Localized: "Auf Standardposition zur\xFCcksetzen"
+    m_Localized: "Auf Standard zur\xFCcksetzen"
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648520
@@ -67,24 +67,24 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506304
-    m_Localized: Spatial Anker ausgerichtet
+    m_Localized: AR-Anker ausgerichtet
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506305
-    m_Localized: Spatial Anker gespeichert
+    m_Localized: AR-Anker gespeichert
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506306
-    m_Localized: "Speichern des Spatial Ankers fehlgeschlagen \u2013 Unbekannt"
+    m_Localized: AR-Anker speichern fehlgeschlagen
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506307
-    m_Localized: Scannen und tippen Sie, um die Asset-Position zu initialisieren
+    m_Localized: Scannen und tippen, um den Asset initial zu positionieren.
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506308
-    m_Localized: "Sie k\xF6nnen Ihr Asset feinjustieren und auf \u201EPosition sperren\u201C
-      klicken"
+    m_Localized: "Sie k\xF6nnen Ihr Asset feinjustieren und auf Position sperren
+      klicken."
     m_Metadata:
       m_Items: []
   - m_Id: 41362627148898304
@@ -104,11 +104,32 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 45568947435593728
-    m_Localized: Das Laden ist fehlgeschlagen
+    m_Localized: Laden fehlgeschlagen
     m_Metadata:
       m_Items: []
   - m_Id: 45568947439788032
-    m_Localized: Sie haben keine Schreibberechtigung.
+    m_Localized: "Sie verf\xFCgen nicht \xFCber Schreibrechte."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084964016128
+    m_Localized: "R\xE4umlicher Anker gefunden"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084972404736
+    m_Localized: "Ein zuvor gespeicherter r\xE4umlicher Anker wurde gefunden. M\xF6chten
+      Sie ihn laden?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084972404737
+    m_Localized: Ignorieren
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084972404738
+    m_Localized: Laden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119205759076524032
+    m_Localized: Tippe auf den Punkt, um das Objekt zu platzieren.
     m_Metadata:
       m_Items: []
   references:

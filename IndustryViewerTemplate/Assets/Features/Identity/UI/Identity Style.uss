@@ -1,0 +1,37 @@
+#LoginPanel .is-selected.appui-actionbutton--accent.loginButton {
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    background-color: var(--appui-accent-100);
+}
+
+#LoginPanel .loginButton .unity-text-element {
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    font-size: 16px;
+}
+
+#LoginPanel .loginButton.is-selected.appui-actionbutton--accent .unity-text-element {
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    color: rgb(255, 255, 255);
+    font-size: 16px;
+}
+
+#LoginPanel .loginButton {
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    font-size: 16px;
+    border-left-color: rgb(67, 67, 67);
+    border-right-color: rgb(67, 67, 67);
+    border-top-color: rgb(67, 67, 67);
+    border-bottom-color: rgb(67, 67, 67);
+    background-color: rgb(46, 46, 46);
+}

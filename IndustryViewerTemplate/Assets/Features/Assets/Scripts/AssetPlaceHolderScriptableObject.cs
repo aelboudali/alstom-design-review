@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Unity.Industry.Viewer.Assets
 {
-    [CreateAssetMenu(menuName = "UC/Assets/AssetPlaceHolderScriptableObject")]
+    [CreateAssetMenu(menuName = "IVT/Assets/AssetPlaceHolderScriptableObject")]
     public class AssetPlaceHolderScriptableObject : ScriptableObject
     {
         [Serializable]

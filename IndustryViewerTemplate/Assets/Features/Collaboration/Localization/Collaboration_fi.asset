@@ -1,0 +1,162 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Collaboration_fi
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: fi
+  m_SharedData: {fileID: 11400000, guid: 5a5b0fdb44e374c3f950b188f7c8b8cd, type: 2}
+  m_Metadata:
+    m_Items:
+    - rid: 8052603406888206662
+  m_TableData:
+  - m_Id: 1301378228224
+    m_Localized: Annotaatio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421797892096
+    m_Localized: Seuraa ketjua
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421802086400
+    m_Localized: Lopeta ketjun seuraaminen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421802086401
+    m_Localized: Kopioi linkki
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280704
+    m_Localized: Poista ketju
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280705
+    m_Localized: "Haluatko varmasti poistaa t\xE4m\xE4n ketjun ja kaikki sen vastaukset?
+      T\xE4t\xE4 ei voi kumota."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280706
+    m_Localized: Aloita uusi ketju...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280707
+    m_Localized: Valitse liite
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280708
+    m_Localized: "<color=#0892FF>{reply_count:plural:1\_vastaus|{}\_vastausta}</color>"
+    m_Metadata:
+      m_Items:
+      - rid: 8052603406888206662
+  - m_Id: 9757421806280709
+    m_Localized: "Lis\xE4\xE4 liite"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280710
+    m_Localized: Muokkaa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280711
+    m_Localized: "Tuntematon k\xE4ytt\xE4j\xE4"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280714
+    m_Localized: "{attachment_count:plural:1\_liitetiedosto|{}\_liitetiedostoa}"
+    m_Metadata:
+      m_Items:
+      - rid: 8052603406888206662
+  - m_Id: 9757421806280715
+    m_Localized: Kaikki ketjut
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280716
+    m_Localized: Vain avoimet ketjut
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280717
+    m_Localized: "Lis\xE4\xE4 vastaus t\xE4h\xE4n ketjuun..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280718
+    m_Localized: Ratkaistu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280719
+    m_Localized: Tiedostonimen kaksoiskappale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280720
+    m_Localized: "T\xE4m\xE4 liite on jo lis\xE4tty."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280721
+    m_Localized: Avaruudellinen liite
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280722
+    m_Localized: Tuntematon liite
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280723
+    m_Localized: Poista liite
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280724
+    m_Localized: "Haluatko varmasti poistaa t\xE4m\xE4n liitteen?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280725
+    m_Localized: Tallenna liite
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280726
+    m_Localized: Olet parhaillaan offline-tilassa.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280727
+    m_Localized: Olet vierastilassa.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9758374261415936
+    m_Localized: "<i>on ratkaissut t\xE4m\xE4n ketjun.</i>"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9757421806280713
+    m_Localized: "<i>on avannut t\xE4m\xE4n ketjun uudelleen.</i>"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9766184659443712
+    m_Localized: Vastaus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9825352548343808
+    m_Localized: Tillbaka
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9825352552538112
+    m_Localized: Ny kommentar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9827055381241856
+    m_Localized: Ketju
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 8052603406888206662
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 9757421806280714
+        - id: 9757421806280708

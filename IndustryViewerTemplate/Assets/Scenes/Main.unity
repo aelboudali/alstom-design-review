@@ -157,7 +157,7 @@ MonoBehaviour:
   m_MaxPacketQueueSize: 128
   m_MaxPayloadSize: 6144
   m_HeartbeatTimeoutMS: 500
-  m_ConnectTimeoutMS: 1000
+  m_ConnectTimeoutMS: 3000
   m_MaxConnectAttempts: 60
   m_DisconnectTimeoutMS: 30000
   ConnectionData:
@@ -184,7 +184,7 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 376695037}
-    PlayerPrefab: {fileID: 2781245951586822286, guid: eb665db57a7694140ad8ea7df635607e,
+    PlayerPrefab: {fileID: 624796993150874788, guid: 9827e73cc34fb44ebbb2e93d42623bac,
       type: 3}
     Prefabs:
       NetworkPrefabsLists:
@@ -295,6 +295,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serviceAccountCredentials: {fileID: 0}
+  vpcCredentials: {fileID: 0}
 --- !u!4 &685454538
 Transform:
   m_ObjectHideFlags: 0
@@ -325,6 +326,9 @@ GameObject:
   - component: {fileID: 1174084937}
   - component: {fileID: 1174084938}
   - component: {fileID: 1174084939}
+  - component: {fileID: 1174084941}
+  - component: {fileID: 1174084942}
+  - component: {fileID: 1174084943}
   m_Layer: 5
   m_Name: UIDocument
   m_TagString: Untagged
@@ -349,9 +353,13 @@ MonoBehaviour:
   sourceAsset: {fileID: 9197481963319205126, guid: 2b6a84bdbc787478e95033cdedf52dc7,
     type: 3}
   m_SortingOrder: 0
+  m_Position: 0
   m_WorldSpaceSizeMode: 1
   m_WorldSpaceWidth: 1920
   m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
 --- !u!4 &1174084935
 Transform:
   m_ObjectHideFlags: 0
@@ -402,9 +410,9 @@ MonoBehaviour:
     m_LocalVariables: []
   m_LocalizedCancel:
     m_TableReference:
-      m_TableCollectionName: GUID:57a7ebbc038a2427a989d443ddacef3e
+      m_TableCollectionName: GUID:2a6c1c34211344e798bb376d8fa80190
     m_TableEntryReference:
-      m_KeyId: 32483335725056
+      m_KeyId: 53019499552768
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -465,9 +473,9 @@ MonoBehaviour:
     m_LocalVariables: []
   m_OK:
     m_TableReference:
-      m_TableCollectionName: GUID:57a7ebbc038a2427a989d443ddacef3e
+      m_TableCollectionName: GUID:2a6c1c34211344e798bb376d8fa80190
     m_TableEntryReference:
-      m_KeyId: 58409243970101248
+      m_KeyId: 53019533107208
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -496,6 +504,12 @@ MonoBehaviour:
     type: 3}
   m_AssetPlaceHolderScriptableObject: {fileID: 11400000, guid: 11b623e90c9b24a12bb09f65b5a36ddf,
     type: 2}
+  m_AssetCreationTemplate: {fileID: 9197481963319205126, guid: e38ba48659c7a8c4684d2c54aff62ea1,
+    type: 3}
+  m_AssetCreationRequestsPopupTemplate: {fileID: 9197481963319205126, guid: 9dd151aa7107e1e40a3aafca5e30f070,
+    type: 3}
+  m_AssetsCreationStyleSheet: {fileID: 7433441132597879392, guid: 6d8b752a252fd374ba35c19cf9228285,
+    type: 3}
   m_SelectOrganizationLocalizedString:
     m_TableReference:
       m_TableCollectionName: GUID:e57257823a7964becb6eb06d6181f15a
@@ -560,9 +574,20 @@ MonoBehaviour:
     type: 3}
   m_assetItemStyle: {fileID: 7433441132597879392, guid: 2997fb9b33eb34c55b308631186cf64b,
     type: 3}
+  m_StreamingDataNotAvailableLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: GUID:0f0e26e2fcb43452a837fa831753065b
+    m_TableEntryReference:
+      m_KeyId: 123892356694925312
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   m_AssetItem3DDSUITemplate: {fileID: 9197481963319205126, guid: 8fccce546aa864795a536cd3c9e0809d,
     type: 3}
   m_StreamingAssetBarTemplate: {fileID: 9197481963319205126, guid: de03a0b9a1c6e4508ada2ef6f864ed25,
+    type: 3}
+  m_DirectStreamAssetModalTemplate: {fileID: 9197481963319205126, guid: b18012bf7ec264bdfbaf51da6410e7b7,
     type: 3}
   m_RemoveAssetTitleLocalizedString:
     m_TableReference:
@@ -584,9 +609,9 @@ MonoBehaviour:
     m_LocalVariables: []
   m_RemoveLocalizedString:
     m_TableReference:
-      m_TableCollectionName: GUID:0f0e26e2fcb43452a837fa831753065b
+      m_TableCollectionName: GUID:2a6c1c34211344e798bb376d8fa80190
     m_TableEntryReference:
-      m_KeyId: 2966592413696
+      m_KeyId: 53019533107200
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -602,9 +627,9 @@ MonoBehaviour:
     m_LocalVariables: []
   m_CancelLocalizedString:
     m_TableReference:
-      m_TableCollectionName: GUID:0f0e26e2fcb43452a837fa831753065b
+      m_TableCollectionName: GUID:2a6c1c34211344e798bb376d8fa80190
     m_TableEntryReference:
-      m_KeyId: 3080430018560
+      m_KeyId: 53019499552768
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -629,9 +654,9 @@ MonoBehaviour:
     m_LocalVariables: []
   m_DownloadLocalizedString:
     m_TableReference:
-      m_TableCollectionName: GUID:0f0e26e2fcb43452a837fa831753065b
+      m_TableCollectionName: GUID:2a6c1c34211344e798bb376d8fa80190
     m_TableEntryReference:
-      m_KeyId: 3862307004416
+      m_KeyId: 53019528912898
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -656,36 +681,36 @@ MonoBehaviour:
     m_LocalVariables: []
   m_LoadLayoutLocalizedString:
     m_TableReference:
-      m_TableCollectionName: GUID:0f0e26e2fcb43452a837fa831753065b
+      m_TableCollectionName: GUID:2a6c1c34211344e798bb376d8fa80190
     m_TableEntryReference:
-      m_KeyId: 4789797642240
+      m_KeyId: 53019533107202
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
   m_StreamLocalizedString:
     m_TableReference:
-      m_TableCollectionName: GUID:0f0e26e2fcb43452a837fa831753065b
+      m_TableCollectionName: GUID:2a6c1c34211344e798bb376d8fa80190
     m_TableEntryReference:
-      m_KeyId: 5427377987584
+      m_KeyId: 53019533107201
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
   m_CloudLocalizedString:
     m_TableReference:
-      m_TableCollectionName: GUID:0f0e26e2fcb43452a837fa831753065b
+      m_TableCollectionName: GUID:2a6c1c34211344e798bb376d8fa80190
     m_TableEntryReference:
-      m_KeyId: 5858598576128
+      m_KeyId: 53019533107203
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
   m_LocalLocalizedString:
     m_TableReference:
-      m_TableCollectionName: GUID:0f0e26e2fcb43452a837fa831753065b
+      m_TableCollectionName: GUID:2a6c1c34211344e798bb376d8fa80190
     m_TableEntryReference:
-      m_KeyId: 5890873745408
+      m_KeyId: 53019533107204
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -764,36 +789,9 @@ MonoBehaviour:
     m_LocalVariables: []
   m_UpdateLocalizedString:
     m_TableReference:
-      m_TableCollectionName: GUID:0f0e26e2fcb43452a837fa831753065b
+      m_TableCollectionName: GUID:2a6c1c34211344e798bb376d8fa80190
     m_TableEntryReference:
-      m_KeyId: 40835830153994242
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  m_DirectStreamingTitleLocalizedString:
-    m_TableReference:
-      m_TableCollectionName: GUID:0f0e26e2fcb43452a837fa831753065b
-    m_TableEntryReference:
-      m_KeyId: 40847564071755776
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  m_DirectStreamingDescriptionLocalizedString:
-    m_TableReference:
-      m_TableCollectionName: GUID:0f0e26e2fcb43452a837fa831753065b
-    m_TableEntryReference:
-      m_KeyId: 40847564071755777
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  m_CopyLinkToClipboardLocalizedString:
-    m_TableReference:
-      m_TableCollectionName: GUID:0f0e26e2fcb43452a837fa831753065b
-    m_TableEntryReference:
-      m_KeyId: 47728520850300928
+      m_KeyId: 54834492334080
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -813,6 +811,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d65d102f42882741a1a887e397531a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_NoAssetsFoundForUserString:
+    m_TableReference:
+      m_TableCollectionName: GUID:0f0e26e2fcb43452a837fa831753065b
+    m_TableEntryReference:
+      m_KeyId: 113671218895249408
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_SelectOrganizationHereString:
+    m_TableReference:
+      m_TableCollectionName: GUID:0f0e26e2fcb43452a837fa831753065b
+    m_TableEntryReference:
+      m_KeyId: 123180386542936064
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!114 &1174084940
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -825,6 +844,132 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89edef3ad987b414aa8aedcf773a4214, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_UIDocument: {fileID: 1174084934}
+--- !u!114 &1174084941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1174084933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bca089bc4aeea4896a794130b989312e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Industry.Viewer.Assets::Unity.Industry.Viewer.Assets.LoadingUIPanel
+--- !u!114 &1174084942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1174084933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0a96efcf480a524ba22c62eecdd758d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Industry.Viewer.DeepLinking::DeepLinkUIController
+  m_StreamingDeepLinkButtonTooltip:
+    m_TableReference:
+      m_TableCollectionName: GUID:df7e84428955d474eae3626a98b575a6
+    m_TableEntryReference:
+      m_KeyId: 2905052585984
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_CopyDeepLinkToClipboardMessage:
+    m_TableReference:
+      m_TableCollectionName: GUID:df7e84428955d474eae3626a98b575a6
+    m_TableEntryReference:
+      m_KeyId: 47728520850300928
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_CopyDeepLinkToClipboardErrorMessage:
+    m_TableReference:
+      m_TableCollectionName: GUID:df7e84428955d474eae3626a98b575a6
+    m_TableEntryReference:
+      m_KeyId: 86225446284337152
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_OfflineModeTitle:
+    m_TableReference:
+      m_TableCollectionName: GUID:df7e84428955d474eae3626a98b575a6
+    m_TableEntryReference:
+      m_KeyId: 298597604171776
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_OfflineModeMessage:
+    m_TableReference:
+      m_TableCollectionName: GUID:df7e84428955d474eae3626a98b575a6
+    m_TableEntryReference:
+      m_KeyId: 299763431940096
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_OfflineModeOkButton:
+    m_TableReference:
+      m_TableCollectionName: GUID:2a6c1c34211344e798bb376d8fa80190
+    m_TableEntryReference:
+      m_KeyId: 53019533107208
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_AccessErrorMessage:
+    m_TableReference:
+      m_TableCollectionName: GUID:df7e84428955d474eae3626a98b575a6
+    m_TableEntryReference:
+      m_KeyId: 1037017326592000
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_StyleSheet: {fileID: 7433441132597879392, guid: b2148e1b752382942ac3c91a9432cce9,
+    type: 3}
+  m_XRControllerMenu:
+    m_Side: 2
+    m_Position: 0
+  m_DeepLinkingIcon: {fileID: 2800000, guid: 00b564ed0cb7b4f30a3d4801ebceb5d3, type: 3}
+  references:
+    version: 2
+    RefIds: []
+--- !u!114 &1174084943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1174084933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 917769237ac384680bb3ead731476c68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Industry.Viewer.Collaboration::Unity.Industry.Viewer.Collaboration.CollaborationUIController
+  AttachmentGridViewColumnCount: 3
+  annotationStylesheet: {fileID: 7433441132597879392, guid: 8a8cb0c5aad2043259d6a5ba65a4590e,
+    type: 3}
+  annotationItemTemplate: {fileID: 9197481963319205126, guid: 8d8e247931fd644d69e294ad4618a34c,
+    type: 3}
+  commentUITemplate: {fileID: 9197481963319205126, guid: fb856cffc3bf34a78987b62402319ab4,
+    type: 3}
+  reactionUITemplate: {fileID: 9197481963319205126, guid: 2103fa7559dd841c3afc0d634be8fe76,
+    type: 3}
+  attachmentMessageEntryTemplate: {fileID: 9197481963319205126, guid: cd9f6704c21c54641b61ac0f1b974db4,
+    type: 3}
+  attachmentUITemplate: {fileID: 9197481963319205126, guid: 426eb1b32899a47f8b7d5d1a57b5f147,
+    type: 3}
+  defaultFileIcon: {fileID: 2800000, guid: 9ba121993c313427cac1846ed52d3ab9, type: 3}
+  FilterType: 0
+  LocalizedStringAsset: {fileID: 11400000, guid: 13af8fb68cbcb40349f8cfe4a3a99289,
+    type: 2}
   m_UIDocument: {fileID: 1174084934}
 --- !u!1 &1251707695
 GameObject:
@@ -966,9 +1111,13 @@ MonoBehaviour:
   sourceAsset: {fileID: 9197481963319205126, guid: 43e9268239b7b44f3be2ea4198909ec2,
     type: 3}
   m_SortingOrder: 1000
+  m_Position: 0
   m_WorldSpaceSizeMode: 1
   m_WorldSpaceWidth: 1920
   m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
 --- !u!1 &1524119581
 GameObject:
   m_ObjectHideFlags: 0
@@ -982,6 +1131,8 @@ GameObject:
   - component: {fileID: 1524119584}
   - component: {fileID: 1524119585}
   - component: {fileID: 1524119586}
+  - component: {fileID: 1524119588}
+  - component: {fileID: 1524119589}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -1053,6 +1204,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SimulateOffLine: 0
+--- !u!114 &1524119588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1524119581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 657c0d855b40fe74995e49dfe32af1cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1524119589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1524119581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2ce8ff6116e3447bb37e5588055fef8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Industry.Viewer.Collaboration::Unity.Industry.Viewer.Collaboration.CollaborationController
 --- !u!1 &1545756085
 GameObject:
   m_ObjectHideFlags: 0
@@ -1107,7 +1282,6 @@ MonoBehaviour:
   m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
-  m_Version: 2
   m_TaaSettings:
     m_Quality: 3
     m_FrameInfluence: 0.1
@@ -1115,6 +1289,7 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+  m_Version: 2
 --- !u!20 &1545756087
 Camera:
   m_ObjectHideFlags: 0

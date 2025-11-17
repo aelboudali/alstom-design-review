@@ -11,6 +11,9 @@
     border-top-right-radius: 12px;
     border-bottom-right-radius: 12px;
     border-bottom-left-radius: 12px;
+    padding-right: 0;
+    padding-left: 0;
+    margin-right: 9px;
 }
 
 .GridAssetSelected {
@@ -27,6 +30,9 @@
     border-bottom-right-radius: 12px;
     border-bottom-left-radius: 12px;
     background-color: rgb(24, 39, 69);
+    padding-right: 0;
+    padding-left: 0;
+    margin-right: 9px;
 }
 
 .ProjectButtonClose > #appui-actionbutton__icon {
@@ -68,39 +74,20 @@
     margin-right: 4px;
 }
 
+.ProjectAssetActionButton.is-selected.appui-actionbutton {
+    background-color: var(--appui-alias-actions-accent-background-color-default);
+}
+
 .ProjectAssetActionButtonNotSelected {
     background-color: rgba(0, 0, 0, 0);
 }
 
-.ProjectAssetActionButton:hover {
-    background-color: rgb(1, 1, 1);
-    border-top-width: 0;
-    border-right-width: 0;
-    border-bottom-width: 0;
-    border-left-width: 0;
-}
-
-.ActionButtonArrow .appui-icon-- {
-    background-image: url("project://database/Assets/UI/Textures/DownArrow.png?fileID=2800000&guid=3e527df8ddfbf4713b33dc173ffa7696&type=3#DownArrow");
-    display: flex;
+.appui-icon--Down-Arrow--regular {
+    --unity-image: url("project://database/Assets/UI/Textures/DownArrow.png?fileID=2800000&guid=3e527df8ddfbf4713b33dc173ffa7696&type=3#DownArrow");
     position: absolute;
     right: 18.34px;
     width: 23.34px;
     height: 13.33px;
-}
-
-.ProjectAssetActionButtonLastLevel .appui-icon-- {
-    display: none;
-}
-
-.AssetDropDownCreation #appui-picker__caret {
-    width: 23.34px;
-    max-width: 23.34px;
-    min-width: 23.34px;
-    height: 13.33px;
-    max-height: 13.33px;
-    position: absolute;
-    right: 13.34px;
 }
 
 .AssetDropDownArrow #appui-picker__caret {
@@ -125,110 +112,15 @@
     display: none;
 }
 
-#AddNewAssetButton > #appui-actionbutton__label {
-    font-size: 16px;
-    -unity-text-outline-color: rgb(255, 255, 255);
-    -unity-text-outline-width: 0.5px;
+.appui-icon--globe--regular {
+    --unity-image: url("project://database/Assets/UI/Textures/Globe.png?fileID=2800000&guid=2b271471c7feb4bcc812b13b448aa595&type=3#Globe");
 }
 
-#AssetCreationFileList #FileLabel {
-    font-size: 16px;
-    margin-left: 20px;
-    color: rgb(255, 255, 255);
-    white-space: nowrap;
-    overflow: hidden;
-    -unity-text-align: middle-left;
-    height: 30px;
-    max-height: 30px;
-    min-height: 30px;
-}
-
-#AssetDescriptionField > #appui-textarea__placeholder {
-    width: 660px;
-    height: 100%;
-}
-
-#AssetDescriptionField > #appui-textarea__input {
-    overflow: visible;
-    padding-top: 0;
-    padding-right: 0;
-    padding-bottom: 0;
-    padding-left: 0;
-    width: 680px;
-    max-width: 680px;
-}
-
-#AssetDescriptionField > #appui-textarea__input > #unity-text-input > .unity-scroll-view--vertical > #unity-content-and-vertical-scroll-container > #unity-content-viewport {
-    background-color: rgb(48, 48, 48);
-    width: 660px;
-    max-width: 660px;
-    min-width: 660px;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-    border-bottom-left-radius: 8px;
-    border-top-width: 1px;
-    border-right-width: 1px;
-    border-bottom-width: 1px;
-    border-left-width: 1px;
-    border-left-color: rgb(77, 77, 77);
-    border-right-color: rgb(77, 77, 77);
-    border-top-color: rgb(77, 77, 77);
-    border-bottom-color: rgb(77, 77, 77);
-}
-
-#AssetDescriptionField > #appui-textarea__input > #unity-text-input > .unity-scroll-view--vertical > #unity-content-and-vertical-scroll-container > #unity-content-viewport > #unity-content-container {
-    padding-top: 5px;
-    padding-right: 5px;
-    padding-bottom: 5px;
-    padding-left: 5px;
-}
-
-#AssetDescriptionField > #appui-textarea__input > #unity-text-input > .unity-scroll-view--vertical > #unity-content-and-vertical-scroll-container > .unity-scroll-view__vertical-scroller {
-    left: 10px;
-}
-
-#AssetDescriptionField #appui-textarea__resize-handle {
-    display: none;
-}
-
-#AssetCreationFileList > .unity-scroll-view--vertical {
-    width: 660px;
-    max-width: 660px;
-    background-color: rgb(48, 48, 48);
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-    border-bottom-left-radius: 8px;
-    border-top-width: 1px;
-    border-right-width: 1px;
-    border-bottom-width: 1px;
-    border-left-width: 1px;
-    border-left-color: rgb(77, 77, 77);
-    border-right-color: rgb(77, 77, 77);
-    border-top-color: rgb(77, 77, 77);
-    border-bottom-color: rgb(77, 77, 77);
-}
-
-#AssetCreationFileList > .unity-scroll-view--vertical > #unity-content-and-vertical-scroll-container > .unity-scroll-view__vertical-scroller {
-    left: 22px;
-    width: 10px;
-    max-width: 10px;
-    min-width: 10px;
-}
-
-#AssetCreationFileList > .unity-collection-view__scroll-view > #unity-content-and-vertical-scroll-container > #unity-content-viewport {
-    width: 100%;
-    max-width: 100%;
-    min-width: 100%;
-}
-
-#AMButton > #appui-button__leadingcontainer > #appui-button__leadingicon {
-    background-image: url("project://database/Assets/UI/Textures/Globe.png?fileID=2800000&guid=2b271471c7feb4bcc812b13b448aa595&type=3#Globe");
+.appui-icon--three-persons--regular {
+    --unity-image: url("project://database/Assets/UI/Textures/UsersThree.png?fileID=2800000&guid=d8c9333cc1334463db2e8e7a5cd79b4a&type=3#UsersThree");
 }
 
 #OrganizationButton > #appui-actionbutton__icon {
-    background-image: url("project://database/Assets/UI/Textures/UsersThree.png?fileID=2800000&guid=d8c9333cc1334463db2e8e7a5cd79b4a&type=3#UsersThree");
     display: flex;
     margin-right: 16px;
     width: 40px;
@@ -248,6 +140,11 @@
     background-color: rgb(48, 48, 48);
     background-size: 31px 31px;
     -unity-background-image-tint-color: rgb(188, 188, 188);
+}
+
+#OrganizationButton > #appui-actionbutton__label {
+    margin-left: 0;
+    color: rgb(233, 233, 233);
 }
 
 #OrganizationButton {
@@ -271,4 +168,95 @@
     padding-top: 11px;
     padding-right: 10px;
     padding-bottom: 11px;
+}
+
+.OrganizationSelection {
+    height: 40px;
+    min-height: 40px;
+    max-height: 40px;
+    padding-left: 12px;
+    padding-right: 12px;
+    border-width: 0;
+    justify-content: flex-start;
+    -unity-text-align: middle-left;
+    overflow: hidden;
+    flex-wrap: nowrap;
+    text-overflow: ellipsis;
+    color: white;
+    border-radius: 6px;
+}
+
+.LinkedProject {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgb(74, 74, 74);
+    border-top-left-radius: 11px;
+    border-top-right-radius: 11px;
+    border-bottom-right-radius: 11px;
+    border-bottom-left-radius: 11px;
+    padding-top: 2px;
+    padding-right: 4px;
+    padding-bottom: 2px;
+    padding-left: 4px;
+    height: 20px;
+}
+
+.LinkedProject #project-icon {
+    width: 16px;
+    height: 16px;
+    max-width: 16px;
+    max-height: 16px;
+    min-width: 16px;
+    min-height: 16px;
+    align-items: center;
+    justify-content: center;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+    border-left-color: rgb(40, 40, 40);
+    border-right-color: rgb(40, 40, 40);
+    border-top-color: rgb(40, 40, 40);
+    border-bottom-color: rgb(40, 40, 40);
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    background-image: url("project://database/Assets/UI/Textures/Project%20Cube.png?fileID=2800000&guid=04874049b567446208be02b6fd737c69&type=3#Project Cube");
+    background-size: 7.2px 7.2px;
+}
+
+.LinkedProject #project-name {
+    -unity-text-align: middle-left;
+    margin-right: 4px;
+    margin-left: 4px;
+    color: rgb(238, 238, 238);
+    font-size: 12px;
+}
+
+.LinkedProject #project-source-icon {
+    width: 16px;
+    height: 16px;
+    max-width: 16px;
+    max-height: 16px;
+    min-width: 16px;
+    min-height: 16px;
+    align-items: center;
+    justify-content: center;
+    background-size: 7.2px 7.2px;
+    -unity-background-image-tint-color: rgba(255, 255, 255, 0.56);
+}
+
+.sourceProject {
+    background-image: url("project://database/Assets/UI/Textures/SourceProject.png?fileID=2800000&guid=ffde2bcbf374a4c169b82489be653f24&type=3#SourceProject");
+}
+
+.editProject {
+    background-image: url("project://database/Assets/UI/Textures/PencilCircle.png?fileID=2800000&guid=f114d081b43b04b35b865510903b207e&type=3#PencilCircle");
+}
+
+#AssetBackground {
+    flex-grow: 1;
+    margin-bottom: 40px;
 }

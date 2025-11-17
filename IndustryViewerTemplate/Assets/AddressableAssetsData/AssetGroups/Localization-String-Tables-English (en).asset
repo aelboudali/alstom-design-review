@@ -36,6 +36,12 @@ MonoBehaviour:
     - Locale-en
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1e15bfd70a923814398a39827700a126
+    m_Address: MeasureTool_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 31cd5b931a3e045888027bfdce7628c1
     m_Address: InAppSettings_en
     m_ReadOnly: 1
@@ -49,6 +55,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-en
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3fd7a4101fe8e43f5b9c73a4df413a7a
+    m_Address: Collaboration_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 524c14e4a058d4403949f85244899ee6
     m_Address: Vivox_en
@@ -64,12 +76,30 @@ MonoBehaviour:
     - Locale-en
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 68c1029d4bb274fbd9bfbbb478dfd540
+    m_Address: Section Cut_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 68e63ad5866474dc39c5afcc63e1693a
+    m_Address: UI_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6d358d4b491104097af50e8a9d2c080c
     m_Address: Add Model Tool_en
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-en
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 82bc98e8f74a68b4fbbdfb2d5e959806
+    m_Address: Environment Tool_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 96b9e4f49cfc84048bea703e2a92bd83
     m_Address: Identity_en
@@ -92,12 +122,24 @@ MonoBehaviour:
     - Locale-en
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b6570cf96af274eaea680c6f92d09a9f
+    m_Address: Shared_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bdebcc69ce4794f5696af2d43e5bb494
     m_Address: Orbit Camera_en
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-en
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cc8595819eedadb479e471193fea354b
+    m_Address: Deep Linking_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ec14fe89d2b3d45e6a595154dbf04e24
     m_Address: VR_en

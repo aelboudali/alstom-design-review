@@ -21,27 +21,57 @@ MonoBehaviour:
   - m_Id: 482415206400
     m_Localized: Input Device
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937045952496614
   - m_Id: 482419400704
     m_Localized: Input Volume
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937045952496615
   - m_Id: 482419400705
     m_Localized: Output Device
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937045952496616
   - m_Id: 482419400706
     m_Localized: Output Volume
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937045952496617
   - m_Id: 482419400707
     m_Localized: Mute
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937045952496618
   - m_Id: 482419400708
     m_Localized: Unmute
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937045952496619
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 8258937045952496614
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is simple text for dropdown in the Vivox settings
+    - rid: 8258937045952496615
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is simple text for slider in the Vivox settings
+    - rid: 8258937045952496616
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is simple text for dropdown in the Vivox settings
+    - rid: 8258937045952496617
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is simple text for slider in the Vivox settings
+    - rid: 8258937045952496618
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is tooltip info for microphone icon
+    - rid: 8258937045952496619
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is tooltip info for microphone icon

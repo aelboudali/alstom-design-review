@@ -19,15 +19,15 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 620487499776
-    m_Localized: Fliegende Kamera
+    m_Localized: Fliegenkamera
     m_Metadata:
       m_Items: []
   - m_Id: 620508471296
-    m_Localized: Bewegungs-Empfindlichkeit
+    m_Localized: Bewegungsempfindlichkeit
     m_Metadata:
       m_Items: []
   - m_Id: 620508471297
-    m_Localized: Rotations-Empfindlichkeit
+    m_Localized: Rotationsempfindlichkeit
     m_Metadata:
       m_Items: []
   references:

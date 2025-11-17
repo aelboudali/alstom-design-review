@@ -16,3 +16,5 @@ Each feature folder contains the following key components:
 | [**Asset streaming**](asset-streaming.md) | Learn how to use the streaming function of the Industry Viewer Template. |
 | [**Asset metadata**](asset-metadata.md) | Understand the use of asset metadata in your project. |
 | [**Localize your project**](localization.md) | Add and update multiple languages for global audiences. |
+| [**Wireframe mode**](wireframe-mode.md) | Enable wireframe mode for asset visualization. |
+| [**Manage environments**](environment-management.md) | Manage and customize environment scenes. |

@@ -19,27 +19,25 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 2213752594432
-    m_Localized: "Visualizzatore del settore Unity \nProgetto modello"
+    m_Localized: 'Visualizzatore di settore Unity
+
+      Modello di progetto'
     m_Metadata:
       m_Items: []
   - m_Id: 7997920108544
-    m_Localized: Accedi
+    m_Localized: Login
     m_Metadata:
       m_Items: []
   - m_Id: 9303762132992
-    m_Localized: Oppure
+    m_Localized: o
     m_Metadata:
       m_Items: []
   - m_Id: 9420774825984
-    m_Localized: Continua come ospite
+    m_Localized: "Modalit\xE0 ospite"
     m_Metadata:
       m_Items: []
   - m_Id: 15982369169408
-    m_Localized: Esci
-    m_Metadata:
-      m_Items: []
-  - m_Id: 32483335725056
-    m_Localized: Annulla
+    m_Localized: Disconnettersi
     m_Metadata:
       m_Items: []
   - m_Id: 33199882231808
@@ -47,7 +45,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 33283562790912
-    m_Localized: Sei sicuro di voler uscire?
+    m_Localized: Vuoi davvero uscire?
     m_Metadata:
       m_Items: []
   - m_Id: 33349040070656
@@ -67,12 +65,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 58408840381587456
-    m_Localized: "Attualmente sei in modalit\xE0 offline. Vuoi tornare alla modalit\xE0
-      online ed effettuare l'accesso?"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 58409243970101248
-    m_Localized: OK
+    m_Localized: "Al momento sei in modalit\xE0 offline. Vuoi tornare alla modalit\xE0
+      online e accedere?"
     m_Metadata:
       m_Items: []
   references:

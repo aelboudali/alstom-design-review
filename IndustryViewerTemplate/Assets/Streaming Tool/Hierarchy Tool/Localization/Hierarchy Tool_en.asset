@@ -21,19 +21,34 @@ MonoBehaviour:
   - m_Id: 2275631161344
     m_Localized: Hierarchy
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217589
   - m_Id: 40541884567773184
     m_Localized: Grid Size
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937048882217590
   - m_Id: 1428906041346
     m_Localized: Reset Position
     m_Metadata:
-      m_Items: []
-  - m_Id: 42677741605085184
-    m_Localized: Loading
+      m_Items:
+      - rid: 8258937048882217591
+  - m_Id: 115508050741207040
+    m_Localized: Reset all Visibility
     m_Metadata:
       m_Items: []
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 8258937048882217589
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is header of the Hierarchy panel
+    - rid: 8258937048882217590
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is background text for slider in transfering tab
+    - rid: 8258937048882217591
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is button in transfering tab

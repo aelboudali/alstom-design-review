@@ -26,10 +26,6 @@ MonoBehaviour:
     m_Localized: "Metatietoja ei l\xF6ytynyt"
     m_Metadata:
       m_Items: []
-  - m_Id: 19319819894513664
-    m_Localized: Etsi...
-    m_Metadata:
-      m_Items: []
   - m_Id: 42351695571705856
     m_Localized: Offline-tilaa ei tueta
     m_Metadata:

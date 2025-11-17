@@ -4,6 +4,7 @@ using UnityEngine.UIElements;
 using Unity.AppUI.UI;
 using System.Collections.Generic;
 using Unity.Industry.Viewer.Assets;
+using Unity.Industry.Viewer.Shared;
 
 namespace Unity.Industry.Viewer.Streaming
 {
@@ -57,9 +58,7 @@ namespace Unity.Industry.Viewer.Streaming
             }
             m_NavigationButton.userData = newNavigationOption;
             SetIcon(newNavigationOption.NavigationOptionUIComponent.NavigationIcon, m_NavigationButton);
-            
-            m_NavigationButton.ClearBinding("tooltip");
-            m_NavigationButton.SetBinding("tooltip", newNavigationOption.NavigationName);
+            m_NavigationButton.tooltip = newNavigationOption.NavigationName.GetTitleLocalizedStringForAppUI();
         }
 
         private void InitialUI()
@@ -83,7 +82,7 @@ namespace Unity.Industry.Viewer.Streaming
                     alignItems = Align.Center,
                     justifyContent = Justify.Center,
                     alignSelf = Align.FlexStart,
-                    marginTop = new Length(20, LengthUnit.Pixel)
+                    marginTop = new Length(12, LengthUnit.Pixel)
                 }
             };
             m_NavigationButton = new IconButton();
@@ -91,8 +90,8 @@ namespace Unity.Industry.Viewer.Streaming
             SetIcon(m_NavigationController.DefaultNavigationOption.NavigationOptionUIComponent.NavigationIcon, m_NavigationButton);
             
             m_NavigationButton.userData = m_NavigationController.DefaultNavigationOption;
-            m_NavigationButton.ClearBinding("tooltip");
-            m_NavigationButton.SetBinding("tooltip", m_NavigationController.DefaultNavigationOption.NavigationName);
+            m_NavigationButton.tooltip = m_NavigationController.DefaultNavigationOption.NavigationName
+                .GetTitleLocalizedStringForAppUI();
             
             m_NavigationContainer.Add(m_NavigationButton);
             m_BottomLeftContainer.Add(m_NavigationContainer);
@@ -136,8 +135,7 @@ namespace Unity.Industry.Viewer.Streaming
                         },
                     };
                     
-                    button.ClearBinding("tooltip");
-                    button.SetBinding("tooltip", navigationOption.NavigationName);
+                    button.tooltip = navigationOption.NavigationName.GetTitleLocalizedStringForAppUI();
                     SetIcon(navigationOption.NavigationOptionUIComponent.NavigationIcon, button);
                     button.clicked += () =>
                     {

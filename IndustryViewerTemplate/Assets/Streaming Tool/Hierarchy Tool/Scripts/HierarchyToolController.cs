@@ -16,7 +16,7 @@ using Unity.Industry.Viewer.Shared;
 using UnityEngine.InputSystem;
 using TransformType = RuntimeGizmos.TransformType;
 #if VR_MODE
-using Unity.Industry.Viewer.Navigation.VR;
+using Unity.Industry.Viewer.VR;
 #endif
 #if ENABLE_MULTIPLAY
 using Unity.Industry.Viewer.Multiplay;
@@ -29,7 +29,7 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
     // The script supports asynchronous operations to fetch and update instance data from metadata repositories.
     // It integrates with Unity's MonoBehaviour for lifecycle management and supports both VR and non-VR modes.
     // The script provides user feedback through various events and updates the UI accordingly.
-    public class HierarchyToolController : StreamToolControllerBase
+    public class HierarchyToolController: StreamToolControllerBase
     {
         public static Action<int, List<List<InstanceData>>> TreeViewItemsUpdated;
         public static Action<int, InstanceData> QueryStarted;
@@ -38,21 +38,23 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
         public static Action<InstanceData> InstanceSelectedFromPanel;
         public static Action<ModelStreamId, MetadataInstance, Dictionary<InstanceId, List<InstanceData>>> InstanceSelectedOnModel;
         public static Action<InstanceData, bool> UpdateToggleUI;
-        
+
+        public static event Action<bool> VisibilityReset;
+
 #if ENABLE_MULTIPLAY
         public static Action<string, bool> LockModel;
 #endif
 
         private int m_LastInstanceId;
         
+        public HierarchyToolSceneListener HierarchyToolSceneListener => m_HierarchyToolSceneListener;
         private HierarchyToolSceneListener m_HierarchyToolSceneListener;
         
-        private Dictionary<StreamingModel, IMetadataRepository> m_StreamModelRepositoriesMapping => m_HierarchyToolSceneListener.StreamModelRepositoriesMapping;
+        private Dictionary<StreamingModel, IMetadataRepository> m_StreamModelRepositoriesMapping => 
+            m_HierarchyToolSceneListener == null? null : m_HierarchyToolSceneListener.StreamModelRepositoriesMapping;
 
-        private StreamingModelController m_StreamingModelController => m_HierarchyToolSceneListener.StreamingModelController;
-        
-        public VisibilityModifier VisibilityModifier => m_HierarchyToolSceneListener.VisibilityModifier;
-        public HighlightModifier HighlightModifier => m_HierarchyToolSceneListener.HighlightModifier;
+        private StreamingModelController m_StreamingModelController => m_HierarchyToolSceneListener == null? null :
+            m_HierarchyToolSceneListener.StreamingModelController;
         
         [SerializeField] private InputActionProperty m_PointerClick;
         [SerializeField] private InputActionProperty m_PointerPress;
@@ -61,19 +63,20 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
         [SerializeField] private LayerMask m_RuntimeHandleLayerMask;
         
         private HierarchyToolUIController m_HierarchyToolUIController;
+        private static HierarchyToolController m_Instance;
         
         public GridViewManager GridViewManager { get; private set;}
         
         private TransformGizmo m_TransformGizmo;
         
-        private CancellationTokenSource m_QueryTokenSource;
-        
         private async void Start()
         {
+            m_Instance = this;
             NetworkDetector.OnNetworkStatusChanged += OnNetworkStatusChanged;
             StreamingModelController.RemoveStreamModel += RemoveStreamModel;
             StreamingModelController.AddObserver += AddObserver;
             m_HierarchyToolSceneListener = FindAnyObjectByType<HierarchyToolSceneListener>();
+            m_HierarchyToolUIController ??= gameObject.GetComponent<HierarchyToolUIController>();
             QueryStarted += OnQueryStarted;
             InstanceSelectedFromPanel += OnInstanceSelectedFromPanel;
             
@@ -87,10 +90,11 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
 
         private void OnDestroy()
         {
+            m_Instance = null;
             NetworkDetector.OnNetworkStatusChanged -= OnNetworkStatusChanged;
             StreamingModelController.AddObserver -= AddObserver;
-            HighlightModifier?.Reset();
-            VisibilityModifier?.Reset();
+            m_HierarchyToolSceneListener.ResetHierarchyModifiers(true, false);
+
             StreamingModelController.RemoveStreamModel -= RemoveStreamModel;
             DestroyTransformHandle();
             QueryStarted -= OnQueryStarted;
@@ -105,19 +109,19 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
             InteractionController.UnsubscribeTap(this);
 #endif
         }
-        
-        private void OnNetworkStatusChanged(bool obj)
+
+        public static void ResetVisibility(bool resetHighlighted)
         {
-            if(!obj && !NetworkDetector.RequestedOfflineMode) return;
-            VisibilityModifier?.Reset();
-            HighlightModifier?.Reset();
-            foreach (Transform child in TransformController.Instance.transform)
-            {
-                child.gameObject.SetActive(true);
-            }
+            VisibilityReset?.Invoke(resetHighlighted);
+            m_Instance?.m_HierarchyToolUIController?.RefreshTreeViewItems();
+        }
+
+        private void OnNetworkStatusChanged(bool connected)
+        {
+            if (!connected && !NetworkDetector.RequestedOfflineMode) return;
             _ = UpdateTreeViewItems();
         }
-        
+
         private void FindSelectedInstance()
         {
             var sceneListeners = FindAnyObjectByType<MetadataSceneListener>();
@@ -135,48 +139,23 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
         // If the instance has children, it queries the mesh data asynchronously and updates the highlight modifier with the IDs of the child instances.
         private void OnInstanceSelectedFromPanel(InstanceData data)
         {
+            m_HierarchyToolSceneListener.ResetHighlight();
+            
             if (data == null || data.Instance == null)
             {
                 return;
             }
-            HighlightModifier.Reset();
             
-            m_QueryTokenSource?.Cancel();
-            m_QueryTokenSource?.Dispose();
-            m_QueryTokenSource = null;
+            m_HierarchyToolSceneListener.ResetToken();
+            
+            m_HierarchyToolSceneListener.HighlightInstance(data.StreamModel.Id, data.Instance.Id);
             
             if (!data.Instance.HasChildren)
             {
-                HighlightModifier.Update(data.StreamModel.Id, data.Instance.Id);
                 MetadataToolController.InstanceSelected?.Invoke(data.StreamModel.Id, data.Instance.Id);
                 return;
             }
             DestroyTransformHandle();
-            _ = QueryMeshData();
-            return;
-
-            async Task QueryMeshData()
-            {
-                var repository = data.Repository;
-                var model = data.StreamModel;
-                var instanceId = data.Instance.Id;
-                
-                var query = repository
-                    .Query()
-                    .Select(MetadataPathCollection.None, new OptionalData(OptionalData.Fields.Id | OptionalData.Fields.HasChildren | OptionalData.Fields.Name | OptionalData.Fields.AncestorIds))
-                    .WhereHasAncestor(instanceId, int.MaxValue)
-                    .WithCancellation(CancellationToken.None);
-                
-                HashSet<InstanceId> childrenIds = new();
-                
-                await foreach (var each in query)
-                {
-                    if(each.HasChildren) continue;
-                    childrenIds.Add(each.Id);
-                }
-                
-                HighlightModifier.UpdateList(model.Id, childrenIds, true);
-            }
         }
 
         private void OnQueryStarted(int id, InstanceData data)
@@ -198,6 +177,11 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
         public async Task UpdateTreeViewItems()
         {
             List<List<InstanceData>> eachRepository = new();
+
+            while (!m_HierarchyToolUIController.Initialized)
+            {
+                await Task.Yield();
+            }
             
             foreach (var key in m_StreamModelRepositoriesMapping.Keys)
             {
@@ -233,7 +217,7 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
         #if !VR_MODE
         private void OnSelectActionInvoked(Vector3 position)
         {
-            HighlightModifier.Reset();
+            m_HierarchyToolSceneListener.ResetHighlight();
             if (m_StreamingModelController.ActiveCamera == null)
             {
                 return;
@@ -246,55 +230,71 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
         #if VR_MODE
         private void OnSingleActivateInvoked(Ray ray, int controllerInstanceID)
         {
-            HighlightModifier.Reset();
             if (m_StreamingModelController == null) return;
-            RaycastStreamingModel(ray);
+            RaycastStreamingModel(ray, true);
         }
         #endif
         
         // This function performs a raycast on the streaming model to detect instances.
         // It uses asynchronous tasks to handle the raycast and query data from the metadata repository.
         // If an instance is detected, it queries additional data and updates the highlight modifier.
-        private void RaycastStreamingModel(Ray ray)
+        private void RaycastStreamingModel(Ray ray, bool checkUIWorldSpace = false)
         {
             if(m_StreamingModelController == null) return;
-            if(IsPointerOverUI()) return;
-            _ = Raycast();
+           _ = Raycast();
             return;
 
             async Task Raycast()
             {
                 MetadataToolController.InstanceSelected?.Invoke(default, InstanceId.None);
-                
-                m_QueryTokenSource?.Cancel();
-                m_QueryTokenSource?.Dispose();
-                m_QueryTokenSource = null;
-                
-                var raycastResult = await m_StreamingModelController.Stage.RaycastAsync((DoubleRay) ray, m_StreamingModelController.ActiveCamera.farClipPlane, RaycastOptions.ExcludeHiddenInstances);
+                var raycastResult = await m_StreamingModelController.Stage.RaycastAsync((DoubleRay) ray, m_StreamingModelController.ActiveCamera.farClipPlane, RaycastOptions.ExcludeHiddenInstances | RaycastOptions.ExcludeNormalFromResult);
+                if (checkUIWorldSpace)
+                {
+                    if (Physics.Raycast(ray, out var hit, m_StreamingModelController.ActiveCamera.farClipPlane, LayerMask.GetMask("UI")))
+                    {
+                        if (raycastResult.InstanceId != InstanceId.None)
+                        {
+                            var stageRaycastPoint = raycastResult.Point.ToVector3();
+                            var uiRaycastPoint = hit.point;
+                        
+                            // Calculate distances along the ray using dot product
+                            float uiDistance = Vector3.Dot(uiRaycastPoint - ray.origin, ray.direction);
+                            float stageDistance = Vector3.Dot(stageRaycastPoint - ray.origin, ray.direction);
+
+                            bool isUIInFront = uiDistance < stageDistance;
+                            if (isUIInFront)
+                            {
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            return;
+                        }
+                    }
+                }
                 if (raycastResult.InstanceId == InstanceId.None)
                 {
+                    m_HierarchyToolSceneListener.ResetHighlight();
                     if (Physics.Raycast(ray, m_StreamingModelController.ActiveCamera.farClipPlane,
                             m_RuntimeHandleLayerMask)) return;
-                    m_HierarchyToolUIController ??= gameObject.GetComponent<HierarchyToolUIController>();
                     m_HierarchyToolUIController?.ClearTransformInspector();
+                    DestroyTransformHandle();
                     return;
                 }
-                HighlightModifier.Reset();
+
+                m_HierarchyToolSceneListener.ResetHighlight();
                 if (NetworkDetector.RequestedOfflineMode)
                 {
-                    HighlightModifier.Update(raycastResult.ModelId, raycastResult.InstanceId);
+                    m_HierarchyToolSceneListener.HighlightInstance(raycastResult.ModelId, raycastResult.InstanceId);
                     QueryAbort?.Invoke();
                     return;
                 }
                 QueryStarted.Invoke(-2, null);
                 DestroyTransformHandle();
+                m_HierarchyToolSceneListener.ResetToken();
                 await QueryData(raycastResult.ModelId, raycastResult.InstanceId);
             }
-        }
-        
-        private static bool IsPointerOverUI()
-        {
-            return EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(-1);
         }
         
         private async Task QueryData(ModelStreamId modelId, InstanceId id)
@@ -308,59 +308,71 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
 
             if (repository == null)
             {
-                HighlightModifier.Update(modelId, id);
+                m_HierarchyToolSceneListener.HighlightInstance(modelId, id);
                 QueryAbort?.Invoke();
                 return;
             }
             
-            m_QueryTokenSource?.Cancel();
-            m_QueryTokenSource?.Dispose();
-            m_QueryTokenSource = null;
+            m_HierarchyToolSceneListener.QueryTokenSource?.Cancel();
+            m_HierarchyToolSceneListener.QueryTokenSource?.Dispose();
+            m_HierarchyToolSceneListener.QueryTokenSource = null;
             
-            m_QueryTokenSource = new CancellationTokenSource();
+            m_HierarchyToolSceneListener.QueryTokenSource = new CancellationTokenSource();
             
             var firstQuery = await repository
                 .Query()
                 .Select(MetadataPathCollection.None, new OptionalData(OptionalData.Fields.AncestorIds | OptionalData.Fields.Name | OptionalData.Fields.Id | OptionalData.Fields.HasChildren))
                 .WhereInstanceEquals(id)
                 //.WhereHasAncestor(InstanceId.None, int.MaxValue)
-                .GetFirstOrDefaultAsync(m_QueryTokenSource.Token);
-            
+                .GetFirstOrDefaultAsync(m_HierarchyToolSceneListener.QueryTokenSource.Token);
             if(firstQuery == null) return;
-            HighlightModifier.Update(modelId, id);
+            m_HierarchyToolSceneListener.HighlightInstance(modelId, id);
             MetadataToolController.InstanceSelected?.Invoke(modelId, id);
             
             Dictionary<InstanceId, List<InstanceData>> children = new();
             
-            //Debug.Log($"Select {firstQuery.Id}, Name: {firstQuery.Name}");
-            
-            foreach (var ancestorId in firstQuery.AncestorIds)
-            {
-                if(m_QueryTokenSource.IsCancellationRequested) return;
-                //Debug.Log("Ancestor: " + ancestorId);
-                var moreQuery = repository
-                    .Query()
-                    .Select(MetadataPathCollection.None, new OptionalData(OptionalData.Fields.Id | OptionalData.Fields.Name | OptionalData.Fields.HasChildren | OptionalData.Fields.AncestorIds))
-                    .WhereHasAncestor(ancestorId, 0)
-                    .WithCancellation(m_QueryTokenSource.Token);
+            var streamingModel = m_StreamModelRepositoriesMapping.Keys.First(x => x.ModelStream.Id == modelId);
+            var token = m_HierarchyToolSceneListener.QueryTokenSource.Token;
 
-                var streamingModel = m_StreamModelRepositoriesMapping.Keys.First(x => x.ModelStream.Id == modelId);
-                
-                await foreach (var each in moreQuery)
+            var ancestorIds = firstQuery.AncestorIds.ToList();
+            var tasks = ancestorIds.Select(async ancestorId =>
+            {
+                if (token.IsCancellationRequested) return (ancestorId, new List<InstanceData>());
+                try
                 {
-                    //Debug.Log($"Child: {each.Id}, Name: {each.Name}, has children {each.HasChildren} child of {ancestorId}");
-                    var newInstanceData = new InstanceData(each, streamingModel, repository);
-                    if (children.ContainsKey(ancestorId))
+                    var query = repository
+                        .Query()
+                        .Select(MetadataPathCollection.All)
+                        .WhereHasAncestor(ancestorId, 0)
+                        .WithCancellation(token);
+
+                    var list = new List<InstanceData>();
+                    await foreach (var each in query)
                     {
-                        children[ancestorId].Add(newInstanceData);
+                        list.Add(new InstanceData(each, streamingModel, repository));
                     }
-                    else
-                    {
-                        children.Add(ancestorId, new List<InstanceData> { newInstanceData });
-                    }
+                    return (ancestorId, list);
+                }
+                catch (OperationCanceledException)
+                {
+                    return (ancestorId, new List<InstanceData>());
+                }
+            }).ToList();
+
+            var results = await Task.WhenAll(tasks);
+            foreach (var result in results)
+            {
+                var ancestorId = result.Item1;
+                var list = result.Item2;
+                if (children.ContainsKey(ancestorId))
+                {
+                    children[ancestorId].AddRange(list);
+                }
+                else
+                {
+                    children.Add(ancestorId, list);
                 }
             }
-           
             InstanceSelectedOnModel?.Invoke(modelId, firstQuery, children);
         }
         
@@ -446,12 +458,12 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
 #endif
         }
 
+#if VR_MODE
         private void OnVRControllerPress(Ray ray, bool press, int rayID)
         {
             m_TransformGizmo?.SelectAction?.Invoke(press, ray, rayID);
         }
-
-#if VR_MODE
+        
         private void OnVRControllerMoves(Ray ray, int rayID)
         {
             m_TransformGizmo?.InputMoveAction?.Invoke(ray, rayID);
@@ -492,7 +504,15 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
         {
             ToolOpened?.Invoke();
             #if VR_MODE
-            VRInteractionController.SubscribeSingleActivate(this, OnSingleActivateInvoked);
+            StartCoroutine(WaitForSetup());
+            return;
+
+            IEnumerator WaitForSetup()
+            {
+                yield return new WaitForSeconds(1);
+                VRInteractionController.SubscribeSingleActivate(this, OnSingleActivateInvoked);
+            }
+            
             #else
             InteractionController.SubscribeTap(this, OnSelectActionInvoked);
             #endif

@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Deep Linking_it-IT
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: it-IT
+  m_SharedData: {fileID: 11400000, guid: df7e84428955d474eae3626a98b575a6, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 47728520850300928
+    m_Localized: "Il link di invito \xE8 stato copiato negli appunti"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 86225446284337152
+    m_Localized: Errore nella creazione del link di invito
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019528912897
+    m_Localized: Invitare
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2905052585984
+    m_Localized: Crea un link di invito alla sessione
+    m_Metadata:
+      m_Items: []
+  - m_Id: 298597604171776
+    m_Localized: Attivazione del link di invito
+    m_Metadata:
+      m_Items: []
+  - m_Id: 299763431940096
+    m_Localized: "Gli inviti per il multiplayer non sono supportati in modalit\xE0
+      offline. Torna alla modalit\xE0 online se desideri avviare una sessione multigiocatore."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1037017326592000
+    m_Localized: Errore di accesso alla risorsa tramite link di invito. Verifica
+      i permessi.
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

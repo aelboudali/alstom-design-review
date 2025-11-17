@@ -20,69 +20,41 @@ MonoBehaviour:
     - rid: 7555826617756942445
   m_TableData:
   - m_Id: 2543798181888
-    m_Localized: 'Eliminar recurso del disco local '
+    m_Localized: Eliminar activo de la unidad local
     m_Metadata:
       m_Items: []
   - m_Id: 2720789422080
-    m_Localized: "\xBFEst\xE1 seguro? Esta acci\xF3n es irreversible"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 2966592413696
-    m_Localized: Eliminar
+    m_Localized: "\xBFEst\xE1s seguro? Ten en cuenta que esta acci\xF3n es irreversible."
     m_Metadata:
       m_Items: []
   - m_Id: 3004496338944
-    m_Localized: "\u0420\u0435\u0441\u0443\u0440\u0441 \u0443\u0434\u0430\u043B\u0435\u043D"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 3080430018560
-    m_Localized: Cancelar
+    m_Localized: Activo eliminado.
     m_Metadata:
       m_Items: []
   - m_Id: 3629921591296
-    m_Localized: Descargar recurso al disco local
+    m_Localized: Descargar activo a la unidad local
     m_Metadata:
       m_Items: []
   - m_Id: 3705742024704
-    m_Localized: "\xBFEst\xE1 seguro? La descarga puede tardar debido al tama\xF1o
-      del archivo."
-    m_Metadata:
-      m_Items: []
-  - m_Id: 3862307004416
-    m_Localized: Descargar
+    m_Localized: "\xBFEst\xE1s seguro? Ten en cuenta que la descarga puede tardar
+      un poco debido al tama\xF1o del archivo."
     m_Metadata:
       m_Items: []
   - m_Id: 3894355681280
-    m_Localized: Descargando recurso...
+    m_Localized: Descargando activo...
     m_Metadata:
       m_Items: []
   - m_Id: 4142910136320
-    m_Localized: "Termin\xF3 de descargar el recurso {name}..."
+    m_Localized: "Se termin\xF3 de descargar el activo {name}..."
     m_Metadata:
       m_Items:
       - rid: 7555826617756942445
-  - m_Id: 4789797642240
-    m_Localized: "Cargar dise\xF1o"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5427377987584
-    m_Localized: Stream
-    m_Metadata:
-      m_Items: []
   - m_Id: 5709449125888
-    m_Localized: Elige tus datos
+    m_Localized: "Modo de transmisi\xF3n"
     m_Metadata:
       m_Items: []
   - m_Id: 5795449135104
-    m_Localized: "\xBFQu\xE9 fuente de datos le gustar\xEDa utilizar?"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5858598576128
-    m_Localized: Nube
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5890873745408
-    m_Localized: Local
+    m_Localized: "Por favor, seleccione su m\xE9todo de transmisi\xF3n preferido."
     m_Metadata:
       m_Items: []
   - m_Id: 268399107104768
@@ -95,8 +67,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 268399140659201
-    m_Localized: "Hay una nueva versi\xF3n del recurso disponible. \xBFDesea cambiar
-      a la nueva versi\xF3n?"
+    m_Localized: "Hay una nueva versi\xF3n del recurso disponible. \xBFQuieres actualizarla?"
     m_Metadata:
       m_Items: []
   - m_Id: 268399140659202
@@ -104,23 +75,19 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 268399140659203
-    m_Localized: Rechazar
+    m_Localized: Despedir
     m_Metadata:
       m_Items: []
   - m_Id: 268399140659204
-    m_Localized: Salir del streaming
+    m_Localized: "Salida de transmisi\xF3n"
     m_Metadata:
       m_Items: []
   - m_Id: 268399140659205
-    m_Localized: "\xBFEst\xE1 seguro de salir de la escena de streaming?"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 268399140659206
-    m_Localized: Salida
+    m_Localized: "\xBFEst\xE1s seguro de salir de la escena del streaming?"
     m_Metadata:
       m_Items: []
   - m_Id: 271402836942848
-    m_Localized: "Nueva versi\xF3n disponible"
+    m_Localized: "\xA1Nueva versi\xF3n disponible!"
     m_Metadata:
       m_Items: []
   - m_Id: 15579884532260864
@@ -132,48 +99,28 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 21644036354859008
-    m_Localized: "\xBFQuiere conservar los activos referenciados? Esta acci\xF3n
-      es irreversible."
+    m_Localized: "\xBFDesea conservar los activos referenciados? Esta acci\xF3n es
+      irreversible."
     m_Metadata:
       m_Items: []
   - m_Id: 21710844147523584
-    m_Localized: "Este es un activo al que se hace referencia desde un dise\xF1o.
-      \xBFEst\xE1 seguro? Tenga en cuenta que esta acci\xF3n es irreversible."
+    m_Localized: "Este es un recurso referenciado de un dise\xF1o. \xBFEst\xE1 seguro?
+      Tenga en cuenta que esta acci\xF3n es irreversible."
     m_Metadata:
       m_Items: []
   - m_Id: 22092926879260672
     m_Localized: "Activo referenciado: {name} tiene una versi\xF3n local {localVersion}
-      almacenada en el dispositivo. Pero el dise\xF1o requiere la versi\xF3n {requiredVersion}.
-      \xBFQuieres seguir usando la versi\xF3n local?"
+      almacenada en el dispositivo. Sin embargo, el dise\xF1o requiere la versi\xF3n
+      {requiredVersion}. \xBFDesea seguir usando la versi\xF3n local?"
     m_Metadata:
       m_Items:
       - rid: 7555826617756942445
-  - m_Id: 40828184860549120
-    m_Localized: Enlace
-    m_Metadata:
-      m_Items: []
-  - m_Id: 40831164800294912
-    m_Localized: Descargar
-    m_Metadata:
-      m_Items: []
   - m_Id: 40835830153994240
     m_Localized: "Listo para transmisi\xF3n local"
     m_Metadata:
       m_Items: []
   - m_Id: 40835830153994241
-    m_Localized: "Actualizaci\xF3n disponible"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 40835830153994242
-    m_Localized: Actualizar
-    m_Metadata:
-      m_Items: []
-  - m_Id: 40847564071755776
-    m_Localized: "\xBFEmpezar a transmitir?"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 40847564071755777
-    m_Localized: Haz clic para iniciar el streaming 3D
+    m_Localized: "Actualizaci\xF3n disponible para transmisi\xF3n local"
     m_Metadata:
       m_Items: []
   - m_Id: 1428897652736
@@ -188,16 +135,12 @@ MonoBehaviour:
     m_Localized: "Recopilaci\xF3n"
     m_Metadata:
       m_Items: []
-  - m_Id: 3471058132994
-    m_Localized: Ahorrar
-    m_Metadata:
-      m_Items: []
   - m_Id: 3862327975936
     m_Localized: Nombre
     m_Metadata:
       m_Items: []
   - m_Id: 40851833860644864
-    m_Localized: No se puede cargar un recurso debido al permiso
+    m_Localized: No se puede cargar un activo debido al permiso
     m_Metadata:
       m_Items: []
   - m_Id: 40851833860644865
@@ -205,22 +148,14 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 40851833860644866
-    m_Localized: "Guardar tu dise\xF1o 3D en Asset Manager"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 40851833860644867
-    m_Localized: Seleccionar
+    m_Localized: "Guarde su dise\xF1o 3D en el Administrador de activos"
     m_Metadata:
       m_Items: []
   - m_Id: 40857613896769536
-    m_Localized: Agregar {asset}
+    m_Localized: "A\xF1adiendo {asset}"
     m_Metadata:
       m_Items:
       - rid: 7555826617756942445
-  - m_Id: 42308461222944768
-    m_Localized: Cargando
-    m_Metadata:
-      m_Items: []
   - m_Id: 44808540777340928
     m_Localized: No tienes permiso de escritura.
     m_Metadata:
@@ -231,6 +166,31 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 47728520850300928
     m_Localized: Enlace copiado al portapapeles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 113671218895249408
+    m_Localized: "<b>No hay recursos descargados para la transmisi\xF3n local.</b>\n\n<size=70%>Por
+      favor, con\xE9ctese a Internet y desc\xE1rguelos antes de continuar.</size>"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 118748446100283392
+    m_Localized: Herramienta
+    m_Metadata:
+      m_Items: []
+  - m_Id: 123180386542936064
+    m_Localized: "Seleccione aqu\xED sus organizaciones."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 123892356694925312
+    m_Localized: El activo no tiene un conjunto de datos transmitible.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 124618061661593600
+    m_Localized: Renderizado de postprocesamiento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 124621959373774848
+    m_Localized: "Representaci\xF3n"
     m_Metadata:
       m_Items: []
   references:

@@ -1,0 +1,36 @@
+.xr-round-button-style.XRSubToolButton {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    max-width: 40px;
+    max-height: 40px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.xr-round-button-style.XRSubToolButton > #appui-button__leadingcontainer {
+    width: 32.5px;
+    height: 32.5px;
+    min-width: 32.5px;
+    max-width: 32.5px;
+    min-height: 32.5px;
+    max-height: 32.5px;
+}
+
+.xr-round-button-style.XRSubToolButton .unity-image {
+    width: 32.5px;
+    height: 32.5px;
+    min-width: 32.5px;
+    max-width: 32.5px;
+    min-height: 32.5px;
+    max-height: 32.5px;
+}
+
+.xr-round-button-style.XRSubToolButton:hover {
+    background-color: gray;
+}
+
+.xr-round-button-style.XRSubToolButton.appui-button--size-m.appui-button--primary {
+    background-color: var(--appui-accent-100);
+}

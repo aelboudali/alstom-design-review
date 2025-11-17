@@ -20,19 +20,19 @@ MonoBehaviour:
     - rid: 1545659760810917922
   m_TableData:
   - m_Id: 5081708617728
-    m_Localized: "M\xF8tet er fullt"
+    m_Localized: Sesjonen er full
     m_Metadata:
       m_Items: []
   - m_Id: 5081977053184
-    m_Localized: "Kan ikke opprette eller bli med i \xF8kten, pr\xF8v igjen."
+    m_Localized: "Kan ikke opprette eller bli med i \xF8kten, pr\xF8v igjen"
     m_Metadata:
       m_Items: []
   - m_Id: 5081981247488
-    m_Localized: "Vil du bli med p\xE5 presentasjonen?"
+    m_Localized: "Bli med p\xE5 presentasjonen?"
     m_Metadata:
       m_Items: []
   - m_Id: 5081981247489
-    m_Localized: "{name} presenterer. Vil du bli med p\xE5 presentasjonen?"
+    m_Localized: "{name} presenterer. Vil du v\xE6re med p\xE5 presentasjonen?"
     m_Metadata:
       m_Items:
       - rid: 1545659760810917922
@@ -41,7 +41,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441793
-    m_Localized: Avvis
+    m_Localized: Avskjedige
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441794
@@ -49,7 +49,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441795
-    m_Localized: Avslutt presentasjon
+    m_Localized: Avslutt presentasjonen
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441796
@@ -57,11 +57,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441797
-    m_Localized: Avslutt
+    m_Localized: Slutt
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441798
-    m_Localized: Forlate presentasjon
+    m_Localized: Forlat presentasjonen
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441799
@@ -69,15 +69,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441800
-    m_Localized: Forlat
+    m_Localized: Forlate
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441801
-    m_Localized: Bli med i presentasjonen
+    m_Localized: "Bli med p\xE5 presentasjonen"
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441802
-    m_Localized: "Vil du bli med p\xE5 gjeldende presentasjon?"
+    m_Localized: "Vil du v\xE6re med p\xE5 den n\xE5v\xE6rende presentasjonen?"
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441803
@@ -92,16 +92,12 @@ MonoBehaviour:
     m_Localized: Start
     m_Metadata:
       m_Items: []
-  - m_Id: 5081985441806
-    m_Localized: Avbryt
-    m_Metadata:
-      m_Items: []
   - m_Id: 42058065896267776
     m_Localized: Ny layout-innsats
     m_Metadata:
       m_Items: []
   - m_Id: 42058065904656384
-    m_Localized: "\xD8kten er lagret som nytt oppsett. Bli med?"
+    m_Localized: "\xD8kten er lagret som ny layout. Bli med p\xE5 ny \xF8kt med andre?"
     m_Metadata:
       m_Items: []
   references:

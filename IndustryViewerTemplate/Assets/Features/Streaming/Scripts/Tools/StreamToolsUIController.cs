@@ -3,30 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.AppUI.UI;
 using Unity.Industry.Viewer.Assets;
+using Unity.Industry.Viewer.Shared;
 using UnityEngine.UIElements;
 
 namespace Unity.Industry.Viewer.Streaming
 {
-    public class StreamToolData
-    {
-        public StreamingToolAsset toolAsset { get; private set; }
-
-        public StreamToolData(StreamingToolAsset toolAsset)
-        {
-            this.toolAsset = toolAsset;
-        }
-
-        public void OnButtonPress()
-        {
-            StreamToolsController.ToolSelected?.Invoke(toolAsset);
-        }
-    }
-    
     [DefaultExecutionOrder(-100)]
     public class StreamToolsUIController : StreamToolsUIControllerBase
     {
-        protected Dictionary<StreamingToolAsset, ActionButton> m_toolButtons;
-
         private const string k_MainToolIconClassName = "MainToolIcon";
         
         private const string k_ToolScrollListName = "ToolScrollList";
@@ -43,7 +27,7 @@ namespace Unity.Industry.Viewer.Streaming
             StreamToolsController.ToolActiveChanged += OnToolActiveChanged;
             ToolPanelUIController.CloseToolPanel += CloseToolPanel;
             UpdateToolPanel += OnUpdateToolPanel;
-
+            
             InitializeUI();
         }
 
@@ -60,7 +44,7 @@ namespace Unity.Industry.Viewer.Streaming
 
         private void CloseToolPanel()
         {
-            StreamToolsController.DisableAllTools?.Invoke();
+            StreamToolsController.DisableAllTools?.Invoke(false);
         }
 
         private void OnUpdateToolPanel(StreamingToolAsset toolAsset, GameObject controller, bool active)
@@ -80,13 +64,12 @@ namespace Unity.Industry.Viewer.Streaming
                     {
                         toolPanel = toolUI.ToolUIAsset.Instantiate().Children().First();
                         toolPanel.userData = controller;
-                        toolPanel.style.flexGrow = 1;
                     }
                     
-                    toolUI.InitializeUI(toolPanel, controller);
+                    toolUI.InitializeUI(m_UIDocument, toolPanel, controller);
                     if (toolPanel != null)
                     {
-                        ToolPanelUIController.OpenToolPanel?.Invoke(toolAsset.ToolName, toolPanel);
+                        ToolPanelUIController.OpenToolPanel?.Invoke(toolAsset.ToolName, toolPanel, toolAsset.resizablePanel);
                     }
                 }
             }
@@ -106,11 +89,12 @@ namespace Unity.Industry.Viewer.Streaming
             m_SubToolScrollList.style.display = DisplayStyle.None;
         }
 
-        private void OnToolActiveChanged(StreamingToolAsset toolAsset, bool active)
+        protected void OnToolActiveChanged(StreamingToolAsset toolAsset, bool active)
         {
-            if(!m_toolButtons.TryGetValue(toolAsset, out var button)) return;
-            button.accent = active;
-            button.selected = active;
+            if(m_toolButtons == null || !m_toolButtons.TryGetValue(toolAsset, out var button)) return;
+            ActionButton actionButton = button as ActionButton;
+            actionButton.accent = active;
+            actionButton.selected = active;
         }
 
         private void OnToolInitializing(StreamingToolAsset[] tools)
@@ -119,7 +103,7 @@ namespace Unity.Industry.Viewer.Streaming
         }
 
         protected void DistributeToolsIcons(StreamingToolAsset[] tools, string styleClassName, ScrollView scrollView,
-            ref Dictionary<StreamingToolAsset, ActionButton> toolButtonDict)
+            ref Dictionary<StreamingToolAsset, IPressable> toolButtonDict)
         {
             if (tools == null || tools.Length == 0)
             {
@@ -143,11 +127,10 @@ namespace Unity.Industry.Viewer.Streaming
                 icon.image = toolAsset.toolIcon;
                 var newButtonData = new StreamToolData(toolAsset);
                 newButton.userData = newButtonData;
-                newButton.ClearBinding("tooltip");
-                newButton.SetBinding("tooltip", toolAsset.ToolName);
+                newButton.tooltip = toolAsset.ToolName.GetTitleLocalizedStringForAppUI();
 
                 newButton.clicked += newButtonData.OnButtonPress;
-                toolButtonDict ??= new Dictionary<StreamingToolAsset, ActionButton>();
+                toolButtonDict ??= new Dictionary<StreamingToolAsset, IPressable>();
                 toolButtonDict.Add(toolAsset, newButton);
                 scrollView.Add(newButton);
             }

@@ -20,19 +20,11 @@ MonoBehaviour:
     - rid: 7555826617756942437
   m_TableData:
   - m_Id: 5709449125888
-    m_Localized: Kies uw gegevens
+    m_Localized: Streammodus
     m_Metadata:
       m_Items: []
   - m_Id: 5795449135104
-    m_Localized: Welke gegevensbron wilt u gebruiken?
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5858598576128
-    m_Localized: Wolk
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5890873745408
-    m_Localized: Lokaal
+    m_Localized: Selecteer de gewenste streamingmethode.
     m_Metadata:
       m_Items: []
   - m_Id: 268399107104768
@@ -58,23 +50,19 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 268399140659204
-    m_Localized: Sluit Streaming af
+    m_Localized: Streaming verlaten
     m_Metadata:
       m_Items: []
   - m_Id: 268399140659205
-    m_Localized: "Weet je zeker dat je de streamingsc\xE8ne afsluit?"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 268399140659206
-    m_Localized: Uitgang
+    m_Localized: "Weet u zeker dat u de streamingsc\xE8ne wilt verlaten?"
     m_Metadata:
       m_Items: []
   - m_Id: 271402836942848
-    m_Localized: Nieuwe ver. Beschikbaar!
+    m_Localized: Nieuwe versie beschikbaar!
     m_Metadata:
       m_Items: []
   - m_Id: 2543798181888
-    m_Localized: Verwijder activa van het lokale station
+    m_Localized: Asset van lokale schijf verwijderen
     m_Metadata:
       m_Items: []
   - m_Id: 2720789422080
@@ -82,20 +70,12 @@ MonoBehaviour:
       is.
     m_Metadata:
       m_Items: []
-  - m_Id: 2966592413696
-    m_Localized: Verwijderen
-    m_Metadata:
-      m_Items: []
   - m_Id: 3004496338944
-    m_Localized: Item verwijderd.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 3080430018560
-    m_Localized: Annuleren
+    m_Localized: Activa verwijderd.
     m_Metadata:
       m_Items: []
   - m_Id: 3629921591296
-    m_Localized: Download asset naar lokale schijf
+    m_Localized: Download Asset naar lokale schijf
     m_Metadata:
       m_Items: []
   - m_Id: 3705742024704
@@ -103,27 +83,15 @@ MonoBehaviour:
       tijd kan duren vanwege de bestandsgrootte.
     m_Metadata:
       m_Items: []
-  - m_Id: 3862307004416
-    m_Localized: Downloaden
-    m_Metadata:
-      m_Items: []
   - m_Id: 3894355681280
-    m_Localized: Middel downloaden...
+    m_Localized: Asset downloaden...
     m_Metadata:
       m_Items: []
   - m_Id: 4142910136320
-    m_Localized: Downloaden van {name} item voltooid...
+    m_Localized: Downloaden van {name} asset voltooid...
     m_Metadata:
       m_Items:
       - rid: 7555826617756942437
-  - m_Id: 4789797642240
-    m_Localized: Lay-out laden
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5427377987584
-    m_Localized: Streamen
-    m_Metadata:
-      m_Items: []
   - m_Id: 15579884532260864
     m_Localized: Draadmodel
     m_Metadata:
@@ -133,48 +101,27 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 21644036354859008
-    m_Localized: Wilt u de assets waarnaar wordt verwezen behouden? Deze actie is
-      onomkeerbaar.
+    m_Localized: Wilt u de gerefereerde assets behouden? Deze actie is onomkeerbaar.
     m_Metadata:
       m_Items: []
   - m_Id: 21710844147523584
-    m_Localized: Dit is een item waarnaar wordt verwezen vanuit een lay-out. Weet
-      je het zeker? Houd er rekening mee dat deze actie onomkeerbaar is.
+    m_Localized: 'Dit is een gerefereerd item uit een lay-out. Weet u het zeker?
+      Let op: deze actie is onomkeerbaar.'
     m_Metadata:
       m_Items: []
   - m_Id: 22092926879260672
-    m_Localized: Asset waarnaar wordt verwezen - {name} heeft een lokale versie {localVersion}
-      opgeslagen op het apparaat. Maar de lay-out vereist versie {requiredVersion}.
-      Wilt u de lokale versie blijven gebruiken?
+    m_Localized: Gerefereerd item - {name} heeft een lokale versie {localVersion}
+      op het apparaat. De lay-out vereist echter versie {requiredVersion}. Wilt u
+      de lokale versie blijven gebruiken?
     m_Metadata:
       m_Items:
       - rid: 7555826617756942437
-  - m_Id: 40828184860549120
-    m_Localized: Link
-    m_Metadata:
-      m_Items: []
-  - m_Id: 40831164800294912
-    m_Localized: Ontladen
-    m_Metadata:
-      m_Items: []
   - m_Id: 40835830153994240
     m_Localized: Klaar voor lokale streaming
     m_Metadata:
       m_Items: []
   - m_Id: 40835830153994241
-    m_Localized: Update beschikbaar
-    m_Metadata:
-      m_Items: []
-  - m_Id: 40835830153994242
-    m_Localized: Update
-    m_Metadata:
-      m_Items: []
-  - m_Id: 40847564071755776
-    m_Localized: Beginnen met streamen?
-    m_Metadata:
-      m_Items: []
-  - m_Id: 40847564071755777
-    m_Localized: Klik om 3D-streaming te starten.
+    m_Localized: Update beschikbaar voor lokale streaming
     m_Metadata:
       m_Items: []
   - m_Id: 1428897652736
@@ -189,16 +136,12 @@ MonoBehaviour:
     m_Localized: Verzameling
     m_Metadata:
       m_Items: []
-  - m_Id: 3471058132994
-    m_Localized: Redden
-    m_Metadata:
-      m_Items: []
   - m_Id: 3862327975936
     m_Localized: Naam
     m_Metadata:
       m_Items: []
   - m_Id: 40851833860644864
-    m_Localized: Kan een item niet laden vanwege toestemming
+    m_Localized: Kan een asset niet laden vanwege toestemming
     m_Metadata:
       m_Items: []
   - m_Id: 40851833860644865
@@ -206,11 +149,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 40851833860644866
-    m_Localized: Sla je 3D-layout op in de Asset Manager
-    m_Metadata:
-      m_Items: []
-  - m_Id: 40851833860644867
-    m_Localized: Selecteer
+    m_Localized: Sla uw 3D-indeling op in de Asset Manager
     m_Metadata:
       m_Items: []
   - m_Id: 40857613896769536
@@ -218,12 +157,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7555826617756942437
-  - m_Id: 42308461222944768
-    m_Localized: Laden
-    m_Metadata:
-      m_Items: []
   - m_Id: 44808540777340928
-    m_Localized: U heeft geen schrijfrechten.
+    m_Localized: U hebt geen schrijfrechten.
     m_Metadata:
       m_Items: []
   - m_Id: 45884123531698176
@@ -231,7 +166,35 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 47728520850300928
-    m_Localized: Gekopieerde link naar klembord
+    m_Localized: Link naar klembord gekopieerd
+    m_Metadata:
+      m_Items: []
+  - m_Id: 113671218895249408
+    m_Localized: '<b>Er zijn geen gedownloade bestanden voor lokale streaming</b>
+
+
+      <size=70%>Ga
+      online en download ze voordat u verdergaat</size>'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 118748446100283392
+    m_Localized: Hulpmiddel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 123180386542936064
+    m_Localized: Selecteer hier uw organisaties
+    m_Metadata:
+      m_Items: []
+  - m_Id: 123892356694925312
+    m_Localized: Het item heeft geen streambare dataset.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 124618061661593600
+    m_Localized: Nabewerking Rendering
+    m_Metadata:
+      m_Items: []
+  - m_Id: 124621959373774848
+    m_Localized: Renderen
     m_Metadata:
       m_Items: []
   references:

@@ -1,0 +1,29 @@
+.EnvironmentSelected{
+    background-color: var(--appui-alias-actions-accent-background-color-default);
+}
+
+.EnvironmentSelected #EnvironmentNameText{
+    color: white;
+}
+
+.EnvironmentUnselected{
+    background-color: #303030;
+}
+
+.EnvironmentUnselected #EnvironmentNameText{
+    color: white;
+}
+
+#EnvironmentsListView .unity-collection-view__item--selected {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.EnvironmentSelected {
+    padding-top: 3px;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+.EnvironmentEntry {
+    max-width: 378px;
+}

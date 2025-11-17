@@ -16,23 +16,14 @@ MonoBehaviour:
     m_Code: nl-NL
   m_SharedData: {fileID: 11400000, guid: e57257823a7964becb6eb06d6181f15a, type: 2}
   m_Metadata:
-    m_Items:
-    - rid: 7555826606608744549
+    m_Items: []
   m_TableData:
-  - m_Id: 20735582208
-    m_Localized: Zoekopdracht...
-    m_Metadata:
-      m_Items: []
   - m_Id: 3047743807488
     m_Localized: Nieuwe versie beschikbaar
     m_Metadata:
       m_Items: []
   - m_Id: 4032537026560
     m_Localized: Naam
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4496284442624
-    m_Localized: Versie
     m_Metadata:
       m_Items: []
   - m_Id: 4881900363776
@@ -59,15 +50,6 @@ MonoBehaviour:
     m_Localized: Gemaakt door
     m_Metadata:
       m_Items: []
-  - m_Id: 7216613548032
-    m_Localized: Downloaden
-    m_Metadata:
-      m_Items: []
-  - m_Id: 11727306481664
-    m_Localized: Versie {num}
-    m_Metadata:
-      m_Items:
-      - rid: 7555826606608744549
   - m_Id: 35648491741184
     m_Localized: Er is een nieuwe versie van het item beschikbaar. Wilt u overstappen
       naar de nieuwe versie?
@@ -82,7 +64,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 41819579604992
-    m_Localized: Selecteer Organisatie
+    m_Localized: Selecteer organisatie
     m_Metadata:
       m_Items: []
   - m_Id: 41959505780736
@@ -114,11 +96,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 71435971190784
-    m_Localized: 'Sorteer op:'
+    m_Localized: 'Sorteren op:'
     m_Metadata:
       m_Items: []
   - m_Id: 83968589291520
-    m_Localized: 2D-activum
+    m_Localized: 2D-activa
     m_Metadata:
       m_Items: []
   - m_Id: 84109517905920
@@ -146,11 +128,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 84751309332480
-    m_Localized: Eenheidsredacteur
+    m_Localized: Unity-editor
     m_Metadata:
       m_Items: []
   - m_Id: 113148827787264
-    m_Localized: Item uploaden
+    m_Localized: Voeg Asset Toe
     m_Metadata:
       m_Items: []
   - m_Id: 113743160664064
@@ -177,20 +159,16 @@ MonoBehaviour:
     m_Localized: Selectie verwijderen
     m_Metadata:
       m_Items: []
-  - m_Id: 116427913682944
-    m_Localized: Activa uploaden
-    m_Metadata:
-      m_Items: []
-  - m_Id: 117455979536384
-    m_Localized: Item uploaden
+  - m_Id: 103408215129104384
+    m_Localized: "Cre\xEBren"
     m_Metadata:
       m_Items: []
   - m_Id: 126885479571456
-    m_Localized: Item gemaakt
+    m_Localized: "Activa gecre\xEBerd"
     m_Metadata:
       m_Items: []
   - m_Id: 129700784496640
-    m_Localized: Selecteer Bestanden
+    m_Localized: Selecteer bestanden
     m_Metadata:
       m_Items: []
   - m_Id: 25800459972239360
@@ -198,7 +176,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 25800460005793792
-    m_Localized: Totaal bestand(en)
+    m_Localized: Totaal aantal bestanden
     m_Metadata:
       m_Items: []
   - m_Id: 25801326007934976
@@ -206,15 +184,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 25802025936609280
-    m_Localized: Item-ID
+    m_Localized: Activa-ID
     m_Metadata:
       m_Items: []
   - m_Id: 26945938399420416
-    m_Localized: Info
+    m_Localized: Informatie
     m_Metadata:
       m_Items: []
   - m_Id: 26945938407809024
-    m_Localized: Opmerkingen
+    m_Localized: Reacties
     m_Metadata:
       m_Items: []
   - m_Id: 26945938407809025
@@ -222,23 +200,66 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 26945938407809026
-    m_Localized: Binnenkort beschikbaar...
+    m_Localized: Binnenkort verkrijgbaar...
     m_Metadata:
       m_Items: []
   - m_Id: 26945938407809027
-    m_Localized: Selecteer Alles
+    m_Localized: Selecteer alles
     m_Metadata:
       m_Items: []
   - m_Id: 26946288296648704
     m_Localized: Beoordeling
     m_Metadata:
       m_Items: []
+  - m_Id: 98637747977232384
+    m_Localized: Status
+    m_Metadata:
+      m_Items: []
+  - m_Id: 102582021617917952
+    m_Localized: '    Voorbereid op 3D-datastreaming'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 102589537559027712
+    m_Localized: Nieuw Object Toevoegen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 102911663331647488
+    m_Localized: Het maken van de asset is mislukt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 102916677815017472
+    m_Localized: "De bron verschijnt nadat deze volledig is ge\xFCpload en getransformeerd,
+      wat enige tijd kan duren."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103410122987970560
+    m_Localized: Uploaden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103437425314930688
+    m_Localized: Upload voltooid
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103438020864155648
+    m_Localized: Upload mislukt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103438847884435456
+    m_Localized: Transformeren
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103439357110689792
+    m_Localized: Transformatie voltooid
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103439907755696128
+    m_Localized: Transformatie mislukt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103803189238734848
+    m_Localized: Bestandstype wordt niet ondersteund
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
-    RefIds:
-    - rid: 7555826606608744549
-      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
-      data:
-        m_Entries: 
-        m_SharedEntries:
-        - id: 11727306481664
+    RefIds: []

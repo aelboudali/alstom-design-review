@@ -47,21 +47,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75914c53e9bae458fa857f9cff99f018, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  navigationName:
-    m_TableReference:
-      m_TableCollectionName: GUID:4ae8c4accfa144438a938b2e4b7e9449
-    m_TableEntryReference:
-      m_KeyId: 620487499776
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
   navigationCamera: {fileID: 0}
   navigationOptionUIComponent: {fileID: 3805530258908772848}
   cameraController: {fileID: 2891413954205171489}
-  references:
-    version: 2
-    RefIds: []
+  freeFlyCamera: {fileID: 7968087249051455355}
 --- !u!114 &3805530258908772848
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75,15 +64,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   navigationIcon: {fileID: 2800000, guid: eb520bc8daaecad408c9683aeaaf30ef, type: 3}
+  navigationName:
+    m_TableReference:
+      m_TableCollectionName: GUID:4ae8c4accfa144438a938b2e4b7e9449
+    m_TableEntryReference:
+      m_KeyId: 620487499776
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   navigationOptionUIAsset: {fileID: 9197481963319205126, guid: 26c61fdb4d61f46cfa774723c7c46d32,
     type: 3}
-  m_FlyCameraNavigationController: {fileID: 5566567309891808973}
-  m_CameraInputSystemController: {fileID: 2891413954205171489}
   m_UIDocument: {fileID: 0}
-  forceJoystickOnDebug: 0
+  leftStickEnabled: 1
   initialLeftStickMultiplier: 2
   invertLeftStickYAxis: 1
   invertLeftStickXAxis: 0
+  rightStickEnabled: 0
+  initialRightStickMultiplier: 1
+  invertRightStickYAxis: 0
+  invertRightStickXAxis: 0
+  m_FlyCameraNavigationController: {fileID: 5566567309891808973}
+  m_CameraInputSystemController: {fileID: 2891413954205171489}
+  references:
+    version: 2
+    RefIds: []
 --- !u!114 &7968087249051455355
 MonoBehaviour:
   m_ObjectHideFlags: 0

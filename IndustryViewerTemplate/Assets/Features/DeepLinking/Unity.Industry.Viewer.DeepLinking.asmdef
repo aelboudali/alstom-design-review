@@ -1,0 +1,29 @@
+{
+    "name": "Unity.Industry.Viewer.DeepLinking",
+    "rootNamespace": "",
+    "references": [
+        "GUID:2f101f87087d58f4ba92ca00188e763d",
+        "GUID:eec0964c48f6f4e40bc3ec2257ccf8c5",
+        "GUID:ae052f549db434c89af6d304e7f1a8ed",
+        "GUID:26fe9e7348f152c458454189f3bf7e25",
+        "GUID:18a3ee135d24342f7ae628142b5114cb",
+        "GUID:498d02e03062b2649b108f31a9668c56",
+        "GUID:f2f9fbb8654eff343bf4a94f2a688687",
+        "GUID:ded3a1fd6dfcb488e8056389a56a3f4f",
+        "GUID:72dbfbe357d5a40c69505e128456d3d1",
+        "GUID:3072efb1b5d06449eb35617ac762a62d",
+        "GUID:7652355c4d73b47e78a66a1e0890152f",
+        "GUID:3d3e68b9ff529d94cb07db044937b0f1",
+        "GUID:1874b38b645344c78ad35186a20ec06c",
+        "GUID:c5a5b73654d2d422383b51fb8dfbb105"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

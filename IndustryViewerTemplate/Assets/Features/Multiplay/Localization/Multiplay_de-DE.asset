@@ -20,29 +20,30 @@ MonoBehaviour:
     - rid: 7555826618794508408
   m_TableData:
   - m_Id: 5081708617728
-    m_Localized: Seesion ist voll
+    m_Localized: Die Sitzung ist voll
     m_Metadata:
       m_Items: []
   - m_Id: 5081977053184
-    m_Localized: "Session konnt nicht erstellt werden oder Sie k\xF6nnen nicht beitreten.
-      Bitte versuchen Sie es erneut."
+    m_Localized: Sitzung konnte nicht erstellt oder beigetreten werden. Bitte versuchen
+      Sie es erneut.
     m_Metadata:
       m_Items: []
   - m_Id: 5081981247488
-    m_Localized: "An der Pr\xE4sentation teilnehmen?"
+    m_Localized: "Pr\xE4sentation beitreten?"
     m_Metadata:
       m_Items: []
   - m_Id: 5081981247489
-    m_Localized: "{name} pr\xE4sentiert. M\xF6chten Sie an der Pr\xE4sentation teilnehmen?"
+    m_Localized: "{name} h\xE4lt eine Pr\xE4sentation. M\xF6chten Sie an der Pr\xE4sentation
+      teilnehmen?"
     m_Metadata:
       m_Items:
       - rid: 7555826618794508408
   - m_Id: 5081985441792
-    m_Localized: Teilnehmen
+    m_Localized: Verbinden
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441793
-    m_Localized: Abbrechen
+    m_Localized: "Zur\xFCckweisen"
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441794
@@ -74,11 +75,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441801
-    m_Localized: "An Pr\xE4sentation tieilnehmen"
+    m_Localized: "Pr\xE4sentation beitreten"
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441802
-    m_Localized: "An der aktuellen Pr\xE4sentation teilnehmen?"
+    m_Localized: "M\xF6chten Sie an der aktuellen Pr\xE4sentation teilnehmen?"
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441803
@@ -86,15 +87,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441804
-    m_Localized: "Pr\xE4sentation starten?"
+    m_Localized: "M\xF6chten Sie eine Pr\xE4sentation starten?"
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441805
     m_Localized: Start
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5081985441806
-    m_Localized: Cancel
     m_Metadata:
       m_Items: []
   - m_Id: 42058065896267776
@@ -102,7 +99,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 42058065904656384
-    m_Localized: "Sitzung als neues Layout gespeichert. M\xF6chtest du beitreten?"
+    m_Localized: Sitzung als neues Layout gespeichert. Neuer Sitzung mit anderen
+      beitreten?
     m_Metadata:
       m_Items: []
   references:

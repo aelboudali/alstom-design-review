@@ -48,7 +48,7 @@
 }
 
 .mic{
-    margin-left: 20px;
+    margin-left: 16px;
     width: 40px;
     height: 40px;
     border-left-color: rgba(0, 0, 0, 0);

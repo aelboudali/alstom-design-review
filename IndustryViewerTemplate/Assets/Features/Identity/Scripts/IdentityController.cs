@@ -14,17 +14,24 @@ namespace Unity.Industry.Viewer.Identity
     [DefaultExecutionOrder(-200)]
     public class IdentityController : MonoBehaviour
     {
+        public class LogoutMessage
+        {
+            public string Value;
+        }
+
         public static bool GuestMode;
         public static IUserInfo UserInfo => m_UserInfo;
         private static IUserInfo m_UserInfo;
         public static event Action<AuthenticationState> AuthenticationStateChangedEvent;
-        public static event Action<IUserInfo> UserInfoUpdatedEvent; 
+        public static event Action<IUserInfo> UserInfoUpdatedEvent;
         public static Action TriggerLogin;
         public static Action TriggerGuestLogin;
         public static Action<bool> TriggerLogout;
         public static Action TriggerCancelLogin;
-        
-        ICompositeAuthenticator m_CompositeAuthenticator;
+        public static Action<LogoutMessage> GetLogoutMessage;
+
+        private ICompositeAuthenticator m_CompositeAuthenticator => PlatformServices.CompositeAuthenticator;
+        private IAuthenticator m_ServiceAccountAuthenticator => PlatformServices.ServiceAccountServiceAuthenticator;
         IUserInfoProvider m_UserInfoProvider => m_CompositeAuthenticator;
         
         bool m_IsInitialized;
@@ -50,13 +57,11 @@ namespace Unity.Industry.Viewer.Identity
             if(platformService == null) return;
             
             //Subscribe to events
-            m_CompositeAuthenticator = PlatformServices.CompositeAuthenticator;
             m_CompositeAuthenticator.AuthenticationStateChanged += OnAuthenticationStateChanged;
             TriggerLogin += OnTriggerLogin;
             TriggerLogout += OnTriggerLogout;
             TriggerCancelLogin += OnTriggerCancelLogin;
             TriggerGuestLogin += OnTriggerGuestLogin;
-            
             AuthenticationStateChangedEvent?.Invoke(m_CompositeAuthenticator.AuthenticationState);
         }
 
@@ -64,7 +69,14 @@ namespace Unity.Industry.Viewer.Identity
         {
             NetworkDetector.OnNetworkStatusChanged -= OnNetworkStatusChanged;
             if(NetworkDetector.IsOffline) return;
-            m_CompositeAuthenticator.AuthenticationStateChanged -= OnAuthenticationStateChanged;
+            if (m_CompositeAuthenticator != null)
+            {
+                m_CompositeAuthenticator.AuthenticationStateChanged -= OnAuthenticationStateChanged;
+            }
+            if (m_ServiceAccountAuthenticator != null)
+            {
+                m_ServiceAccountAuthenticator.AuthenticationStateChanged -= OnAuthenticationStateChanged;
+            }
             TriggerLogin -= OnTriggerLogin;
             TriggerLogout -= OnTriggerLogout;
             TriggerCancelLogin -= OnTriggerCancelLogin;
@@ -74,7 +86,11 @@ namespace Unity.Industry.Viewer.Identity
         private void OnTriggerGuestLogin()
         {
             GuestMode = true;
-            OnAuthenticationStateChanged(AuthenticationState.LoggedIn);
+            
+            PlatformServices.ServiceAccountCreation();
+            if(m_ServiceAccountAuthenticator == null) return;
+            m_ServiceAccountAuthenticator.AuthenticationStateChanged += OnAuthenticationStateChanged;
+            _ = PlatformServices.InitializeServiceAccountAsync();
         }
 
         private void OnTriggerCancelLogin()
@@ -117,6 +133,7 @@ namespace Unity.Industry.Viewer.Identity
             {
                 if (GuestMode)
                 {
+                    PlatformServices.ServiceAccountLogout();
                     OnAuthenticationStateChanged(AuthenticationState.LoggedOut);
                     return;
                 }

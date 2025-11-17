@@ -1,0 +1,24 @@
+{
+    "name": "Unity.Industry.Viewer.Streaming.Environment",
+    "rootNamespace": "Unity.Industry.Viewer.Streaming.Environment",
+    "references": [
+        "GUID:3072efb1b5d06449eb35617ac762a62d",
+        "GUID:7652355c4d73b47e78a66a1e0890152f",
+        "GUID:2f101f87087d58f4ba92ca00188e763d",
+        "GUID:e0cd26848372d4e5c891c569017e11f1",
+        "GUID:eec0964c48f6f4e40bc3ec2257ccf8c5",
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:ded3a1fd6dfcb488e8056389a56a3f4f",
+        "GUID:15fc0a57446b3144c949da3e2b9737a9",
+        "GUID:a9420e37d7990b54abdef6688edbe313"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

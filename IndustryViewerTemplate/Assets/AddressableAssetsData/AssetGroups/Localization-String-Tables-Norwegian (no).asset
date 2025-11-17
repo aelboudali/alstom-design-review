@@ -29,6 +29,18 @@ MonoBehaviour:
     - Locale-no
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2563a3f8999754b3ab2e5d41dd2fe18d
+    m_Address: UI_no
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-no
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 26600e826df9646f88f9436dbde74eb0
+    m_Address: Shared_no
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-no
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 36f2052ec3c8a467cbc3edf653a05a93
     m_Address: Hierarchy Tool_no
     m_ReadOnly: 1
@@ -49,6 +61,18 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-no
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 47240c9d341d3d54188e505a66f824e5
+    m_Address: Deep Linking_no
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-no
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 50ead707f6881436c93eb470ae26f098
+    m_Address: Section Cut_no
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-no
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6d534322ab9694baea7187af857e9cec
     m_Address: Streaming_no
@@ -71,12 +95,24 @@ MonoBehaviour:
     - Locale-no
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 73333040fbed35b4b81b0dd692ef7f5d
+    m_Address: MeasureTool_no
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-no
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 870d1ee51ffaa4d549ec0bde84bbb2d4
     m_Address: Add Model Tool_no
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-no
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9cf03a8a210649e4995930d4fd8fba79
+    m_Address: Environment Tool_no
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-no
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: aeda2a51a355b4f06b31f4aef33973f8
     m_Address: Vivox_no
@@ -91,6 +127,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-no
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d0369b88ce18245e5856376535ff3c41
+    m_Address: Collaboration_no
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-no
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ec3132a52b73341bcba8a9f2994da969
     m_Address: Assets_no

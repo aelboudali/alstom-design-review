@@ -21,19 +21,39 @@ MonoBehaviour:
   - m_Id: 12455156637696
     m_Localized: Orbit Sensitivity
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937045952496546
   - m_Id: 12455160832000
     m_Localized: Pan Sensitivity
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937045952496547
   - m_Id: 12455160832001
     m_Localized: Zoom Sensitivity
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937045952496548
   - m_Id: 12604054429696
     m_Localized: Orbit Camera
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937045952496549
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 8258937045952496546
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: 'This is background text on slider in settings '
+    - rid: 8258937045952496547
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: 'This is background text on slider in settings '
+    - rid: 8258937045952496548
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: 'This is background text on slider in settings '
+    - rid: 8258937045952496549
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is header in settings for camera mode

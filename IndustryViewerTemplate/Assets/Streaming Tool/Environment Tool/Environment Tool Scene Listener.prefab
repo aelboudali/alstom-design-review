@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3992718851138775453
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 817551182279632526}
+  - component: {fileID: 974792209363588469}
+  m_Layer: 0
+  m_Name: Environment Tool Scene Listener
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &817551182279632526
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3992718851138775453}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &974792209363588469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3992718851138775453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b5890a89877f422783cb200b14cbd9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Industry.Viewer.Streaming.Environment::Unity.Industry.Viewer.Streaming.Environment.EnvironmentToolSceneListener
+  m_EnvironmentLayerMask:
+    serializedVersion: 2
+    m_Bits: 8
+  m_Settings: {fileID: 11400000, guid: ae3d5cde4c5aaff4f871206c7e22250e, type: 2}
+  m_NavigationOptionsLeadsDisability:
+  - m_TableReference:
+      m_TableCollectionName: GUID:8439f8a59aa98411c86af28e69b5af05
+    m_TableEntryReference:
+      m_KeyId: 751689523200
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  - m_TableReference:
+      m_TableCollectionName: GUID:75b7202b47b6842be8d6b5d609ec08e7
+    m_TableEntryReference:
+      m_KeyId: 95971741896007680
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_ToolAsset: {fileID: 11400000, guid: ddcbaaa3da36dc64c886bdf0580001f0, type: 2}
+  references:
+    version: 2
+    RefIds: []

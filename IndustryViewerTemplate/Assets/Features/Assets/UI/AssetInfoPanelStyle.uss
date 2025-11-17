@@ -23,75 +23,6 @@
     width: 33.3%;
 }
 
-.LinkedProject {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    background-color: rgb(74, 74, 74);
-    border-top-left-radius: 11px;
-    border-top-right-radius: 11px;
-    border-bottom-right-radius: 11px;
-    border-bottom-left-radius: 11px;
-    padding-top: 2px;
-    padding-right: 4px;
-    padding-bottom: 2px;
-    padding-left: 4px;
-}
-
-.LinkedProject #project-icon {
-    width: 16px;
-    height: 16px;
-    max-width: 16px;
-    max-height: 16px;
-    min-width: 16px;
-    min-height: 16px;
-    align-items: center;
-    justify-content: center;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-    border-bottom-left-radius: 8px;
-    border-left-color: rgb(40, 40, 40);
-    border-right-color: rgb(40, 40, 40);
-    border-top-color: rgb(40, 40, 40);
-    border-bottom-color: rgb(40, 40, 40);
-    border-top-width: 1px;
-    border-right-width: 1px;
-    border-bottom-width: 1px;
-    border-left-width: 1px;
-    background-image: url("project://database/Assets/UI/Textures/Project%20Cube.png?fileID=2800000&guid=04874049b567446208be02b6fd737c69&type=3#Project Cube");
-    background-size: 7.2px 7.2px;
-}
-
-.LinkedProject #project-name {
-    -unity-text-align: middle-left;
-    margin-right: 4px;
-    margin-left: 4px;
-    color: rgb(238, 238, 238);
-    font-size: 12px;
-}
-
-.LinkedProject #project-source-icon {
-    width: 16px;
-    height: 16px;
-    max-width: 16px;
-    max-height: 16px;
-    min-width: 16px;
-    min-height: 16px;
-    align-items: center;
-    justify-content: center;
-    background-size: 7.2px 7.2px;
-    -unity-background-image-tint-color: rgba(255, 255, 255, 0.56);
-}
-
-.sourceProject {
-    background-image: url("project://database/Assets/UI/Textures/SourceProject.png?fileID=2800000&guid=ffde2bcbf374a4c169b82489be653f24&type=3#SourceProject");
-}
-
-.editProject {
-    background-image: url("project://database/Assets/UI/Textures/PencilCircle.png?fileID=2800000&guid=f114d081b43b04b35b865510903b207e&type=3#PencilCircle");
-}
-
 .AssetInfoTag {
     padding-top: 2px;
     padding-right: 4px;
@@ -103,6 +34,7 @@
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
+    height: 20px;
 }
 
 .AssetStatusDropdownItem .unity-hidden {

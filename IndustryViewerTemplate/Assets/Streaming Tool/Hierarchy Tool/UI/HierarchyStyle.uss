@@ -10,3 +10,41 @@
 #HierarchyTreeView .unity-collection-view__item--selected {
     background-color: rgba(220, 220, 220, 0.25);
 }
+
+#HierarchyTreeView .unity-collection-view__item--selected #BinButton {
+    margin-right: 5px;
+}
+
+.appui-icon--cube--regular{
+    --unity-image: url("project://database/Assets/UI/Textures/Cube.png");
+}
+
+.appui-icon--hidden-cube--regular{
+    --unity-image: url("project://database/Assets/UI/Textures/HiddenCube.png");
+}
+
+#HierarchyTreeView .unity-collection-view__item--selected {
+    background-color: var(--appui-alias-actions-accent-background-color-default);
+    border-radius: 8px;
+}
+
+#HierarchyTreeView #BinButton.unity-disabled {
+    background-color: rgba(99, 99, 99, 0);
+    border-width: 0;
+}
+
+#HierarchyTreeView #unity-tree-view__item-toggle {
+    height: 40px;
+    width: 40px;
+}
+
+#HierarchyTreeView #unity-tree-view__item-toggle #unity-checkmark {
+    rotate: -90deg;
+    background-image: url("chevron-down.png");
+    height: 30px;
+    width: 30px;
+}
+
+#HierarchyTreeView #unity-tree-view__item-toggle :checked #unity-checkmark {
+    rotate: 0deg;
+}

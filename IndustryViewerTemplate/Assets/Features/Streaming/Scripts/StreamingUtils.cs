@@ -20,10 +20,8 @@ namespace Unity.Industry.Viewer.Streaming
     {
         [ReadOnly]
         public static string StreamModelTag = "Model";
-        
         [ReadOnly]
         public static string OfflineAssetJsonFileName = "assetInfo.json";
-
         [ReadOnly]
         public static string StreamingPanelName = "StreamingContainer";
         [ReadOnly]
@@ -44,7 +42,7 @@ namespace Unity.Industry.Viewer.Streaming
         public const string LayoutTag = "Layout";
         
         public const string LayoutJson = "layout.json";
-        
+
         public static string LocalStreamingAssetPath => Path.Combine(Application.persistentDataPath, "StreamingAssets");
         
         public static string ReturnHashName(LayoutModelEntity layoutModelEntity)
@@ -64,8 +62,13 @@ namespace Unity.Industry.Viewer.Streaming
             return HashString(folderName);
         }
         
-        public static bool CheckHasLocalAsset(IAsset asset, out int ver)
+        public static bool CheckHasLocalAsset(IAsset asset, bool checkOfflineVersionID, out int ver)
         {
+            /*
+             * Offline asset has a version number at the end of the folder's name, for example <assetFolder>_1 where 1 is the version number.
+             * However, in some cases user might need to check the version ID instead. Therefore, using the [checkOfflineVersionID] to extract the version ID from the json file.
+             * As it uses Json deserialization to deserialize the json file, it might consume a little of memory.
+             */
             if (!Directory.Exists(LocalStreamingAssetPath))
             {
                 ver = 0;
@@ -77,6 +80,22 @@ namespace Unity.Industry.Viewer.Streaming
             {
                 var directoryName = new DirectoryInfo(matchingFolder).Name;
                 if (directoryName.Contains("_temp")) continue;
+                if (checkOfflineVersionID)
+                {
+                    var assetJsonFilePath = Path.Combine(matchingFolder, OfflineAssetJsonFileName);
+                    if (!File.Exists(assetJsonFilePath))
+                    {
+                        ver = 0;
+                        return false;
+                    }
+                    var json = File.ReadAllText(assetJsonFilePath);
+                    var offlineAssetInfo = JsonConvert.DeserializeObject<OfflineAssetInfo>(json);
+                    if (offlineAssetInfo == null || !string.Equals(asset.Descriptor.AssetVersion.ToString(), offlineAssetInfo.assetVersionId))
+                    {
+                        ver = 0;
+                        return false;
+                    }
+                }
                 ver = int.Parse(directoryName.Split('_')[1]);
                 return true;
             }
@@ -110,7 +129,12 @@ namespace Unity.Industry.Viewer.Streaming
             return null;
 #endif
             var hashFolderName = ReturnHashName(asset);
-            return ReturnOfflineAsset(hashFolderName);
+            var offlineAssetInfo = ReturnOfflineAsset(hashFolderName);
+            if (offlineAssetInfo == null)
+            {
+                return null;
+            }
+            return offlineAssetInfo.Descriptor.AssetVersion != asset.Descriptor.AssetVersion? null: offlineAssetInfo;
         }
         
         public static OfflineAsset ReturnOfflineAssetInfo(LayoutModelEntity asset)
@@ -120,7 +144,11 @@ namespace Unity.Industry.Viewer.Streaming
 #endif
             var hashFolderName = ReturnHashName(asset);
             var offlineAssetInfo = ReturnOfflineAsset(hashFolderName);
-            return offlineAssetInfo;
+            if (offlineAssetInfo == null)
+            {
+                return null;
+            }
+            return offlineAssetInfo.Descriptor.AssetVersion.ToString() != asset.versionID? null: offlineAssetInfo;
         }
 
         private static OfflineAsset ReturnOfflineAsset(string hashFolder)
@@ -204,7 +232,7 @@ namespace Unity.Industry.Viewer.Streaming
             return offlineAsset == null ? null : (OfflineAsset)offlineAsset.Asset;
         }
 
-        private static List<AssetInfo> ReturnOfflineAssets()
+        public static List<AssetInfo> ReturnOfflineAssets()
         {
             if (!Directory.Exists(LocalStreamingAssetPath))
             {
@@ -329,7 +357,27 @@ namespace Unity.Industry.Viewer.Streaming
                 }
             }
         }
-        
+
+        public static bool IsSource(this DatasetProperties datasetProperties)
+        {
+            return datasetProperties.SystemTags.Contains(SourceTag);
+        }
+
+        public static bool IsPreview(this DatasetProperties datasetProperties)
+        {
+            return datasetProperties.SystemTags.Contains(PreviewTag);
+        }
+
+        public static bool IsStreamable(this DatasetProperties datasetProperties)
+        {
+            return datasetProperties.SystemTags.Contains(StreamableTag);
+        }
+
+        public static bool IsLayout(this AssetProperties assetProperties)
+        {
+            return assetProperties.Tags.Contains(LayoutTag);
+        }
+
         private static class Base32Encoder
         {
             private static readonly char[] Base32Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567".ToCharArray();

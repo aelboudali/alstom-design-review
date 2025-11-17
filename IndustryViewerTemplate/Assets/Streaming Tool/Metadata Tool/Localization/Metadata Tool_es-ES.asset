@@ -26,10 +26,6 @@ MonoBehaviour:
     m_Localized: No se encontraron metadatos
     m_Metadata:
       m_Items: []
-  - m_Id: 19319819894513664
-    m_Localized: Buscar
-    m_Metadata:
-      m_Items: []
   - m_Id: 42351695571705856
     m_Localized: "El modo sin conexi\xF3n no es compatible"
     m_Metadata:

@@ -48,7 +48,7 @@
                     "id": "7b898a84-356e-453c-a9dd-f04ea671274b",
                     "path": "OneModifier(overrideModifiersNeedToBePressedFirst=true)",
                     "interactions": "",
-                    "processors": "InvertVector2(invertX=false),ScaleVector2(x=0.8,y=0.8)",
+                    "processors": "InvertVector2(invertX=false),ScaleVector2(x=0.2,y=0.2)",
                     "groups": "",
                     "action": "Orbit",
                     "isComposite": true,

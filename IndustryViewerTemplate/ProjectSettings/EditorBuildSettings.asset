@@ -10,13 +10,25 @@ EditorBuildSettings:
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
     path: Assets/Scenes/Streaming.unity
-    guid: fb3f40c9cbcbf4acf89e76549352dce3
+    guid: 3799e6b04afe54d878f925c4693cb1a8
   - enabled: 0
     path: Assets/Scenes/Main VR.unity
-    guid: 98c727aa0fabb44c9afe85dd6abcd61e
+    guid: 091c63cbdb3f64bb6ae8a60ac7434b02
   - enabled: 0
     path: Assets/Scenes/Streaming VR.unity
     guid: aba7b41708f4742b9b2110724b3f3bc2
+  - enabled: 1
+    path: Assets/Streaming Tool/Environment Tool/Environment Data/ENV_CAD/CAD.unity
+    guid: b5d5b2a34a05b3d4cadebd8b75d9fc05
+  - enabled: 1
+    path: Assets/Streaming Tool/Environment Tool/Environment Data/ENV_Hangar/Hangar.unity
+    guid: 3da19286fb918ef4d85f4f14376a3911
+  - enabled: 1
+    path: Assets/Streaming Tool/Environment Tool/Environment Data/ENV_Outdoor/Outdoor.unity
+    guid: 5078fb58f61cc7149b1b2dc1c758b623
+  - enabled: 1
+    path: Assets/Streaming Tool/Environment Tool/Environment Data/ENV_Studio/Studio.unity
+    guid: 83d91d94550acfd489ac63604d6cc3c5
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 98aacd684f9f44a2d8dc25d08668f8e6,
       type: 2}

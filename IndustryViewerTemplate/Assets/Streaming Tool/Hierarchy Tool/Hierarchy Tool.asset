@@ -24,9 +24,9 @@ MonoBehaviour:
   toolIcon: {fileID: 2800000, guid: 0c692b7901cd12140bfdb4121de4e9ae, type: 3}
   toolPrefab: {fileID: 7926565579244599466, guid: 63fbaa5601a18ab4094dda003c28af42,
     type: 3}
-  onlineModeOnly: 1
   sceneListener: {fileID: 2450891812187986, guid: 481638708189b4d6aa744a294649b29f,
     type: 3}
+  resizablePanel: 1
   references:
     version: 2
     RefIds: []

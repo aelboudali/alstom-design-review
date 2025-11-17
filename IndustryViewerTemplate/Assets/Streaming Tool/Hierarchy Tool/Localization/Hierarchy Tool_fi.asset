@@ -30,8 +30,8 @@ MonoBehaviour:
     m_Localized: Palauta sijainti
     m_Metadata:
       m_Items: []
-  - m_Id: 42677741605085184
-    m_Localized: Ladataan
+  - m_Id: 115508050741207040
+    m_Localized: "Nollaa kaikki N\xE4kyvyys"
     m_Metadata:
       m_Items: []
   references:

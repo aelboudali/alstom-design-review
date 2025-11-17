@@ -3,7 +3,7 @@ using UnityEngine.Localization;
 
 namespace Unity.Industry.Viewer.Streaming
 {
-    [CreateAssetMenu(fileName = "StreamingToolAsset", menuName = "UC/Streaming/StreamingToolAsset")]
+    [CreateAssetMenu(fileName = "StreamingToolAsset", menuName = "IVT/Streaming/StreamingToolAsset")]
     public class StreamingToolAsset : ScriptableObject
     {
         public LocalizedString ToolName => toolName;
@@ -14,5 +14,7 @@ namespace Unity.Industry.Viewer.Streaming
         public GameObject toolPrefab;
 
         public GameObject sceneListener;
+
+        public bool resizablePanel = false;
     }
 }

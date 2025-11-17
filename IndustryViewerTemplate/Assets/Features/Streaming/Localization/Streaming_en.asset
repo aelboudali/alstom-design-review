@@ -22,107 +22,92 @@ MonoBehaviour:
   - m_Id: 2543798181888
     m_Localized: Remove Asset from local drive
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153530389135672
   - m_Id: 2720789422080
     m_Localized: Are you sure? Please note that this action is irreversible.
     m_Metadata:
-      m_Items: []
-  - m_Id: 2966592413696
-    m_Localized: Remove
-    m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153530389135673
   - m_Id: 3004496338944
     m_Localized: Asset removed.
     m_Metadata:
-      m_Items: []
-  - m_Id: 3080430018560
-    m_Localized: Cancel
-    m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153530389135674
   - m_Id: 3629921591296
     m_Localized: Download Asset to local drive
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153530389135675
   - m_Id: 3705742024704
     m_Localized: Are you sure? Please note that the download may take some time due
       to the file size.
     m_Metadata:
-      m_Items: []
-  - m_Id: 3862307004416
-    m_Localized: Download
-    m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153530389135676
   - m_Id: 3894355681280
     m_Localized: Downloading asset...
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153530389135677
   - m_Id: 4142910136320
     m_Localized: Finished downloading {name} asset...
     m_Metadata:
       m_Items:
       - rid: 7555826617756942434
-  - m_Id: 4789797642240
-    m_Localized: Load Layout
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5427377987584
-    m_Localized: Stream
-    m_Metadata:
-      m_Items: []
+      - rid: 535153530389135678
   - m_Id: 5709449125888
-    m_Localized: Pick your data
+    m_Localized: Stream Mode
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153530389135679
   - m_Id: 5795449135104
-    m_Localized: Which data source you would like to use?
+    m_Localized: Please select the preferred streaming method.
     m_Metadata:
-      m_Items: []
-  - m_Id: 5858598576128
-    m_Localized: Cloud
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5890873745408
-    m_Localized: Local
-    m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153530389135680
   - m_Id: 268399107104768
     m_Localized: '{name} - Version: {num}'
     m_Metadata:
       m_Items:
       - rid: 7555826617756942434
+      - rid: 535153530389135681
   - m_Id: 268399140659200
     m_Localized: New Version Available
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153530389135682
   - m_Id: 268399140659201
     m_Localized: A new version of the asset is available. Do you want to switch to
       the new version?
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153530389135683
   - m_Id: 268399140659202
     m_Localized: Switch
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153530389135684
   - m_Id: 268399140659203
     m_Localized: Dismiss
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153530389135685
   - m_Id: 268399140659204
     m_Localized: Exit Streaming
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153530389135686
   - m_Id: 268399140659205
     m_Localized: Are you sure to exit streaming scene?
     m_Metadata:
-      m_Items: []
-  - m_Id: 268399140659206
-    m_Localized: Exit
-    m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153530389135687
   - m_Id: 271402836942848
     m_Localized: New Ver. Available!
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153530389135688
   - m_Id: 15579884532260864
     m_Localized: Wireframe
     m_Metadata:
@@ -130,16 +115,19 @@ MonoBehaviour:
   - m_Id: 21644036333887488
     m_Localized: Preserve
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153530389135689
   - m_Id: 21644036354859008
     m_Localized: Do you want to preserve referenced assets? This action is irreversible.
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153530389135690
   - m_Id: 21710844147523584
     m_Localized: This is a referenced asset from a layout. Are you sure? Please note
       that this action is irreversible.
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153530389135691
   - m_Id: 22092926879260672
     m_Localized: Referenced Asset - {name} has a local version {localVersion} stored
       on device. But the layout requires version {requiredVersion}. Do you want to
@@ -147,94 +135,244 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7555826617756942434
-  - m_Id: 40828184860549120
-    m_Localized: Link
-    m_Metadata:
-      m_Items: []
-  - m_Id: 40831164800294912
-    m_Localized: Offload
-    m_Metadata:
-      m_Items: []
   - m_Id: 40835830153994240
     m_Localized: Ready for Local Streaming
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153530389135692
   - m_Id: 40835830153994241
     m_Localized: Update Available for Local Streaming
     m_Metadata:
-      m_Items: []
-  - m_Id: 40835830153994242
-    m_Localized: Update
-    m_Metadata:
-      m_Items: []
-  - m_Id: 40847564071755776
-    m_Localized: Start Streaming?
-    m_Metadata:
-      m_Items: []
-  - m_Id: 40847564071755777
-    m_Localized: Click to enter the 3D streaming with the selected asset.
-    m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153530389135693
   - m_Id: 1428897652736
     m_Localized: Organisation
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153530389135694
   - m_Id: 1428897652737
     m_Localized: Project
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153530389135695
   - m_Id: 1428897652738
     m_Localized: Collection
     m_Metadata:
-      m_Items: []
-  - m_Id: 3471058132994
-    m_Localized: Save
-    m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153530389135696
   - m_Id: 3862327975936
     m_Localized: Name
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153530389135697
   - m_Id: 40851833860644864
     m_Localized: Unable to load an asset due to permission
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153530389135698
   - m_Id: 40851833860644865
     m_Localized: Save Layout
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153530389135699
   - m_Id: 40851833860644866
     m_Localized: Save your 3D layout to the Asset Manager
     m_Metadata:
-      m_Items: []
-  - m_Id: 40851833860644867
-    m_Localized: Select
-    m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153530389135700
   - m_Id: 40857613896769536
     m_Localized: Adding {asset}
     m_Metadata:
       m_Items:
       - rid: 7555826617756942434
-  - m_Id: 42308461222944768
-    m_Localized: Loading
-    m_Metadata:
-      m_Items: []
+      - rid: 535153530389135701
   - m_Id: 44808540777340928
     m_Localized: You don't have the write permission.
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153530389135702
   - m_Id: 45884123531698176
     m_Localized: Save failed, an unknown error occurred
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 535153530389135703
   - m_Id: 47728520850300928
     m_Localized: Copied link to clipboard
+    m_Metadata:
+      m_Items:
+      - rid: 535153530389135704
+  - m_Id: 113671218895249408
+    m_Localized: '<b>There are no downloaded assets for local streaming</b>
+
+
+      <size=70%>Please
+      go online and download them before continue</size>'
+    m_Metadata:
+      m_Items:
+      - rid: 535153530389135705
+  - m_Id: 118748446100283392
+    m_Localized: Tool
+    m_Metadata:
+      m_Items: []
+  - m_Id: 123180386542936064
+    m_Localized: Please select your organisations here
+    m_Metadata:
+      m_Items: []
+  - m_Id: 123892356694925312
+    m_Localized: Asset does not have a streamable dataset.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 124618061661593600
+    m_Localized: Post Processing Rendering
+    m_Metadata:
+      m_Items: []
+  - m_Id: 124621959373774848
+    m_Localized: Rendering
     m_Metadata:
       m_Items: []
   references:
     version: 2
     RefIds:
+    - rid: 535153530389135672
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is header of the pop-up for removing asset
+    - rid: 535153530389135673
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is text of the pop-up for removing asset
+    - rid: 535153530389135674
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is toast UI after removing asset
+    - rid: 535153530389135675
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is header of the pop-up for downloading asset
+    - rid: 535153530389135676
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is text of the pop-up for downloading asset
+    - rid: 535153530389135677
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is toast UI after starting downloading asset
+    - rid: 535153530389135678
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is toast UI after completion downloading asset
+    - rid: 535153530389135679
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is header of the pop-up for streaming downloaded asset/layout
+    - rid: 535153530389135680
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is text of the pop-up for streaming downloaded asset/layout
+    - rid: 535153530389135681
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is text of the scene title
+    - rid: 535153530389135682
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is header of the pop-up for new ver.available
+    - rid: 535153530389135683
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is text of the pop-up for new ver.available
+    - rid: 535153530389135684
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is button of the pop-up for new ver.available
+    - rid: 535153530389135685
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is button of the pop-up for new ver.available
+    - rid: 535153530389135686
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is header of the pop-up for exit streaming
+    - rid: 535153530389135687
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is text of the pop-up for exit streaming
+    - rid: 535153530389135688
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is button for new ver.available in scene view
+    - rid: 535153530389135689
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is button of the pop-up for removing layout
+    - rid: 535153530389135690
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is text of the pop-up for removing layout
+    - rid: 535153530389135691
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is text of the pop-up for removing asset which include
+          in downloaded layout
+    - rid: 535153530389135692
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is toast UI when asset is downloaded in details view
+    - rid: 535153530389135693
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is toast UI when old version of the asset is downloaded
+          in details view
+    - rid: 535153530389135694
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is text for dropdown in Save layout pop-up
+    - rid: 535153530389135695
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is text for dropdown in Save layout pop-up
+    - rid: 535153530389135696
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is text for dropdown in Save layout pop-up
+    - rid: 535153530389135697
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is text for text field in Save layout pop-up
+    - rid: 535153530389135698
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is toast UI when asset can not be loaded in 3D scene
+          view
+    - rid: 535153530389135699
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is header for Save layout pop-up
+    - rid: 535153530389135700
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is text for Save layout pop-up
+    - rid: 535153530389135701
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is header for Adding asset pop-up
+    - rid: 535153530389135702
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is toast UI when User can not save layout
+    - rid: 535153530389135703
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is toast UI when some errors occur during saving layout
+    - rid: 535153530389135704
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is toast UI when User clicks the Link button
+    - rid: 535153530389135705
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Message to show users that there is no downloaded asset for
+          local streaming
     - rid: 7555826617756942434
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:

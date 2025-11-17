@@ -19,7 +19,7 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 751689523200
-    m_Localized: Mobil AR
+    m_Localized: "Lis\xE4tty todellisuus"
     m_Metadata:
       m_Items: []
   - m_Id: 3464783454209
@@ -27,39 +27,39 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3464783454210
-    m_Localized: Tildekking
+    m_Localized: Okklusjon
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648512
-    m_Localized: <u>Romlig anker</u>
+    m_Localized: Rolig forankring
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648513
-    m_Localized: Lagre romlig anker
+    m_Localized: Lagre anker
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648514
-    m_Localized: Last inn romlig anker
+    m_Localized: Lasteanker
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648515
-    m_Localized: Flytt
+    m_Localized: Flytte
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648516
-    m_Localized: Roter
+    m_Localized: Rotere
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648517
-    m_Localized: Skaler
+    m_Localized: Skala
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648518
-    m_Localized: "\xD8k"
+    m_Localized: "\xD8ke"
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648519
-    m_Localized: Tilbakestill til standardposisjon
+    m_Localized: Tilbakestill til standard
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648520
@@ -75,11 +75,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506306
-    m_Localized: Kunne ikke lagre AR-anker - Ukjent
+    m_Localized: Mislykket Lagre AR-anker - Ukjent
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506307
-    m_Localized: "Skann og trykk for \xE5 initialisere ressursposisjon"
+    m_Localized: "Skann og trykk for \xE5 initialisere aktivaposisjonen"
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506308
@@ -108,6 +108,27 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 45568947439788032
     m_Localized: Du har ikke skrivetillatelse.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084964016128
+    m_Localized: "Spatiaalinen ankkuri l\xF6ytyi"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084972404736
+    m_Localized: "Aiemmin tallennettu paikkatietoankkuri l\xF6ytyi. Haluatko ladata
+      sen?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084972404737
+    m_Localized: Sivuuttaa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084972404738
+    m_Localized: Ladata
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119205759076524032
+    m_Localized: "Napauta pistett\xE4 sijoittaaksesi resurssin"
     m_Metadata:
       m_Items: []
   references:

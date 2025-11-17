@@ -22,6 +22,12 @@ MonoBehaviour:
     - Locale-de-DE
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 19dc546441946dc4abd3f80e7a43ff4d
+    m_Address: Environment Tool_de-DE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-de-DE
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 30792c23fa3a64e14ae6df88b1037cfa
     m_Address: Identity_de-DE
     m_ReadOnly: 1
@@ -35,12 +41,24 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-de-DE
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3d91a565610304523b7b6a0f7fa1d6dc
+    m_Address: Collaboration_de-DE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-de-DE
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3ece4efaf27c34c8f8528f293a9ce6ff
     m_Address: Hierarchy Tool_de-DE
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-de-DE
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 454847a75c0104062bed8d7b66c8332c
+    m_Address: Shared_de-DE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-de-DE
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 495a8af9207ad437998114ce05db4380
     m_Address: VR_de-DE
@@ -63,12 +81,30 @@ MonoBehaviour:
     - Locale-de-DE
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 79ad1384ad35540a3888b15a83864469
+    m_Address: Section Cut_de-DE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-de-DE
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7baca19e8d890fa45b888151d8744052
+    m_Address: MeasureTool_de-DE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-de-DE
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 80dde71fd6bca419d93325211e5a931d
     m_Address: Mobile AR_de-DE
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-de-DE
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 86dbf9284758e9e4e9a32ef52d5e51ab
+    m_Address: Deep Linking_de-DE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-de-DE
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 948e8b40c807c4efca4d318ad0391542
     m_Address: Vivox_de-DE
@@ -104,6 +140,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-de-DE
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: de7f943a79a0e4e73ab065201a9252b4
+    m_Address: UI_de-DE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-de-DE
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f795b99ff508f45ff9f12a0556c7f15f
     m_Address: Streaming_de-DE

@@ -19,7 +19,15 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 376479670272
-    m_Localized: Mode vol VR
+    m_Localized: Mode Vol VR
+    m_Metadata:
+      m_Items: []
+  - m_Id: 95971741896007680
+    m_Localized: Transparence
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119196761623355392
+    m_Localized: "Appuyez sur la g\xE2chette ou pincez l'\xE9cran pour placer l'\xE9l\xE9ment"
     m_Metadata:
       m_Items: []
   references:

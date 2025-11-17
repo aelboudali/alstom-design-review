@@ -24,15 +24,16 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5081977053184
-    m_Localized: Kan geen sessie maken of eraan deelnemen. Probeer het opnieuw
+    m_Localized: Het is niet mogelijk om een sessie te maken of eraan deel te nemen.
+      Probeer het opnieuw.
     m_Metadata:
       m_Items: []
   - m_Id: 5081981247488
-    m_Localized: Deelnemen aan presentatie?
+    m_Localized: Presentatie bijwonen?
     m_Metadata:
       m_Items: []
   - m_Id: 5081981247489
-    m_Localized: '{name} presenteert. Wil je aanwezig zijn bij de presentatie?'
+    m_Localized: '{name} geeft een presentatie. Wil je meedoen aan de presentatie?'
     m_Metadata:
       m_Items:
       - rid: 7555826618794508406
@@ -49,7 +50,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441795
-    m_Localized: Einde presentatie
+    m_Localized: Eindpresentatie
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441796
@@ -61,7 +62,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441798
-    m_Localized: Verlaat de presentatie
+    m_Localized: Presentatie verlaten
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441799
@@ -73,11 +74,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441801
-    m_Localized: Sluit je aan bij Presentatie
+    m_Localized: Deelnemen aan presentatie
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441802
-    m_Localized: Wilt u deelnemen aan de huidige presentatie?
+    m_Localized: Wilt u de huidige presentatie bijwonen?
     m_Metadata:
       m_Items: []
   - m_Id: 5081985441803
@@ -92,16 +93,13 @@ MonoBehaviour:
     m_Localized: Begin
     m_Metadata:
       m_Items: []
-  - m_Id: 5081985441806
-    m_Localized: Annuleren
-    m_Metadata:
-      m_Items: []
   - m_Id: 42058065896267776
-    m_Localized: Nieuw lay-outmiddel
+    m_Localized: Nieuwe lay-out-asset
     m_Metadata:
       m_Items: []
   - m_Id: 42058065904656384
-    m_Localized: Je sessie is opgeslagen als nieuw layout-item. Wil je deelnemen?
+    m_Localized: Sessie opgeslagen in nieuwe lay-out. Deelnemen aan een nieuwe sessie
+      met anderen?
     m_Metadata:
       m_Items: []
   references:

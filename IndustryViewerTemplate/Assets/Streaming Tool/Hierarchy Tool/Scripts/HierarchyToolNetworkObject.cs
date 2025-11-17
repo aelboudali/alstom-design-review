@@ -1,8 +1,12 @@
 using System;
-using Unity.Netcode;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Unity.Cloud.Common;
 using Unity.Collections;
+using Unity.Industry.Viewer.Multiplay;
+using Unity.Industry.Viewer.Shared;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Unity.Industry.Viewer.Streaming.Hierarchy
@@ -29,15 +33,25 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
         
         public override int GetHashCode()
         {
-            return HashCode.Combine(OrgID.GetHashCode(), ProjectID.GetHashCode(), AssetId.GetHashCode(), GameObjectName.GetHashCode());
+            return HashCode.Combine(OrgID, ProjectID, AssetId, GameObjectName, InstanceId, root);
         }
 
         public bool Equals(HierarchySyncData other)
         {
-            return OrgID == other.OrgID && ProjectID == other.ProjectID && AssetId == other.AssetId 
-                   && GameObjectName == other.GameObjectName;
+            return OrgID == other.OrgID
+                   && ProjectID == other.ProjectID
+                   && AssetId == other.AssetId
+                   && GameObjectName == other.GameObjectName
+                   && InstanceId == other.InstanceId
+                   && root == other.root;
         }
-        
+
+        public override bool Equals(object obj)
+        {
+            if (obj is not HierarchySyncData other) return false;
+            return Equals(other);
+        }
+
         public static bool operator ==(HierarchySyncData left, HierarchySyncData right)
         {
             return left.Equals(right);
@@ -47,8 +61,13 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
         {
             return !left.Equals(right);
         }
+
+        public override string ToString()
+        {
+            return $"OrgID: {OrgID}, ProjectID: {ProjectID}, AssetId: {AssetId}, GameObjectName: {GameObjectName}, InstanceId: {InstanceId}, root: {root}";
+        }
     }
-    
+
     // This script manages the network synchronization of hierarchy data in a Unity project.
     // It uses Unity's Netcode for GameObjects to handle network variables and RPCs for data synchronization.
     // The script listens for network events such as session ownership changes and updates the visibility of instances accordingly.
@@ -71,50 +90,133 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
             m_HierarchySyncData.OnValueChanged += OnHierarchyDataChanged;
             NetworkManager.OnSessionOwnerPromoted += OnSessionOwnerPromoted;
             HierarchyToolController.InstanceVisibilityChanged += OnInstanceVisibilityChanged;
+            HierarchyToolController.VisibilityReset += OnVisibilityReset;
+
             m_HierarchyToolSceneListener = FindAnyObjectByType<HierarchyToolSceneListener>();
             if (NetworkManager.LocalClient.IsSessionOwner)
             {
-                if (m_HierarchyToolSceneListener.VisibilityModifier.HiddenInstances != null)
+                if (m_HierarchyToolSceneListener.InstanceStates != null)
                 {
-                    foreach (var hidingItem in m_HierarchyToolSceneListener.VisibilityModifier.HiddenInstances)
-                    {
-                        var data = new HierarchySyncData()
-                        {
-                            AssetId = hidingItem.StreamingModel.AssetId,
-                            ProjectID = hidingItem.StreamingModel.ProjectID,
-                            OrgID = hidingItem.StreamingModel.OrgID,
-                            GameObjectName = hidingItem.StreamingModel.gameObject.name,
-                        };
+                    var streamingModels = TransformController.Instance.transform.GetComponentsInChildren<StreamingModel>(true);
 
-                        if (hidingItem.Instance != null)
+                    // Process all hidden sub models
+                    foreach (var KeyPairValue in m_HierarchyToolSceneListener.InstanceStates)
+                    {
+                        if(KeyPairValue.Value.Hidden != null && KeyPairValue.Value.Hidden.Count > 0)
                         {
-                            data.InstanceId = hidingItem.Instance.Id.ToString();
-                            data.root = hidingItem.Instance == null || hidingItem.Instance.AncestorIds.Count == 0;
+                            var streamingModel = streamingModels.FirstOrDefault(x => x.ModelStreamId == KeyPairValue.Key);
+                            if (streamingModel == null) continue;
+
+                            foreach (var instanceData in KeyPairValue.Value.Hidden)
+                            {
+                                var data = new HierarchySyncData()
+                                {
+                                    AssetId = streamingModel.AssetId,
+                                    ProjectID = streamingModel.ProjectID,
+                                    OrgID = streamingModel.OrgID,
+                                    GameObjectName = streamingModel.gameObject.name
+                                };
+                                if (instanceData.Instance != null)
+                                {
+                                    data.InstanceId = instanceData.Instance.Id.ToString();
+                                    data.root = instanceData.Instance.AncestorIds.Count == 0;
+                                }
+                                else
+                                {
+                                    data.InstanceId = string.Empty;
+                                    data.root = true;
+                                }
+
+                                if (!m_HierarchySyncData.Value.Contains(data))
+                                {
+                                    m_HierarchySyncData.Value.Add(data);
+                                }
+                            }
                         }
-                        else
+                    }
+
+                    // Process all hidden root models
+                    foreach (var streamingModel in streamingModels)
+                    {
+                        if (!streamingModel.gameObject.activeSelf)
                         {
-                            data.InstanceId = string.Empty;
-                            data.root = true;
+                            var data = new HierarchySyncData()
+                            {
+                                AssetId = streamingModel.AssetId,
+                                ProjectID = streamingModel.ProjectID,
+                                OrgID = streamingModel.OrgID,
+                                GameObjectName = streamingModel.gameObject.name,
+                                InstanceId = string.Empty,
+                                root = true
+                            };
+
+                            if (!m_HierarchySyncData.Value.Contains(data))
+                            {
+                                m_HierarchySyncData.Value.Add(data);
+                            }
                         }
-                        
-                        m_HierarchySyncData.Value.Add(data);
                     }
                 }
-                
+
                 m_HierarchySyncData.CheckDirtyState();
             }
             else
             {
-                m_HierarchyToolSceneListener?.VisibilityModifier?.Reset();
-                for (var i = 0; i < TransformController.Instance.transform.childCount; i++)
+                _ = WaitForModelsAndApplyNetworkVisibilityAsync();
+            }
+
+            async Task WaitForModelsAndApplyNetworkVisibilityAsync()
+            {
+                try
                 {
-                    if (!TransformController.Instance.transform.GetChild(i)
-                            .TryGetComponent(out StreamingModel model)) continue;
-                    model.gameObject.SetActive(true);
+                    // Wait until NetworkModelSync is spawned
+                    NetworkModelSync networkModelSync = null;
+                    while (networkModelSync == null)
+                    {
+                        await Task.Yield();
+                        networkModelSync = FindAnyObjectByType<NetworkModelSync>();
+                    }
+
+                    // Wait until local scene is syncked with networked models
+                    while (!networkModelSync.IsSceneSynckedWithNetworkModels())
+                    {
+                        await Task.Yield();
+                    }
+
+                    // Sub objects of models may still be loading, wait for stage to be fully loaded
+                    var streamSceneUIController = FindAnyObjectByType<StreamSceneUIController>();
+                    if (streamSceneUIController == null)
+                    {
+                        Debug.LogError("Network: Can't find StreamSceneUIController.");
+                    }
+                    else
+                    {
+                        await streamSceneUIController.Stage.WaitUntilLoadedAsync();
+                    }
+
+                    // Make all root items visible (they could be hidden in offline mode)
+                    var localModels = TransformController.Instance.transform.GetComponentsInChildren<StreamingModel>(true);
+                    foreach (var streamingModel in localModels)
+                    {
+                        streamingModel.gameObject.SetActive(true);
+                    }
+
+                    // Hide objects (root and sub items) by networked data from the session owner
+                    foreach (var syncData in m_HierarchySyncData.Value)
+                    {
+                        CheckHierarchyDataAgainstModel(syncData, false);
+                    }
+
+                    // Models can be added/removed, tree view may still have old items, rebuild it
+                    var hierarchyToolController = FindFirstObjectByType<HierarchyToolController>();
+                    if (hierarchyToolController != null)
+                    {
+                        await hierarchyToolController.UpdateTreeViewItems();
+                    }
                 }
-                foreach (var syncData in m_HierarchySyncData.Value)
+                catch (Exception ex)
                 {
-                    CheckHierarchyDataAgainstModel(syncData, false);
+                    Debug.LogError($"Network: Exception on models sync during Player joining: {ex}");
                 }
             }
         }
@@ -127,8 +229,8 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
                         .TryGetComponent(out StreamingModel model)) continue;
                 if(data.ProjectID == model.ProjectID && data.OrgID == model.OrgID && data.AssetId == model.AssetId && data.GameObjectName == model.gameObject.name)
                 {
-                    m_HierarchyToolSceneListener.UpdateVisibility(model, data.root,
-                        data.root ? InstanceId.None : new InstanceId(data.InstanceId), visibility);
+                    _ = m_HierarchyToolSceneListener.UpdateVisibility(model, data.root,
+                       new InstanceId(data.InstanceId), visibility);
                 }
             }
         }
@@ -139,6 +241,7 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
             HierarchyToolController.LockModel -= LockModel;
 #endif
             HierarchyToolController.InstanceVisibilityChanged -= OnInstanceVisibilityChanged;
+            HierarchyToolController.VisibilityReset -= OnVisibilityReset;
             m_HierarchySyncData.OnValueChanged -= OnHierarchyDataChanged;
             NetworkManager.OnSessionOwnerPromoted -= OnSessionOwnerPromoted;
         }
@@ -244,6 +347,36 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
             m_HierarchySyncData.CheckDirtyState();
         }
 
+        private void OnVisibilityReset(bool resetHighlighted)
+        {
+            if (NetworkDetector.RequestedOfflineMode)
+            {
+                return;
+            }
+
+            if (NetworkManager.LocalClient.IsSessionOwner)
+            {
+                InternalVisibilityReset();
+            }
+            else
+            {
+                VisibilityResetRpc();
+            }
+        }
+
+        private void InternalVisibilityReset()
+        {
+            m_HierarchySyncData.Value.Clear();
+            m_HierarchySyncData.CheckDirtyState();
+        }
+
+        [Rpc(SendTo.Authority, Delivery = RpcDelivery.Reliable)]
+        private void VisibilityResetRpc()
+        {
+            if (!IsOwner) return;
+            InternalVisibilityReset();
+        }
+
         private void OnHierarchyDataChanged(List<HierarchySyncData> previousvalue, List<HierarchySyncData> newvalue)
         {
             FindRemovedItem(previousvalue, newvalue);
@@ -281,11 +414,11 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
             }
         }
 
-        private void OnSessionOwnerPromoted(ulong sessionownerpromoted)
+        private void OnSessionOwnerPromoted(ulong sessionOwnerPromoted)
         {
-            if (NetworkManager.LocalClientId == sessionownerpromoted)
+            if (NetworkManager.LocalClientId == sessionOwnerPromoted)
             {
-                NetworkObject.ChangeOwnership(sessionownerpromoted);
+                NetworkObject.ChangeOwnership(sessionOwnerPromoted);
             }
         }
     }

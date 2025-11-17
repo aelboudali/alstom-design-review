@@ -28,6 +28,18 @@ MonoBehaviour:
     - Locale-it-IT
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 21fadff8fecdb425fa7e4941eb06fefe
+    m_Address: Shared_it-IT
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-it-IT
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 232299935a8c1584397a85093136b796
+    m_Address: Environment Tool_it-IT
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-it-IT
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 2908898d458d245a1ac4ae50799dc3ed
     m_Address: Mobile AR_it-IT
     m_ReadOnly: 1
@@ -55,6 +67,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-it-IT
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 48f0666e99963134380319ec1cf74f34
+    m_Address: MeasureTool_it-IT
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-it-IT
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6760a6e5aec08427c8b1984a8a2e0578
     m_Address: Orbit Camera_it-IT
@@ -91,6 +109,12 @@ MonoBehaviour:
     - Locale-it-IT
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a8da75c252b2540628778be51e197887
+    m_Address: Collaboration_it-IT
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-it-IT
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b9720a943304d4b7aaffc5d8198a4fcc
     m_Address: Hierarchy Tool_it-IT
     m_ReadOnly: 1
@@ -111,6 +135,24 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-it-IT
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: eb7a1d2c8a6984f4fa23e31f1c930089
+    m_Address: Section Cut_it-IT
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-it-IT
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: eb90da70390f2499db4ddc060ad6ee53
+    m_Address: UI_it-IT
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-it-IT
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: eeffcd05eaa151143860122e2d425a67
+    m_Address: Deep Linking_it-IT
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-it-IT
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: bf5713deec68845209684f81a71bb85a, type: 2}

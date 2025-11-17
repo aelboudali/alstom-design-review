@@ -8,13 +8,13 @@ using Avatar = Unity.AppUI.UI.Avatar;
 using System.Linq;
 using UnityEngine.Localization;
 using Unity.Industry.Viewer.Assets;
+using Unity.Industry.Viewer.Shared;
 
 namespace Unity.Industry.Viewer.Vivox
 {
     public class VivoxUIController : MonoBehaviour
     {
         private const string k_AvatarName = "IdentityAvatar";
-        private const string k_PresentationButtonName = "PresentationModeButton";
         private const string k_InputDeviceDropdownName = "InputDeviceDropdown";
         private const string k_InputEffectiveDeviceLabelName = "InputEffectiveDeviceLabel";
         private const string k_InputVolumeSliderName = "InputVolumeSlider";
@@ -27,9 +27,9 @@ namespace Unity.Industry.Viewer.Vivox
         private UIDocument m_UIDocument;
         
         [SerializeField]
-        private StyleSheet m_StyleSheet;
+        protected StyleSheet m_StyleSheet;
         
-        private MicComponent m_MicButton;
+        protected MicComponent m_MicButton;
 
         [SerializeField] private VisualTreeAsset m_VivoxSettingsUI;
         
@@ -354,7 +354,7 @@ namespace Unity.Industry.Viewer.Vivox
             arg1.label = VivoxService.Instance.AvailableOutputDevices[arg2].DeviceName;
         }
         
-        private void InitializeUI()
+        protected virtual void InitializeUI()
         {
             var avatar = SharedUIManager.Instance.AssetsUIDocument.rootVisualElement.Q<Avatar>(k_AvatarName);
 
@@ -373,11 +373,13 @@ namespace Unity.Industry.Viewer.Vivox
             m_MicButton = new MicComponent(VivoxService.Instance.IsInputDeviceMuted);
             UpdateToolTips();
             m_MicButton.clicked += OnMicButtonClicked;
+            
+            int index = avatar.parent.IndexOf(avatar);
 
-            avatar.parent.Insert(0, m_MicButton);
+            avatar.parent.Insert(index, m_MicButton);
         }
 
-        private void OnMicButtonClicked()
+        protected void OnMicButtonClicked()
         {
             if (VivoxService.Instance.IsInputDeviceMuted)
             {
@@ -393,10 +395,11 @@ namespace Unity.Industry.Viewer.Vivox
             UpdateToolTips();
         }
 
-        private void UpdateToolTips()
+        protected void UpdateToolTips()
         {
-            m_MicButton.ClearBinding("tooltip");
-            m_MicButton.SetBinding("tooltip", VivoxService.Instance.IsInputDeviceMuted ? m_UnmuteLocalizedString : m_MuteLocalizedString);
+            m_MicButton.tooltip = VivoxService.Instance.IsInputDeviceMuted
+                ? m_UnmuteLocalizedString.GetTitleLocalizedStringForAppUI()
+                : m_MuteLocalizedString.GetTitleLocalizedStringForAppUI();
         }
     }
 }

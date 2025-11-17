@@ -14,31 +14,28 @@
 }
 
 .AddModelToSelectionButton {
-    height: 40px;
-    margin-left: 8px;
     background-color: rgb(8, 146, 255);
 }
 
-.AddModelToSelectionButton > #appui-actionbutton__icon {
-    background-image: url("project://database/Assets/UI/Textures/PlusCircle.png?fileID=2800000&guid=9dd3f25552a1945efa310c3d53c12957&type=3#PlusCircle");
+.appui-icon--circle-nonselected--regular{
+    --unity-image: url("project://database/Assets/UI/Textures/PlusCircle.png");
 }
 
-.AddModelToSelectionButton > #appui-actionbutton__label {
+.SelectionButton {
+    height: 40px;
+    margin-left: 8px;
+}
+
+.SelectionButton > #appui-actionbutton__label {
     color: rgb(255, 255, 255);
 }
 
 .RemoveModelFromSelectionButton {
-    margin-left: 8px;
-    height: 40px;
     background-color: rgb(17, 168, 95);
 }
 
-.RemoveModelFromSelectionButton > #appui-actionbutton__icon {
-    background-image: url("project://database/Assets/UI/Textures/CircleChecked.png?fileID=2800000&guid=543276166ad654aee887b8a152fe410a&type=3#CircleChecked");
-}
-
-.RemoveModelFromSelectionButton > #appui-actionbutton__label {
-    color: rgb(255, 255, 255);
+.appui-icon--circle-selected--regular{
+    --unity-image: url("project://database/Assets/UI/Textures/CircleChecked.png");
 }
 
 #AddModelToSceneButton {
@@ -66,4 +63,17 @@
 
 #AssetRoot #AssetLeftPanel{
     padding-top: 0;
+}
+
+#AssetInfoContainer {
+    min-width: 553px;
+    width: 553px;
+    max-width: 553px;
+    margin-left: 8px;
+}
+
+#AssetInfoPanelRoot {
+    min-width: 553px;
+    width: 553px;
+    max-width: 553px;
 }

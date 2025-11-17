@@ -35,10 +35,6 @@ MonoBehaviour:
     m_Key: Logout
     m_Metadata:
       m_Items: []
-  - m_Id: 32483335725056
-    m_Key: Cancel
-    m_Metadata:
-      m_Items: []
   - m_Id: 33199882231808
     m_Key: LogoutTitle
     m_Metadata:
@@ -65,10 +61,6 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 58408840381587456
     m_Key: Offline Mode Log in
-    m_Metadata:
-      m_Items: []
-  - m_Id: 58409243970101248
-    m_Key: OK
     m_Metadata:
       m_Items: []
   m_Metadata:

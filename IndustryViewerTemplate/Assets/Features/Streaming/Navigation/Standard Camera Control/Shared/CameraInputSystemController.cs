@@ -27,7 +27,7 @@ namespace Unity.Industry.Viewer.Navigation.StandardCameraControl.Shared
 
         [SerializeField]
         protected InputActionProperty m_RotateActionProperty;
-
+        
         [SerializeField]
         protected StandardCamera m_Camera;
 
@@ -43,6 +43,8 @@ namespace Unity.Industry.Viewer.Navigation.StandardCameraControl.Shared
         protected bool m_Initialized;
 
         protected bool m_UpdateRotation;
+        
+        protected bool m_PauseCameraControl;
 
         public float MoveSensitivity => m_MoveSensitivity;
         public float RotateSensitivity => m_RotateSensitivity;
@@ -172,8 +174,9 @@ namespace Unity.Industry.Viewer.Navigation.StandardCameraControl.Shared
             {
                 var newBounds = StreamingUtils.ReturnBounds(m_MainBounds.Value);
                 m_Camera.Utility.SetClipPlane(newBounds);
+                m_Camera.Camera.nearClipPlane = 0.01f;
             }
-
+            if(m_PauseCameraControl) return;
             CheckTouches();
         }
 
@@ -239,6 +242,7 @@ namespace Unity.Industry.Viewer.Navigation.StandardCameraControl.Shared
 
         protected void PauseCameraControl(bool shouldPause)
         {
+            m_PauseCameraControl = shouldPause;
             m_LastMovingAction = Vector3.zero;
             m_RotateVector = Vector2.zero;
 
@@ -342,11 +346,17 @@ namespace Unity.Industry.Viewer.Navigation.StandardCameraControl.Shared
         {
             var t = m_Camera?.Transform;
             //m_Camera?.SetCameraSpeedSettings(bounds);
+            
             var newPosition = t.position;
             if (zoom)
             {
                 Vector3 direction = (t.position - ((Bounds)bounds).center).normalized; // Step 1: Direction
                 newPosition = ((Bounds)bounds).center + direction * 5f; // Step 2: Move along direction
+            }
+            
+            if (NavigationController.StartingPosition.HasValue)
+            {
+                newPosition = NavigationController.StartingPosition.Value;
             }
             
             m_Camera?.ResetTracking(newPosition, ((Bounds)bounds).center);
@@ -359,6 +369,11 @@ namespace Unity.Industry.Viewer.Navigation.StandardCameraControl.Shared
             Vector3 direction = (t.position - ((Bounds)bounds).center).normalized; // Step 1: Direction
             Vector3 result = ((Bounds)bounds).center + direction * 5f; // Step 2: Move along direction
 
+            if (NavigationController.StartingPosition.HasValue)
+            {
+                result = NavigationController.StartingPosition.Value;
+            }
+            
             m_Camera.ResetTracking(result, ((Bounds)bounds).center);
         }
 

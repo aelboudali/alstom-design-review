@@ -18,10 +18,6 @@ MonoBehaviour:
   m_Metadata:
     m_Items: []
   m_TableData:
-  - m_Id: 13261332480
-    m_Localized: "Versi\xF3n"
-    m_Metadata:
-      m_Items: []
   - m_Id: 642184634368
     m_Localized: "Frecuencia de actualizaci\xF3n"
     m_Metadata:
@@ -48,6 +44,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 45987493470789632
     m_Localized: "Modo sin conexi\xF3n activado"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 91376129548476416
+    m_Localized: Ajustes
     m_Metadata:
       m_Items: []
   references:

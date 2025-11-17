@@ -1,0 +1,121 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: Shared Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: Shared
+  m_TableCollectionNameGuidString: 2a6c1c34211344e798bb376d8fa80190
+  m_Entries:
+  - m_Id: 53019499552768
+    m_Key: Cancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019528912896
+    m_Key: Search
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27292174277140480
+    m_Key: Link
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019528912898
+    m_Key: Download
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019528912899
+    m_Key: Offload
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019533107200
+    m_Key: Remove
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019533107201
+    m_Key: Stream
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019533107202
+    m_Key: Load Layout
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019533107203
+    m_Key: Cloud
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019533107204
+    m_Key: Local
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019533107205
+    m_Key: Version
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019533107206
+    m_Key: Loading
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019533107208
+    m_Key: OK
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019533107209
+    m_Key: Exit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53019533107212
+    m_Key: Save
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53948906987520
+    m_Key: Version Smart
+    m_Metadata:
+      m_Items: []
+  - m_Id: 54834492334080
+    m_Key: Update
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40851833860644867
+    m_Key: Select
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27292174281334784
+    m_Key: Delete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 30929080184512512
+    m_Key: Upload
+    m_Metadata:
+      m_Items: []
+  - m_Id: 31232716568518656
+    m_Key: Reset
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40974582780256256
+    m_Key: User Not login
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40974582784450560
+    m_Key: Ask To login
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 8258937041623711859
+  references:
+    version: 2
+    RefIds:
+    - rid: 8258937041623711859
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables,
+        asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1753264592708

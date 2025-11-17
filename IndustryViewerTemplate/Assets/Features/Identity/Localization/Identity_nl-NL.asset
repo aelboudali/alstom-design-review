@@ -19,7 +19,9 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 2213752594432
-    m_Localized: "Unity Industry-viewer \nSjabloonproject"
+    m_Localized: 'Unity Industry Viewer
+
+      Sjabloonproject'
     m_Metadata:
       m_Items: []
   - m_Id: 7997920108544
@@ -27,19 +29,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 9303762132992
-    m_Localized: Of
+    m_Localized: of
     m_Metadata:
       m_Items: []
   - m_Id: 9420774825984
-    m_Localized: Ga verder als gast
+    m_Localized: Gastmodus
     m_Metadata:
       m_Items: []
   - m_Id: 15982369169408
     m_Localized: Uitloggen
-    m_Metadata:
-      m_Items: []
-  - m_Id: 32483335725056
-    m_Localized: Annuleren
     m_Metadata:
       m_Items: []
   - m_Id: 33199882231808
@@ -47,11 +45,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 33283562790912
-    m_Localized: Weet u zeker dat u zich wilt afmelden?
+    m_Localized: Weet u zeker dat u wilt uitloggen?
     m_Metadata:
       m_Items: []
   - m_Id: 33349040070656
-    m_Localized: In afwachting van inloggen...
+    m_Localized: Wacht op inloggen...
     m_Metadata:
       m_Items: []
   - m_Id: 33437661519872
@@ -67,12 +65,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 58408840381587456
-    m_Localized: U bevindt zich momenteel in de offlinemodus. Wilt u terugschakelen
-      naar de onlinemodus en inloggen?
-    m_Metadata:
-      m_Items: []
-  - m_Id: 58409243970101248
-    m_Localized: OK
+    m_Localized: U bevindt zich momenteel in de offlinemodus. Wilt u teruggaan naar
+      de onlinemodus en inloggen?
     m_Metadata:
       m_Items: []
   references:

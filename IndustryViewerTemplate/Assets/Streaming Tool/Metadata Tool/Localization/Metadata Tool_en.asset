@@ -21,23 +21,39 @@ MonoBehaviour:
   - m_Id: 632743256064
     m_Localized: Metadata
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937046547824653
   - m_Id: 5998956765184
     m_Localized: No metadata found
     m_Metadata:
-      m_Items: []
-  - m_Id: 19319819894513664
-    m_Localized: Search
-    m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937046547824654
   - m_Id: 42351695571705856
     m_Localized: Offline Mode is not supported
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937046547824655
   - m_Id: 42379094405406720
     m_Localized: Local Streaming Model is not supported
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 8258937046547824656
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 8258937046547824653
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is header of the Metadata panel
+    - rid: 8258937046547824654
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is text in Metadata panel
+    - rid: 8258937046547824655
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is text of the Metadata panel in Offline mode
+    - rid: 8258937046547824656
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is text of the Metadata panel in while local streaming

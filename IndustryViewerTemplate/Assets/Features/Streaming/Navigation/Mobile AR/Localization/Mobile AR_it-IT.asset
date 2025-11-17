@@ -19,11 +19,11 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 751689523200
-    m_Localized: AR mobile
+    m_Localized: "Realt\xE0 aumentata"
     m_Metadata:
       m_Items: []
   - m_Id: 3464783454209
-    m_Localized: Blocca posizione
+    m_Localized: Posizione di blocco
     m_Metadata:
       m_Items: []
   - m_Id: 3464783454210
@@ -31,23 +31,23 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648512
-    m_Localized: <u>Ancoraggio spaziale</u>
+    m_Localized: Ancora spaziale
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648513
-    m_Localized: Salva l'ancora
+    m_Localized: Salva Ancora
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648514
-    m_Localized: Carica l'ancora
+    m_Localized: Ancoraggio di carico
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648515
-    m_Localized: Sposta
+    m_Localized: Mossa
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648516
-    m_Localized: Ruota
+    m_Localized: Ruotare
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648517
@@ -59,11 +59,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648519
-    m_Localized: Ripristina le impostazioni predefinite
+    m_Localized: Ripristina impostazioni predefinite
     m_Metadata:
       m_Items: []
   - m_Id: 3464787648520
-    m_Localized: m
+    m_Localized: M
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506304
@@ -71,15 +71,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506305
-    m_Localized: Ancoraggio AR salvato
+    m_Localized: Ancora AR salvata
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506306
-    m_Localized: Salvataggio dell'ancoraggio AR fallito - Sconosciuto
+    m_Localized: Errore Salva AR Anchor - Sconosciuto
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506307
-    m_Localized: Scansiona e tocca per inizializzare la posizione dell'asset
+    m_Localized: Scansiona e tocca per inizializzare la posizione della risorsa
     m_Metadata:
       m_Items: []
   - m_Id: 7191313506308
@@ -99,7 +99,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 44105927752671232
-    m_Localized: Sblocca posizione
+    m_Localized: Posizione di sblocco
     m_Metadata:
       m_Items: []
   - m_Id: 45568947435593728
@@ -107,7 +107,28 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 45568947439788032
-    m_Localized: Non hai il permesso di scrittura.
+    m_Localized: Non hai i permessi di scrittura.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084964016128
+    m_Localized: Ancoraggio spaziale trovato
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084972404736
+    m_Localized: "\xC8 stata trovata un'ancora spaziale salvata in precedenza. Vuoi
+      caricarla?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084972404737
+    m_Localized: Ignorare
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119198084972404738
+    m_Localized: Carico
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119205759076524032
+    m_Localized: Tocca il punto per posizionare la risorsa
     m_Metadata:
       m_Items: []
   references:

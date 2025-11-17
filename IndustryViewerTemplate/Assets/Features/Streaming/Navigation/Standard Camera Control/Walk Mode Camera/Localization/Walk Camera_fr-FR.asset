@@ -23,7 +23,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 29980151459840
-    m_Localized: "Sensibilit\xE9 au d\xE9placement"
+    m_Localized: "Sensibilit\xE9 au mouvement"
     m_Metadata:
       m_Items: []
   - m_Id: 29980151459841
@@ -35,7 +35,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 13492953057058816
-    m_Localized: Commandes par joystick
+    m_Localized: Commandes du joystick
     m_Metadata:
       m_Items: []
   references:

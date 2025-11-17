@@ -19,7 +19,7 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 1804204157
-    m_Localized: Cammina con la fotocamera
+    m_Localized: Walk Camera
     m_Metadata:
       m_Items: []
   - m_Id: 29980151459840
@@ -31,11 +31,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 754539096907776
-    m_Localized: Altezza della fotocamera
+    m_Localized: Altezza della telecamera
     m_Metadata:
       m_Items: []
   - m_Id: 13492953057058816
-    m_Localized: Controlli tramite joystick
+    m_Localized: Comandi del joystick
     m_Metadata:
       m_Items: []
   references:

@@ -1,4 +1,5 @@
 using Unity.Cloud.HighPrecision.Runtime;
+using Unity.Industry.Viewer.Navigation.StandardCameraControl.Shared;
 using UnityEngine;
 using Unity.Industry.Viewer.Streaming;
 
@@ -9,6 +10,9 @@ namespace Unity.Industry.Viewer.Navigation.FlyCamera
         [SerializeField]
         private FlyCameraInputSystemController cameraController;
 
+        [SerializeField]
+        FreeFlyCamera freeFlyCamera; 
+        
         DoubleBounds m_CurrentBounds;
         
         public override void Initialize()
@@ -53,6 +57,18 @@ namespace Unity.Industry.Viewer.Navigation.FlyCamera
         public override void FocusToPoint(DoubleBounds bounds)
         {
             cameraController.GoTo(bounds);
+        }
+
+        public override void TranslateTo(Vector3 position, Quaternion rotation)
+        {
+            if(GetNavigationGameObject() == null) return;
+            freeFlyCamera.TranslateTo(GetNavigationGameObject(), position, rotation);
+        }
+
+        public override void FollowPresenter(GameObject presenterObject)
+        {
+            if(GetNavigationGameObject() == null) return;
+            freeFlyCamera.FollowPresenter(presenterObject, GetNavigationGameObject());
         }
 
         private void OnBoundsUpdated(DoubleBounds bounds, bool skipCameraUpdate)

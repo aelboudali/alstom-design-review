@@ -5447,8 +5447,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1609449841027309086}
-  - component: {fileID: 475285978788170845}
-  - component: {fileID: 1347890097472007655}
   - component: {fileID: 3241425523594079259}
   m_Layer: 0
   m_Name: Player_Name_Tag
@@ -5477,86 +5475,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 224, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &475285978788170845
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7644345967948244596}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7086c2e8e1b2a924185edf8409a34dca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_WorldUp: 1
-  m_NameTagText: {fileID: 2282954479990746709}
-  m_InitialsText: {fileID: 6059303314686923199}
-  m_ColoredImage: {fileID: 1088087491780253519}
-  m_NameTextScale: 0.25
-  m_MuteButton: {fileID: 1227266567567664343}
-  m_VoiceChatFillImage: {fileID: 2148184454706583962}
-  m_MicIcon: {fileID: 8332799319295886508}
-  m_SquelchedIcon: {fileID: 3900087902426726603}
-  m_MutedSprite: {fileID: -1955292857, guid: 947058cdb6ae2458cb36de45bfc27b62, type: 3}
-  m_UnmutedSprite: {fileID: 837913548, guid: 947058cdb6ae2458cb36de45bfc27b62, type: 3}
-  m_voiceParticles:
-  - {fileID: 582350603016708191}
-  - {fileID: 3440135356568323785}
-  m_MaxDistanceThreshold: 4.5
-  m_MinDistanceThreshold: 0.75
-  m_GameObjectToHide: {fileID: 2046409980490938567}
-  m_GameObjectDetailsToDeactivate:
-  - {fileID: 6453517526965205759}
-  - {fileID: 6069666140975976935}
---- !u!114 &1347890097472007655
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7644345967948244596}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84f6509f3c7fa7b4899c9c767f49e622, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_GazeTransform: {fileID: 0}
-  m_FacingThreshold: 0.95
-  m_FacingEntered:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 475285978788170845}
-        m_TargetAssemblyTypeName: XRMPT.PlayerNameTag, XRMPT
-        m_MethodName: ToggleFocused
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-  m_FacingExited:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 475285978788170845}
-        m_TargetAssemblyTypeName: XRMPT.PlayerNameTag, XRMPT
-        m_MethodName: ToggleFocused
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  m_LargeMovementDistanceThreshold: 0.05
-  m_LargeMovementCoolDownTime: 0.25
-  m_UseDistanceThreshold: 1
-  m_MaxDistanceThreshold: 10
 --- !u!114 &3241425523594079259
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5574,7 +5492,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 475285978788170845}
+        - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: XRMPT.PlayerNameTag, XRMPT
           m_MethodName: ToggleFocused
           m_Mode: 6
@@ -5590,7 +5508,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 1347890097472007655}
+        - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: XRMPT.CalloutGazeController, XRMPT
           m_MethodName: CheckPointerExit
           m_Mode: 1
@@ -10595,63 +10513,9 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a8ed9b2782764954dae6d50067fd43f6, type: 3}
---- !u!114 &1227266567567664343 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7080475253632028484, guid: a8ed9b2782764954dae6d50067fd43f6,
-    type: 3}
-  m_PrefabInstance: {fileID: 8307671035423697811}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6069666140975976935}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2148184454706583962 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7963811833871495689, guid: a8ed9b2782764954dae6d50067fd43f6,
-    type: 3}
-  m_PrefabInstance: {fileID: 8307671035423697811}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &2314544479048901684 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6004476132092940199, guid: a8ed9b2782764954dae6d50067fd43f6,
     type: 3}
   m_PrefabInstance: {fileID: 8307671035423697811}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3900087902426726603 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4995938406409874264, guid: a8ed9b2782764954dae6d50067fd43f6,
-    type: 3}
-  m_PrefabInstance: {fileID: 8307671035423697811}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!1 &6069666140975976935 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2842070398465342068, guid: a8ed9b2782764954dae6d50067fd43f6,
-    type: 3}
-  m_PrefabInstance: {fileID: 8307671035423697811}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &8332799319295886508 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 67213276836310847, guid: a8ed9b2782764954dae6d50067fd43f6,
-    type: 3}
-  m_PrefabInstance: {fileID: 8307671035423697811}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

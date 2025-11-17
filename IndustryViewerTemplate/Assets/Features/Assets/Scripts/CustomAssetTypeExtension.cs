@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace Unity.Industry.Viewer.Assets
 {
+    // TODO: need to be updated, now asset type has more members
     public static class CustomAssetTypeExtension
     {
         private const string k_AssetsTableKey = "Assets";

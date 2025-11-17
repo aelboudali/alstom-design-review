@@ -4,6 +4,13 @@
     height: 40px;
 }
 
-.MultiplayIcon .appui-icon {
-    background-image: url("project://database/Assets/UI/Textures/Presentation.png");
+.appui-icon--presentation--regular {
+    --unity-image: url("project://database/Assets/UI/Textures/Presentation.png");
+}
+
+.AvatarDivider {
+    margin-left: 16px;
+    width: 2px;
+    height: 24px;
+    background-color: #BCBCBC;
 }

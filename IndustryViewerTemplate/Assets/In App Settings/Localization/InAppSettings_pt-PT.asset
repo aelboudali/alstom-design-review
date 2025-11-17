@@ -18,10 +18,6 @@ MonoBehaviour:
   m_Metadata:
     m_Items: []
   m_TableData:
-  - m_Id: 13261332480
-    m_Localized: "Vers\xE3o"
-    m_Metadata:
-      m_Items: []
   - m_Id: 642184634368
     m_Localized: "Taxa de atualiza\xE7\xE3o"
     m_Metadata:
@@ -39,15 +35,19 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 53920947757056
-    m_Localized: Idioma
+    m_Localized: Linguagem
     m_Metadata:
       m_Items: []
   - m_Id: 44170049240424448
-    m_Localized: Modo off-line
+    m_Localized: Modo offline
     m_Metadata:
       m_Items: []
   - m_Id: 45987493470789632
-    m_Localized: Modo off-line ativado
+    m_Localized: Modo offline ativado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 91376129548476416
+    m_Localized: "Configura\xE7\xF5es"
     m_Metadata:
       m_Items: []
   references:

@@ -18,14 +18,6 @@ MonoBehaviour:
   m_Metadata:
     m_Items: []
   m_TableData:
-  - m_Id: 511469150208
-    m_Localized: Actif cloud
-    m_Metadata:
-      m_Items: []
-  - m_Id: 40570196551786496
-    m_Localized: "S\xE9lectionner"
-    m_Metadata:
-      m_Items: []
   - m_Id: 40570196551786497
     m_Localized: Choisi
     m_Metadata:

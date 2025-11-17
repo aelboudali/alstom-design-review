@@ -1,0 +1,6 @@
+#AssetTitle.in-multiplay {
+    border-right-width: 1px;
+    border-right-color: white;
+    padding-right: 16px;
+    margin-right: 13px;
+}

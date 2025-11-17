@@ -1,0 +1,118 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1923889427737931276
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5859583874221632096}
+  - component: {fileID: 8655374090934977377}
+  - component: {fileID: 8260772250796984774}
+  m_Layer: 0
+  m_Name: Add Model Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5859583874221632096
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1923889427737931276}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8655374090934977377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1923889427737931276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0d77cd8b90064ac0b3617ac37e8e83f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8260772250796984774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1923889427737931276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f9a8fce4b1024324b11b790dcbb4ffa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StyleSheet: {fileID: 7433441132597879392, guid: a2fccf2d32d774997a32886f997de50f,
+    type: 3}
+  m_SelectLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: GUID:2a6c1c34211344e798bb376d8fa80190
+    m_TableEntryReference:
+      m_KeyId: 40851833860644867
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_SelectedLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: GUID:82f30657e69ff493294e966d632ba729
+    m_TableEntryReference:
+      m_KeyId: 40570196551786497
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_AddToSceneLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: GUID:82f30657e69ff493294e966d632ba729
+    m_TableEntryReference:
+      m_KeyId: 40570196551786498
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_UserNotLoggedInLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: GUID:2a6c1c34211344e798bb376d8fa80190
+    m_TableEntryReference:
+      m_KeyId: 40974582780256256
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_AskToLoginLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: GUID:2a6c1c34211344e798bb376d8fa80190
+    m_TableEntryReference:
+      m_KeyId: 40974582784450560
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_OK:
+    m_TableReference:
+      m_TableCollectionName: GUID:2a6c1c34211344e798bb376d8fa80190
+    m_TableEntryReference:
+      m_KeyId: 53019533107208
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []

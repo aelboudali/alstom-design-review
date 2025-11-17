@@ -57,12 +57,30 @@ MonoBehaviour:
     - Locale-zh-TW
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5af89a926e8a9fa45879d63a48f2cc2b
+    m_Address: Environment Tool_zh-TW
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-TW
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5c31a79b42902d44985edc68fcd71ec0
+    m_Address: MeasureTool_zh-TW
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-TW
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 5f6682fff1dc44896bfceb03aee224a8
     m_Address: Vivox_zh-TW
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-zh-TW
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6298e3b71c46e4b4ea5fb39b89bad8bc
+    m_Address: Collaboration_zh-TW
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-TW
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6af31f3659eb92f4c97d0f1638091712
     m_Address: Walk Camera_zh-TW
@@ -105,12 +123,36 @@ MonoBehaviour:
     - Locale-zh-TW
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c84446763d6c447d499b2ade18bc4196
+    m_Address: Section Cut_zh-TW
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-TW
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d11a5b78e447e4655bdd49454a7f78b1
+    m_Address: UI_zh-TW
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-TW
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d6685ef16c156442180c3308c6ac4211
+    m_Address: Shared_zh-TW
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-TW
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: dce1f083c2be04584bff1083d1096fd1
     m_Address: Identity_zh-TW
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-zh-TW
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: eff3f1b4d4ca485469054897c6529a92
+    m_Address: Deep Linking_zh-TW
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-TW
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: bf5713deec68845209684f81a71bb85a, type: 2}

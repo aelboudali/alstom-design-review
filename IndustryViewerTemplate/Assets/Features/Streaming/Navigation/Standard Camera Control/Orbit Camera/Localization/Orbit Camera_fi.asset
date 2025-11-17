@@ -19,19 +19,19 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 12604054429696
-    m_Localized: Kiertokamera
+    m_Localized: Orbit kamera
     m_Metadata:
       m_Items: []
   - m_Id: 12455156637696
-    m_Localized: Kiertonopeus
+    m_Localized: Rataherkkyys
     m_Metadata:
       m_Items: []
   - m_Id: 12455160832000
-    m_Localized: Panorointinopeus
+    m_Localized: Pan-herkkyys
     m_Metadata:
       m_Items: []
   - m_Id: 12455160832001
-    m_Localized: Zoomausnopeus
+    m_Localized: Zoomausherkkyys
     m_Metadata:
       m_Items: []
   references:

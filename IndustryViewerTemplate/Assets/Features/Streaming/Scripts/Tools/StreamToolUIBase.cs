@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -13,8 +10,10 @@ namespace Unity.Industry.Viewer.Streaming
         [SerializeField] private VisualTreeAsset m_toolUIAsset;
         
         protected StreamToolControllerBase m_Controller;
+        
+        protected UIDocument m_PanelDocument;
 
-        public abstract void InitializeUI(VisualElement parent, GameObject controller);
+        public abstract void InitializeUI(UIDocument uiDocument, VisualElement parent, GameObject controller);
         
         public abstract void UninitializeUI();
 

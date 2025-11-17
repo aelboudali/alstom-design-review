@@ -1,0 +1,322 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Collaboration_en
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 5a5b0fdb44e374c3f950b188f7c8b8cd, type: 2}
+  m_Metadata:
+    m_Items:
+    - rid: 8052603406888206648
+  m_TableData:
+  - m_Id: 1301378228224
+    m_Localized: Annotation
+    m_Metadata:
+      m_Items:
+      - rid: 8052603427972186295
+  - m_Id: 9757421797892096
+    m_Localized: Follow thread
+    m_Metadata:
+      m_Items:
+      - rid: 8052603427972186296
+  - m_Id: 9757421802086400
+    m_Localized: Unfollow thread
+    m_Metadata:
+      m_Items:
+      - rid: 8052603427972186297
+  - m_Id: 9757421802086401
+    m_Localized: Copy link
+    m_Metadata:
+      m_Items:
+      - rid: 8052603427972186298
+  - m_Id: 9757421806280704
+    m_Localized: Delete Thread
+    m_Metadata:
+      m_Items:
+      - rid: 8052603427972186299
+  - m_Id: 9757421806280705
+    m_Localized: Are you sure you want to delete this thread and all its replies?
+      This cannot be undone.
+    m_Metadata:
+      m_Items:
+      - rid: 8052603427972186300
+  - m_Id: 9757421806280706
+    m_Localized: Start a new thread...
+    m_Metadata:
+      m_Items:
+      - rid: 8052603427972186301
+  - m_Id: 9757421806280707
+    m_Localized: Select Attachment
+    m_Metadata:
+      m_Items:
+      - rid: 8052603427972186302
+  - m_Id: 9757421806280708
+    m_Localized: <color=#0892FF>{reply_count:plural:1 reply|{} replies}</color>
+    m_Metadata:
+      m_Items:
+      - rid: 8052603406888206648
+      - rid: 8052603427972186303
+  - m_Id: 9757421806280709
+    m_Localized: Add Attachment
+    m_Metadata:
+      m_Items:
+      - rid: 8052603427972186304
+  - m_Id: 9757421806280710
+    m_Localized: Edit
+    m_Metadata:
+      m_Items:
+      - rid: 8052603427972186305
+  - m_Id: 9757421806280711
+    m_Localized: Unknown User
+    m_Metadata:
+      m_Items:
+      - rid: 8052603427972186306
+  - m_Id: 9758374261415936
+    m_Localized: <i>has resolved this thread.</i>
+    m_Metadata:
+      m_Items:
+      - rid: 8052603427972186307
+  - m_Id: 9757421806280713
+    m_Localized: <i>has re-opened this thread.</i>
+    m_Metadata:
+      m_Items:
+      - rid: 8052603427972186308
+  - m_Id: 9757421806280714
+    m_Localized: '{attachment_count:plural:1 attachment|{} attachments}'
+    m_Metadata:
+      m_Items:
+      - rid: 8052603406888206648
+      - rid: 8052603427972186309
+  - m_Id: 9757421806280715
+    m_Localized: All Threads
+    m_Metadata:
+      m_Items:
+      - rid: 8052603427972186310
+  - m_Id: 9757421806280716
+    m_Localized: Open threads only
+    m_Metadata:
+      m_Items:
+      - rid: 8052603427972186311
+  - m_Id: 9757421806280717
+    m_Localized: Add a reply to this thread...
+    m_Metadata:
+      m_Items:
+      - rid: 8052603427972186312
+  - m_Id: 9757421806280718
+    m_Localized: Resolved
+    m_Metadata:
+      m_Items:
+      - rid: 8052603427972186313
+  - m_Id: 9757421806280719
+    m_Localized: Duplicate file name
+    m_Metadata:
+      m_Items:
+      - rid: 8052603427972186314
+  - m_Id: 9757421806280720
+    m_Localized: This attachment has already been added.
+    m_Metadata:
+      m_Items:
+      - rid: 8052603427972186315
+  - m_Id: 9757421806280721
+    m_Localized: Spatial Attachment
+    m_Metadata:
+      m_Items:
+      - rid: 8052603427972186316
+  - m_Id: 9757421806280722
+    m_Localized: Unknown Attachment
+    m_Metadata:
+      m_Items:
+      - rid: 8052603427972186317
+  - m_Id: 9757421806280723
+    m_Localized: Delete Attachment
+    m_Metadata:
+      m_Items:
+      - rid: 8052603427972186318
+  - m_Id: 9757421806280724
+    m_Localized: Are you sure you want to delete this attachment?
+    m_Metadata:
+      m_Items:
+      - rid: 8052603427972186319
+  - m_Id: 9757421806280725
+    m_Localized: Save Attachment
+    m_Metadata:
+      m_Items:
+      - rid: 8052603427972186320
+  - m_Id: 9757421806280726
+    m_Localized: You are currently offline.
+    m_Metadata:
+      m_Items:
+      - rid: 8052603427972186321
+  - m_Id: 9757421806280727
+    m_Localized: You are in guest mode.
+    m_Metadata:
+      m_Items:
+      - rid: 8052603427972186322
+  - m_Id: 9766184659443712
+    m_Localized: Reply
+    m_Metadata:
+      m_Items:
+      - rid: 8052603427972186323
+  - m_Id: 9825352548343808
+    m_Localized: Back
+    m_Metadata:
+      m_Items:
+      - rid: 8052603427972186324
+  - m_Id: 9825352552538112
+    m_Localized: New Comment
+    m_Metadata:
+      m_Items:
+      - rid: 8052603427972186325
+  - m_Id: 9827055381241856
+    m_Localized: Thread
+    m_Metadata:
+      m_Items:
+      - rid: 8052603427972186326
+  references:
+    version: 2
+    RefIds:
+    - rid: 8052603406888206648
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 9757421806280714
+        - id: 9757421806280708
+    - rid: 8052603427972186295
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Name of the tool
+    - rid: 8052603427972186296
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Button for follow thread
+    - rid: 8052603427972186297
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Button for unfollow thread
+    - rid: 8052603427972186298
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Button for copy
+    - rid: 8052603427972186299
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Button for delete
+    - rid: 8052603427972186300
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: The confirmation text asking user to delete thread
+    - rid: 8052603427972186301
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Placeholder for new thread
+    - rid: 8052603427972186302
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Title for file picker
+    - rid: 8052603427972186303
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: The text to show how many replies of a thread
+    - rid: 8052603427972186304
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Button for add attachment
+    - rid: 8052603427972186305
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Button for edit thread
+    - rid: 8052603427972186306
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Show unknown user who create the thread
+    - rid: 8052603427972186307
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Show who resolved it
+    - rid: 8052603427972186308
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Show who re-opened it
+    - rid: 8052603427972186309
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Show how many attachments in this thread
+    - rid: 8052603427972186310
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Thread filter label
+    - rid: 8052603427972186311
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Thread filter label
+    - rid: 8052603427972186312
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Placeholder for new reply
+    - rid: 8052603427972186313
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Show if thread is resolved
+    - rid: 8052603427972186314
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Error message for duplicate file name when attach files
+    - rid: 8052603427972186315
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Error message for duplicate file path when attach files
+    - rid: 8052603427972186316
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: title for show Spatial Attachment
+    - rid: 8052603427972186317
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Title for show Unknown Attachment
+    - rid: 8052603427972186318
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Title for asking Delete Attachment
+    - rid: 8052603427972186319
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Confirmation for asking delete attachment
+    - rid: 8052603427972186320
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Title for file picker
+    - rid: 8052603427972186321
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Message when in offline
+    - rid: 8052603427972186322
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Message when the user is a guest
+    - rid: 8052603427972186323
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Text to show reply in thread
+    - rid: 8052603427972186324
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Back to previous page
+    - rid: 8052603427972186325
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Add new comment
+    - rid: 8052603427972186326
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Thread title

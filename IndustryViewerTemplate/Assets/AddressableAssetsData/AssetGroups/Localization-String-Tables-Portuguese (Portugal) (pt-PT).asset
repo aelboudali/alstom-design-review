@@ -36,6 +36,12 @@ MonoBehaviour:
     - Locale-pt-PT
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 39646bf2a5205074297484989d8db361
+    m_Address: MeasureTool_pt-PT
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-pt-PT
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 46ad31d540cc1425387805805bf2957b
     m_Address: Orbit Camera_pt-PT
     m_ReadOnly: 1
@@ -77,6 +83,18 @@ MonoBehaviour:
     - Locale-pt-PT
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8cb3f67d31903bc41837b83fb89d91f1
+    m_Address: Deep Linking_pt-PT
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-pt-PT
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8fe671e4150fc4801994e1007d9a80b3
+    m_Address: UI_pt-PT
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-pt-PT
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 94c97dc9725a44e36993b424fa0af6e9
     m_Address: Fly Camera_pt-PT
     m_ReadOnly: 1
@@ -91,6 +109,18 @@ MonoBehaviour:
     - Locale-pt-PT
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b24865471c11c47d0bc0330170a9395e
+    m_Address: Collaboration_pt-PT
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-pt-PT
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b6878350b4595894da75940453aa1308
+    m_Address: Environment Tool_pt-PT
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-pt-PT
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bfa4592d4558f47bb91eb6773a3e2513
     m_Address: VR_pt-PT
     m_ReadOnly: 1
@@ -98,12 +128,24 @@ MonoBehaviour:
     - Locale-pt-PT
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d4fb98d758b69402d940d0a8a57ecf24
+    m_Address: Section Cut_pt-PT
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-pt-PT
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d8261cf02f1ec45f5912f84c0a8b8afa
     m_Address: Multiplay_pt-PT
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-pt-PT
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f18c346a279af44f79bbf7dfc41e7329
+    m_Address: Shared_pt-PT
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-pt-PT
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f9e28493c240242778d89d0fce950aaa
     m_Address: Add Model Tool_pt-PT

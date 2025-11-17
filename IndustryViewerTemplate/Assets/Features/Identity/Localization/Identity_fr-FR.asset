@@ -19,7 +19,7 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 2213752594432
-    m_Localized: "Visionneuse d'industrie Unity \nProjet de mod\xE8le"
+    m_Localized: "Visionneuse Unity Industry\nMod\xE8le de projet"
     m_Metadata:
       m_Items: []
   - m_Id: 7997920108544
@@ -27,19 +27,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 9303762132992
-    m_Localized: Ou
+    m_Localized: ou
     m_Metadata:
       m_Items: []
   - m_Id: 9420774825984
-    m_Localized: "Continuer en tant qu'invit\xE9"
+    m_Localized: "Mode invit\xE9"
     m_Metadata:
       m_Items: []
   - m_Id: 15982369169408
     m_Localized: "Se d\xE9connecter"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 32483335725056
-    m_Localized: Annuler
     m_Metadata:
       m_Items: []
   - m_Id: 33199882231808
@@ -47,7 +43,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 33283562790912
-    m_Localized: "\xCAtes-vous s\xFBr de vous d\xE9connecter\_?"
+    m_Localized: "\xCAtes-vous s\xFBr de vouloir vous d\xE9connecter ?"
     m_Metadata:
       m_Items: []
   - m_Id: 33349040070656
@@ -67,12 +63,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 58408840381587456
-    m_Localized: "Vous \xEAtes actuellement en mode hors ligne. Vous souhaitez revenir
-      en mode en ligne et vous connecter ?"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 58409243970101248
-    m_Localized: D'ACCORD
+    m_Localized: "Vous \xEAtes actuellement en mode hors ligne. Souhaitez-vous revenir
+      en mode connect\xE9 et vous connecter\_?"
     m_Metadata:
       m_Items: []
   references:

@@ -7,14 +7,10 @@ namespace Unity.Industry.Viewer.Streaming
     [DefaultExecutionOrder(100)]
     public abstract class NavigationOption : MonoBehaviour
     {
-        public LocalizedString NavigationName => navigationName;
+        public LocalizedString NavigationName => navigationOptionUIComponent?.NavigationName;
         public NavigationOptionUI NavigationOptionUIComponent => navigationOptionUIComponent;
-        
         public Camera NavigationCamera => navigationCamera;
-        
-        [SerializeField]
-        private LocalizedString navigationName;
-        
+
         [SerializeField]
         protected Camera navigationCamera;
         
@@ -36,5 +32,9 @@ namespace Unity.Industry.Viewer.Streaming
         public abstract void SetDefaultView();
         
         public abstract void FocusToPoint(DoubleBounds bounds);
+        
+        public abstract void TranslateTo(Vector3 position, Quaternion rotation);
+        
+        public abstract void FollowPresenter(GameObject presenter);
     }
 }

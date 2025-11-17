@@ -1,0 +1,21 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:VisualElement style="background-color: rgb(39, 39, 39); border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding-top: 12px; padding-right: 12px; padding-bottom: 12px; padding-left: 12px; width: 345px; max-width: 345px;">
+        <engine:VisualElement style="flex-grow: 0; flex-direction: row; justify-content: space-between; max-width: 321px; margin-bottom: 18px;">
+            <engine:VisualElement style="flex-grow: 1; flex-direction: row; margin-right: 8px; align-items: center; max-width: 273px; justify-content: flex-start;">
+                <Unity.AppUI.UI.Text name="Asset-Label" style="font-size: 18px; margin-right: 4px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; height: 24px; max-width: 225px;" />
+                <Unity.AppUI.UI.Text name="VerBox" size="S" style="min-width: 41px; height: 20px; padding-right: 4px; padding-left: 4px; padding-top: 2px; padding-bottom: 2px; border-left-color: rgb(63, 63, 63); border-right-color: rgb(63, 63, 63); border-top-color: rgb(63, 63, 63); border-bottom-color: rgb(63, 63, 63); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-left-radius: 6px; border-top-right-radius: 6px; border-bottom-right-radius: 6px; border-bottom-left-radius: 6px; font-size: 12px;" />
+            </engine:VisualElement>
+            <Unity.AppUI.UI.IconButton icon="x" size="S" style="width: 40px; height: 40px;" />
+        </engine:VisualElement>
+        <engine:VisualElement name="Popup-Image" style="height: 198px; max-height: 198px; min-height: 198px; margin-bottom: 18px; -unity-background-scale-mode: scale-to-fit;" />
+        <engine:VisualElement style="flex-direction: row; justify-content: space-between; margin-bottom: 18px;">
+            <Unity.AppUI.UI.Text style="overflow: hidden; max-width: 50px; white-space: nowrap;">
+                <Bindings>
+                    <UnityEngine.Localization.LocalizedString property="text" table="GUID:2a6c1c34211344e798bb376d8fa80190" entry="Id(53019533107205)" />
+                </Bindings>
+            </Unity.AppUI.UI.Text>
+            <Unity.AppUI.UI.Dropdown default-message="@Shared:Select" style="max-width: 261px; min-width: 261px; width: 261px;" />
+        </engine:VisualElement>
+        <Unity.AppUI.UI.ActionButton accent="true" selected="true" icon="broadcast" />
+    </engine:VisualElement>
+</engine:UXML>

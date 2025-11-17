@@ -19,27 +19,25 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 2213752594432
-    m_Localized: "Visualizador da ind\xFAstria Unity \nProjeto de modelo"
+    m_Localized: 'Visualizador Unity Industry
+
+      Projeto de Modelo'
     m_Metadata:
       m_Items: []
   - m_Id: 7997920108544
-    m_Localized: "Iniciar sess\xE3o "
+    m_Localized: Conecte-se
     m_Metadata:
       m_Items: []
   - m_Id: 9303762132992
-    m_Localized: Ou
+    m_Localized: ou
     m_Metadata:
       m_Items: []
   - m_Id: 9420774825984
-    m_Localized: Continuar como convidado
+    m_Localized: Modo Convidado
     m_Metadata:
       m_Items: []
   - m_Id: 15982369169408
     m_Localized: Sair
-    m_Metadata:
-      m_Items: []
-  - m_Id: 32483335725056
-    m_Localized: Cancelar
     m_Metadata:
       m_Items: []
   - m_Id: 33199882231808
@@ -51,7 +49,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 33349040070656
-    m_Localized: "Aguardando iniciar sess\xE3o..."
+    m_Localized: Aguardando login...
     m_Metadata:
       m_Items: []
   - m_Id: 33437661519872
@@ -63,16 +61,12 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 58408840369004544
-    m_Localized: Modo off-line
+    m_Localized: Modo offline
     m_Metadata:
       m_Items: []
   - m_Id: 58408840381587456
-    m_Localized: "Voc\xEA est\xE1 atualmente no modo off-line. Quer voltar ao modo
-      online e fazer login?"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 58409243970101248
-    m_Localized: OK
+    m_Localized: "Voc\xEA est\xE1 no modo offline. Deseja retornar ao modo online
+      e fazer login?"
     m_Metadata:
       m_Items: []
   references:

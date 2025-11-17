@@ -1,0 +1,3 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="Cursor" style="flex-grow: 0; width: 75px; height: 75px; background-image: url(&quot;project://database/Assets/Streaming%20Tool/Measure%20Tool/Sprites/PointSelected.png?fileID=2800000&amp;guid=3d555d1544604db4181ce87a5eae3e1f&amp;type=3#PointSelected&quot;);" />
+</ui:UXML>

@@ -22,6 +22,14 @@ MonoBehaviour:
     m_Localized: "VR\u98DE\u884C\u6A21\u5F0F"
     m_Metadata:
       m_Items: []
+  - m_Id: 95971741896007680
+    m_Localized: "\u6269\u5C55\u73B0\u5B9E"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 119196761623355392
+    m_Localized: "\u6309\u4E0B\u6273\u673A\u952E\u6216\u7528\u624B\u6307\u634F\u5408\u5373\u53EF\u653E\u7F6E\u8D44\u4EA7"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

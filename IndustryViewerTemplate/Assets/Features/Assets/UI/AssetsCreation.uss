@@ -1,0 +1,12 @@
+#appui-divider__content {
+    background-color: #444444;
+}
+
+#TagChipsScrollView .unity-scroll-view__content-container {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+#AssetDescriptionField #appui-textarea__resize-handle {
+    display: none;
+}

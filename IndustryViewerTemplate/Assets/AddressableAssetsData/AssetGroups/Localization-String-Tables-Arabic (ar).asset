@@ -29,6 +29,24 @@ MonoBehaviour:
     - Locale-ar
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0d168e4cb979c4d4fae604d21ba8e985
+    m_Address: UI_ar
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ar
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0dd7151cfbb3a7e4c84636c69248b533
+    m_Address: Environment Tool_ar
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ar
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 128cf9ff9b58cff42bf2c53e6a340e96
+    m_Address: Deep Linking_ar
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ar
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 16d561ac03706424baa1203fb28891ad
     m_Address: Hierarchy Tool_ar
     m_ReadOnly: 1
@@ -49,12 +67,24 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-ar
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 35eb009f073dbed4cab624cf0448e220
+    m_Address: MeasureTool_ar
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ar
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 482a9ebb49c6a428baff1bd7931574b1
     m_Address: Streaming_ar
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-ar
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 55395b5d5ef154cb88cdd6fcd5ca32d3
+    m_Address: Collaboration_ar
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ar
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 5e12ce79368204a0686115803a412853
     m_Address: Identity_ar
@@ -69,6 +99,18 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-ar
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 665c7a53cf0ea468793d80c3e3735068
+    m_Address: Section Cut_ar
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ar
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6dc7298fc3d42442da7949545799966c
+    m_Address: Shared_ar
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ar
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: aa8beb265c0414805b53cf3673173cf1
     m_Address: InAppSettings_ar

@@ -1,13 +1,13 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-using UnityEngine.UIElements;
 using Unity.AppUI.UI;
+using Unity.Cloud.Identity;
 using Unity.Industry.Viewer.Assets;
 using Unity.Industry.Viewer.Shared;
+using UnityEngine;
 using UnityEngine.Localization;
+using UnityEngine.UIElements;
 using AssetInfo = Unity.Industry.Viewer.Assets.AssetInfo;
 
 namespace Unity.Industry.Viewer.Streaming.AddModel
@@ -17,24 +17,25 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
     {
         private const string k_AssetTopBarName = "AssetTopBar";
         private const string k_AssetInfoPanelRootName = "AssetInfoContainer";
-        private const string k_StreamAssetButtonName = "StreamAssetButton";
         private const string k_OffloadAssetButtonName = "OffloadAssetButton";
-        private const string k_DownloadStreamingAssetButtonName = "DownloadStreamingAssetButton";
         private const string k_AddToSelectionClassName = "AddModelToSelectionButton";
         private const string k_RemoveFromSelectionClassName = "RemoveModelFromSelectionButton";
         private const string k_TopLeftBarName = "TopLeftBar";
+        private const string k_NewAssetButtonName = "NewAssetButton";
 
         private IconButton m_FolderButton;
-        private ActionButton m_OffloadButton;
         private ActionButton m_AddToSelectionButton;
         private ActionButton m_AddToSceneButton;
+        private ActionButton m_NewAssetButton;
         private VisualElement m_OriginalOrganizationContainer;
-        private ProgressActionButton m_DownloadButton;
         private StreamAssetUIController m_StreamAssetUIController;
         private AssetsUIBaseController m_AssetsUIBaseController;
         private AssetInfoUIBaseController m_AssetInfoUIBaseController;
         private Panel m_Panel;
-        
+        private VisualElement m_AssetTopBar;
+        private AssetsUIBaseController m_CurrentActiveAssetsUIBaseController = null;
+        private bool m_CurrentVersionHasStreamableDataset;
+
         [SerializeField]
         private StyleSheet m_StyleSheet;
 
@@ -43,9 +44,10 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
         [SerializeField] private LocalizedString m_SelectLocalizedString;
         [SerializeField] private LocalizedString m_SelectedLocalizedString;
         [SerializeField] private LocalizedString m_AddToSceneLocalizedString;
+        [SerializeField] private LocalizedString m_UserNotLoggedInLocalizedString;
+        [SerializeField] private LocalizedString m_AskToLoginLocalizedString;
+        [SerializeField] private LocalizedString m_OK;
 
-        private WaitForEndOfFrame m_Wait = new WaitForEndOfFrame();
-        
         private void Awake()
         {
             m_AddModelToolController = GetComponent<AddModelToolController>();
@@ -53,42 +55,37 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
 
         private void Start()
         {
+            AddModelToolController.OnSelectedAssetChanged += OnSelectedAssetChanged;
             ToolPanelUIController.OpenToolPanel += OnOpenToolPanel;
             StreamingModelController.FinishedAddingModel += OnFinishedAddingModel;
             NavigationController.OnNavigationOptionChanged += NavigationOptionChanged;
             NetworkDetector.OnNetworkStatusChanged += OnNetworkStatusChanged;
             NavigationController.RequestDefaultHomeView += CloseUI;
-            SharedUIManager.Instance.AssetsRoot.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+            SharedUIManager.Instance.AssetsContainer.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
             
             if (!SharedUIManager.Instance.AssetsUIDocument.rootVisualElement.styleSheets.Contains(m_StyleSheet))
             {
                 SharedUIManager.Instance.AssetsUIDocument.rootVisualElement.styleSheets.Add(m_StyleSheet);
             }
-            
-            var topLeftBar = SharedUIManager.Instance.AssetsUIDocument.rootVisualElement.Q<VisualElement>(k_TopLeftBarName);
-            m_FolderButton = new IconButton()
-            {
-                icon = "folder",
-                name = "AddModelIconButton"
-            };
-            topLeftBar.Insert(0, m_FolderButton);
-            m_FolderButton.clicked += FolderButtonOnClicked;
+
+            InitializeToolButton();
             StreamSceneController.ExitSceneConfirmed += CloseUI;
             OfflineModeAssetsController.AssetOffloaded += OnFinishedOffloadModel;
             AssetsController.AssetSelected += OnAssetSelected;
+
         }
 
         private void OnDestroy()
         {
+            AddModelToolController.OnSelectedAssetChanged -= OnSelectedAssetChanged;
             StopAllCoroutines();
-            if (SharedUIManager.Instance.AssetsUIDocument.rootVisualElement.styleSheets.Contains(m_StyleSheet))
+            if (SharedUIManager.Instance?.AssetsUIDocument?.rootVisualElement.styleSheets.Contains(m_StyleSheet) == true)
             {
                 SharedUIManager.Instance.AssetsUIDocument.rootVisualElement.styleSheets.Remove(m_StyleSheet);
             }
-            SharedUIManager.Instance.AssetsRoot.UnregisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+            SharedUIManager.Instance.AssetsContainer?.UnregisterCallback<GeometryChangedEvent>(OnGeometryChanged);
             ToolPanelUIController.OpenToolPanel -= OnOpenToolPanel;
-            m_FolderButton.clicked -= FolderButtonOnClicked;
-            m_FolderButton?.RemoveFromHierarchy();
+            RemoveToolButton();
             NetworkDetector.OnNetworkStatusChanged -= OnNetworkStatusChanged;
             StreamingModelController.FinishedAddingModel -= OnFinishedAddingModel;
             StreamSceneController.ExitSceneConfirmed -= CloseUI;
@@ -96,6 +93,36 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
             NavigationController.RequestDefaultHomeView -= CloseUI;
             OfflineModeAssetsController.AssetOffloaded -= OnFinishedOffloadModel;
             AssetsController.AssetSelected -= OnAssetSelected;
+            if (m_AssetsUIBaseController?.AssetInfoUIController != null)
+            {
+                m_AssetsUIBaseController.AssetInfoUIController.AssetVersionDropdown?.UnregisterValueChangedCallback(OnVersionDropdownValueChanged);
+                m_AssetsUIBaseController.AssetInfoUIController.AssetVersionsLoaded -= OnAssetVersionsLoaded;
+            }
+        }
+
+        protected virtual void RemoveToolButton()
+        {
+            m_FolderButton.clicked -= FolderButtonOnClicked;
+            m_FolderButton?.RemoveFromHierarchy();
+        }
+
+        protected virtual void InitializeToolButton()
+        {
+            var topLeftBar = SharedUIManager.Instance.AssetsUIDocument.rootVisualElement.Q<VisualElement>(k_TopLeftBarName);
+            m_FolderButton = new IconButton
+            {
+                icon = "folder",
+                name = "AddModelIconButton",
+                primary = false,
+                size = Size.L
+            };
+            topLeftBar.Insert(0, m_FolderButton);
+            m_FolderButton.clicked += FolderButtonOnClicked;
+        }
+        
+        private void OnSelectedAssetChanged(HashSet<AssetInfo> obj)
+        {
+            m_AddToSceneButton?.SetEnabled(obj.Count > 0);
         }
         
         private void OnAssetSelected(AssetInfo obj)
@@ -103,18 +130,16 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
             CloseUI();
         }
         
-        private void OnFinishedOffloadModel(AssetInfo obj)
+        private void OnFinishedOffloadModel(AssetInfo assetInfo)
         {
-            if (m_AddModelToolController.SelectedAssets.Any(x => x.Asset.Descriptor == obj.Asset.Descriptor))
+            if (m_AddModelToolController.SelectedAssetsContainExactVersion(assetInfo))
             {
-                m_AddModelToolController.SelectedAssets.Remove(obj);
-                m_AddToSceneButton?.SetEnabled(m_AddModelToolController.SelectedAssets.Count > 0);
+                m_AddModelToolController.RemoveExactVersionOfSelectedAsset(assetInfo);
             }
         }
 
-        private void OnGeometryChanged(GeometryChangedEvent evt)
+        protected virtual void OnGeometryChanged(GeometryChangedEvent evt)
         {
-            m_FolderButton.primary = (evt.target as VisualElement).style.display == DisplayStyle.Flex;
             if ((evt.target as VisualElement).style.display == DisplayStyle.None)
             {
                 m_AddToSceneButton?.RemoveFromHierarchy();
@@ -123,7 +148,7 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
             }
         }
 
-        private void OnOpenToolPanel(LocalizedString arg1, VisualElement arg2)
+        private void OnOpenToolPanel(LocalizedString arg1, VisualElement arg2, bool arg3)
         {
             CloseUI();
         }
@@ -135,32 +160,59 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
 
         private void CloseUI()
         {
-            if (SharedUIManager.Instance.AssetsRoot.style.display == DisplayStyle.None) return;
+            if (!SharedUIManager.Instance.AssetsContainer.IsDisplayOn()) return;
             StopAllCoroutines();
             UninitializeUI();
         }
 
-        private void FolderButtonOnClicked()
+        protected void FolderButtonOnClicked()
         {
-            if (SharedUIManager.Instance.AssetsRoot.style.display == DisplayStyle.None)
+            if (!NetworkDetector.IsOffline && !PlatformServices.IsUserLoggedIn)
             {
-                StreamToolsController.DisableAllTools?.Invoke();
-                ToolPanelUIController.CloseToolPanel?.Invoke();
-                NavigationController.PauseCameraControl?.Invoke(true);
-                InitializeUI();
+                var alertDialog = new AlertDialog()
+                {
+                    title = m_UserNotLoggedInLocalizedString.GetTitleLocalizedStringForAppUI(),
+                    description = m_AskToLoginLocalizedString.GetTitleLocalizedStringForAppUI()
+                };
+                alertDialog.SetCancelAction(0, m_OK.GetTitleLocalizedStringForAppUI());
+                var modal = Modal.Build(m_FolderButton, alertDialog);
+                modal.Show();
+                return;
             }
-            else
+            
+            if (IsVisible())
             {
                 UninitializeUI();
             }
+            else
+            {
+                Show();
+            }
         }
         
+        public bool IsVisible()
+        {
+            return SharedUIManager.Instance.AssetsContainer.style.display == DisplayStyle.Flex;
+        }
+
+        public void Show()
+        {
+            if (IsVisible()) return;
+
+            StreamToolsController.DisableAllTools?.Invoke(true);
+            ToolPanelUIController.CloseToolPanel?.Invoke();
+            NavigationController.PauseCameraControl?.Invoke(true);
+            InitializeUI();
+        }
+
         private void OnNetworkStatusChanged(bool obj)
         {
-            if (!obj && NetworkDetector.RequestedOfflineMode && SharedUIManager.Instance.AssetsRoot.style.display == DisplayStyle.Flex)
+            if (!obj && NetworkDetector.RequestedOfflineMode && SharedUIManager.Instance.AssetsContainer.style.display == DisplayStyle.Flex)
             {
                 SharedUIManager.Instance.AssetProjectScrollList.Clear();
                 SharedUIManager.Instance.OrganizationButton.style.display = DisplayStyle.Flex;
+                m_AssetTopBar?.SetEnabled(false);
+                SharedUIManager.OrganizationSelected += OrganizationSelected;
             }
             
             DefineUIController();
@@ -172,43 +224,61 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
             }
             m_AddModelToolController.ClearSelectedAssets();
 
-            if (m_AssetInfoUIBaseController.IsVisible())
+            if (SharedUIManager.Instance.AssetsContainer.style.display == DisplayStyle.Flex && m_AssetInfoUIBaseController.IsVisible())
             {
                 UpdateSelectedButton(false);
             }
             
-            m_AddToSceneButton?.SetEnabled(m_AddModelToolController.SelectedAssets.Count > 0);
+            m_AddToSceneButton?.SetEnabled(m_AddModelToolController.GetSelectedAssetCount() > 0);
         }
         
         private void OnFinishedAddingModel()
         {
-            SharedUIManager.HideLoadingModal();
-            m_AssetInfoUIBaseController?.ClearUI();
-            SharedUIManager.Instance.AssetGridView.ClearSelectionWithoutNotify();
-            SharedUIManager.ClearSelectionOnGrid();
-            var allGridAssets = SharedUIManager.Instance.AssetGridView
-                .Query<Checkbox>().ToList();
-            foreach (var checkbox in allGridAssets)
+            StartCoroutine(WaitForUIUpdate());
+            return;
+
+            IEnumerator WaitForUIUpdate()
             {
-                checkbox.SetEnabled(true);
-                checkbox.SetValueWithoutNotify(CheckboxState.Unchecked);
+                SharedUIManager.Instance.AssetGridView.SetEnabled(false);
+                m_AssetInfoUIBaseController?.ClearUI();
+                SharedUIManager.Instance.AssetGridView.ClearSelectionWithoutNotify();
+                SharedUIManager.ClearSelectionOnGrid();
+                var allGridAssets = SharedUIManager.Instance.AssetGridView
+                    .Query<Checkbox>().ToList();
+                foreach (var checkbox in allGridAssets)
+                {
+                    checkbox.SetEnabled(true);
+                    checkbox.SetValueWithoutNotify(CheckboxState.Unchecked);
+                }
+                m_AddModelToolController.ClearSelectedAssets();
+                m_AddToSelectionButton?.SetEnabled(true);
+                m_AddToSceneButton?.SetEnabled(false);
+                yield return new WaitForEndOfFrame();
+                LoadingUIPanel.HideLoadingPanel?.Invoke(() =>
+                {
+                    SharedUIManager.Instance.AssetGridView.SetEnabled(true);
+                });
             }
-            m_AddToSelectionButton?.SetEnabled(true);
-            m_AddToSceneButton?.SetEnabled(false);
+            
         }
 
-        private void InitializeUI()
+        protected virtual void InitializeUI()
         {
             if (!SharedUIManager.Instance.AssetsUIDocument.rootVisualElement.styleSheets.Contains(m_StyleSheet))
             {
                 SharedUIManager.Instance.AssetsUIDocument.rootVisualElement.styleSheets.Add(m_StyleSheet);
             }
+
+            if (m_FolderButton != null)
+            {
+                m_FolderButton.primary = true;
+            }
             
             m_Panel = SharedUIManager.Instance.AssetsUIDocument.rootVisualElement.Q<Panel>();
             
-            m_FolderButton.primary = true;
+            m_AssetTopBar = SharedUIManager.Instance.AssetsContainer.Q<VisualElement>(k_AssetTopBarName);
             
-            SharedUIManager.Instance.AssetsRoot.style.display = DisplayStyle.Flex;
+            SharedUIManager.Instance.AssetsContainer.style.display = DisplayStyle.Flex;
 
             m_OriginalOrganizationContainer ??= SharedUIManager.Instance.OrganizationButton.parent;
             
@@ -216,19 +286,22 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
             
             SharedUIManager.Instance.OrganizationButton.style.display = DisplayStyle.Flex;
 
+            m_NewAssetButton = m_AssetTopBar.Q<ActionButton>(k_NewAssetButtonName);
+            m_NewAssetButton?.DisplayOff();
+            m_StreamAssetUIController = FindFirstObjectByType<StreamAssetUIController>();
+            m_StreamAssetUIController.IsStreamFunctionalityActive = false;
+            m_StreamAssetUIController.IsDownOffloadFunctionalityActive = false;
+
             if (NetworkDetector.RequestedOfflineMode)
             {
-                SharedUIManager.Instance.OrganizationButton.label = string.Empty;
-                SharedUIManager.Instance.OrganizationButton.ClearBinding("label");
-                SharedUIManager.Instance.OrganizationButton.SetBinding("label", SharedUIManager.Instance.SelectOrganization);
+                SharedUIManager.Organization = null;
+                SharedUIManager.Instance.OrganizationButton.label =
+                    SharedUIManager.Instance.SelectOrganization.GetTitleLocalizedStringForAppUI();
+                SharedUIManager.OrganizationSelected += OrganizationSelected;
             }
 
             SharedUIManager.Instance.SetAssetGridColumn(7,4);
-            
-            SharedUIManager.Instance.PathText.text = string.Empty;
 
-            m_StreamAssetUIController = FindFirstObjectByType<StreamAssetUIController>();
-            
             var assetsUIBase =
                 FindObjectsByType<AssetsUIBaseController>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
             foreach (var assetsUIBaseController in assetsUIBase)
@@ -236,6 +309,10 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
                 assetsUIBaseController?.AssetInfoUIController?.SwitchCloseButtonBehaviour(true);
                 assetsUIBaseController?.AssetInfoUIController?.ClearUI();
             }
+            
+            m_CurrentActiveAssetsUIBaseController = NetworkDetector.RequestedOfflineMode ? assetsUIBase.First(x => x is OfflineModeAssetsUIController) : assetsUIBase.First(x => x is AssetsUIToolkitController);
+            
+            m_CurrentActiveAssetsUIBaseController?.SetPathText(null, SharedUIManager.AssetProjectInfo, SharedUIManager.AssetCollection);
 
             StartCoroutine(WaitForRefresh());
 
@@ -244,43 +321,32 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
             m_AssetInfoUIBaseController.CloseButton.clicked -= OnCloseInfoButtonPress;
             m_AssetInfoUIBaseController.CloseButton.clicked += OnCloseInfoButtonPress;
 
-            var assetInfoPanelRoot = SharedUIManager.Instance.AssetsRoot.Q<VisualElement>(k_AssetInfoPanelRootName);
-            
-            var streamButton = assetInfoPanelRoot.Q<ActionButton>(k_StreamAssetButtonName);
-            streamButton.style.display = DisplayStyle.None;
-
-            m_OffloadButton = assetInfoPanelRoot.Q<ActionButton>(k_OffloadAssetButtonName);
-            m_OffloadButton.style.display = DisplayStyle.None;
-
-            m_DownloadButton = assetInfoPanelRoot.Q<ProgressActionButton>(k_DownloadStreamingAssetButtonName);
-            m_DownloadButton.style.display = DisplayStyle.None;
+            var assetInfoPanelRoot = SharedUIManager.Instance.AssetsContainer.Q<VisualElement>(k_AssetInfoPanelRootName);
 
             m_AddToSelectionButton = new ActionButton()
             {
                 icon = "plus-circle",
             };
             
-            m_AddToSelectionButton.SetBinding("label", m_SelectLocalizedString);
-            
+            m_AddToSelectionButton.AddToClassList("SelectionButton");
+            m_AddToSelectionButton.label = m_SelectLocalizedString.GetTitleLocalizedStringForAppUI();
+            m_AddToSelectionButton.clicked += AddToSelectionButtonOnClicked;
+            var m_OffloadButton = assetInfoPanelRoot.Q<ActionButton>(k_OffloadAssetButtonName);
             m_OffloadButton.parent.Insert(0, m_AddToSelectionButton);
-            m_AddToSelectionButton.clicked += AddToSelectionButtonOnclicked;
 
-            m_AddToSceneButton = new ActionButton()
+            m_AddToSceneButton = new ActionButton
             {
                 accent = true,
                 selected = true,
                 icon = "broadcast",
-                name = "AddModelToSceneButton"
+                name = "AddModelToSceneButton",
+                label = m_AddToSceneLocalizedString.GetTitleLocalizedStringForAppUI()
             };
-            
-            m_AddToSceneButton.SetBinding("label", m_AddToSceneLocalizedString);
-            
-            var assetTopBar = SharedUIManager.Instance.AssetsRoot.Q<VisualElement>(k_AssetTopBarName);
-            assetTopBar.Add(m_AddToSceneButton);
+
+            m_AssetTopBar.Add(m_AddToSceneButton);
             m_AddToSceneButton.SetEnabled(false);
             m_AddToSceneButton.clicked += AddToSceneButtonOnClicked;
-            return;
-            
+
             IEnumerator WaitForRefresh()
             {
                 yield return new WaitForEndOfFrame();
@@ -310,30 +376,32 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
             }
         }
 
+        private void OrganizationSelected(IOrganization obj)
+        {
+            SharedUIManager.OrganizationSelected -= OrganizationSelected;
+            m_AssetTopBar?.SetEnabled(true);
+        }
+
         private void DefineUIController()
         {
-            if (!NetworkDetector.RequestedOfflineMode)
-            {
-                m_AssetsUIBaseController = FindFirstObjectByType<AssetsUIToolkitController>();
-                m_AssetInfoUIBaseController = m_AssetsUIBaseController.AssetInfoUIController;
-            }
-            else
+            if (NetworkDetector.RequestedOfflineMode)
             {
                 m_AssetsUIBaseController = FindFirstObjectByType<OfflineModeAssetsUIController>();
                 m_AssetInfoUIBaseController = m_AssetsUIBaseController.AssetInfoUIController;
+                return;
             }
+
+            m_AssetsUIBaseController = FindFirstObjectByType<AssetsUIToolkitController>();
+            m_AssetInfoUIBaseController = m_AssetsUIBaseController.AssetInfoUIController;
+            m_AssetsUIBaseController.AssetInfoUIController.AssetVersionDropdown?.RegisterValueChangedCallback(OnVersionDropdownValueChanged);
+            m_AssetsUIBaseController.AssetInfoUIController.AssetVersionsLoaded += OnAssetVersionsLoaded;
         }
 
         private void AddToSceneButtonOnClicked()
         {
             m_AddToSceneButton.SetEnabled(false);
             m_AddToSelectionButton?.SetEnabled(false);
-            var allGridAssets = SharedUIManager.Instance.AssetGridView
-                .Query<Checkbox>().ToList();
-            foreach (var checkbox in allGridAssets)
-            {
-                checkbox?.SetEnabled(false);
-            }
+            SetEnabledAllCheckBoxes(false);
 
             StartCoroutine(WaitForUpdate());
 
@@ -346,69 +414,49 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
                 
                 if (m_Panel.popupContainer.childCount > 0)
                 {
-                    var allGridAssets = SharedUIManager.Instance.AssetGridView
-                        .Query<Checkbox>().ToList();
-                    foreach (var checkbox in allGridAssets)
-                    {
-                        checkbox?.SetEnabled(true);
-                    }
+                    SetEnabledAllCheckBoxes(true);
                     m_AddToSelectionButton?.SetEnabled(true);
-                    m_AddToSceneButton?.SetEnabled(m_AddModelToolController.SelectedAssets.Count > 0);
                     yield break;
                 }
-                
-                if (m_AddModelToolController.SelectedAssets.Count == 0)
+
+                if (m_AddModelToolController.GetSelectedAssetCount() == 0)
                 {
-                    var allGridAssets = SharedUIManager.Instance.AssetGridView
-                        .Query<Checkbox>().ToList();
-                    foreach (var checkbox in allGridAssets)
-                    {
-                        checkbox?.SetEnabled(true);
-                    }
+                    SetEnabledAllCheckBoxes(true);
                     m_AddToSelectionButton?.SetEnabled(true);
                     yield break;
                 }
-            
-                SharedUIManager.ShowLoadingModal(() =>
+                LoadingUIPanel.ShowLoadingPanel?.Invoke(() =>
                 {
                     m_AddModelToolController.AddToScene();
                 });
             }
         }
 
+        private static void SetEnabledAllCheckBoxes(bool enable)
+        {
+            var allGridAssets = SharedUIManager.Instance.AssetGridView.Query<Checkbox>().ToList();
+            foreach (var checkbox in allGridAssets)
+            {
+                checkbox.SetDisplay(true);
+                checkbox.SetEnabled(enable);
+            }
+        }
+
         private void AssetGridBindItem(VisualElement arg1, int arg2)
         {
-            StartCoroutine(WaitForEndFrame());
-            
             var checkBox = CheckAndCreateCheckBox(arg1);
             if (checkBox == null) return;
             checkBox.SetEnabled(true);
-            var item = SharedUIManager.Instance.AssetGridView.itemsSource[arg2] as AssetInfo?;
             
+            var item = SharedUIManager.Instance.AssetGridView.itemsSource[arg2] as AssetInfo?;
             if (!item.HasValue) return;
-            var contain =
-                m_AddModelToolController.SelectedAssets.Any(x => x.Asset.Descriptor == item.Value.Asset.Descriptor);
+            checkBox.name = item.Value.Asset.Descriptor.AssetId.ToString();
+            var contain = m_AddModelToolController.SelectedAssetsContainAnyVersion(item.Value);
             checkBox.SetValueWithoutNotify(contain ? CheckboxState.Checked : CheckboxState.Unchecked);
-            return;
-
-            //Wait for end frame to make sure the button is created
-            IEnumerator WaitForEndFrame()
-            {
-                yield return m_Wait;
-                if(arg1 == null) yield break;
-                var directStreamButton = arg1.Q<ActionButton>("3DDSButton");
-                if (directStreamButton != null)
-                {
-                    directStreamButton.style.display = DisplayStyle.None;
-                }
-            }
         }
         
         private void AssetGridUnbindItem(VisualElement element, int index)
         {
-            var directStreamButton = element.Q<ActionButton>("3DDSButton");
-            directStreamButton.style.display = DisplayStyle.Flex;
-            
             var checkBox = element.Q<Checkbox>();
             if(checkBox == null) return;
             checkBox.SetValueWithoutNotify(CheckboxState.Unchecked);
@@ -444,45 +492,73 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
         {
             var elementName = ((VisualElement)evt.currentTarget).parent.name;
             var index = int.Parse(elementName.Remove(0, SharedUIManager.k_GridItemName.Length));
-            var item = SharedUIManager.Instance.AssetGridView.itemsSource[index] as AssetInfo?;
-            if(!item.HasValue) return;
-            var added = m_AddModelToolController.ManageSelectedAssets(item.Value, evt.newValue == CheckboxState.Checked);
-            m_AddToSceneButton.SetEnabled(m_AddModelToolController.SelectedAssets.Count > 0);
-            if (!SharedUIManager.SelectedAsset.HasValue) return;
-            if (SharedUIManager.SelectedAsset.Value == item.Value)
+            var gridAssetInfo = SharedUIManager.Instance.AssetGridView.itemsSource[index] as AssetInfo?;
+            
+            if(!gridAssetInfo.HasValue) return;
+
+            var assetInfoToProcess = gridAssetInfo.Value;
+            var isCurrentGridItem = false;
+
+            // User clicks on currently selected item in the grid, so we need to apply version selected in dropdown
+            if (SharedUIManager.SelectedAsset.HasValue && SharedUIManager.SelectedAsset.Value.Asset.Descriptor.AssetId == gridAssetInfo.Value.Asset.Descriptor.AssetId)
+            {
+                assetInfoToProcess = SharedUIManager.SelectedAsset.Value;
+                isCurrentGridItem = true;
+            }
+
+            var added = m_AddModelToolController.ManageSelectedAssets(assetInfoToProcess, evt.newValue == CheckboxState.Checked);
+            m_AddToSceneButton.SetEnabled(m_AddModelToolController.GetSelectedAssetCount() > 0);
+
+            if (isCurrentGridItem)
             {
                 UpdateSelectedButton(added);
+                SetSelectionControlsAvailability();
             }
         }
 
-        private void AddToSelectionButtonOnclicked()
+        private void AddToSelectionButtonOnClicked()
         {
-            var added = m_AddModelToolController.ManageSelectedAssets(SharedUIManager.SelectedAsset.Value, !m_AddModelToolController.SelectedAssets.Contains(SharedUIManager.SelectedAsset.Value));
+            var added = m_AddModelToolController.ManageSelectedAssets(
+                SharedUIManager.SelectedAsset.Value,
+                !m_AddModelToolController.SelectedAssetsContainAnyVersion(SharedUIManager.SelectedAsset.Value));
+
             UpdateSelectedButton(added);
-            m_AddToSceneButton.SetEnabled(m_AddModelToolController.SelectedAssets.Count > 0);
-            var index = SharedUIManager.Instance.AssetGridView.itemsSource.IndexOf(SharedUIManager.SelectedAsset);
-            var item = SharedUIManager.Instance.AssetGridView.Q<VisualElement>(
-                SharedUIManager.ItemNameFromIndex(index));
-            if (item != null)
+            m_AddToSceneButton.SetEnabled(m_AddModelToolController.GetSelectedAssetCount() > 0);
+            
+            var checkBox = FindSelectionCheckbox(SharedUIManager.SelectedAsset.Value);
+            if (checkBox != null)
             {
-                var checkBox = item.Q<Checkbox>();
-                checkBox?.SetValueWithoutNotify(added ? CheckboxState.Checked : CheckboxState.Unchecked);
+                checkBox.SetValueWithoutNotify(added ? CheckboxState.Checked : CheckboxState.Unchecked);
             }
+
+            SetSelectionControlsAvailability();
         }
 
-        private void UninitializeUI()
+        private Checkbox FindSelectionCheckbox(AssetInfo assetInfo)
         {
-            m_FolderButton.primary = false;
+            var itemSource = SharedUIManager.Instance.AssetGridView.itemsSource as List<AssetInfo>;
+            if (itemSource == null) return null;
+            var index = itemSource.FindIndex(sourceAssetInfo => sourceAssetInfo.Asset.Descriptor.AssetId == assetInfo.Asset.Descriptor.AssetId);
+            var item = SharedUIManager.Instance.AssetGridView.Q<VisualElement>(SharedUIManager.ItemNameFromIndex(index));
+            return item?.Q<Checkbox>();
+        }
+
+        protected virtual void UninitializeUI()
+        {
+            if (m_FolderButton != null)
+            {
+                m_FolderButton.primary = false;
+            }
             
             NavigationController.PauseCameraControl?.Invoke(false);
             
             m_AddModelToolController?.ClearSelectedAssets();
-            
+            m_NewAssetButton?.DisplayOn();
             SharedUIManager.Instance.AssetGridView.ClearSelection();
-            SharedUIManager.Instance.PathText.text = string.Empty;
+            m_CurrentActiveAssetsUIBaseController?.SetPathText(null, SharedUIManager.AssetProjectInfo, SharedUIManager.AssetCollection);
             
             SharedUIManager.Instance.ResetAssetGridColumn();
-            SharedUIManager.Instance.AssetsRoot.style.display = DisplayStyle.None;
+            SharedUIManager.Instance.AssetsContainer.style.display = DisplayStyle.None;
             
             SharedUIManager.Instance.AssetGridView.selectionChanged -= OnSelectedAsset;
 
@@ -498,7 +574,13 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
             m_AddToSceneButton?.RemoveFromHierarchy();
 
             m_AddToSelectionButton = null;
-            
+
+            if (m_StreamAssetUIController != null)
+            {
+                m_StreamAssetUIController.IsStreamFunctionalityActive = true;
+                m_StreamAssetUIController.IsDownOffloadFunctionalityActive = true;
+            }
+
             SharedUIManager.Instance.AssetGridView.bindItem -= AssetGridBindItem;
             SharedUIManager.Instance.AssetGridView.unbindItem -= AssetGridUnbindItem;
             
@@ -507,14 +589,13 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
 
             if (NetworkDetector.RequestedOfflineMode)
             {
-                SharedUIManager.Instance.OrganizationButton.ClearBinding("label");
-                SharedUIManager.Instance.OrganizationButton.SetBinding("label", SharedUIManager.Instance.SelectOrganization);
+                SharedUIManager.Instance.OrganizationButton.label =
+                    SharedUIManager.Instance.SelectOrganization.GetTitleLocalizedStringForAppUI();
                 SharedUIManager.Instance.ClearGridView();
                 SharedUIManager.Instance.AssetProjectScrollList.Clear();
             }
             else
             {
-                SharedUIManager.Instance.OrganizationButton.ClearBinding("label");
                 SharedUIManager.Instance.OrganizationButton.label = SharedUIManager.Organization.Name;
             }
         }
@@ -529,10 +610,11 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
 
         private void UpdateSelectedButton(bool isSelected)
         {
-            m_AddToSelectionButton.ClearBinding("label");
+            m_AddToSelectionButton.label = string.Empty;
             
             if (isSelected)
             {
+                m_AddToSelectionButton.icon = "circle-selected";
                 if (m_AddToSelectionButton.ClassListContains(k_AddToSelectionClassName))
                 {
                     m_AddToSelectionButton.RemoveFromClassList(k_AddToSelectionClassName);
@@ -542,11 +624,12 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
                 {
                     m_AddToSelectionButton.AddToClassList(k_RemoveFromSelectionClassName);
                 }
-                
-                m_AddToSelectionButton.SetBinding("label", m_SelectedLocalizedString);
+
+                m_AddToSelectionButton.label = m_SelectedLocalizedString.GetTitleLocalizedStringForAppUI();
             }
             else
             {
+                m_AddToSelectionButton.icon = "circle-nonselected";
                 if (m_AddToSelectionButton.ClassListContains(k_RemoveFromSelectionClassName))
                 {
                     m_AddToSelectionButton.RemoveFromClassList(k_RemoveFromSelectionClassName);
@@ -556,7 +639,8 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
                 {
                     m_AddToSelectionButton.AddToClassList(k_AddToSelectionClassName);
                 }
-                m_AddToSelectionButton.SetBinding("label", m_SelectLocalizedString);
+
+                m_AddToSelectionButton.label = m_SelectLocalizedString.GetTitleLocalizedStringForAppUI();
             }
         }
 
@@ -566,58 +650,148 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
             {
                 return;
             }
-            
-            var selectedAsset = (obj.First() as AssetInfo?);
-            
-            m_AssetInfoUIBaseController.AssetSelected(selectedAsset.Value);
+
+            var selectedAssetNullable = obj.First() as AssetInfo?;
+            if (!selectedAssetNullable.HasValue)
+            {
+                return;
+            }
+
+            var selectedAsset = selectedAssetNullable.Value;
+
+            // Clear version behavior
+            m_CurrentVersionHasStreamableDataset = true; // assuming latest version supports streaming
+            AssetsController.ParentAssetSelected?.Invoke(null);
+            SetEnabledAllCheckBoxes(true);
+
+            m_AssetInfoUIBaseController.AssetSelected(selectedAsset);
+            if (selectedAsset.Asset is OfflineAsset)
+            {
+                AssetsController.ParentAssetSelected?.Invoke(selectedAsset);
+            }
 
             m_AssetInfoUIBaseController.PanelTabs.value = 0;
             m_AssetInfoUIBaseController.PanelTabs.SetEnabled(false);
             m_AssetInfoUIBaseController.AssetStatusDropdown.SetEnabled(false);
 
-            m_DownloadButton.style.display = DisplayStyle.None;
-            m_OffloadButton.style.display = DisplayStyle.None;
-
-            var contain =
-                m_AddModelToolController.SelectedAssets.Any(x => x.Asset.Descriptor == selectedAsset.Value.Asset.Descriptor);
-            
-            UpdateSelectedButton(m_AddModelToolController.SelectedAssets != null && contain);
+            var assetIsChecked = m_AddModelToolController.SelectedAssetsContainAnyVersion(selectedAsset);
+            UpdateSelectedButton(assetIsChecked);
             m_AddToSelectionButton.SetEnabled(true);
-            StreamingModel[] streamingModels =
-                TransformController.Instance.GetComponentsInChildren<StreamingModel>(true);
-            
-            m_AssetsUIBaseController.AssetInfoUIController.AssetVersionDropdown.sourceItems = new List<AssetInfo> { selectedAsset.Value };
-            m_AssetsUIBaseController.AssetInfoUIController.AssetVersionDropdown.SetValueWithoutNotify(new []{ 0 });
-            m_AssetsUIBaseController.AssetInfoUIController.AssetVersionDropdown.SetEnabled(false);
-            
-#if !UNITY_WEBGL || UNITY_EDITOR
-            if (NetworkDetector.IsOffline && NetworkDetector.RequestedOfflineMode)
+
+            if (selectedAsset.Asset is OfflineAsset offlineAsset)
             {
-                bool isCurrentlyStreaming = false;
-                foreach (var streamingModel in streamingModels)
-                {
-                    if (streamingModel.Asset.Descriptor != selectedAsset.Value.Asset.Descriptor) continue;
-                    isCurrentlyStreaming = true;
-                    break;
-                }
-                
-                //If what users opened is the same as the current streaming asset, disable the offload button
-                m_StreamAssetUIController.OffloadAssetButton.style.display = isCurrentlyStreaming ? DisplayStyle.None : DisplayStyle.Flex;
+                m_AssetsUIBaseController.AssetInfoUIController.AssetVersionDropdown.sourceItems = new List<int>()
+                    { offlineAsset.OfflineAssetInfo.assetVersion };
+                m_AssetsUIBaseController.AssetInfoUIController.AssetVersionDropdown.SetValueWithoutNotify(new[] { 0 });
+                m_AssetsUIBaseController.AssetInfoUIController.AssetVersionDropdown.SetEnabled(false);
+            }
+
+            m_StreamAssetUIController.ShowStreamingAssetDownload(selectedAsset);
+        }
+
+        private async void OnVersionDropdownValueChanged(ChangeEvent<IEnumerable<int>> evt)
+        {
+            if (evt.newValue == null || !evt.newValue.Any()) return;
+            var assets = m_AssetsUIBaseController.AssetInfoUIController.AssetVersionDropdown.sourceItems as List<AssetInfo>;
+            if (assets == null) return;
+            var index = evt.newValue.First();
+            var asset = assets[index];
+            // Prevent selection before we know if the version has 3DDS
+            m_CurrentVersionHasStreamableDataset = false;
+            SetSelectionControlsAvailability();
+
+            if (index == 0)
+            {
+                AssetsController.ParentAssetSelected?.Invoke(null);
+            }
+            else
+            {
+                AssetsController.ParentAssetSelected?.Invoke(asset);
+            }
+
+            SharedUIManager.SelectedAsset = asset;
+            m_AssetInfoUIBaseController.AssetSelected(asset);
+            m_AssetInfoUIBaseController.AssetStatusDropdown.SetEnabled(false);
+
+            if (asset.Properties.Value.Tags.Contains(StreamingUtils.LayoutTag))
+            {
+                m_CurrentVersionHasStreamableDataset = true;
+            }
+            else
+            {
+                m_CurrentVersionHasStreamableDataset = await StreamAssetUIController.HasStreamableDataset(asset);
+            }
+            var selected = m_AddModelToolController.SelectedAssetsContainAnyVersion(asset);
+
+            if (m_CurrentVersionHasStreamableDataset && selected)
+            {
+                m_AddModelToolController.ManageSelectedAssets(asset, true);
+            } else if (!m_CurrentVersionHasStreamableDataset && selected)
+            {
+                m_AddModelToolController.ManageSelectedAssets(asset, false);
+                var checkBox = SharedUIManager.Instance.AssetGridView.Q<Checkbox>(asset.Asset.Descriptor.AssetId.ToString());
+                checkBox?.SetValueWithoutNotify(CheckboxState.Unchecked);
+                m_AddToSceneButton?.SetEnabled(m_AddModelToolController.GetSelectedAssetCount() > 0);
+                UpdateSelectedButton(false);
+            }
+
+            SetSelectionControlsAvailability();
+        }
+
+        private void OnAssetVersionsLoaded(List<AssetInfo> assets)
+        {
+            if (!SharedUIManager.SelectedAsset.HasValue)
+            {
+                Debug.LogWarning("OnAssetVersionsLoaded: No selected asset to match version to.");
                 return;
             }
-            
-            m_StreamAssetUIController.ShowStreamingAssetDownload(selectedAsset.Value);
 
-            foreach (var streamingModel in streamingModels)
+            if (assets == null || assets.Count == 0)
             {
-                if (streamingModel.Asset is OfflineAsset && streamingModel.Asset.Descriptor == selectedAsset.Value.Asset.Descriptor)
-                {
-                    m_StreamAssetUIController.OffloadAssetButton.style.display = DisplayStyle.None;
-                    return;
-                }
+                Debug.LogWarning("OnAssetVersionsLoaded: No versions loaded.");
+                return;
             }
+
+            var selectedAssetVersion = m_AddModelToolController.GetSelectedAssetVersion(SharedUIManager.SelectedAsset.Value);
+            if (selectedAssetVersion == null)
+            {
+                Debug.Log("OnAssetVersionsLoaded: No selected asset version found in selected assets.");
+                return;
+            }
+
+            // Can't use Descriptor equality because for linked assets the ProjectId is different even if the AssetId is the same
+            var index = assets.FindIndex(asset =>
+                asset.Asset.Descriptor.AssetId == selectedAssetVersion.Value.Asset.Descriptor.AssetId
+                && asset.Asset.Descriptor.AssetVersion == selectedAssetVersion.Value.Asset.Descriptor.AssetVersion);
+
+            if (index < 0)
+            {
+                Debug.LogWarning($"OnAssetVersionsLoaded: Selected asset version not found in versions list. Selected asset version: {selectedAssetVersion.Value.Asset.Descriptor.AssetVersion}, versions found: {string.Join(',', assets.Select(a => a.Asset.Descriptor.AssetVersion.ToString()))}");
+                return;
+            }
+
+            m_AssetsUIBaseController.AssetInfoUIController.AssetVersionDropdown.value = new[] { index };
+        }
+
+        private void SetSelectionControlsAvailability()
+        {
+            if (!SharedUIManager.SelectedAsset.HasValue) return;
+
+            var asset = SharedUIManager.SelectedAsset.Value;
             
-#endif
+            var selected = m_AddModelToolController.SelectedAssetsContainAnyVersion(asset);
+
+            // hasStreamableDataset | SelectedAssetsContainAnyVersion | Button
+            //      true               false                            enabled, Select
+            //      true               true                             enabled, Deselect
+            //      false              false                            disabled, Select
+            //      false              true                             enabled, Deselect
+            var addToSelectionEnabled = m_CurrentVersionHasStreamableDataset || selected;
+            m_AddToSceneButton.SetEnabled(m_AddModelToolController.GetSelectedAssetCount() > 0);
+            m_AddToSelectionButton.SetEnabled(addToSelectionEnabled);
+            Checkbox checkBox = FindSelectionCheckbox(asset);
+            checkBox?.SetEnabled(addToSelectionEnabled);
+            checkBox?.SetDisplay(addToSelectionEnabled);
         }
     }
 }

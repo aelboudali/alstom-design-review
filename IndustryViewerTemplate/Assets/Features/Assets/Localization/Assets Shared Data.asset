@@ -15,20 +15,12 @@ MonoBehaviour:
   m_TableCollectionName: Assets
   m_TableCollectionNameGuidString: e57257823a7964becb6eb06d6181f15a
   m_Entries:
-  - m_Id: 20735582208
-    m_Key: Search
-    m_Metadata:
-      m_Items: []
   - m_Id: 3047743807488
     m_Key: New Version Available
     m_Metadata:
       m_Items: []
   - m_Id: 4032537026560
     m_Key: Asset Name
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4496284442624
-    m_Key: Asset Version
     m_Metadata:
       m_Items: []
   - m_Id: 4881900363776
@@ -53,14 +45,6 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 6667159724032
     m_Key: Created by
-    m_Metadata:
-      m_Items: []
-  - m_Id: 7216613548032
-    m_Key: File Download
-    m_Metadata:
-      m_Items: []
-  - m_Id: 11727306481664
-    m_Key: Version
     m_Metadata:
       m_Items: []
   - m_Id: 35648491741184
@@ -171,16 +155,8 @@ MonoBehaviour:
     m_Key: Remove Selection Button
     m_Metadata:
       m_Items: []
-  - m_Id: 116427913682944
-    m_Key: Uploading Asset
-    m_Metadata:
-      m_Items: []
-  - m_Id: 117455979536384
-    m_Key: Upload Asset
-    m_Metadata:
-      m_Items: []
   - m_Id: 126885479571456
-    m_Key: Asset Created
+    m_Key: Asset Creation Completed
     m_Metadata:
       m_Items: []
   - m_Id: 129700784496640
@@ -225,6 +201,58 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 26946288296648704
     m_Key: Review
+    m_Metadata:
+      m_Items: []
+  - m_Id: 98637747977232384
+    m_Key: Status
+    m_Metadata:
+      m_Items: []
+  - m_Id: 102582021617917952
+    m_Key: Prepared for 3DDS
+    m_Metadata:
+      m_Items: []
+  - m_Id: 102589537559027712
+    m_Key: Add new asset
+    m_Metadata:
+      m_Items: []
+  - m_Id: 102911663331647488
+    m_Key: Asset Creation Failed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 102916677815017472
+    m_Key: Asset Creation Confirmation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103408215129104384
+    m_Key: Asset Request Creating
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103410122987970560
+    m_Key: Asset Request Uploading
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103437425314930688
+    m_Key: Asset Request Upload Completed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103438020864155648
+    m_Key: Asset Request Upload Failed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103438847884435456
+    m_Key: Asset Request Transforming
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103439357110689792
+    m_Key: Asset Request Transformation Completed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103439907755696128
+    m_Key: Asset Request Transformation Failed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103803189238734848
+    m_Key: Asset Creation File Not Supported
     m_Metadata:
       m_Items: []
   m_Metadata:

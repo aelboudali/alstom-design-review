@@ -1,8 +1,10 @@
 using System;
+using System.Threading;
 using UnityEngine;
-using System.Collections;
 using Unity.Cloud.HighPrecision.Runtime;
 using Unity.Industry.Viewer.Assets;
+using System.Threading.Tasks;
+using System.Collections;
 
 namespace Unity.Industry.Viewer.Streaming
 {
@@ -21,7 +23,7 @@ namespace Unity.Industry.Viewer.Streaming
         public static Action<DoubleBounds> FocusToPoint;
         public static Action<GameObject> FollowPresenter;
         public static Action RequestDefaultHomeView;
-        
+        public static Vector3? StartingPosition;
         public static NavigationOption CurrentNavigationOption => m_CurrentNavigationOption;
         public NavigationOption[] NavigationOptions => navigationOptions;
         
@@ -34,8 +36,6 @@ namespace Unity.Industry.Viewer.Streaming
         private NavigationOption[] navigationOptions;
         
         private static NavigationOption m_CurrentNavigationOption;
-
-        private Coroutine m_TranslationCoroutine;
         
         private void Awake()
         {
@@ -53,17 +53,24 @@ namespace Unity.Industry.Viewer.Streaming
             }
         }
 
-        private void Start()
+        private async Task Start()
         {
             ChangeToNewNavigationOption += SetNavigationOption;
             PlayerTranslateTo += OnPlayerRequestTranslateTo;
             FollowPresenter += OnFollowPresenter;
             FocusToPoint += OnFocusToPoint;
             RequestDefaultHomeView += OnRequestDefaultHomeView;
+            StartingPosition = null;
+            var isOnlineAsset = StreamingModelController.StreamingAsset.Value.Asset is not OfflineAsset;
+            if (isOnlineAsset)
+            {
+                StartingPosition = await GetStartingPositionFromService();
+            }
+            
             SetNavigationOption(defaultNavigationOption);
             AssetsController.AssetSelected += OnAssetSelected;
         }
-
+        
         private void OnDestroy()
         {
             ChangeToNewNavigationOption -= SetNavigationOption;
@@ -76,6 +83,42 @@ namespace Unity.Industry.Viewer.Streaming
                 navigationOption.Uninitialize();
             }
             AssetsController.AssetSelected -= OnAssetSelected;
+        }
+        
+        private async Task<Vector3?> GetStartingPositionFromService()
+        {
+            try
+            {
+                var key = "Startingpoint";
+                var query = StreamingModelController.StreamingAsset.Value.Asset.Metadata.Query()
+                    .SelectWhereKeyEquals(key)
+                    .ExecuteAsync(CancellationToken.None);
+                
+                await foreach (var item in query)
+                {
+                    if (item.Key == key)
+                    {
+                        var coords = item.Value.AsText().Value.Split(",");
+                        if (coords.Length != 3)
+                        {
+                            return null;
+                        }
+                        if(float.TryParse(coords[0], out var x) && float.TryParse(coords[1], out var y) && float.TryParse(coords[2], out var z))
+                        {
+                            return new Vector3(x, y, z);
+                        }
+
+                        return null;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"Failed to get starting position from service: {e.Message}");
+                return null;
+            }
+
+            return null;
         }
         
         private void OnFocusToPoint(DoubleBounds bounds)
@@ -94,47 +137,14 @@ namespace Unity.Industry.Viewer.Streaming
             CurrentNavigationOption?.SetDefaultView();
         }
 
-        private void OnFollowPresenter(GameObject presenterObject)
+        private void OnFollowPresenter(GameObject presenter)
         {
-            var currentNavigationGameObject = m_CurrentNavigationOption.GetNavigationGameObject();
-            if(currentNavigationGameObject == null) return;
-            if (m_TranslationCoroutine != null)
-            {
-                StopCoroutine(m_TranslationCoroutine);
-            }
-            currentNavigationGameObject.transform.SetPositionAndRotation(presenterObject.transform.position,
-                presenterObject.transform.rotation);
+            m_CurrentNavigationOption.FollowPresenter(presenter);
         }
 
         private void OnPlayerRequestTranslateTo(Vector3 targetPosition, Quaternion targetRotation)
         {
-            var currentNavigationGameObject = m_CurrentNavigationOption.GetNavigationGameObject();
-            if(currentNavigationGameObject == null) return;
-            if (m_TranslationCoroutine != null)
-            {
-                StopCoroutine(m_TranslationCoroutine);
-            }
-            
-            m_TranslationCoroutine = StartCoroutine(SmoothTranslateTo());
-            
-            IEnumerator SmoothTranslateTo(float duration = 1.0f)
-            {
-                PauseCameraControl?.Invoke(true);
-                Vector3 startPosition = currentNavigationGameObject.transform.position;
-                Quaternion startRotation = currentNavigationGameObject.transform.rotation;
-                float elapsedTime = 0;
-
-                while (elapsedTime < duration)
-                {
-                    var finalPos = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
-                    var finalRot = Quaternion.Lerp(startRotation, targetRotation, elapsedTime / duration);
-                    currentNavigationGameObject.transform.SetPositionAndRotation(finalPos, finalRot);
-                    elapsedTime += Time.deltaTime;
-                    yield return null;
-                }
-                currentNavigationGameObject.transform.SetPositionAndRotation(targetPosition, targetRotation);
-                PauseCameraControl?.Invoke(false);
-            }
+            m_CurrentNavigationOption.TranslateTo(targetPosition, targetRotation);
         }
 
         private void SetNavigationOption(NavigationOption navigationOption)
