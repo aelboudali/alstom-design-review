@@ -1,7 +1,0 @@
-@import url("/Packages/com.unity.dt.app-ui/PackageResources/Styles/Themes/App UI.tss");
-
-@import url("/Packages/com.unity.dt.app-ui/PackageResources/Icons/Icons.uss");
-@import url("/Assets/UI/Shared.uss");
-
-
-VisualElement {}
