@@ -173,9 +173,9 @@ namespace Unity.Industry.Viewer.Navigation.StandardCameraControl.Shared
             var rotation = Quaternion.LookRotation(lookAt - pos, Vector3.up);
             
             pos = new Vector3(
-                Mathf.Clamp(pos.x, -StandardCamera.DefaultBounds, StandardCamera.DefaultBounds),
-                Mathf.Clamp(pos.y, -StandardCamera.DefaultBounds, StandardCamera.DefaultBounds),
-                Mathf.Clamp(pos.z, -StandardCamera.DefaultBounds, StandardCamera.DefaultBounds)
+                Mathf.Clamp(pos.x, -DefaultBounds, DefaultBounds),
+                Mathf.Clamp(pos.y, -DefaultBounds, DefaultBounds),
+                Mathf.Clamp(pos.z, -DefaultBounds, DefaultBounds)
             );
             
             m_Camera.transform.SetPositionAndRotation(pos, rotation);
@@ -206,6 +206,18 @@ namespace Unity.Industry.Viewer.Navigation.StandardCameraControl.Shared
             }
             cameraObject.transform.SetPositionAndRotation(presenterObject.transform.position,
                 presenterObject.transform.rotation);
+        }
+
+        public static (Vector3, DoubleBounds) ReturnStartingPositionAndBounds()
+        {
+            var newPosition = NavigationController.StartingPosition.Value;
+            var position = newPosition + Vector3.one * 5.0f;
+            Vector3 maxPoint = Vector3.Max(position, NavigationController.StartingPosition.Value);
+            Vector3 minPoint = 2 * position - maxPoint;
+            double3 center = new double3(position.x,
+                NavigationController.StartingPosition.Value.y, position.z);
+            var bounds = new DoubleBounds(center, new double3(maxPoint - minPoint));
+            return (newPosition, bounds);
         }
 
         public void TranslateTo(GameObject objectToTranslate, Vector3 targetPosition,

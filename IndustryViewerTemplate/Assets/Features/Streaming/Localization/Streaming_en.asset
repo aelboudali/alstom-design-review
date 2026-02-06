@@ -202,11 +202,8 @@ MonoBehaviour:
       m_Items:
       - rid: 535153530389135704
   - m_Id: 113671218895249408
-    m_Localized: '<b>There are no downloaded assets for local streaming</b>
-
-
-      <size=70%>Please
-      go online and download them before continue</size>'
+    m_Localized: <size=20><b>There are no downloaded assets for local streaming</b></size><size=14><br><br>Please
+      go online and download them before continue</size>
     m_Metadata:
       m_Items:
       - rid: 535153530389135705
@@ -215,7 +212,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 123180386542936064
-    m_Localized: Please select your organisations here
+    m_Localized: Please, select your organisation here
     m_Metadata:
       m_Items: []
   - m_Id: 123892356694925312

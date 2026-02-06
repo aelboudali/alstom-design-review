@@ -1903,6 +1903,15 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  m_OrganizationPlaceholderLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: GUID:e57257823a7964becb6eb06d6181f15a
+    m_TableEntryReference:
+      m_KeyId: 113743160664064
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   m_NoProjectFoundLocalizedString:
     m_TableReference:
       m_TableCollectionName: GUID:e57257823a7964becb6eb06d6181f15a
@@ -2343,6 +2352,15 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  m_LocalizedLogoutCompletely:
+    m_TableReference:
+      m_TableCollectionName: GUID:57a7ebbc038a2427a989d443ddacef3e
+    m_TableEntryReference:
+      m_KeyId: 134464886551863296
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   m_LocalizedCancel:
     m_TableReference:
       m_TableCollectionName: GUID:2a6c1c34211344e798bb376d8fa80190
@@ -2553,6 +2571,7 @@ MonoBehaviour:
   attachmentUITemplate: {fileID: 9197481963319205126, guid: 426eb1b32899a47f8b7d5d1a57b5f147,
     type: 3}
   defaultFileIcon: {fileID: 2800000, guid: 9ba121993c313427cac1846ed52d3ab9, type: 3}
+  isCurrentThreadSubscribed: 0
   FilterType: 0
   LocalizedStringAsset: {fileID: 11400000, guid: 13af8fb68cbcb40349f8cfe4a3a99289,
     type: 2}
@@ -2635,7 +2654,7 @@ Transform:
   m_GameObject: {fileID: 1311312221}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.025, y: 0.015, z: 0}
+  m_LocalPosition: {x: -0.04888, y: 0.015, z: 0}
   m_LocalScale: {x: 0.015, y: 0.015, z: 0.015}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -3113,8 +3132,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.Industry.Viewer.Navigation.VR::Unity.Industry.Viewer.Navigation.VR.ReparentToController
   m_Side: 1
-  m_LocalControllerPosition: {x: -0.035, y: -0.005, z: 0}
-  m_LocalHandsPosition: {x: -0.02, y: 0.06, z: 0}
+  m_LocalControllerPosition: {x: 0, y: 0, z: 0}
+  m_LocalHandsPosition: {x: 0, y: 0.075, z: 0}
   m_CanBeDestroyed: 0
 --- !u!4 &1662315478
 Transform:

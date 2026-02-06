@@ -93,6 +93,7 @@ namespace Unity.Industry.Viewer.DeepLinking
             DeepLinkController.CreationErrorAction -= CreationErrorMessage;
             DeepLinkController.AccessErrorAction -= ShowAccessErrorMessage;
             DeepLinkController.CreatedLinkAction -= ShowCreatedLinkMessage;
+            DeepLinkController.ShowSelectionUIAction -= ShowAssetSelectionUI;
             NetworkDetector.OnNetworkStatusChanged -= OnNetworkStatusChanged;
             DeepLinkController.NotSupportedAction -= ShowNotSupportedDialog;
             DeepLinkController.ShowOrganizationUIAction -= SelectOrganizationInUI;
@@ -122,7 +123,7 @@ namespace Unity.Industry.Viewer.DeepLinking
             ShowErrorMessage(m_AccessErrorMessage);
         }
 
-        private void InitializeUI()
+        private async void InitializeUI()
         {
             #if VR_MODE
             SceneManager.activeSceneChanged += OnStreamingLoaded;
@@ -147,7 +148,7 @@ namespace Unity.Industry.Viewer.DeepLinking
             {
                 name = "DeepLinkButton",
                 icon = "share-network",
-                tooltip = m_StreamingDeepLinkButtonTooltip.GetTitleLocalizedStringForAppUI()
+                tooltip = await m_StreamingDeepLinkButtonTooltip.GetTitleLocalizedStringForAppUIAsync()
             };
 
             m_StreamingDeepLinkButton.clicked += OnStreamingDeepLinkButtonClicked;
@@ -215,7 +216,7 @@ namespace Unity.Industry.Viewer.DeepLinking
             _ = DeepLinkController.Instance.CreateDeepLinkAndCopyToClipboardAsync(SharedUIManager.SelectedAsset.Value);
         }
 
-        public void ShowErrorMessage(LocalizedString message)
+        public async void ShowErrorMessage(LocalizedString message)
         {
             if (m_XRDeepLinkingButton == null)
             {
@@ -224,20 +225,20 @@ namespace Unity.Industry.Viewer.DeepLinking
                 var errorMessageToast = Toast
                     .Build(
                         messageReferenceView,
-                        message.GetTitleLocalizedStringForAppUI(), NotificationDuration.Long)
+                         await message.GetTitleLocalizedStringForAppUIAsync(), NotificationDuration.Long)
                     .SetStyle(NotificationStyle.Negative);
 
                 errorMessageToast.Show();
             }
             else
             {
-                var xrErrorMessageToast = XRToastPanel.Build(message.GetTitleLocalizedStringForAppUI(), NotificationDuration.Long)
+                var xrErrorMessageToast = XRToastPanel.Build(await message.GetTitleLocalizedStringForAppUIAsync(), NotificationDuration.Long)
                     .SetStyle(NotificationStyle.Negative);
                 xrErrorMessageToast.Show();
             }
         }
 
-        public void ShowInfoMessage(LocalizedString message)
+        public async void ShowInfoMessage(LocalizedString message)
         {
             if (m_XRDeepLinkingButton == null)
             {
@@ -246,20 +247,20 @@ namespace Unity.Industry.Viewer.DeepLinking
                 var infoMessageToast = Toast
                     .Build(
                         messageReferenceView,
-                        message.GetTitleLocalizedStringForAppUI(), NotificationDuration.Long)
+                        await message.GetTitleLocalizedStringForAppUIAsync(), NotificationDuration.Long)
                     .SetStyle(NotificationStyle.Default);
 
                 infoMessageToast.Show();
             }
             else
             {
-                var xrInfoMessageToast = XRToastPanel.Build(message.GetTitleLocalizedStringForAppUI(), NotificationDuration.Long)
+                var xrInfoMessageToast = XRToastPanel.Build(await message.GetTitleLocalizedStringForAppUIAsync(), NotificationDuration.Long)
                     .SetStyle(NotificationStyle.Default);
                 xrInfoMessageToast.Show();
             }
         }
 
-        public void ShowNotSupportedDialog()
+        public async void ShowNotSupportedDialog()
         {
             if (m_XRDeepLinkingButton == null)
             {
@@ -271,12 +272,12 @@ namespace Unity.Industry.Viewer.DeepLinking
 
                 var messageDialog = new AlertDialog()
                 {
-                    title = m_OfflineModeTitle.GetTitleLocalizedStringForAppUI(),
-                    description = m_OfflineModeMessage.GetTitleLocalizedStringForAppUI(),
+                    title = await m_OfflineModeTitle.GetTitleLocalizedStringForAppUIAsync(),
+                    description = await m_OfflineModeMessage.GetTitleLocalizedStringForAppUIAsync(),
                     variant = AlertSemantic.Default
                 };
 
-                messageDialog.SetCancelAction(0, m_OfflineModeOkButton.GetTitleLocalizedStringForAppUI());
+                messageDialog.SetCancelAction(0, await m_OfflineModeOkButton.GetTitleLocalizedStringForAppUIAsync());
 
                 m_Modal = Modal.Build(SharedUIManager.Instance.AssetsUIDocument.rootVisualElement, messageDialog);
                 m_Modal.Show();
@@ -292,11 +293,11 @@ namespace Unity.Industry.Viewer.DeepLinking
                     Debug.LogWarning("Deep linking: modal is already shown.");
                     return;
                 }
-                m_XRAlertPanel = new XRPanel.AlertXRPanel(
-                    m_OfflineModeTitle.GetTitleLocalizedStringForAppUI(),
-                    m_OfflineModeMessage.GetTitleLocalizedStringForAppUI());
+                m_XRAlertPanel = new XRPanel.AlertXRPanel(await 
+                    m_OfflineModeTitle.GetTitleLocalizedStringForAppUIAsync(),
+                    await m_OfflineModeMessage.GetTitleLocalizedStringForAppUIAsync());
                 
-                m_XRAlertPanel.SetCancelButton(m_OfflineModeOkButton.GetTitleLocalizedStringForAppUI());
+                m_XRAlertPanel.SetCancelButton(await m_OfflineModeOkButton.GetTitleLocalizedStringForAppUIAsync());
                 
                 m_XRAlertPanel.Dismissed += Dismissed;
 
@@ -442,13 +443,13 @@ namespace Unity.Industry.Viewer.DeepLinking
 
             if (projectButton == null)
             {
-                Debug.Log($"Deep linking: project button for project '{assetProject.Name}' not found in AssetProjectScrollList.");
+                //Debug.Log($"Deep linking: project button for project '{assetProject.Name}' not found in AssetProjectScrollList.");
                 // Do not clear the link here, as we may have a valid project but it is not yet loaded in the UI.
                 return;
             }
 
             var info = (AssetProjectInfo)projectButton.userData;
-            Debug.Log($"Deep linking: project button '{projectButton.label}' for project '{info.AssetProject.Name}' has been found. Click and wait for assets...");
+            //Debug.Log($"Deep linking: project button '{projectButton.label}' for project '{info.AssetProject.Name}' has been found. Click and wait for assets...");
 
             var assetController = FindFirstObjectByType<AssetsUIToolkitController>();
             if (assetController == null)
@@ -536,7 +537,7 @@ namespace Unity.Industry.Viewer.DeepLinking
 
         private void SelectAssetInUI(IAssetProject assetProject, CollectionDescriptor? assetCollectionDescriptor)
         {
-            Debug.Log($"Deep linking: SelectAssetInUI called for '{assetProject?.Name}\\{assetCollectionDescriptor?.Path}', link path is '{DeepLinkController.AssetProject?.Name}\\{DeepLinkController.AssetCollectionDescriptor?.Path}'.");
+            //Debug.Log($"Deep linking: SelectAssetInUI called for '{assetProject?.Name}\\{assetCollectionDescriptor?.Path}', link path is '{DeepLinkController.AssetProject?.Name}\\{DeepLinkController.AssetCollectionDescriptor?.Path}'.");
 
             if (assetProject?.Descriptor != DeepLinkController.AssetProject?.Descriptor
                 && ((!DeepLinkController.AssetCollectionDescriptor.HasValue && !assetCollectionDescriptor.HasValue)
@@ -583,12 +584,12 @@ namespace Unity.Industry.Viewer.DeepLinking
 
                 if (itemIndex < 0)
                 {
-                    Debug.Log($"Deep linking: item '{assetInfo.Asset.Name}' not found in AssetGridView itemsSource.");
+                    //Debug.Log($"Deep linking: item '{assetInfo.Asset.Name}' not found in AssetGridView itemsSource.");
                     DeepLinkController.ClearCurrentLink();
                     yield break;
                 }
 
-                Debug.Log($"Deep linking: item '{assetInfo.Asset.Name}' has been found, index is {itemIndex}. Apply grid selection...");
+                //Debug.Log($"Deep linking: item '{assetInfo.Asset.Name}' has been found, index is {itemIndex}. Apply grid selection...");
                 assetGridView.SetSelection(itemIndex);
                 StartCoroutine(ScrollToItem());
 

@@ -67,6 +67,10 @@ MonoBehaviour:
       til online-modus og logge p\xE5?"
     m_Metadata:
       m_Items: []
+  - m_Id: 134464886551863296
+    m_Localized: "Kirjaudu ulos ja tyhjenn\xE4 v\xE4limuisti"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

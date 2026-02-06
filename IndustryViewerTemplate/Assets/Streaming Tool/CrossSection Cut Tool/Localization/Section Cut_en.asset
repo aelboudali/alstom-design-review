@@ -22,7 +22,7 @@ MonoBehaviour:
     m_Localized: Section Cut
     m_Metadata:
       m_Items:
-      - rid: 8052603661931777662
+      - rid: 535153779631719189
   - m_Id: 2586893165256704
     m_Localized: Move
     m_Metadata:
@@ -50,7 +50,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 8052603661931777662
+    - rid: 535153779631719189
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: Section Cut Tool name

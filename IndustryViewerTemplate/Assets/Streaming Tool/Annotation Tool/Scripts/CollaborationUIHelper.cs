@@ -64,10 +64,16 @@ namespace Unity.Industry.Viewer.Streaming.Annotation
         {
             NewCommentUIActive(() =>
             {
-                m_TextArea.placeholder = LocalizedStringAsset.StartThreadPlaceHolderLocalizedString.GetTitleLocalizedStringForAppUI();
+                _ = GetTranslationForTextArea();
             });
             annotationToolController.SubscribeInteraction();
             m_AnnotationToolUIController.DeselectAllMarkUp();
+            return;
+
+            async Task GetTranslationForTextArea()
+            {
+                m_TextArea.placeholder = await LocalizedStringAsset.StartThreadPlaceHolderLocalizedString.GetTitleLocalizedStringForAppUIAsync();
+            }
         }
 
         public override void BackToAllThreadsButtonOnClicked()

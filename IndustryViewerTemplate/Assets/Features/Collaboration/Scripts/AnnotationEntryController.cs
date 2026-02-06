@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using Unity.Industry.Viewer.Assets;
 using Unity.AppUI.Core;
+using Unity.Cloud.Collaboration.Abstractions;
 using Unity.Industry.Viewer.Shared;
 using Avatar = Unity.AppUI.UI.Avatar;
 using Button = Unity.AppUI.UI.Button;
@@ -165,6 +166,9 @@ namespace Unity.Industry.Viewer.Collaboration
                 m_AttachmentGridView.unbindItem = collaborationUIController.UnbindAttachmentItem;
                 m_AttachmentGridView.columnCount = CollaborationUIController.AttachmentGridViewColumnCount;
                 m_AttachmentIconButton.clicked += AttachmentIconButtonOnClicked;
+#if UNITY_WEBGL && !UNITY_EDITOR
+                m_AttachmentIconButton.SetEnabled(false);
+#endif
                 AnnotationEditModeEnter += OnAnnotationEditModeEnter;
                 
                 //Reactions
@@ -207,8 +211,8 @@ namespace Unity.Industry.Viewer.Collaboration
                 {
                     m_attachmentContainer.style.display = DisplayStyle.Flex;
 
-                    m_attachmentCountLabel.text = collaborationUIController.LocalizedStringAsset
-                        .AttachmentCountLocalizedString.GetTitleLocalizedStringForAppUI();
+                    CollaborationUIBase.GetTranslation(m_attachmentCountLabel, collaborationUIController.LocalizedStringAsset
+                        .AttachmentCountLocalizedString);
 
                     m_attachmentCountLabel.variables = new object[]
                     {
@@ -242,14 +246,13 @@ namespace Unity.Industry.Viewer.Collaboration
                 {
                     if (Annotation.ReplyCount.Value == 0)
                     {
-                        m_ReplyLabel.text = CollaborationUIController.LocalizedStringAsset.ReplyLocalizedString.GetTitleLocalizedStringForAppUI();
+                        CollaborationUIBase.GetTranslation(m_ReplyLabel, CollaborationUIController.LocalizedStringAsset.ReplyLocalizedString);
                         m_ReplyLabel.variables?.Clear();
                         m_ReplyLabel.variables = null;
                     }
                     else
                     {
-                        m_ReplyLabel.text = CollaborationUIController.LocalizedStringAsset.ReplyCountLocalizedString
-                            .GetTitleLocalizedStringForAppUI();
+                        CollaborationUIBase.GetTranslation(m_ReplyLabel, CollaborationUIController.LocalizedStringAsset.ReplyCountLocalizedString);
                         m_ReplyLabel.variables = new object[]
                         {
                             new Dictionary<string,object>()
@@ -279,11 +282,13 @@ namespace Unity.Industry.Viewer.Collaboration
                 m_MessageLabel.text = CollaborationUIUtility.ParseUserTags(annotation.Text);
             } else if (annotation.MessageType == MessageType.Resolve)
             {
-                m_MessageLabel.text = CollaborationUIController.LocalizedStringAsset.HasResolvedLocalizedString.GetTitleLocalizedStringForAppUI();
+                CollaborationUIBase.GetTranslation(m_MessageLabel, CollaborationUIController.LocalizedStringAsset.HasResolvedLocalizedString);
             } else if (annotation.MessageType == MessageType.Unresolve)
             {
-                m_MessageLabel.text = CollaborationUIController.LocalizedStringAsset.HasReopenedLocalizedString.GetTitleLocalizedStringForAppUI();
+                CollaborationUIBase.GetTranslation(m_MessageLabel, CollaborationUIController.LocalizedStringAsset.HasReopenedLocalizedString);
             }
+
+            m_MessageLabel.SetDisplay(!string.IsNullOrWhiteSpace(m_MessageLabel.text));
 
             m_MenuIconButton = AnnotationEntryRoot.Q<IconButton>(k_MenuIconButtonName);
             m_MenuIconButton.style.display = annotation.MessageType == MessageType.User? DisplayStyle.Flex: DisplayStyle.None;;
@@ -380,7 +385,14 @@ namespace Unity.Industry.Viewer.Collaboration
 
         public async Task CheckSubscription()
         {
-            IsSubscribed = await CollaborationController.IsUserFollowing(CollaborationUIController.SelectedAsset.Value, Annotation, new CancellationTokenSource());
+            if (!CollaborationUIController.ReadingThread)
+            {
+                IsSubscribed = await CollaborationController.IsUserFollowing(CollaborationUIController.SelectedAsset.Value, Annotation, new CancellationTokenSource());
+            }
+            else
+            {
+                IsSubscribed = CollaborationUIController.isCurrentThreadSubscribed;
+            }
         }
 
         private void OnReactionIconButtonClicked()
@@ -489,8 +501,8 @@ namespace Unity.Industry.Viewer.Collaboration
 
         private void OnCancelEditClicked()
         {
-            m_MessageLabel.style.display = DisplayStyle.Flex;
-            m_EditContainer.style.display = DisplayStyle.None;
+            m_MessageLabel.SetDisplay(!string.IsNullOrWhiteSpace(m_MessageLabel.text));
+            m_EditContainer.DisplayOff();
             m_AttachmentGridView.itemsSource = null;
             m_AttachmentGridView.style.display = DisplayStyle.None;
         }
@@ -520,32 +532,36 @@ namespace Unity.Industry.Viewer.Collaboration
             (m_Popover as MenuBuilder).dismissed += OnMenuDismissed;
             m_Popover.Show();
 
-            void AddAttachment(MenuItem item)
+            async void AddAttachment(MenuItem item)
             {
-                item.label = CollaborationUIController.LocalizedStringAsset.AddAttachmentLocalizedString.GetTitleLocalizedStringForAppUI();
+                item.label = await CollaborationUIController.LocalizedStringAsset.AddAttachmentLocalizedString.GetTitleLocalizedStringForAppUIAsync();
                 item.selectable = false;
+#if UNITY_WEBGL && !UNITY_EDITOR
+                item.SetEnabled(false);
+#else
                 item.SetEnabled(IsCreator);
+#endif
                 item.clickable.clicked += OnAddAttachmentClicked;
             }
             
-            void CopyLink(MenuItem item)
+            async void CopyLink(MenuItem item)
             {
-                item.label = CollaborationUIController.LocalizedStringAsset.CopyLinkLocalizedString.GetTitleLocalizedStringForAppUI();
+                item.label = await CollaborationUIController.LocalizedStringAsset.CopyLinkLocalizedString.GetTitleLocalizedStringForAppUIAsync();
                 item.selectable = false;
                 item.clickable.clicked += OnCopyLinkClicked;
             }
             
-            void Edit(MenuItem item)
+            async void Edit(MenuItem item)
             {
-                item.label = CollaborationUIController.LocalizedStringAsset.EditLocalizedString.GetTitleLocalizedStringForAppUI();
+                item.label = await CollaborationUIController.LocalizedStringAsset.EditLocalizedString.GetTitleLocalizedStringForAppUIAsync();
                 item.selectable = false;
                 item.SetEnabled(IsCreator);
                 item.clickable.clicked += OnEditorButtonClicked;
             }
             
-            void Delete(MenuItem item)
+            async void Delete(MenuItem item)
             {
-                item.label = CollaborationUIController.LocalizedStringAsset.DeleteLocalizedString.GetTitleLocalizedStringForAppUI();
+                item.label = await CollaborationUIController.LocalizedStringAsset.DeleteLocalizedString.GetTitleLocalizedStringForAppUIAsync();
                 item.selectable = false;
                 item.SetEnabled(IsCreator);
                 item.clickable.clicked += OnDeleteCommentClicked;

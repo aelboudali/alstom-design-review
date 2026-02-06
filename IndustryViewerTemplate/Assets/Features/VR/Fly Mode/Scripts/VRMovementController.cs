@@ -388,12 +388,21 @@ namespace Unity.Industry.Viewer.VR.FlyMode
 
         public override void FocusToPoint(DoubleBounds bounds)
         {
-            Vector3 direction = (m_XROrigin.gameObject.transform.position - ((Bounds)bounds).center).normalized; // Step 1: Direction
-            Vector3 result = ((Bounds)bounds).center + direction * 5f; // Step 2: Move along direction
-            
+            // Calculate the center of the bounds
+            Vector3 center = ((Bounds)bounds).center;
+
+            // Calculate the offset position (e.g., 5 units back along Z)
+            Vector3 offset = new Vector3((float)bounds.Center.x, (float)bounds.Extents.y, -(float)bounds.Extents.z * 7.5f);
+            Vector3 result = center + offset;
+
+            // Move the camera to the new position
             m_XROrigin.MoveCameraToWorldLocation(result);
-                
-            m_XROrigin.MatchOriginUpCameraForward(Vector3.up, direction);
+
+            // Calculate the direction from the camera to the center
+            Vector3 lookDirection = (center - result).normalized;
+
+            // Set the camera to look at the center of the object
+            m_XROrigin.MatchOriginUpCameraForward(Vector3.up, lookDirection);
         }
 
         public override void TranslateTo(Vector3 position, Quaternion rotation)
@@ -527,7 +536,7 @@ namespace Unity.Industry.Viewer.VR.FlyMode
 
         public override GameObject GetNavigationGameObject()
         {
-            return null;
+            return m_XROrigin == null ? null : m_XROrigin.gameObject;
         }
         
         private ControlType GetCurrentInputType()

@@ -67,6 +67,10 @@ MonoBehaviour:
       tillbaka till onlinel\xE4ge och logga in?"
     m_Metadata:
       m_Items: []
+  - m_Id: 134464886551863296
+    m_Localized: "Logg ut og t\xF8m hurtigbufferen"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

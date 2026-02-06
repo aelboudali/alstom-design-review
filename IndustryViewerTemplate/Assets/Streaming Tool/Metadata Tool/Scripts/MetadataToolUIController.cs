@@ -70,22 +70,22 @@ namespace Unity.Industry.Viewer.Streaming.Metadata
             }
         }
 
-        private void OnOfflineMode()
+        private async void OnOfflineMode()
         {
             CleanPanel();
             var text = new Text
             {
-                text = m_OfflineModeNotSupportedLocalizedString.GetTitleLocalizedStringForAppUI()
+                text = await m_OfflineModeNotSupportedLocalizedString.GetTitleLocalizedStringForAppUIAsync()
             };
             m_MetadataScrollView.Add(text);
         }
 
-        private void OnOfflineAssetSelected()
+        private async void OnOfflineAssetSelected()
         {
             CleanPanel();
             var text = new Text
             {
-                text = m_OfflineAssetNotSupportedLocalizedString.GetTitleLocalizedStringForAppUI()
+                text = await m_OfflineAssetNotSupportedLocalizedString.GetTitleLocalizedStringForAppUIAsync()
             };
             m_MetadataScrollView.Add(text);
         }
@@ -128,7 +128,7 @@ namespace Unity.Industry.Viewer.Streaming.Metadata
             MetadataToolController.MetadataFound += OnMetadataFound;
         }
 
-        private void OnMetadataFound(List<MetadataInstance> found)
+        private async void OnMetadataFound(List<MetadataInstance> found)
         {
             if (NetworkDetector.RequestedOfflineMode)
             {
@@ -158,7 +158,7 @@ namespace Unity.Industry.Viewer.Streaming.Metadata
             
             var text = new Text
             {
-                text = m_NoMetadataFoundLocalizedString.GetTitleLocalizedStringForAppUI()
+                text = await m_NoMetadataFoundLocalizedString.GetTitleLocalizedStringForAppUIAsync()
             };
             m_MetadataScrollView.Add(text);
         }

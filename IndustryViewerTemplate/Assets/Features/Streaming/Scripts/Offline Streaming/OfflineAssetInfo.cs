@@ -149,7 +149,6 @@ namespace Unity.Industry.Viewer.Streaming
                 }
             }
             assetVersionId = assetInfo.Asset.Descriptor.AssetVersion.ToString();
-            OrganizationId orgId;
             
             if (!IdentityController.GuestMode)
             {

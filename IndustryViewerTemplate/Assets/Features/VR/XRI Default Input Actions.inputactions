@@ -1157,6 +1157,17 @@
                 },
                 {
                     "name": "",
+                    "id": "67230dfd-ef5c-4d60-9a7c-3e6d31e831f8",
+                    "path": "<KHRSimpleController>{LeftHand}/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UI Press",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "71d94579-1bf4-4034-ab9e-e7166842128f",
                     "path": "<XRController>{LeftHand}/{Trigger}",
                     "interactions": "",
@@ -2219,6 +2230,17 @@
                     "name": "",
                     "id": "f8a900c7-8116-4f44-9d24-8f19caf07108",
                     "path": "<HoloLensHand>{RightHand}/selectPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UI Press",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7fafef5d-ab0a-4410-8fcc-e05a1a27bce5",
+                    "path": "<KHRSimpleController>{RightHand}/select",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

@@ -214,25 +214,25 @@ Dropdown {
 
 #line_creator_confirmation_clear,
 #line_creator_edit_confirmation_discard {
-    width: 72px;
+    width: auto;
     height: 30px;
     font-size: 14px;
 }
 
-#line_creator_confirmation_save>#appui-actionbutton__label,
-#line_creator_edit_confirmation_apply>#appui-actionbutton__label {
+#line_creator_confirmation_save > #appui-actionbutton__label,
+#line_creator_edit_confirmation_apply > #appui-actionbutton__label {
     color: #FFFFFF;
 }
 
-#line_creator_confirmation_clear>#appui-actionbutton__label,
-#line_creator_edit_confirmation_discard>#appui-actionbutton__label {
+#line_creator_confirmation_clear > #appui-actionbutton__label,
+#line_creator_edit_confirmation_discard > #appui-actionbutton__label {
     color: #BCBCBC;
 }
 
-#line_creator_confirmation_clear.unity-disabled>#appui-actionbutton__label,
-#line_creator_edit_confirmation_discard.unity-disabled>#appui-actionbutton__label,
-#line_creator_confirmation_save.unity-disabled>#appui-actionbutton__label,
-#line_creator_edit_confirmation_apply.unity-disabled>#appui-actionbutton__label,
+#line_creator_confirmation_clear.unity-disabled > #appui-actionbutton__label,
+#line_creator_edit_confirmation_discard.unity-disabled > #appui-actionbutton__label,
+#line_creator_confirmation_save.unity-disabled > #appui-actionbutton__label,
+#line_creator_edit_confirmation_apply.unity-disabled > #appui-actionbutton__label
 {
     color: #646464;
 }

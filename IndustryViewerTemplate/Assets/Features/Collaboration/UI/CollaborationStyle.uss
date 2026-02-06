@@ -58,7 +58,6 @@
 #ResolvedButton.thread.appui-actionbutton--quiet.resolved {
     padding-right: 6px;
     padding-left: 1px;
-    background-color: rgba(17, 168, 95, 0.49);
 }
 
 #ResolvedButton.thread.appui-actionbutton--quiet.resolved #appui-actionbutton__icon {
@@ -66,7 +65,7 @@
 }
 
 #ResolvedButton.thread.appui-actionbutton--quiet.resolved #appui-actionbutton__label {
-    color: rgb(134, 255, 196);
+    color: #BCBCBC;
 }
 
 .attachment.appui-grid-view {
@@ -142,18 +141,6 @@
     min-height: 180px;
 }
 
-#AnnotationParent {
-    max-height: 100%;
-}
-
-#AnnotationParent.read-annotation {
-    max-height: 68%;
-}
-
-#AnnotationParent.in-3d-view.read-annotation {
-    max-height: 79%;
-}
-
 #AnnotationEntry > #AnnotationMessageLabel {
     margin-left: 48px;
 }
@@ -168,4 +155,21 @@
 
 #AnnotationEntry > #ReactionContainer {
     margin-left: 48px;
+}
+
+#ThreadFilterOptionsButton #appui-actionbutton__trailing-icon {
+    width: 32px;
+    height: 32px;
+    margin-left: 6px;
+}
+
+#NewCommentButton #appui-button__leadingicon {
+    width: 40px;
+    height: 40px;
+}
+
+#BackButton #appui-actionbutton__icon {
+    width: 32px;
+    height: 32px;
+    margin-right: 2px;
 }

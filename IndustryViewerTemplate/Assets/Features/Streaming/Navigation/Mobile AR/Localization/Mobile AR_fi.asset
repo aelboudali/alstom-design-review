@@ -130,6 +130,10 @@ MonoBehaviour:
     m_Localized: "Tryck p\xE5 punkten f\xF6r att placera tillg\xE5ngen"
     m_Metadata:
       m_Items: []
+  - m_Id: 131130674381840384
+    m_Localized: "Placera p\xE5 ytan"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

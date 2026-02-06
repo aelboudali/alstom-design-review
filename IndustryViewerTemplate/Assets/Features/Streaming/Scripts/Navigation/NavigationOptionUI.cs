@@ -31,10 +31,10 @@ namespace Unity.Industry.Viewer.Streaming
             // Do nothing by default
         }
 
-        protected virtual void ChangeCameraTitle(VisualTreeAsset titleTemplate)
+        protected virtual async void ChangeCameraTitle(VisualTreeAsset titleTemplate)
         {
             var titleText = m_Title.Q<Text>("Title");
-            titleText.text = navigationName.GetTitleLocalizedStringForAppUI();
+            titleText.text = await navigationName.GetTitleLocalizedStringForAppUIAsync();
         }
 
         protected void SettingsPanelUp(VisualElement settingsWindow, VisualTreeAsset titleTemplate)

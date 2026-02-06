@@ -90,6 +90,8 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
         public static Action<string> LoadMapError;
 #endregion
         
+        public Action OnAssetPlaceOnSurfaceComplete;
+
         [FormerlySerializedAs("ARSessionGO")]
         [Header("AR Components")]
         [SerializeField] private ARSession ARSession;
@@ -120,6 +122,7 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
         private bool m_Initialized = false;
         private bool m_IsSupported = false;
         public bool HasWriteAccess { get; private set; }
+        public bool OcclusionManagerIsOn => m_AROcclusionManager.currentEnvironmentDepthMode != EnvironmentDepthMode.Disabled;
         
         [Header("Input")]
         [SerializeField]
@@ -1080,6 +1083,31 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
             TransformController.Instance.transform.position = originalPos;
         }
 
+        public void PlaceOnSurface()
+        {
+            TransformController.Instance.transform.position = new Vector3(
+                TransformController.Instance.transform.position.x, m_OriginalPosition.y,
+                TransformController.Instance.transform.position.z);
+            StartCoroutine(WaitForBoundsUpdate());
+            
+            return;
+
+            IEnumerator WaitForBoundsUpdate()
+            {
+                yield return null;
+                StreamingModelController streamingModelController = FindAnyObjectByType<StreamingModelController>(FindObjectsInactive.Include);
+                DoubleBounds tmpBounds = streamingModelController.GetWorldBounds();
+                var height = (float)tmpBounds.Extents.y;
+                var lowestPoint = (float)(tmpBounds.Center.y - height);
+                var offsetY = m_OriginalPosition.y - lowestPoint;
+                TransformController.Instance.transform.position = new Vector3(
+                    TransformController.Instance.transform.position.x,
+                    TransformController.Instance.transform.position.y + offsetY,
+                    TransformController.Instance.transform.position.z);
+                OnAssetPlaceOnSurfaceComplete?.Invoke();
+            }
+        }
+
         private void SwitchToState(ARState newState)
         {
             m_ARState = newState;
@@ -1092,11 +1120,11 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
                     {
                         trackable.gameObject.SetActive(true);
                     }
-                    InteractionController.SubscribeTap(this, OnTapAction);
                     m_TwoFingerDragDelta.inputActionReference.action.Disable();
                     m_PinchDelta.inputActionReference.action.Disable();
                     TransformController.Instance.transform.localScale = Vector3.one;
                     TransformController.Instance.gameObject.SetActive(false);
+                    InteractionController.SubscribeTap(this, OnTapAction);
                     break;
                 
                 case ARState.Positioning:

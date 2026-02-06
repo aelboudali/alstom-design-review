@@ -5,6 +5,9 @@ using Unity.AppUI.UI;
 using Unity.Industry.Viewer.Assets;
 using Unity.Industry.Viewer.Shared;
 using UnityEngine.UIElements;
+using System.Threading.Tasks;
+using System.Threading;
+using UnityEngine.Localization;
 
 namespace Unity.Industry.Viewer.Streaming
 {
@@ -127,12 +130,18 @@ namespace Unity.Industry.Viewer.Streaming
                 icon.image = toolAsset.toolIcon;
                 var newButtonData = new StreamToolData(toolAsset);
                 newButton.userData = newButtonData;
-                newButton.tooltip = toolAsset.ToolName.GetTitleLocalizedStringForAppUI();
+                _ = AssignToolTips(newButton, toolAsset.ToolName);
 
                 newButton.clicked += newButtonData.OnButtonPress;
                 toolButtonDict ??= new Dictionary<StreamingToolAsset, IPressable>();
                 toolButtonDict.Add(toolAsset, newButton);
                 scrollView.Add(newButton);
+            }
+            return;
+
+            async Task AssignToolTips(ActionButton newButton, LocalizedString toolName)
+            {
+                newButton.tooltip = await toolName.GetTitleLocalizedStringForAppUIAsync();
             }
         }
     }

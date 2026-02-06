@@ -65,6 +65,8 @@ namespace Unity.Industry.Viewer.Assets
         [SerializeField]
         protected LocalizedString m_SelectOrganizationLocalizedString;
         [SerializeField]
+        protected LocalizedString m_OrganizationPlaceholderLocalizedString;
+        [SerializeField]
         protected LocalizedString m_NoProjectFoundLocalizedString;
         [SerializeField]
         protected LocalizedString m_NoOrganizationFoundLocalizedString;
@@ -84,6 +86,7 @@ namespace Unity.Industry.Viewer.Assets
                     m_NoProjectFoundLocalizedString,
                     m_NoOrganizationFoundLocalizedString,
                     m_SelectOrganizationLocalizedString,
+                    m_OrganizationPlaceholderLocalizedString,
                     m_NewVersionAvailableLocalizedString,
                     m_ViewNewVersionLocalizedString,
                     m_OrganizationPopoverTemplate,
@@ -113,7 +116,7 @@ namespace Unity.Industry.Viewer.Assets
             UninitializeUI();
         }
         
-        private void ShowSelectOrgButton()
+        private async void ShowSelectOrgButton()
         {
             var loginButton = SharedUIManager.Instance.IdentityContainer.Q<ActionButton>(k_LoginButtonName);
             if (loginButton != null)
@@ -124,7 +127,7 @@ namespace Unity.Industry.Viewer.Assets
                 loginButton.clicked += LoginButtonOnClicked;
                 loginButton.accent = true;
                 loginButton.selected = true;
-                loginButton.label = m_SelectOrganizationLocalizedString.GetTitleLocalizedStringForAppUI();
+                loginButton.label = await m_SelectOrganizationLocalizedString.GetTitleLocalizedStringForAppUIAsync();
             }
         }
 
@@ -277,6 +280,7 @@ namespace Unity.Industry.Viewer.Assets
                 sharedUIManagerInstance.OrganizationButton.clicked -= OnOrganizationButtonClicked;
                 sharedUIManagerInstance.AssetGridView.selectionChanged -= OnAssetSelectedOnGrid;
                 sharedUIManagerInstance.AssetGridView.bindItem -= AssetGridBindItem;
+                sharedUIManagerInstance.AssetGridView.unbindItem -= AssetGridUnbindItem;
                 sharedUIManagerInstance.AssetGridView.parent.UnregisterCallback<GeometryChangedEvent>(OnGridGeometryChanged);
                 sharedUIManagerInstance.AssetGridView.UnregisterCallback<GeometryChangedEvent>(OnGridGeometryChanged);
 
@@ -311,14 +315,14 @@ namespace Unity.Industry.Viewer.Assets
         }
 
         // Initialization of the UI
-        protected override void InitializeUI()
+        protected override async void InitializeUI()
         {
             SharedUIManager.Instance.AssetsContainer.style.display = DisplayStyle.None;
             
             AssetIconLoadFailed -= OnAssetIconLoadedFailed;
             AssetIconLoadFailed += OnAssetIconLoadedFailed;
             
-            SharedUIManager.Instance.OrganizationButton.label = SharedUIManager.Instance.SelectOrganization.GetTitleLocalizedStringForAppUI();
+            SharedUIManager.Instance.OrganizationButton.label = await SharedUIManager.Instance.OrganizationPlaceholder.GetTitleLocalizedStringForAppUIAsync();
             SharedUIManager.Instance.OrganizationButton.style.display = DisplayStyle.None;
             SharedUIManager.Instance.OrganizationButton.clicked -= OnOrganizationButtonClicked;
             SharedUIManager.Instance.OrganizationButton.clicked += OnOrganizationButtonClicked;
@@ -357,9 +361,12 @@ namespace Unity.Industry.Viewer.Assets
             
             SharedUIManager.Instance.AssetGridView.bindItem -= AssetGridBindItem;
             SharedUIManager.Instance.AssetGridView.bindItem += AssetGridBindItem;
+            SharedUIManager.Instance.AssetGridView.unbindItem -= AssetGridUnbindItem;
+            SharedUIManager.Instance.AssetGridView.unbindItem += AssetGridUnbindItem;
             SharedUIManager.Instance.AssetGridView.selectionChanged -= OnAssetSelectedOnGrid;
             SharedUIManager.Instance.AssetGridView.selectionChanged += OnAssetSelectedOnGrid;
-            
+
+            SetBackgroundTint(false);
             InitializeExtraUIController();
         }
 
@@ -411,7 +418,8 @@ namespace Unity.Industry.Viewer.Assets
                 {
                     sb.Append(" / ");
                 }
-                sb.Append("<b>" + assetInfo.Value.Properties.Value.Name + "</b>");
+
+                sb.Append(FormatLastPathPart(assetInfo.Value.Properties.Value.Name));
             }
             
             SharedUIManager.Instance.PathText.text = sb.ToString();
@@ -489,16 +497,12 @@ namespace Unity.Industry.Viewer.Assets
         {
             if (assetInfo.Properties.Value.PreviewFileDescriptor != null)
             {
-                _ = TextureDownload.DownloadThumbnail(assetInfo.Asset, textureResult =>
+                HandleThumbnailDownload(iconPlaceHolder, assetInfo.Properties.Value.Type, bindingId =>
                 {
-                    if (textureResult != null)
+                    _ = TextureDownload.DownloadThumbnail(assetInfo.Asset, textureResult =>
                     {
-                        iconPlaceHolder.style.backgroundImage = textureResult;
-                    }
-                    else
-                    {
-                        AssetIconLoadFailed.Invoke(iconPlaceHolder, assetInfo.Properties.Value.Type);
-                    }
+                        OnThumbnailDownloaded(iconPlaceHolder, bindingId, textureResult, assetInfo.Properties.Value.Type);
+                    });
                 });
             }
             else
@@ -589,7 +593,7 @@ namespace Unity.Industry.Viewer.Assets
         }
 
         // Handles the loading of organizations and updates the UI accordingly
-        protected override void OnOrganizationListReceived(List<IOrganization> listOfOrg)
+        protected override async void OnOrganizationListReceived(List<IOrganization> listOfOrg)
         {
             base.OnOrganizationListReceived(listOfOrg);
 
@@ -607,8 +611,8 @@ namespace Unity.Industry.Viewer.Assets
             
             if (AssetsController.SelectedOrganization == null)
             {
-                SharedUIManager.Instance.OrganizationButton.label =
-                    SharedUIManager.Instance.SelectOrganization.GetTitleLocalizedStringForAppUI();
+                SharedUIManager.Instance.OrganizationButton.label = await 
+                    SharedUIManager.Instance.OrganizationPlaceholder.GetTitleLocalizedStringForAppUIAsync();
             }
             else
             {

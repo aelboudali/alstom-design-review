@@ -62,7 +62,7 @@ namespace Unity.Industry.Viewer.Streaming.Environment
             m_EnvironmentsListView.selectedIndex = Array.FindIndex(m_Settings.Scenes, scene => scene.id == EnvironmentToolController.CurrentEnvironmentSettings.id);
         }
 
-        private void BindListItem(VisualElement item, int index)
+        private async void BindListItem(VisualElement item, int index)
         {
             var environmentSettings = m_Settings.Scenes[index];
             if (environmentSettings == null)
@@ -94,7 +94,7 @@ namespace Unity.Industry.Viewer.Streaming.Environment
             var itemCaption = item.Q<Text>(k_EnvironmentListItemCaptionName);
             if (itemCaption != null)
             {
-                itemCaption.text = environmentSettings.DisplayName.GetTitleLocalizedStringForAppUI();
+                itemCaption.text = await environmentSettings.DisplayName.GetTitleLocalizedStringForAppUIAsync();
             }
             else
             {

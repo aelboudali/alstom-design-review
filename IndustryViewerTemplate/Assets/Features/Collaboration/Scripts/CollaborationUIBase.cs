@@ -122,7 +122,8 @@ namespace Unity.Industry.Viewer.Collaboration
         protected IAnnotation m_currentRootAnnotation;
         private WaitForSeconds m_WaitForUIUpdate;
 
-        protected bool isCurrentThreadSubscribed;
+        [HideInInspector]
+        public bool isCurrentThreadSubscribed;
         
         public abstract AssetInfo? SelectedAsset { get; }
 
@@ -144,23 +145,24 @@ namespace Unity.Industry.Viewer.Collaboration
 
         protected Text m_GuestModeText;
 
-        public void InsertCollaborationNotAvailable(VisualElement container)
+        public async void InsertCollaborationNotAvailable(VisualElement container)
         {
             container.Clear();
             string message = string.Empty;
             if (NetworkDetector.IsOffline || IdentityController.GuestMode)
             {
-                message = NetworkDetector.IsOffline? LocalizedStringAsset.CurrentlyOfflineLocalizedString.GetTitleLocalizedStringForAppUI(): LocalizedStringAsset.GuestModeLocalizedString.GetTitleLocalizedStringForAppUI();
+                message = NetworkDetector.IsOffline? await LocalizedStringAsset.CurrentlyOfflineLocalizedString.GetTitleLocalizedStringForAppUIAsync()
+                    : await LocalizedStringAsset.GuestModeLocalizedString.GetTitleLocalizedStringForAppUIAsync();
             }
             else
             {
-                message = LocalizedStringAsset.NotLoggedInLocalizedString.GetTitleLocalizedStringForAppUI();
+                message = await LocalizedStringAsset.NotLoggedInLocalizedString.GetTitleLocalizedStringForAppUIAsync();
             }
             m_GuestModeText = new Text(message);
             container.Add(m_GuestModeText);
         }
         
-        public virtual void InitializeUI(UIDocument uiDoc, VisualElement contentContainer, 
+        public virtual async void InitializeUI(UIDocument uiDoc, VisualElement contentContainer, 
             CollaborationController.FilterType filterType)
         {
             m_AnnotationRoot = contentContainer.Q<VisualElement>(k_AnnotationRootName);
@@ -211,10 +213,14 @@ namespace Unity.Industry.Viewer.Collaboration
                 
             m_ThreadFilterOptionsButton = contentContainer.Q<ActionButton>(k_ThreadFilterOptionsButtonName);
             m_ThreadFilterOptionsButton.label = filterType == CollaborationController.FilterType.All? 
-                    LocalizedStringAsset.AllThreadLocalizedString.GetTitleLocalizedStringForAppUI() : LocalizedStringAsset.OpenThreadOnlyLocalizedString.GetTitleLocalizedStringForAppUI();
+                    await LocalizedStringAsset.AllThreadLocalizedString.GetTitleLocalizedStringForAppUIAsync():
+                    await LocalizedStringAsset.OpenThreadOnlyLocalizedString.GetTitleLocalizedStringForAppUIAsync();
             m_ThreadFilterOptionsButton.clicked += ThreadFilterOptionsButtonOnClicked;
                 
             m_AttachmentIconButton.RegisterCallback<ClickEvent>(OnAddAttachmentIconClicked);
+#if UNITY_WEBGL && !UNITY_EDITOR
+            m_AttachmentIconButton.SetEnabled(false);
+#endif
             m_AttachmentGridView = contentContainer.Q<GridView>(k_AttachmentGridViewName);
             m_AttachmentGridView.columnCount = AttachmentGridViewColumnCount;
             m_AttachmentGridView.makeItem = AttachmentGridViewItem;
@@ -261,6 +267,11 @@ namespace Unity.Industry.Viewer.Collaboration
 
             m_AttachmentIconButton?.UnregisterCallback<ClickEvent>(OnAddAttachmentIconClicked);
             m_SendIconButton?.UnregisterCallback<ClickEvent>(SendIconClicked);
+        }
+
+        public static async void GetTranslation(Text label, LocalizedString localizedString)
+        {
+            label.text = await localizedString.GetTitleLocalizedStringForAppUIAsync();
         }
         
         public virtual void OnAnnotationLoaded(IReadOnlyList<IAnnotation> listOfAnnotations)
@@ -330,7 +341,7 @@ namespace Unity.Industry.Viewer.Collaboration
             }
         }
         
-        public virtual void OpenRootThread(IAnnotation annotation)
+        public virtual async void OpenRootThread(IAnnotation annotation)
         {
             if (NetworkDetector.IsOffline) return;
             LoadingUIPanel.HideLoadingPanel(null);
@@ -341,7 +352,7 @@ namespace Unity.Industry.Viewer.Collaboration
             {
                 m_AnnotationContainer.AddToClassList(k_ReadingAnnotationClassName);
             }
-            m_TextArea.placeholder = LocalizedStringAsset.ReplyPlaceHolderLocalizedString.GetTitleLocalizedStringForAppUI();
+            m_TextArea.placeholder = await LocalizedStringAsset.ReplyPlaceHolderLocalizedString.GetTitleLocalizedStringForAppUIAsync();
             m_TextArea.SetValueWithoutNotify(string.Empty);
             m_NewCommentButton.SetEnabled(true);
             CollaborationUIUtility.CheckValidInput(m_TextArea, m_AttachmentGridView, m_SendIconButton);
@@ -353,7 +364,7 @@ namespace Unity.Industry.Viewer.Collaboration
             bool hasResolved = annotation.Resolved.HasValue;
             m_ThreadMenuIconButton.SetEnabled(true);
             m_ResolveButton.SetEnabled(true);
-            m_ResolveButton.label = hasResolved ? LocalizedStringAsset.ResolvedLocalizedString.GetTitleLocalizedStringForAppUI(): string.Empty;
+            m_ResolveButton.label = hasResolved ? await LocalizedStringAsset.ResolvedLocalizedString.GetTitleLocalizedStringForAppUIAsync(): string.Empty;
             m_ResolveButton.icon = hasResolved ? k_ResolvedIconName : k_UnResolvedIconName;
             if (hasResolved)
             {
@@ -491,17 +502,17 @@ namespace Unity.Industry.Viewer.Collaboration
             }
         }
         
-        public void ShowRepeatedAttachmentMessage(AddAttachmentFailType type)
+        public async void ShowRepeatedAttachmentMessage(AddAttachmentFailType type)
         {
             string message = string.Empty;
             switch (type)
             {
                 case AddAttachmentFailType.DuplicateFileName:
-                    message = LocalizedStringAsset.DuplicateFileNameLocalizedString.GetTitleLocalizedStringForAppUI();
+                    message = await LocalizedStringAsset.DuplicateFileNameLocalizedString.GetTitleLocalizedStringForAppUIAsync();
                     break;
                 
                 case AddAttachmentFailType.DuplicateFilePath:
-                    message = LocalizedStringAsset.DuplicateFilePathLocalizedString.GetTitleLocalizedStringForAppUI();
+                    message = await LocalizedStringAsset.DuplicateFilePathLocalizedString.GetTitleLocalizedStringForAppUIAsync();
                     break;
             }
 
@@ -526,6 +537,7 @@ namespace Unity.Industry.Viewer.Collaboration
             {
                 arg1.dismissed -= MenuOnDismissed;
                 CollaborationUIUtility.JustDismissedPopover = true;
+                ResetDismissedPopover();
                 m_ThreadFilterOptionsButton.trailingIcon = k_CaretDownIconName;
             }
             
@@ -536,35 +548,47 @@ namespace Unity.Industry.Viewer.Collaboration
                 m_ThreadFilterOptionsButton.trailingIcon = k_CaretUpIconName;
             }
 
-            void BindItemFunc(MenuItem item)
+            async void BindItemFunc(MenuItem item)
             {
-                item.label = LocalizedStringAsset.OpenThreadOnlyLocalizedString.GetTitleLocalizedStringForAppUI();
+                item.label = await LocalizedStringAsset.OpenThreadOnlyLocalizedString.GetTitleLocalizedStringForAppUIAsync();
                 item.selectable = true;
                 item.value = FilterType == CollaborationController.FilterType.Opened;
                 item.clickable.clicked += OnOpenThreadsClicked;
             }
 
-            void AllThreadButton(MenuItem item)
+            async void AllThreadButton(MenuItem item)
             {
-                item.label = LocalizedStringAsset.AllThreadLocalizedString.GetTitleLocalizedStringForAppUI();
+                item.label = await LocalizedStringAsset.AllThreadLocalizedString.GetTitleLocalizedStringForAppUIAsync();
                 item.selectable = true;
                 item.value = FilterType == CollaborationController.FilterType.All;
                 item.clickable.clicked += OnAllThreadsClicked;
             }
         }
+
+        public void ResetDismissedPopover()
+        {
+            StartCoroutine(ResetValue());
+            return;
+
+            IEnumerator ResetValue()
+            {
+                yield return new WaitForEndOfFrame();
+                CollaborationUIUtility.JustDismissedPopover = false;
+            }
+        }
         
-        private void OnOpenThreadsClicked()
+        private async void OnOpenThreadsClicked()
         {
             if(NetworkDetector.IsOffline) return;
-            m_ThreadFilterOptionsButton.label = LocalizedStringAsset.OpenThreadOnlyLocalizedString.GetTitleLocalizedStringForAppUI();
+            m_ThreadFilterOptionsButton.label = await LocalizedStringAsset.OpenThreadOnlyLocalizedString.GetTitleLocalizedStringForAppUIAsync();
             FilterType = CollaborationController.FilterType.Opened;
             QueryThread(FilterType);
         }
         
-        private void OnAllThreadsClicked()
+        private async void OnAllThreadsClicked()
         {
             if(NetworkDetector.IsOffline) return;
-            m_ThreadFilterOptionsButton.label = LocalizedStringAsset.AllThreadLocalizedString.GetTitleLocalizedStringForAppUI();
+            m_ThreadFilterOptionsButton.label = await LocalizedStringAsset.AllThreadLocalizedString.GetTitleLocalizedStringForAppUIAsync();
             FilterType = CollaborationController.FilterType.All;
             QueryThread(FilterType);
         }
@@ -591,35 +615,35 @@ namespace Unity.Industry.Viewer.Collaboration
             menuBuilder.Show();
             return;
 
-            void FollowThread(MenuItem item)
+            async void FollowThread(MenuItem item)
             {
-                item.label = LocalizedStringAsset.FollowThreadLocalizedString.GetTitleLocalizedStringForAppUI();
+                item.label = await LocalizedStringAsset.FollowThreadLocalizedString.GetTitleLocalizedStringForAppUIAsync();
                 item.selectable = false;
                 item.active = true;
                 item.style.display = isCurrentlySubscribed? DisplayStyle.None: DisplayStyle.Flex;
                 item.clickable.clicked += OnFollowThreadClicked;
             }
             
-            void UnfollowThread(MenuItem item)
+            async void UnfollowThread(MenuItem item)
             {
-                item.label = LocalizedStringAsset.UnfollowThreadLocalizedString.GetTitleLocalizedStringForAppUI();
+                item.label = await LocalizedStringAsset.UnfollowThreadLocalizedString.GetTitleLocalizedStringForAppUIAsync();
                 item.selectable = false;
                 item.active = true;
                 item.style.display = isCurrentlySubscribed? DisplayStyle.Flex: DisplayStyle.None;
                 item.clickable.clicked += OnUnfollowThreadClicked;
             }
             
-            void CopyLink(MenuItem item)
+            async void CopyLink(MenuItem item)
             {
-                item.label = LocalizedStringAsset.CopyLinkLocalizedString.GetTitleLocalizedStringForAppUI();
+                item.label = await LocalizedStringAsset.CopyLinkLocalizedString.GetTitleLocalizedStringForAppUIAsync();
                 item.selectable = false;
                 item.active = true;
                 item.clickable.clicked += OnCopyLinkClicked;
             }
             
-            void DeleteThread(MenuItem item)
+            async void DeleteThread(MenuItem item)
             {
-                item.label = LocalizedStringAsset.DeleteThreadLocalizedString.GetTitleLocalizedStringForAppUI();
+                item.label = await LocalizedStringAsset.DeleteThreadLocalizedString.GetTitleLocalizedStringForAppUIAsync();
                 item.selectable = false;
                 item.active = true;
                 bool isCreator = annotation.CreatedBy == m_UserInfo.UserId.ToString();
@@ -636,20 +660,21 @@ namespace Unity.Industry.Viewer.Collaboration
             void OnMenuDismissed(MenuBuilder arg1, DismissType arg2)
             {
                 CollaborationUIUtility.JustDismissedPopover = true;
+                ResetDismissedPopover();
                 arg1.dismissed -= OnMenuDismissed;
             }
             
-            void OnDeleteThreadClicked()
+            async void OnDeleteThreadClicked()
             {
                 m_PopoverMenu?.Dismiss();
                 if(NetworkDetector.IsOffline) return;
                 var deleteAlert = new AlertDialog
                 {
-                    title = LocalizedStringAsset.DeleteThreadLocalizedString.GetTitleLocalizedStringForAppUI(),
-                    description = LocalizedStringAsset.DeleteThreadMessageLocalizedString.GetTitleLocalizedStringForAppUI(),
+                    title = await LocalizedStringAsset.DeleteThreadLocalizedString.GetTitleLocalizedStringForAppUIAsync(),
+                    description = await LocalizedStringAsset.DeleteThreadMessageLocalizedString.GetTitleLocalizedStringForAppUIAsync(),
                     variant = AlertSemantic.Destructive
                 };
-                deleteAlert.SetPrimaryAction(99, LocalizedStringAsset.DeleteLocalizedString.GetTitleLocalizedStringForAppUI(), () =>
+                deleteAlert.SetPrimaryAction(99, await LocalizedStringAsset.DeleteLocalizedString.GetTitleLocalizedStringForAppUIAsync(), () =>
                 {
                     CollaborationController.DeleteAnnotation?.Invoke(SelectedAsset.Value, TokenSource, annotation, (success) =>
                     {
@@ -661,7 +686,7 @@ namespace Unity.Industry.Viewer.Collaboration
                     });
                 });
             
-                deleteAlert.SetCancelAction(0, LocalizedStringAsset.CancelLocalizedString.GetTitleLocalizedStringForAppUI());
+                deleteAlert.SetCancelAction(0, await LocalizedStringAsset.CancelLocalizedString.GetTitleLocalizedStringForAppUIAsync());
                 var modal = Modal.Build(reference, deleteAlert);
                 modal.Show();
             }
@@ -731,9 +756,16 @@ namespace Unity.Industry.Viewer.Collaboration
         {
             NewCommentUIActive(() =>
             {
-                m_TextArea.placeholder = LocalizedStringAsset.StartThreadPlaceHolderLocalizedString.GetTitleLocalizedStringForAppUI();
+                _ = PlaceHolderText();
                 m_TextArea.Focus();
             });
+            return;
+
+            async Task PlaceHolderText()
+            {
+                m_TextArea.placeholder = await LocalizedStringAsset.StartThreadPlaceHolderLocalizedString
+                    .GetTitleLocalizedStringForAppUIAsync();
+            }
         }
 
         protected void NewCommentUIActive(Action onUISetupCallback)
@@ -930,9 +962,12 @@ namespace Unity.Industry.Viewer.Collaboration
             {
                 m_TextArea.RemoveFromClassList(k_TextAreaFocusClassName);
             }
-            
-            m_AttachmentGridView.itemsSource = null;
-            m_ReplyContainer.style.display = DisplayStyle.None;
+
+            if (m_AttachmentGridView != null)
+            {
+                m_AttachmentGridView.itemsSource = null;
+            }
+            m_ReplyContainer?.DisplayOff();
             if (m_AnnotationContainer.ClassListContains(k_ReadingAnnotationClassName))
             {
                 m_AnnotationContainer.RemoveFromClassList(k_ReadingAnnotationClassName);

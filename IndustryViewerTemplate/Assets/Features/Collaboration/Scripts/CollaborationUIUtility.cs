@@ -16,6 +16,7 @@ using Unity.Cloud.Identity;
 using System.Threading.Tasks;
 using System.Threading;
 using UnityEngine.InputSystem;
+using Object = UnityEngine.Object;
 
 namespace Unity.Industry.Viewer.Collaboration
 {
@@ -421,6 +422,7 @@ namespace Unity.Industry.Viewer.Collaboration
                     NamePopover.dismissed -= NamePopoverOnDismissed;
                     textArea.UnregisterCallback<KeyDownEvent>(OnKeyDownWithPopover, TrickleDown.TrickleDown);
                     JustDismissedPopover = true;
+                    Object.FindAnyObjectByType<CollaborationUIBase>()?.ResetDismissedPopover();
                     NamePopover = null;
                 }
             }

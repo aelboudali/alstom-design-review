@@ -22,6 +22,7 @@ namespace Unity.Industry.Viewer.Identity
         public static bool GuestMode;
         public static IUserInfo UserInfo => m_UserInfo;
         private static IUserInfo m_UserInfo;
+        public static bool IsLoogedIn => m_UserInfo != null;
         public static event Action<AuthenticationState> AuthenticationStateChangedEvent;
         public static event Action<IUserInfo> UserInfoUpdatedEvent;
         public static Action TriggerLogin;

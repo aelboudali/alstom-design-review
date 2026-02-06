@@ -9,7 +9,6 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
         private const string GridSizeName = "Grid-Size";
         
         [SerializeField] protected float m_fGridUnit;
-        private bool m_bKeepRendering;
         private Material m_Material;
         private readonly int m_GridSizeId = Shader.PropertyToID("_GridSize");
         
@@ -28,7 +27,6 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
             {
                 m_fGridUnit  = PlayerPrefs.GetFloat(GridSizeName, 0.1f);
             }
-            m_bKeepRendering = false;
             m_MeshRenderer = GetComponent<MeshRenderer>();
             m_ARSession = FindAnyObjectByType<ARSession>(FindObjectsInactive.Include);
             SetGridUnit(m_fGridUnit);

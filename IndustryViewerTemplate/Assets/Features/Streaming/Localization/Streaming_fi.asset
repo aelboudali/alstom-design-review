@@ -169,7 +169,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 113671218895249408
-    m_Localized: "<b>Det finns inga nedladdade resurser f\xF6r lokal streaming</b>\n\n<size=70%>G\xE5
+    m_Localized: "<size=20><b>Det finns inga nedladdade resurser f\xF6r lokal streaming</b></size><size=14><br><br>G\xE5
       online och ladda ner dem innan du forts\xE4tter</size>"
     m_Metadata:
       m_Items: []
@@ -178,7 +178,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 123180386542936064
-    m_Localized: "V\xE4nligen v\xE4lj era organisationer h\xE4r"
+    m_Localized: "Ole hyv\xE4 ja valitse organisaatiosi t\xE4st\xE4"
     m_Metadata:
       m_Items: []
   - m_Id: 123892356694925312

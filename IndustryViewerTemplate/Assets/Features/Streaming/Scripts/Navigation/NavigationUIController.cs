@@ -50,7 +50,7 @@ namespace Unity.Industry.Viewer.Streaming
             NavigationController.CurrentNavigationOption.NavigationOptionUIComponent.CreatePanel();
         }
 
-        private void OnNavigationOptionChanged(NavigationOption newNavigationOption)
+        private async void OnNavigationOptionChanged(NavigationOption newNavigationOption)
         {
             if (m_NavigationOptions != null)
             {
@@ -58,10 +58,10 @@ namespace Unity.Industry.Viewer.Streaming
             }
             m_NavigationButton.userData = newNavigationOption;
             SetIcon(newNavigationOption.NavigationOptionUIComponent.NavigationIcon, m_NavigationButton);
-            m_NavigationButton.tooltip = newNavigationOption.NavigationName.GetTitleLocalizedStringForAppUI();
+            m_NavigationButton.tooltip = await newNavigationOption.NavigationName.GetTitleLocalizedStringForAppUIAsync();
         }
 
-        private void InitialUI()
+        private async void InitialUI()
         {
             if(m_UIDocument != null) return;
 
@@ -90,8 +90,8 @@ namespace Unity.Industry.Viewer.Streaming
             SetIcon(m_NavigationController.DefaultNavigationOption.NavigationOptionUIComponent.NavigationIcon, m_NavigationButton);
             
             m_NavigationButton.userData = m_NavigationController.DefaultNavigationOption;
-            m_NavigationButton.tooltip = m_NavigationController.DefaultNavigationOption.NavigationName
-                .GetTitleLocalizedStringForAppUI();
+            m_NavigationButton.tooltip = await m_NavigationController.DefaultNavigationOption.NavigationName
+                .GetTitleLocalizedStringForAppUIAsync();
             
             m_NavigationContainer.Add(m_NavigationButton);
             m_BottomLeftContainer.Add(m_NavigationContainer);
@@ -101,7 +101,7 @@ namespace Unity.Industry.Viewer.Streaming
             m_NavigationButton.clickable.longClicked += OnNavigationButtonLongClick;
         }
 
-        private void OnNavigationButtonClicked()
+        private async void OnNavigationButtonClicked()
         {
             if (m_NavigationOptionButtons.Count == 0)
             {
@@ -135,7 +135,7 @@ namespace Unity.Industry.Viewer.Streaming
                         },
                     };
                     
-                    button.tooltip = navigationOption.NavigationName.GetTitleLocalizedStringForAppUI();
+                    button.tooltip = await navigationOption.NavigationName.GetTitleLocalizedStringForAppUIAsync();
                     SetIcon(navigationOption.NavigationOptionUIComponent.NavigationIcon, button);
                     button.clicked += () =>
                     {

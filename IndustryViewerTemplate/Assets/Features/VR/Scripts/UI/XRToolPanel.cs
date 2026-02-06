@@ -72,7 +72,7 @@ namespace Unity.Industry.Viewer.VR
             IsOpened = true;
             GrabEnable(true);
             AddContentToPanel(title, content);
-            m_InteractionCollider ??= m_UIDocument.GetComponent<BoxCollider>();
+            m_InteractionCollider = m_UIDocument.GetComponent<BoxCollider>();
             m_InteractionCollider.enabled = true;
             
             Transform cam = Camera.main.transform;
@@ -102,7 +102,10 @@ namespace Unity.Industry.Viewer.VR
             IsOpened = false;
             m_ToolPanelContent?.RemoveFromHierarchy();
             m_ToolPanelContent = null;
-            m_InteractionCollider.enabled = false;
+            if (m_InteractionCollider != null)
+            {
+                m_InteractionCollider.enabled = false;
+            }
             GrabEnable(false);
         }
     }

@@ -171,8 +171,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 113671218895249408
-    m_Localized: "Aucun contenu t\xE9l\xE9charg\xE9 n'est disponible pour la diffusion
-      locale.\n\nVeuillez vous connecter et les t\xE9l\xE9charger avant de continuer."
+    m_Localized: "<size=20><b>Aucun contenu t\xE9l\xE9charg\xE9 n'est disponible
+      pour la diffusion locale</b></size><size=14><br><br>Veuillez vous connecter
+      et les t\xE9l\xE9charger avant de continuer</size>"
     m_Metadata:
       m_Items: []
   - m_Id: 118748446100283392
@@ -180,7 +181,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 123180386542936064
-    m_Localized: "Veuillez s\xE9lectionner vos organisations ici"
+    m_Localized: "Veuillez s\xE9lectionner votre organisation ici"
     m_Metadata:
       m_Items: []
   - m_Id: 123892356694925312

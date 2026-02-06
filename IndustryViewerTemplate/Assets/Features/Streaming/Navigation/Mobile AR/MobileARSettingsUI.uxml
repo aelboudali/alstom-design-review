@@ -130,6 +130,11 @@
                 <Unity.AppUI.UI.SliderFloat show-input-field="true" format-string="f3" high-value="2" value="1" name="ScaleSlider" style="display: none; height: 40px;" />
                 <Unity.AppUI.UI.TouchSliderFloat name="ScaleSlider" high-value="2" value="1" format-string="f2" increment-factor="0.01" style="width: 100%; display: none; height: 40px;" />
             </engine:VisualElement>
+            <Unity.AppUI.UI.ActionButton name="PlaceOnSurface" style="height: 40px; margin-top: 16px;">
+                <Bindings>
+                    <UnityEngine.Localization.LocalizedString property="label" table="GUID:8439f8a59aa98411c86af28e69b5af05" entry="Id(131130674381840384)" />
+                </Bindings>
+            </Unity.AppUI.UI.ActionButton>
         </engine:VisualElement>
         <engine:VisualElement style="flex-grow: 1; height: 40px; padding-left: 8px; flex-direction: row; margin-bottom: 16px;">
             <Unity.AppUI.UI.Text style="width: 100px; margin-right: 32px; font-size: 20px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">

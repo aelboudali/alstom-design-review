@@ -189,10 +189,6 @@ namespace Unity.Industry.Viewer.Assets
                     }
                 };
                 newTag.AddToClassList("AssetInfoTag");
-                if(i != 0)
-                {
-                    newTag.style.marginLeft = new Length(4, LengthUnit.Pixel);
-                }
                 m_TagsContainer.Add(newTag);
             }
         }

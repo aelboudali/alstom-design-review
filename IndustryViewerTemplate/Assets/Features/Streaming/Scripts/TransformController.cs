@@ -146,11 +146,21 @@ namespace Unity.Industry.Viewer.Streaming
 
             if (visible)
             {
-                foreach (var key in m_OriginalVisibility.Keys)
+                if (m_OriginalVisibility.Count == 0)
                 {
-                    key.SetActive(m_OriginalVisibility[key]);
+                    for(var i = 0; i < transform.childCount; i++)
+                    {
+                        transform.GetChild(i).gameObject.SetActive(true);
+                    }
                 }
-                m_OriginalVisibility.Clear();
+                else
+                {
+                    foreach (var key in m_OriginalVisibility.Keys)
+                    {
+                        key.SetActive(m_OriginalVisibility[key]);
+                    }
+                    m_OriginalVisibility.Clear();
+                }
             }
             else
             {

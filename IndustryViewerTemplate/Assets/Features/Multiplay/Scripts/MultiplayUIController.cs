@@ -212,21 +212,21 @@ namespace Unity.Industry.Viewer.Multiplay
             }
         }
 
-        protected virtual void OnAskToJoinLayout(AssetInfo assetInfo)
+        protected virtual async void OnAskToJoinLayout(AssetInfo assetInfo)
         {
             var askToChangeDialog = new AlertDialog()
             {
-                title = m_JoinNewLayoutSessionTitleLocalizedString.GetTitleLocalizedStringForAppUI(),
-                description = m_JoinNewLayoutSessionDescriptionLocalizedString.GetTitleLocalizedStringForAppUI(),
+                title = await m_JoinNewLayoutSessionTitleLocalizedString.GetTitleLocalizedStringForAppUIAsync(),
+                description = await m_JoinNewLayoutSessionDescriptionLocalizedString.GetTitleLocalizedStringForAppUIAsync(),
                 variant = AlertSemantic.Default
             };
             
-            askToChangeDialog.SetPrimaryAction(99, m_JoinLocalizedString.GetTitleLocalizedStringForAppUI(), () =>
+            askToChangeDialog.SetPrimaryAction(99, await m_JoinLocalizedString.GetTitleLocalizedStringForAppUIAsync(), () =>
             {
                 AssetsController.AssetSelected?.Invoke(assetInfo);
             });
             
-            askToChangeDialog.SetCancelAction(0, m_CancelLocalizedString.GetTitleLocalizedStringForAppUI());
+            askToChangeDialog.SetCancelAction(0, await m_CancelLocalizedString.GetTitleLocalizedStringForAppUIAsync());
             
             var modal = Modal.Build(SharedUIManager.Instance.AssetsContainer, askToChangeDialog);
 
@@ -251,9 +251,9 @@ namespace Unity.Industry.Viewer.Multiplay
         }
 
         // event handler for session join failure
-        protected virtual void OnSessionJoinedFailed(string message)
+        protected virtual async void OnSessionJoinedFailed(string message)
         {
-            var textMessage = message.Contains("lobby is full") ? m_Toast_SessionFullLocalizedString.GetTitleLocalizedStringForAppUI() : m_Toast_SessionJoinFailedLocalizedString.GetTitleLocalizedStringForAppUI();
+            var textMessage = message.Contains("lobby is full") ? await m_Toast_SessionFullLocalizedString.GetTitleLocalizedStringForAppUIAsync() : await m_Toast_SessionJoinFailedLocalizedString.GetTitleLocalizedStringForAppUIAsync();
 
             var toast = Toast.Build(m_MyAvatar, textMessage, NotificationDuration.Long).SetStyle(NotificationStyle.Negative);
 
@@ -280,14 +280,14 @@ namespace Unity.Industry.Viewer.Multiplay
             }
         }
 
-        protected virtual void ShowRequestToJoinDialog(NetworkPlayerController playerController, Action joinAction)
+        protected virtual async void ShowRequestToJoinDialog(NetworkPlayerController playerController, Action joinAction)
         {
             m_PresentationModal?.Dismiss();
             
             var requestToJoinDialog = new AlertDialog()
             {
-                title = m_JoinPresentationTitleLocalizedString.GetTitleLocalizedStringForAppUI(),
-                description = m_JoinPresentationDescriptionLocalizedString.GetTitleLocalizedStringForAppUI(),
+                title = await m_JoinPresentationTitleLocalizedString.GetTitleLocalizedStringForAppUIAsync(),
+                description = await m_JoinPresentationDescriptionLocalizedString.GetTitleLocalizedStringForAppUIAsync(),
                 variant = AlertSemantic.Default
             };
 
@@ -300,9 +300,9 @@ namespace Unity.Industry.Viewer.Multiplay
                 }
             };
                     
-            requestToJoinDialog.SetPrimaryAction(98, m_JoinLocalizedString.GetTitleLocalizedStringForAppUI(), joinAction);
+            requestToJoinDialog.SetPrimaryAction(98, await m_JoinLocalizedString.GetTitleLocalizedStringForAppUIAsync(), joinAction);
                     
-            requestToJoinDialog.SetCancelAction(0, m_CancelLocalizedString.GetTitleLocalizedStringForAppUI());
+            requestToJoinDialog.SetCancelAction(0, await m_CancelLocalizedString.GetTitleLocalizedStringForAppUIAsync());
                     
             m_PresentationModal = Modal.Build(m_PresentationModeButton, requestToJoinDialog);
             m_PresentationModal.shown += OnModalShown;
@@ -512,7 +512,7 @@ namespace Unity.Industry.Viewer.Multiplay
             return avatar;
         }
 
-        protected virtual void InitializeUI()
+        protected virtual async void InitializeUI()
         {
             if (!m_UIDocument.rootVisualElement.styleSheets.Contains(m_MultiplayStyleSheet))
             {
@@ -539,8 +539,8 @@ namespace Unity.Industry.Viewer.Multiplay
             m_MyAvatar.parent.Insert(avatarIndex, m_PresentationModeButton);
             m_PresentationModeButton.style.display = DisplayStyle.None;
             
-            m_PresentationModeButton.tooltip =
-                m_PresentationModeLocalizedString.GetTitleLocalizedStringForAppUI();
+            m_PresentationModeButton.tooltip = await 
+                m_PresentationModeLocalizedString.GetTitleLocalizedStringForAppUIAsync();
         }
 
         // event handler for presentation mode button click
@@ -624,22 +624,22 @@ namespace Unity.Industry.Viewer.Multiplay
             InitializePresentationDialog();
         }
 
-        protected virtual void InitializePresentationDialog()
+        protected virtual async void InitializePresentationDialog()
         {
             var presentationModeDialog = new AlertDialog()
             {
-                title = m_StartPresentationTitleLocalizedString.GetTitleLocalizedStringForAppUI(),
-                description = m_StartPresentationDescriptionLocalizedString.GetTitleLocalizedStringForAppUI(),
+                title = await m_StartPresentationTitleLocalizedString.GetTitleLocalizedStringForAppUIAsync(),
+                description = await m_StartPresentationDescriptionLocalizedString.GetTitleLocalizedStringForAppUIAsync(),
                 variant = AlertSemantic.Default
             };
             
-            presentationModeDialog.SetPrimaryAction(96, m_StartLocalizedString.GetTitleLocalizedStringForAppUI(),
+            presentationModeDialog.SetPrimaryAction(96, await m_StartLocalizedString.GetTitleLocalizedStringForAppUIAsync(),
                 () =>
                 {
                     MultiplayController.InitializePresentationMode?.Invoke();
                 });
             
-            presentationModeDialog.SetCancelAction(0, m_CancelLocalizedString.GetTitleLocalizedStringForAppUI());
+            presentationModeDialog.SetCancelAction(0, await m_CancelLocalizedString.GetTitleLocalizedStringForAppUIAsync());
             
             m_PresentationModal = Modal.Build(m_PresentationModeButton, presentationModeDialog);
             m_PresentationModal.shown += OnModalShown;
@@ -647,7 +647,7 @@ namespace Unity.Industry.Viewer.Multiplay
             m_PresentationModal.Show();
         }
 
-        protected virtual void ShowPresentationDialog(NetworkPlayerController myOwnPlayerObject, 
+        protected virtual async void ShowPresentationDialog(NetworkPlayerController myOwnPlayerObject, 
             NetworkPlayerController presenter, LocalizedString title, LocalizedString description, 
             LocalizedString primaryButtonText, Action primaryAction)
         {
@@ -655,15 +655,15 @@ namespace Unity.Industry.Viewer.Multiplay
                 
             newDialog = new AlertDialog()
             {
-                title = title.GetTitleLocalizedStringForAppUI(),
-                description = description.GetTitleLocalizedStringForAppUI(),
+                title = await title.GetTitleLocalizedStringForAppUIAsync(),
+                description = await description.GetTitleLocalizedStringForAppUIAsync(),
                 variant = AlertSemantic.Default
             };
             
             
-            newDialog.SetPrimaryAction(97, primaryButtonText.GetTitleLocalizedStringForAppUI(), primaryAction);
+            newDialog.SetPrimaryAction(97, await primaryButtonText.GetTitleLocalizedStringForAppUIAsync(), primaryAction);
                 
-            newDialog.SetCancelAction(0, m_DismissLocalizedString.GetTitleLocalizedStringForAppUI());
+            newDialog.SetCancelAction(0,  await m_DismissLocalizedString.GetTitleLocalizedStringForAppUIAsync());
                 
             m_PresentationModal = Modal.Build(m_PresentationModeButton, newDialog);
             m_PresentationModal.shown += OnModalShown;

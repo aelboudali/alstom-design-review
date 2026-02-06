@@ -130,6 +130,10 @@ MonoBehaviour:
     m_Localized: "Trykk p\xE5 punktet for \xE5 plassere ressursen"
     m_Metadata:
       m_Items: []
+  - m_Id: 131130674381840384
+    m_Localized: "Plasser p\xE5 overflaten"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

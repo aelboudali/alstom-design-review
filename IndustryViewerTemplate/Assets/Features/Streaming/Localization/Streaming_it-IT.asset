@@ -169,11 +169,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 113671218895249408
-    m_Localized: '<b>Non ci sono risorse scaricate per lo streaming locale</b>
-
-
-      <size=70%>Connettiti
-      e scaricale prima di continuare</size>'
+    m_Localized: <size=20><b>Non ci sono risorse scaricate per lo streaming locale</b></size><size=14><br><br>Connettiti
+      e scaricale prima di continuare</size>
     m_Metadata:
       m_Items: []
   - m_Id: 118748446100283392
@@ -181,7 +178,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 123180386542936064
-    m_Localized: Seleziona qui le tue organizzazioni
+    m_Localized: Seleziona qui la tua organizzazione, per favore
     m_Metadata:
       m_Items: []
   - m_Id: 123892356694925312

@@ -11,6 +11,7 @@ using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 using UnityEngine.UIElements;
+using System.Threading.Tasks;
 
 namespace Unity.Industry.Viewer.Assets
 {
@@ -92,7 +93,7 @@ namespace Unity.Industry.Viewer.Assets
             SetPathText(null, SharedUIManager.AssetProjectInfo.Value, selectedCollection);
         }
 
-        protected void OnAssetProjectsLoaded(IOrganization organization, List<AssetProjectInfo> assetProjects)
+        protected async void OnAssetProjectsLoaded(IOrganization organization, List<AssetProjectInfo> assetProjects)
         {
             //Clear asset Projects
             SharedUIManager.Instance.AssetProjectScrollList?.Clear();
@@ -101,24 +102,15 @@ namespace Unity.Industry.Viewer.Assets
             {
                 var text = new Text
                 {
-                    text = SharedUIManager.Instance.NoProjectsFound.GetTitleLocalizedStringForAppUI()
+                    text = await SharedUIManager.Instance.NoProjectsFound.GetTitleLocalizedStringForAppUIAsync()
                 };
                 SharedUIManager.Instance.AssetProjectScrollList?.Add(text);
                 OnAssetProjectsLoadedEvent?.Invoke(organization);
                 return;
             }
 
-            bool firstItem = true;
-            
             foreach (var assetProject in assetProjects)
             {
-                if (!firstItem)
-                {
-                    SharedUIManager.Instance?.AssetProjectScrollList?.Add(new Divider());
-                }
-
-                firstItem = false;
-
                 var newAssetProjectButton = ReturnAssetProjectButton(assetProject);
                 newAssetProjectButton.icon = "Down-Arrow";
                 newAssetProjectButton.AddToClassList(SharedUIManager.k_AssetProjectButtonClass);
@@ -265,7 +257,7 @@ namespace Unity.Industry.Viewer.Assets
 
             int indentLevel = collection.ParentPath.IsEmpty ? 1 : collection.ParentPath.GetPathComponents().Length + 1;
 
-            collectionButton.style.paddingLeft = 10 + indentLevel * 20;
+            collectionButton.style.paddingLeft = indentLevel * 16;
 
             collectionButton.clicked += () =>
             {
@@ -408,6 +400,12 @@ namespace Unity.Industry.Viewer.Assets
             RefreshGridItem(gridVisualElement, index);
         }
 
+        protected void AssetGridUnbindItem(VisualElement gridVisualElement, int index)
+        {
+            // Clear the binding ID to invalidate any pending downloads
+            gridVisualElement.userData = null;
+        }
+
         private void SelectItemClass(VisualElement item, AssetInfo assetInfo)
         {
             if (SharedUIManager.SelectedAsset.HasValue)
@@ -422,6 +420,41 @@ namespace Unity.Industry.Viewer.Assets
         }
         
         protected abstract void HandleAssetThumbnail(AssetInfo asset, VisualElement iconPlaceHolder);
+        
+        private static int s_BindingIdCounter = 0;
+        
+        protected void HandleThumbnailDownload(VisualElement iconPlaceHolder, AssetType assetType, Action<int> downloadAction)
+        {
+            // Cancel any existing download for this visual element
+            if (iconPlaceHolder.userData is int existingAssetId)
+            {
+                TextureDownload.CancelDownload(existingAssetId);
+            }
+
+            // Generate a unique binding ID for this specific bind operation
+            var bindingId = ++s_BindingIdCounter;
+            iconPlaceHolder.userData = bindingId;
+            
+            downloadAction(bindingId);
+        }
+        
+        protected void OnThumbnailDownloaded(VisualElement iconPlaceHolder, int bindingId, Texture2D textureResult, AssetType assetType)
+        {
+            // Validate that this visual element is still bound to the same asset
+            // by checking if the binding ID matches
+            if (iconPlaceHolder.userData is int currentBindingId && 
+                currentBindingId == bindingId)
+            {
+                if (textureResult != null)
+                {
+                    iconPlaceHolder.style.backgroundImage = textureResult;
+                }
+                else
+                {
+                    AssetIconLoadFailed.Invoke(iconPlaceHolder, assetType);
+                }
+            }
+        }
         
         protected void OnGridGeometryChanged(GeometryChangedEvent evt)
         {
@@ -463,18 +496,13 @@ namespace Unity.Industry.Viewer.Assets
         protected static void SortingBindItem(DropdownItem dropdownItem, int index)
         {
             SortingType sortingType = (SharedUIManager.Instance.SortingDropdown.sourceItems as SortingType[])[index];
-            var localizedString = sortingType.GetValueAsString();
-            if (localizedString == null)
-            {
-                return;
-            }
 
             var text = dropdownItem.Q<LocalizedTextElement>();
             if (text == null)
             {
                 return;
             }
-            text.text = localizedString.GetTitleLocalizedStringForAppUI();
+            text.text = sortingType.GetValueAsString();
         }
         
         protected void OnSortingDropdownValueChanged(ChangeEvent<IEnumerable<int>> evt)
@@ -499,7 +527,7 @@ namespace Unity.Industry.Viewer.Assets
             {
                 if (i == paths.Length - 1 && bold)
                 {
-                    sb.Append("<b>" + paths[i] + "</b>");
+                    sb.Append(FormatLastPathPart(paths[i]));
                 }
                 else
                 {
@@ -511,7 +539,9 @@ namespace Unity.Industry.Viewer.Assets
                 }
             }
         }
-        
+
+        protected static string FormatLastPathPart(string value) => $"<b><color=#E9E9E9>{value}</color></b>";
+
         protected void UpdateItemProperties(VisualElement item, string assetName, AssetType assetType, DateTime creationDate, out VisualElement iconPlaceHolder)
         {
             var itemUI = item.Q<VisualElement>("ItemUI");
@@ -519,7 +549,7 @@ namespace Unity.Industry.Viewer.Assets
             var assetNameLabel = item.Q<Text>();
             
             var assetTypeLabel = item.Q<Text>("AssetTypeLabel");
-            assetTypeLabel.text = assetType.GetAssetTypeAsString().GetTitleLocalizedStringForAppUI();
+            assetTypeLabel.text = assetType.GetAssetTypeAsString();
 
             var assetLastUpdateLabel = item.Q<Text>("AssetLastUpdatedLabel");
             var currentUtcTime = DateTime.UtcNow;
@@ -553,24 +583,33 @@ namespace Unity.Industry.Viewer.Assets
             assetNameLabel.text = assetName;
         }
         
-        protected virtual void OnOrganizationListReceived(List<IOrganization> listOfOrg)
+        protected virtual async void OnOrganizationListReceived(List<IOrganization> listOfOrg)
         {
             SharedUIManager.Instance.OrganizationButton.userData = listOfOrg;
             
             SharedUIManager.Instance.AssetProjectScrollList.Clear();
             SharedUIManager.Instance.ClearGridView();
-            
+
             if (listOfOrg == null || listOfOrg.Count == 0)
             {
                 SharedUIManager.Instance.OrganizationButton.SetEnabled(false);
-                SharedUIManager.Instance.OrganizationButton.label =
-                    SharedUIManager.Instance.NoOrganizationsFound.GetTitleLocalizedStringForAppUI();
+                SharedUIManager.Instance.OrganizationButton.label = await 
+                    SharedUIManager.Instance.NoOrganizationsFound.GetTitleLocalizedStringForAppUIAsync();
                 SharedUIManager.Instance.AssetsContainer.style.display = DisplayStyle.None;
+                SetBackgroundTint(true);
                 return;
             }
+
+            SetBackgroundTint(false);
             SharedUIManager.Instance.OrganizationButton.SetEnabled(true);
         }
         
+        protected void SetBackgroundTint(bool isDark)
+        {
+            var backgroundVE = SharedUIManager.Instance.AssetsUIDocument.rootVisualElement.Q<VisualElement>("BackgroundVE");
+            backgroundVE.style.unityBackgroundImageTintColor = isDark ? new Color(0.5f, 0.5f, 0.5f, 1f) : new Color(1f, 1f, 1f, 1f);
+        }
+
         protected void UpdateUIOnOrganizationSelected()
         {
             //Clear asset projects, collection list and assets
@@ -590,13 +629,16 @@ namespace Unity.Industry.Viewer.Assets
             List<IOrganization> listOfOrg = SharedUIManager.Instance.OrganizationButton.userData as List<IOrganization>;
             organizationListView.itemsSource = listOfOrg;
             organizationListView.selectionChanged += OnOrganizationSelectionChanged;
-            organizationListView.fixedItemHeight = 40;
 
             SharedUIManager.Instance.OrganizationPopover = Popover
-                .Build(SharedUIManager.Instance.OrganizationButton, organizationPopover).SetOutsideClickDismiss(true)
-                .SetArrowVisible(false).SetPlacement(PopoverPlacement.BottomStart);
-            
-            SharedUIManager.Instance.OrganizationPopover?.Show();
+                .Build(SharedUIManager.Instance.OrganizationButton, organizationPopover)
+                .SetOutsideClickDismiss(true)
+                .SetArrowVisible(false)
+                .SetPlacement(PopoverPlacement.BottomStart)
+                .SetOffset(7)
+                .SetCrossOffset(-8);
+
+            SharedUIManager.Instance.OrganizationPopover.Show();
         }
         
         private static VisualElement MakeOrganizationItem()

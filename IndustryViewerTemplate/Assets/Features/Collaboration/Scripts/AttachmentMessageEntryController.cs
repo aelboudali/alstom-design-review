@@ -53,7 +53,7 @@ namespace Unity.Industry.Viewer.Collaboration
                 }
             } else if (attachment is ISpatial3DAttachment spatial3DAttachment)
             {
-                attachmentNameLabel.text = _annotationEntryController.CollaborationUIController.LocalizedStringAsset.SpatialAttachmentTitleLocalizedString.GetTitleLocalizedStringForAppUI();
+                CollaborationUIBase.GetTranslation(attachmentNameLabel, _annotationEntryController.CollaborationUIController.LocalizedStringAsset.SpatialAttachmentTitleLocalizedString);
             } else if(attachment is ISketchAttachment sketchAttachment)
             {
                 _ = GetThumbnailAsync(sketchAttachment.Preview.FilePath);
@@ -61,7 +61,7 @@ namespace Unity.Industry.Viewer.Collaboration
             }
             else
             {
-                attachmentNameLabel.text = _annotationEntryController.CollaborationUIController.LocalizedStringAsset.UnknownAttachmentTitleLocalizedString.GetTitleLocalizedStringForAppUI();
+                CollaborationUIBase.GetTranslation(attachmentNameLabel, _annotationEntryController.CollaborationUIController.LocalizedStringAsset.UnknownAttachmentTitleLocalizedString);
             }
             
             _attachmentMoreIconButton = entryRoot.Q<IconButton>(k_AttachmentMoreIconButtonName);
@@ -83,18 +83,22 @@ namespace Unity.Industry.Viewer.Collaboration
             _attachmentOptionsPopover.Show();
             return;
 
-            void Download(MenuItem item)
+            async void Download(MenuItem item)
             {
-                item.label = _annotationEntryController.CollaborationUIController.LocalizedStringAsset
-                    .DownloadLocalizedString.GetTitleLocalizedStringForAppUI();
+                item.label = await _annotationEntryController.CollaborationUIController.LocalizedStringAsset
+                    .DownloadLocalizedString.GetTitleLocalizedStringForAppUIAsync();
+#if UNITY_WEBGL && !UNITY_EDITOR
+                item.SetEnabled(false);
+#else
                 item.SetEnabled(_attachment is IFileAttachment);
+#endif
                 item.clickable.clicked += OnDownloadButtonPress;
             }
             
-            void Delete(MenuItem item)
+            async void Delete(MenuItem item)
             {
-                item.label = _annotationEntryController.CollaborationUIController.LocalizedStringAsset
-                    .DeleteLocalizedString.GetTitleLocalizedStringForAppUI();
+                item.label = await _annotationEntryController.CollaborationUIController.LocalizedStringAsset
+                    .DeleteLocalizedString.GetTitleLocalizedStringForAppUIAsync();
                 item.SetEnabled(_annotationEntryController.IsCreator);
                 item.clickable.clicked += OnDeleteButtonPress;
             }
@@ -106,16 +110,16 @@ namespace Unity.Industry.Viewer.Collaboration
             _attachmentOptionsPopover = null;
         }
 
-        private void OnDeleteButtonPress()
+        private async void OnDeleteButtonPress()
         {
             _attachmentOptionsPopover?.Dismiss();
             var alert = new AlertDialog()
             {
-                title = _annotationEntryController.CollaborationUIController.LocalizedStringAsset.DeleteAttachmentTitleLocalizedString.GetTitleLocalizedStringForAppUI(),
-                description = _annotationEntryController.CollaborationUIController.LocalizedStringAsset.DeleteAttachmentMessageLocalizedString.GetTitleLocalizedStringForAppUI(),
+                title = await _annotationEntryController.CollaborationUIController.LocalizedStringAsset.DeleteAttachmentTitleLocalizedString.GetTitleLocalizedStringForAppUIAsync(),
+                description = await _annotationEntryController.CollaborationUIController.LocalizedStringAsset.DeleteAttachmentMessageLocalizedString.GetTitleLocalizedStringForAppUIAsync(),
                 variant = AlertSemantic.Destructive
             };
-            alert.SetPrimaryAction(99, _annotationEntryController.CollaborationUIController.LocalizedStringAsset.DeleteLocalizedString.GetTitleLocalizedStringForAppUI(), () =>
+            alert.SetPrimaryAction(99, await _annotationEntryController.CollaborationUIController.LocalizedStringAsset.DeleteLocalizedString.GetTitleLocalizedStringForAppUIAsync(), () =>
             {
                 // Delete attachment
                 if(NetworkDetector.IsOffline) return;
@@ -123,7 +127,7 @@ namespace Unity.Industry.Viewer.Collaboration
                     _annotationEntryController.CollaborationUIController.SelectedAsset.Value, _annotationEntryController.CollaborationUIController.TokenSource,
                     _annotationEntryController.Annotation, _attachment, Callback);
             });
-            alert.SetCancelAction(0, _annotationEntryController.CollaborationUIController.LocalizedStringAsset.CancelLocalizedString.GetTitleLocalizedStringForAppUI());
+            alert.SetCancelAction(0, await _annotationEntryController.CollaborationUIController.LocalizedStringAsset.CancelLocalizedString.GetTitleLocalizedStringForAppUIAsync());
 
             var modal = Modal.Build(_attachmentMoreIconButton, alert);
             modal.Show();

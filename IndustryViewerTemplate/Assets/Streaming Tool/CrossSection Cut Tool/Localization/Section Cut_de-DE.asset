@@ -19,7 +19,7 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 8400134144
-    m_Localized: Abschnittsschnitt
+    m_Localized: Schnitt
     m_Metadata:
       m_Items: []
   - m_Id: 2586893165256704
@@ -35,15 +35,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 2586893173645314
-    m_Localized: Schnitt umkehren
+    m_Localized: Umdrehen Schnitt
     m_Metadata:
       m_Items: []
   - m_Id: 2586893173645315
-    m_Localized: Gizmo anzeigen
+    m_Localized: Show Gizmo
     m_Metadata:
       m_Items: []
   - m_Id: 2586893173645316
-    m_Localized: Abschnittsfeld visuell
+    m_Localized: Abschnittskasten-Visualisierung
     m_Metadata:
       m_Items: []
   references:

@@ -12,7 +12,6 @@ namespace Unity.Industry.Viewer.VR
         private const string k_VRUITag = "VR-UI";
         XRRoundButton m_XRRoundButton;
         
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
             m_XRRoundButton = m_UIDocument.rootVisualElement.Q<XRRoundButton>();
@@ -28,6 +27,12 @@ namespace Unity.Industry.Viewer.VR
 
         private void XRRoundButtonOnClicked()
         {
+            var reparentToController = GetComponentInParent<ReparentToController>();
+            if (reparentToController != null)
+            {
+                reparentToController.UpdateTrackedParentPosition();
+            }
+            
             var vrUIs = GameObject.FindGameObjectsWithTag(k_VRUITag);
             foreach (var vrUI in vrUIs)
             {

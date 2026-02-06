@@ -25,23 +25,15 @@ namespace Unity.Industry.Viewer.Assets
         private const string k_SortingAssetType = "Asset Type";
         private const string k_SortingStatus = "Sorting Status";
         
-        private static LocalizedString m_SortingNameLocalizedString = new LocalizedString(k_AssetsTableKey, k_SortingName);
-        private static LocalizedString m_SortingUploadDateLocalizedString = new LocalizedString(k_AssetsTableKey, k_SortingUploadDate);
-        private static LocalizedString m_SortingLastModifiedLocalizedString = new LocalizedString(k_AssetsTableKey, k_SortingLastModified);
-        //private static LocalizedString m_SortingDescriptionLocalizedString = new LocalizedString(k_AssetsTableKey, k_SortingDescription);
-        private static LocalizedString m_SortingAssetTypeLocalizedString = new LocalizedString(k_AssetsTableKey, k_SortingAssetType);
-        private static LocalizedString m_SortingStatusLocalizedString = new LocalizedString(k_AssetsTableKey, k_SortingStatus);
-        
-        public static LocalizedString GetValueAsString(this SortingType sortingType)
+        public static string GetValueAsString(this SortingType sortingType)
         {
             return sortingType switch
             {
-                SortingType.Name => m_SortingNameLocalizedString,
-                SortingType.Upload_date => m_SortingUploadDateLocalizedString,
-                SortingType.Last_modified => m_SortingLastModifiedLocalizedString,
-                //SortingType.Description => m_SortingDescriptionLocalizedString,
-                SortingType.Asset_type => m_SortingAssetTypeLocalizedString,
-                SortingType.Status => m_SortingStatusLocalizedString,
+                SortingType.Name => $"@{k_AssetsTableKey}:{k_SortingName}",
+                SortingType.Upload_date => $"@{k_AssetsTableKey}:{k_SortingUploadDate}",
+                SortingType.Last_modified => $"@{k_AssetsTableKey}:{k_SortingLastModified}",
+                SortingType.Asset_type => $"@{k_AssetsTableKey}:{k_SortingAssetType}",
+                SortingType.Status => $"@{k_AssetsTableKey}:{k_SortingStatus}",
                 _ => null
             };
         }

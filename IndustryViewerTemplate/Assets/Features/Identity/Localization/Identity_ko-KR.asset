@@ -67,6 +67,10 @@ MonoBehaviour:
       \uC628\uB77C\uC778 \uBAA8\uB4DC\uB85C \uB3CC\uC544\uAC00\uC11C \uB85C\uADF8\uC778\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?"
     m_Metadata:
       m_Items: []
+  - m_Id: 134464886551863296
+    m_Localized: "\uB85C\uADF8\uC544\uC6C3\uD558\uACE0 \uCE90\uC2DC\uB97C \uC9C0\uC6B0\uC138\uC694"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
