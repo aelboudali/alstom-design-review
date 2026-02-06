@@ -132,6 +132,10 @@ MonoBehaviour:
     m_Localized: Tippe auf den Punkt, um das Objekt zu platzieren.
     m_Metadata:
       m_Items: []
+  - m_Id: 131130674381840384
+    m_Localized: "Auf die Oberfl\xE4che legen"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

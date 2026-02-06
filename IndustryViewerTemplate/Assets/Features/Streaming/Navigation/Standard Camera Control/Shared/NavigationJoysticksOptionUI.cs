@@ -182,6 +182,7 @@ namespace Unity.Industry.Viewer.Navigation.StandardCameraControl.Shared
             {
                 m_ControllerUI.style.display = DisplayStyle.Flex;
                 joystickToggled = false;
+                originalJoyStickState = true;
                 return;
             }
 
@@ -191,8 +192,8 @@ namespace Unity.Industry.Viewer.Navigation.StandardCameraControl.Shared
                                !PlayerPrefs.HasKey(StandardCamera.JoystickEnable);
                 m_JoystickToggle?.SetValueWithoutNotify(showJoystick);
             }
-
             m_ControllerUI.style.display = showJoystick ? DisplayStyle.Flex : DisplayStyle.None;
+            originalJoyStickState = showJoystick;
         }
     }
 }

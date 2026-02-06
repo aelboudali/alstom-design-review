@@ -16,6 +16,7 @@ using Unity.Industry.Viewer.VR;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR.Interaction.Toolkit.Locomotion;
 using Unity.Cloud.DataStreaming.Runtime;
+using UnityEngine.XR.Interaction.Toolkit.Inputs;
 
 namespace Unity.Industry.Viewer.VR.CameraPassThrough
 {
@@ -35,7 +36,7 @@ namespace Unity.Industry.Viewer.VR.CameraPassThrough
         
         public static Action<ARState> OnStateChange;
         public static Action<bool> RequestOcclusionOnOff;
-        
+        public Action OnAssetPlaceOnSurfaceComplete;
         ARSession m_ARSession;
         
         [SerializeField]
@@ -90,6 +91,8 @@ namespace Unity.Industry.Viewer.VR.CameraPassThrough
         private CameraUtility Utility;
         
         DoubleBounds? m_Bounds;
+        
+        private XRInputModalityManager m_XRInputModalityManager;
         
         private void Awake()
         {
@@ -166,9 +169,6 @@ namespace Unity.Industry.Viewer.VR.CameraPassThrough
                 {
                     m_placingMakerGO?.SetActive(false);
                 }
-            } else if (m_ARState == ARState.Positioning || m_ARState == ARState.ConfirmPosition)
-            {
-                TransformController.Instance.gameObject.SetActive(true);
             }
         }
         
@@ -533,6 +533,8 @@ namespace Unity.Industry.Viewer.VR.CameraPassThrough
             TransformController.Instance.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
             TransformController.Instance.transform.localScale = Vector3.one;
             TransformController.Instance.gameObject.SetActive(false);
+
+            ControllerVisibility(false);
             
 #if UNITY_ANDROID
             if (m_ARSession.subsystem is MetaOpenXRSessionSubsystem metaOpenXRSessionSubsystem && !m_HasShownRequestSceneCapture)
@@ -567,6 +569,45 @@ namespace Unity.Industry.Viewer.VR.CameraPassThrough
             
         }
 
+        private void ControllerVisibility(bool visibility)
+        {
+            m_XRInputModalityManager ??= FindFirstObjectByType<XRInputModalityManager>(FindObjectsInactive.Include);
+            if (m_XRInputModalityManager == null) return;
+            if (m_XRInputModalityManager.leftController != null &&
+                m_XRInputModalityManager.leftController.activeSelf)
+            {
+                RendererEnable(m_XRInputModalityManager.leftController, visibility);
+            }
+
+            if (m_XRInputModalityManager.rightController != null &&
+                m_XRInputModalityManager.rightController.activeSelf)
+            {
+                RendererEnable(m_XRInputModalityManager.rightController, visibility);
+            }
+
+            if (m_XRInputModalityManager.leftHand != null &&
+                m_XRInputModalityManager.leftHand.activeSelf)
+            {
+                RendererEnable(m_XRInputModalityManager.leftHand, visibility);
+            }
+                
+            if (m_XRInputModalityManager.rightHand != null &&
+                m_XRInputModalityManager.rightHand.activeSelf)
+            {
+                RendererEnable(m_XRInputModalityManager.rightHand, visibility);
+            }
+            return;
+            
+            void RendererEnable(GameObject go, bool newState)
+            {
+                foreach (var rendererComponent in go.GetComponentsInChildren<Renderer>())
+                {
+                    if(rendererComponent is LineRenderer) continue;
+                    rendererComponent.enabled = newState;
+                }
+            }
+        }
+
         private void ARMeshManagerOnMeshesChanged(ARMeshesChangedEventArgs eventArgs)
         {
             foreach (var meshFilter in eventArgs.added)
@@ -585,6 +626,31 @@ namespace Unity.Industry.Viewer.VR.CameraPassThrough
             StartPassthrough();
         }
 #endif
+        
+        public void PlaceOnSurface()
+        {
+            TransformController.Instance.transform.position = new Vector3(
+                TransformController.Instance.transform.position.x, m_OriginalPosition.y,
+                TransformController.Instance.transform.position.z);
+            StartCoroutine(WaitForBoundsUpdate());
+            
+            return;
+
+            IEnumerator WaitForBoundsUpdate()
+            {
+                yield return null;
+                StreamingModelController streamingModelController = FindAnyObjectByType<StreamingModelController>(FindObjectsInactive.Include);
+                DoubleBounds tmpBounds = streamingModelController.GetWorldBounds();
+                var height = (float)tmpBounds.Extents.y;
+                var lowestPoint = (float)(tmpBounds.Center.y - height);
+                var offsetY = m_OriginalPosition.y - lowestPoint;
+                TransformController.Instance.transform.position = new Vector3(
+                    TransformController.Instance.transform.position.x,
+                    TransformController.Instance.transform.position.y + offsetY,
+                    TransformController.Instance.transform.position.z);
+                OnAssetPlaceOnSurfaceComplete?.Invoke();
+            }
+        }
 
         public override void OnNavigationOptionDisable()
         {
@@ -627,6 +693,8 @@ namespace Unity.Industry.Viewer.VR.CameraPassThrough
             
             VRInteractionController.UnsubscribeSingleActivate(this);
             m_placingMakerGO?.SetActive(false);
+            
+            ControllerVisibility(true);
 
             if (TransformController.Instance == null) return;
             TransformController.Instance.gameObject.SetActive(true);

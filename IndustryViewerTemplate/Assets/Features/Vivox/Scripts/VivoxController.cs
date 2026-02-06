@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
-using Unity.Netcode;
 using Unity.Industry.Viewer.Shared;
 using Unity.Industry.Viewer.Streaming;
 using System.Threading.Tasks;

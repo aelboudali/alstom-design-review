@@ -457,9 +457,9 @@ namespace Unity.Industry.Viewer.Streaming
             });
         }
 
-        protected virtual void ShowNoWritePermissionError()
+        protected virtual async void ShowNoWritePermissionError()
         {
-            m_SaveErrorMessageToast = Toast.Build(m_StreamingRoot, m_NoWritePermissionLocalizedString.GetTitleLocalizedStringForAppUI(), NotificationDuration.Indefinite).SetStyle(NotificationStyle.Negative);
+            m_SaveErrorMessageToast = Toast.Build(m_StreamingRoot, await m_NoWritePermissionLocalizedString.GetTitleLocalizedStringForAppUIAsync(), NotificationDuration.Indefinite).SetStyle(NotificationStyle.Negative);
             m_SaveErrorMessageToast.Show();
         }
 
@@ -566,7 +566,10 @@ namespace Unity.Industry.Viewer.Streaming
         
         private void SaveCompleteCallback(AssetInfo? newAssetInfo, string message)
         {
-            LoadingUIPanel.HideLoadingPanel?.Invoke(() =>
+            LoadingUIPanel.HideLoadingPanel?.Invoke(HideAfterAction);
+            return;
+
+            async void HideAfterAction()
             {
                 NavigationController.PauseCameraControl?.Invoke(false);
                 if (!newAssetInfo.HasValue)
@@ -574,14 +577,14 @@ namespace Unity.Industry.Viewer.Streaming
                     m_SaveErrorMessageToast?.Dismiss();
                     
                     var messageText = message.Contains("Forbidden") || message.Contains("Not Authorized")
-                        ? m_NoWritePermissionLocalizedString.GetTitleLocalizedStringForAppUI()
-                        : m_SaveFailureLocalizedString.GetTitleLocalizedStringForAppUI();
+                        ? await m_NoWritePermissionLocalizedString.GetTitleLocalizedStringForAppUIAsync()
+                        : await m_SaveFailureLocalizedString.GetTitleLocalizedStringForAppUIAsync();
                     ShowSaveCompletedToast(messageText);
                     return;
                 }
                 AssetsController.NewVersionAvailable -= OnNewVersionAvailable;
                 AssetsController.AssetSelected?.Invoke(newAssetInfo.Value);
-            });
+            }
         }
 
         protected virtual void ShowSaveCompletedToast(string messageText)
@@ -646,21 +649,21 @@ namespace Unity.Industry.Viewer.Streaming
             LoadingUIPanel.HideLoadingPanel?.Invoke(null);
         }
 
-        protected virtual void OnNewVersionAvailable(AssetInfo newVersionAsset)
+        protected virtual async void OnNewVersionAvailable(AssetInfo newVersionAsset)
         {
             if(NetworkDetector.IsOffline) return;
             AssetsController.NewVersionAvailable -= OnNewVersionAvailable;
             var dialog = new AlertDialog()
             {
-                title = m_NewVersionTitleLocalizedString.GetTitleLocalizedStringForAppUI(),
-                description = m_NewVersionDescriptionLocalizedString.GetTitleLocalizedStringForAppUI(),
+                title = await m_NewVersionTitleLocalizedString.GetTitleLocalizedStringForAppUIAsync(),
+                description = await m_NewVersionDescriptionLocalizedString.GetTitleLocalizedStringForAppUIAsync(),
                 variant = AlertSemantic.Confirmation
             };
-            dialog.SetPrimaryAction(99, m_SwitchLocalizedString.GetTitleLocalizedStringForAppUI(), () =>
+            dialog.SetPrimaryAction(99, await m_SwitchLocalizedString.GetTitleLocalizedStringForAppUIAsync(), () =>
             {
                 AssetsController.AssetSelected?.Invoke(AssetsController.NewerVersionAsset.Value);
             });
-            dialog.SetSecondaryAction(98,m_DismissLocalizedString.GetTitleLocalizedStringForAppUI(), () =>
+            dialog.SetSecondaryAction(98,await m_DismissLocalizedString.GetTitleLocalizedStringForAppUIAsync(), () =>
             {
                 //Enable new version available button
                 m_NewVersionButton.style.display = DisplayStyle.Flex;
@@ -671,13 +674,13 @@ namespace Unity.Industry.Viewer.Streaming
             modal.Show();
         }
         
-        protected virtual void ShowPickSourceDialogHandler(AssetInfo onlineAssetInfo, AssetInfo offlineAssetInfo, string targetName)
+        protected virtual async void ShowPickSourceDialogHandler(AssetInfo onlineAssetInfo, AssetInfo offlineAssetInfo, string targetName)
         {
             //Ask user if he wants to add the asset from the local storage
             var whichDataSourceDialog = new AlertDialog
             {
-                title = m_AddTitle.GetTitleLocalizedStringForAppUI(),
-                description = m_AddDescription.GetTitleLocalizedStringForAppUI(),
+                title = await m_AddTitle.GetTitleLocalizedStringForAppUIAsync(),
+                description = await m_AddDescription.GetTitleLocalizedStringForAppUIAsync(),
                 variant = AlertSemantic.Default,
                 primaryButton =
                 {
@@ -694,15 +697,15 @@ namespace Unity.Industry.Viewer.Streaming
                 }
             };
 
-            whichDataSourceDialog.SetPrimaryAction(97, m_CloudOption.GetTitleLocalizedStringForAppUI(), () =>
+            whichDataSourceDialog.SetPrimaryAction(97, await m_CloudOption.GetTitleLocalizedStringForAppUIAsync(), () =>
             {
                 StreamingModelController.AddStreamModel?.Invoke(onlineAssetInfo, targetName, null);
             });
-            whichDataSourceDialog.SetSecondaryAction(96, m_LocalOption.GetTitleLocalizedStringForAppUI(), () =>
+            whichDataSourceDialog.SetSecondaryAction(96, await m_LocalOption.GetTitleLocalizedStringForAppUIAsync(), () =>
             {
                 StreamingModelController.AddStreamModel?.Invoke(offlineAssetInfo, targetName, null);
             });
-            whichDataSourceDialog.SetCancelAction(0, m_CancelOption.GetTitleLocalizedStringForAppUI());
+            whichDataSourceDialog.SetCancelAction(0, await m_CancelOption.GetTitleLocalizedStringForAppUIAsync());
                     
             var dataSourceModal = Modal.Build(m_StreamingRoot, whichDataSourceDialog);
             
@@ -714,10 +717,10 @@ namespace Unity.Industry.Viewer.Streaming
             dataSourceModal.Show();
         }
 
-        protected virtual void ShowFailToAddModelToastHandler()
+        protected virtual async void ShowFailToAddModelToastHandler()
         {
             //Give feedback to user that he is not part of the organization of the asset
-            var toast = Toast.Build(m_StreamingRoot, m_AssetLoadFailureToast.GetTitleLocalizedStringForAppUI(), NotificationDuration.Short).SetStyle(NotificationStyle.Negative);
+            var toast = Toast.Build(m_StreamingRoot, await m_AssetLoadFailureToast.GetTitleLocalizedStringForAppUIAsync(), NotificationDuration.Short).SetStyle(NotificationStyle.Negative);
             toast.Show();
         }
 
@@ -821,7 +824,7 @@ namespace Unity.Industry.Viewer.Streaming
             topRightBar.Add(avatar);
         }
 
-        protected virtual void AssignAssetNameTitle(AssetInfo asset)
+        protected virtual async void AssignAssetNameTitle(AssetInfo asset)
         {
             string assetName = string.Empty;
             var version = 0;
@@ -836,7 +839,7 @@ namespace Unity.Industry.Viewer.Streaming
                 version = asset.Properties.Value.FrozenSequenceNumber;
             }
 
-            m_TitleText.text = m_TitleVersionLocalizedString.GetTitleLocalizedStringForAppUI();
+            m_TitleText.text = await m_TitleVersionLocalizedString.GetTitleLocalizedStringForAppUIAsync();
             
             m_TitleText.variables = new object[]
             {
@@ -925,19 +928,19 @@ namespace Unity.Industry.Viewer.Streaming
             }
         }
 
-        protected virtual void OnBackButton()
+        protected virtual async void OnBackButton()
         {
             var dialog = new AlertDialog()
             {
-                title = m_ExitTitleLocalizedString.GetTitleLocalizedStringForAppUI(),
-                description = m_ExitDescriptionLocalizedString.GetTitleLocalizedStringForAppUI(),
+                title = await m_ExitTitleLocalizedString.GetTitleLocalizedStringForAppUIAsync(),
+                description = await m_ExitDescriptionLocalizedString.GetTitleLocalizedStringForAppUIAsync(),
                 variant = AlertSemantic.Confirmation
             };
-            dialog.SetPrimaryAction(95, m_ExitLocalizedString.GetTitleLocalizedStringForAppUI(), () =>
+            dialog.SetPrimaryAction(95, await m_ExitLocalizedString.GetTitleLocalizedStringForAppUIAsync(), () =>
             {
                 StreamSceneController.ExitSceneConfirmed?.Invoke();
             });
-            dialog.SetCancelAction(0, m_CancelOption.GetTitleLocalizedStringForAppUI());
+            dialog.SetCancelAction(0, await m_CancelOption.GetTitleLocalizedStringForAppUIAsync());
             var modal = Modal.Build(m_BackButton, dialog);
 
             modal.Show();

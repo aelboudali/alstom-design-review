@@ -131,6 +131,10 @@ MonoBehaviour:
     m_Localized: "Napauta pistett\xE4 sijoittaaksesi resurssin"
     m_Metadata:
       m_Items: []
+  - m_Id: 131130674381840384
+    m_Localized: Aseta pinnalle
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

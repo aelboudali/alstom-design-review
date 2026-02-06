@@ -9,6 +9,7 @@ using UnityEngine.Localization.Settings;
 using UnityEngine.Localization;
 using Unity.Industry.Viewer.Shared;
 using Toggle = Unity.AppUI.UI.Toggle;
+using System.Threading.Tasks;
 
 namespace Unity.Industry.Viewer.AppSettings
 {
@@ -173,9 +174,14 @@ namespace Unity.Industry.Viewer.AppSettings
         protected virtual void OnSettingsButtonClicked()
         {
             var settingsPanelClone = settingPanel.Instantiate().Children().First();
-            var popover = Popover.Build(SettingsButton, settingsPanelClone).SetOutsideClickDismiss(true)
-                .SetArrowVisible(false);
-            
+            var popover = Popover
+                .Build(SettingsButton.parent, settingsPanelClone)
+                .SetOutsideClickDismiss(true)
+                .SetArrowVisible(false)
+                .SetPlacement(PopoverPlacement.TopRight)
+                .SetOffset(-8)
+                .SetCrossOffset(-8);
+
             popover.shown += PopoverOnShown;
             popover.dismissed += PopoverOnDismissed;
             popover.Show();
@@ -202,8 +208,14 @@ namespace Unity.Industry.Viewer.AppSettings
         public static void InitializeSection(LocalizedString localizedString, ref VisualElement section, VisualElement content)
         {
             var titleText = section.Q<Text>("Title");
-            titleText.text = localizedString.GetTitleLocalizedStringForAppUI();
+            _ = GetTranslation();
             section.Q<VisualElement>("Content").Add(content);
+            return;
+
+            async Task GetTranslation()
+            {
+                titleText.text = await localizedString.GetTitleLocalizedStringForAppUIAsync();
+            }
         }
     }
 }

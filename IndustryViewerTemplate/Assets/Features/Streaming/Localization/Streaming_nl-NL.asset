@@ -170,11 +170,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 113671218895249408
-    m_Localized: '<b>Er zijn geen gedownloade bestanden voor lokale streaming</b>
-
-
-      <size=70%>Ga
-      online en download ze voordat u verdergaat</size>'
+    m_Localized: <size=20><b>Er zijn geen gedownloade bestanden voor lokale streaming</b></size><size=14><br><br>Ga
+      online en download ze voordat u verdergaat</size>
     m_Metadata:
       m_Items: []
   - m_Id: 118748446100283392
@@ -182,7 +179,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 123180386542936064
-    m_Localized: Selecteer hier uw organisaties
+    m_Localized: Selecteer alstublieft hier uw organisatie
     m_Metadata:
       m_Items: []
   - m_Id: 123892356694925312

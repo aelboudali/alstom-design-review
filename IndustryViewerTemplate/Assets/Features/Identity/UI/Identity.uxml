@@ -2,13 +2,13 @@
     <Style src="project://database/Assets/Features/Identity/UI/Identity%20Style.uss?fileID=7433441132597879392&amp;guid=cb9cddb72e1024ecd87afd5665a64806&amp;type=3#Identity Style" />
     <engine:VisualElement picking-mode="Ignore" name="LoginPanel" style="flex-grow: 1; flex-direction: row; justify-content: space-between;">
         <engine:VisualElement style="flex-grow: 1; justify-content: center; width: 50%; max-width: 50%; min-width: 50%;">
-            <engine:VisualElement picking-mode="Ignore" name="Logo" style="flex-grow: 1; -unity-background-scale-mode: stretch-to-fill; margin-left: 100px; background-image: url(&quot;project://database/Assets/UI/Textures/U_Logo_Small_White_RGB_1C%201.png?fileID=2800000&amp;guid=c5b4d9b1f451b43f7b2a86d083bc0ce3&amp;type=3#U_Logo_Small_White_RGB_1C 1&quot;); width: 200px; min-width: 200px; max-width: 200px; height: 68px; min-height: 68px; max-height: 68px;" />
-            <Unity.AppUI.UI.Text picking-mode="Ignore" size="L" style="color: rgb(255, 255, 255); font-size: 58px; -unity-text-align: upper-left; margin-left: 100px; min-height: 150px; -unity-font-style: bold;">
+            <engine:VisualElement picking-mode="Ignore" name="Logo" style="flex-grow: 1; -unity-background-scale-mode: stretch-to-fill; margin-left: 100px; background-image: url(&quot;project://database/Assets/UI/Textures/U_Logo_Small_White_RGB_1C%201.png?fileID=2800000&amp;guid=c5b4d9b1f451b43f7b2a86d083bc0ce3&amp;type=3#U_Logo_Small_White_RGB_1C 1&quot;); width: 200px; min-width: 200px; max-width: 200px; height: 68px; min-height: 68px; max-height: 68px; position: absolute; top: 395px;" />
+            <Unity.AppUI.UI.Text picking-mode="Ignore" size="L" class="ivt-font-semi-bold" style="color: rgb(255, 255, 255); font-size: 58px; -unity-text-align: middle-left; margin-left: 100px; min-height: 150px; -unity-font-style: normal; margin-top: 0; position: absolute; top: 465px; letter-spacing: 1px;">
                 <Bindings>
                     <UnityEngine.Localization.LocalizedString property="text" table="GUID:57a7ebbc038a2427a989d443ddacef3e" entry="Id(2213752594432)" />
                 </Bindings>
             </Unity.AppUI.UI.Text>
-            <engine:VisualElement style="flex-grow: 1; height: 40px; max-height: 40px; min-height: 40px; margin-left: 100px; flex-direction: row; width: 700px; max-width: 700px; min-width: 700px; justify-content: space-between; margin-top: 40px;">
+            <engine:VisualElement style="flex-grow: 1; height: 40px; max-height: 40px; min-height: 40px; margin-left: 100px; flex-direction: row; width: 700px; max-width: 700px; min-width: 700px; justify-content: space-between; margin-top: 0; position: absolute; top: 655px;">
                 <Unity.AppUI.UI.ActionButton name="LoginButton" selected="true" accent="true" size="L" class="loginButton" style="height: 40px; max-height: 40px; min-height: 40px; width: 300px; max-width: 300px; min-width: 300px;" />
                 <engine:VisualElement name="GuestContainer" style="flex-grow: 0; flex-direction: row; width: 400px; max-width: 400px; min-width: 400px; display: flex;">
                     <Unity.AppUI.UI.Text picking-mode="Ignore" size="S" style="color: rgb(188, 188, 188); font-size: 16px; -unity-text-align: middle-center; width: 100px; max-width: 100px; min-width: 100px;">

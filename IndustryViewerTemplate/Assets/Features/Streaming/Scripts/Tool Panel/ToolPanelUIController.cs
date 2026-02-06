@@ -71,7 +71,7 @@ namespace Unity.Industry.Viewer.Streaming
             m_ContentPanel = m_ToolPanelRoot.Q<VisualElement>(k_ToolContentName);
         }
 
-        protected void AddContentToPanel(LocalizedString title, VisualElement content)
+        protected async void AddContentToPanel(LocalizedString title, VisualElement content)
         {
             if (m_ToolPanelContent != null)
             {
@@ -79,7 +79,7 @@ namespace Unity.Industry.Viewer.Streaming
             }
             
             m_ToolPanelRoot.style.display = DisplayStyle.Flex;
-            m_ToolPanelTitle.text = title.GetTitleLocalizedStringForAppUI();
+            m_ToolPanelTitle.text = await title.GetTitleLocalizedStringForAppUIAsync();
             m_ToolPanelContent = content;
             m_ContentPanel.Add(content);
         }

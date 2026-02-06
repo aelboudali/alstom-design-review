@@ -169,8 +169,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 113671218895249408
-    m_Localized: "<b>No hay recursos descargados para la transmisi\xF3n local.</b>\n\n<size=70%>Por
-      favor, con\xE9ctese a Internet y desc\xE1rguelos antes de continuar.</size>"
+    m_Localized: "<size=20><b>No hay recursos descargados para la transmisi\xF3n
+      local</b></size><size=14><br><br>Por favor, con\xE9ctese a Internet y desc\xE1rguelos
+      antes de continuar</size>"
     m_Metadata:
       m_Items: []
   - m_Id: 118748446100283392
@@ -178,7 +179,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 123180386542936064
-    m_Localized: "Seleccione aqu\xED sus organizaciones."
+    m_Localized: "Por favor, seleccione su organizaci\xF3n aqu\xED"
     m_Metadata:
       m_Items: []
   - m_Id: 123892356694925312

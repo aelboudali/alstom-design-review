@@ -102,6 +102,8 @@ namespace Unity.Industry.Viewer.Streaming
 
         IServiceHttpClient m_ServiceHttpClient => IdentityController.GuestMode? PlatformServices.ServiceAccountServiceHttpClient : PlatformServices.ServiceHttpClient;
         
+        IServiceHostResolver m_ServiceHostResolver => PlatformServices.ServiceHostResolver;
+        
         [SerializeField, Tooltip("Turn on wireframe mode will have performance cost (double the memory) no matter what mode you put into")]
         private bool m_EnableWireframe = false;
         private bool m_WasInWireframeMode = false;
@@ -132,8 +134,11 @@ namespace Unity.Industry.Viewer.Streaming
         private void Start()
         {
             var builder = DataStreamerSettingsBuilder
-                .CreateDefaultBuilder().SetWireframeSettings(m_EnableWireframe, WireframeModes.Shaded, Color.green); //Turn on wireframe mode will have performance cost (double the memory) no matter what mode you put into
-
+                .CreateDefaultBuilder()
+                .EnableHighlightController() // Enable highlight controller for hierarchical highlighting of models
+                .EnableVisibilityController() // Enable visibility controller for hierarchical visibility control of models
+                .SetWireframeSettings(m_EnableWireframe, WireframeModes.Shaded, Color.green); //Turn on wireframe mode will have performance cost (double the memory) no matter what mode you put into
+            
             if (m_MaterialFactory != null)
             {
                 var materialFactory = m_MaterialFactory.Instantiate();
@@ -159,7 +164,6 @@ namespace Unity.Industry.Viewer.Streaming
             }
             
             var settings = builder.Build();
-            
             m_Stage = m_DataStreamer.Open(settings);
             m_Stage.Models.ModelRemoved.Subscribe(OnModelRemoved);
 
@@ -420,7 +424,7 @@ namespace Unity.Industry.Viewer.Streaming
                 m_Stage.Observers.Remove(m_CurrentObserver);
                 m_ActiveCamera = null;
             }
-            m_CurrentObserver = StageObserverFactory.CreateCameraObserver(observeCamera, 4);
+            m_CurrentObserver = StageObserverFactory.CreateCameraObserver(observeCamera);
             m_ActiveCamera = observeCamera;
 
             m_Stage.Observers.Add(m_CurrentObserver);
@@ -547,7 +551,7 @@ namespace Unity.Industry.Viewer.Streaming
                     if (datasetProperties.Value.SystemTags.Contains(StreamingUtils.StreamableTag))
                     {
                         FinishedInitialLoading = true;
-                        var model = m_Stage.Models.Add(x => x.FromDataset(targetDataset, m_ServiceHttpClient));
+                        var model = m_Stage.Models.Add(x => x.FromDataset(targetDataset, m_ServiceHttpClient, m_ServiceHostResolver));
                         var modelStream = HandleNewModelStream(assetInfo.Asset.Descriptor.AssetId.ToString(), targetName);
                         modelStream.Initialize(model, assetInfo, targetDataset, true, instanceNumber);
                         TransformController.ModelAdded?.Invoke(modelStream.gameObject, model.Transform);
@@ -615,22 +619,20 @@ namespace Unity.Industry.Viewer.Streaming
 
             if ((!offline.HasValue && NetworkDetector.RequestedOfflineMode) || (offline.HasValue && offline.Value))
             {
-                var queue = new Queue<LayoutModelEntity>(layout.LayoutModels);
-
-                while (queue.Count > 0)
+                // Process all offline models in parallel
+                var modelTasks = layout.LayoutModels.Select(async layoutModelEntity =>
                 {
                     if (PauseAddingModel)
                     {
                         await WaitForUnpause();
                     }
 
-                    var layoutModelEntity = queue.Dequeue();
                     var offlineAssetInfo = StreamingUtils.ReturnOfflineAssetInfo(layoutModelEntity);
                     if (offlineAssetInfo == null)
                     {
                         StreamSceneUIController.ShowFailToAddModelToast?.Invoke();
                         LayoutJson.LayoutModels.Remove(layoutModelEntity);
-                        continue;
+                        return;
                     }
 
                     var targetName = string.Empty;
@@ -651,13 +653,14 @@ namespace Unity.Industry.Viewer.Streaming
                         },
                         targetName,
                         layoutModelEntity.instanceNumber);
+                }).ToList();
 
-                    float elapsed = 0f;
-                    while (elapsed < 0.5f)
-                    {
-                        await Task.Yield();
-                        elapsed += Time.deltaTime;
-                    }
+                // Wait for all models to be processed in batches of 5
+                const int batchSize = 5;
+                for (int i = 0; i < modelTasks.Count; i += batchSize)
+                {
+                    var batch = modelTasks.Skip(i).Take(batchSize);
+                    await Task.WhenAll(batch);
                 }
 
                 PauseAddingModel = false;
@@ -665,20 +668,19 @@ namespace Unity.Industry.Viewer.Streaming
             }
             else
             {
-                var queue = new Queue<LayoutModelEntity>(layout.LayoutModels);
-                while (queue.Count > 0)
+                // Process all online models in parallel
+                var modelTasks = layout.LayoutModels.Select(async layoutModelEntity =>
                 {
                     if (PauseAddingModel)
                     {
                         await WaitForUnpause();
                     }
 
-                    var layoutModelEntity = queue.Dequeue();
                     if (string.IsNullOrEmpty(layoutModelEntity.orgID))
                     {
                         StreamSceneUIController.ShowFailToAddModelToast?.Invoke();
                         LayoutJson.LayoutModels.Remove(layoutModelEntity);
-                        continue;
+                        return;
                     }
 
                     IAssetRepository assetRepository = IdentityController.GuestMode?
@@ -694,7 +696,7 @@ namespace Unity.Industry.Viewer.Streaming
                         {
                             StreamSceneUIController.ShowFailToAddModelToast?.Invoke();
                             LayoutJson.LayoutModels.Remove(layoutModelEntity);
-                            continue;
+                            return;
                         }
 
                         if (string.IsNullOrEmpty(layoutModelEntity.versionID))
@@ -729,7 +731,7 @@ namespace Unity.Industry.Viewer.Streaming
                                 Debug.LogWarning("Asset not found");
                                 StreamSceneUIController.ShowFailToAddModelToast?.Invoke();
                                 LayoutJson.LayoutModels.Remove(layoutModelEntity);
-                                continue;
+                                return;
                             }
 
                             var targetName = string.Empty;
@@ -757,7 +759,7 @@ namespace Unity.Industry.Viewer.Streaming
                                 {
                                     StreamSceneUIController.ShowFailToAddModelToast?.Invoke();
                                     LayoutJson.LayoutModels.Remove(layoutModelEntity);
-                                    continue;
+                                    return;
                                 }
 
                                 var targetName = string.Empty;
@@ -777,23 +779,23 @@ namespace Unity.Industry.Viewer.Streaming
                             {
                                 StreamSceneUIController.ShowFailToAddModelToast?.Invoke();
                                 LayoutJson.LayoutModels.Remove(layoutModelEntity);
-                                continue;
+                                return;
                             }
-                        }
-
-                        float elapsed = 0f;
-                        while (elapsed < 0.5f)
-                        {
-                            await Task.Yield();
-                            elapsed += Time.deltaTime;
                         }
                     }
                     catch
                     {
                         StreamSceneUIController.ShowFailToAddModelToast?.Invoke();
                         LayoutJson.LayoutModels.Remove(layoutModelEntity);
-                        continue;
                     }
+                }).ToList();
+
+                // Wait for all models to be processed in batches of 5
+                const int batchSize = 5;
+                for (int i = 0; i < modelTasks.Count; i += batchSize)
+                {
+                    var batch = modelTasks.Skip(i).Take(batchSize);
+                    await Task.WhenAll(batch);
                 }
                 
                 if (PauseAddingModel)

@@ -60,16 +60,7 @@ namespace Unity.Industry.Viewer.Streaming
         {
             if(!m_StreamButton.enabledSelf) return;
             m_StreamButton.SetEnabled(false);
-
-            if (SharedUIManager.SelectedAsset.HasValue &&
-                StreamAssetUIController.IsSameAssetButDifferentVersion(SharedUIManager.SelectedAsset.Value, m_Asset.Value))
-            {
-                m_StreamAssetAction?.Invoke(SharedUIManager.SelectedAsset.Value);
-            }
-            else
-            {
-                m_StreamAssetAction?.Invoke(m_Asset.Value);
-            }
+            m_StreamAssetAction?.Invoke(m_Asset.Value);
         }
 
         public void Dispose()
@@ -392,12 +383,12 @@ namespace Unity.Industry.Viewer.Streaming
         }
 
 #if !UNITY_WEBGL || UNITY_EDITOR
-        private void OnToAskToKeepExistingAssets(string assetName, int requiredVersion, int localVersion, Action<bool> keepActionCallback)
+        private async void OnToAskToKeepExistingAssets(string assetName, int requiredVersion, int localVersion, Action<bool> keepActionCallback)
         {
             var dialog = new AlertDialog()
             {
-                title = m_DownloadAssetTitleLocalizedString.GetTitleLocalizedStringForAppUI(),
-                description = m_KeepOrUpdateLocalAssetDescriptionLocalizedString.GetTitleLocalizedStringForAppUI(),
+                title = await m_DownloadAssetTitleLocalizedString.GetTitleLocalizedStringForAppUIAsync(),
+                description = await m_KeepOrUpdateLocalAssetDescriptionLocalizedString.GetTitleLocalizedStringForAppUIAsync(),
                 variant = AlertSemantic.Confirmation
             };
 
@@ -412,12 +403,12 @@ namespace Unity.Industry.Viewer.Streaming
                 }
             };
             
-            dialog.SetPrimaryAction(99, m_PreserveLocalizedString.GetTitleLocalizedStringForAppUI(), () =>
+            dialog.SetPrimaryAction(99, await m_PreserveLocalizedString.GetTitleLocalizedStringForAppUIAsync(), () =>
             {
                 keepActionCallback?.Invoke(true);
             });
             
-            dialog.SetSecondaryAction(98, m_RemoveLocalizedString.GetTitleLocalizedStringForAppUI(), () =>
+            dialog.SetSecondaryAction(98, await m_RemoveLocalizedString.GetTitleLocalizedStringForAppUIAsync(), () =>
             {
                 keepActionCallback?.Invoke(false);
             });
@@ -563,7 +554,7 @@ namespace Unity.Industry.Viewer.Streaming
 
 #if !UNITY_WEBGL || UNITY_EDITOR
         
-        public void ShowStreamingAssetDownload(AssetInfo assetInfo)
+        public async void ShowStreamingAssetDownload(AssetInfo assetInfo)
         {
             if (!m_IsDownOffloadFunctionalityActive)
             {
@@ -681,7 +672,7 @@ namespace Unity.Industry.Viewer.Streaming
                                 AssetsInfoUIToolkitController.UpdateVersionButton.parent.DisplayOff();
                                 AssetsInfoUIToolkitController.UpdateVersionVE.Q<Icon>().iconName = "download";
                                 var text = AssetsInfoUIToolkitController.UpdateVersionVE.Q<Text>();
-                                text.text = m_ReadyForLocalStreamingLocalizedString.GetTitleLocalizedStringForAppUI();
+                                text.text = await m_ReadyForLocalStreamingLocalizedString.GetTitleLocalizedStringForAppUIAsync();
                             }
                             else
                             {
@@ -698,9 +689,9 @@ namespace Unity.Industry.Viewer.Streaming
                                 }
                                 AssetsInfoUIToolkitController.UpdateVersionVE.Q<Icon>().iconName = "download";
                                 var text = AssetsInfoUIToolkitController.UpdateVersionVE.Q<Text>();
-                                text.text = m_UpdateLocalStreamingLocalizedString.GetTitleLocalizedStringForAppUI();
+                                text.text = await m_UpdateLocalStreamingLocalizedString.GetTitleLocalizedStringForAppUIAsync();
                                 var button = AssetsInfoUIToolkitController.UpdateVersionVE.Q<Button>();
-                                button.title = m_UpdateLocalizedString.GetTitleLocalizedStringForAppUI();
+                                button.title = await m_UpdateLocalizedString.GetTitleLocalizedStringForAppUIAsync();
                                 //Also change the download text to update on button
                             }
 
@@ -720,7 +711,7 @@ namespace Unity.Industry.Viewer.Streaming
             }
         }
 
-        private void OnRemoveCacheButtonPress()
+        private async void OnRemoveCacheButtonPress()
         {
             if(m_TopActionModal != null) return;
             
@@ -765,12 +756,12 @@ namespace Unity.Industry.Viewer.Streaming
             
             var dialog = new AlertDialog()
             {
-                title = m_RemoveAssetTitleLocalizedString.GetTitleLocalizedStringForAppUI(),
-                description = description.GetTitleLocalizedStringForAppUI(),
+                title = await m_RemoveAssetTitleLocalizedString.GetTitleLocalizedStringForAppUIAsync(),
+                description = await description.GetTitleLocalizedStringForAppUIAsync(),
                 variant = AlertSemantic.Confirmation
             };
             
-            dialog.SetPrimaryAction(97, m_RemoveLocalizedString.GetTitleLocalizedStringForAppUI(), () =>
+            dialog.SetPrimaryAction(97, await m_RemoveLocalizedString.GetTitleLocalizedStringForAppUIAsync(), () =>
             {
                 if (isLayoutAsset)
                 {
@@ -867,10 +858,10 @@ namespace Unity.Industry.Viewer.Streaming
 
             if (isLayoutAsset)
             {
-                dialog.SetSecondaryAction(96, m_PreserveLocalizedString.GetTitleLocalizedStringForAppUI(), RemoveDownloadedAsset);
+                dialog.SetSecondaryAction(96, await m_PreserveLocalizedString.GetTitleLocalizedStringForAppUIAsync(), RemoveDownloadedAsset);
             }
             
-            dialog.SetCancelAction(0, m_CancelLocalizedString.GetTitleLocalizedStringForAppUI());
+            dialog.SetCancelAction(0, await m_CancelLocalizedString.GetTitleLocalizedStringForAppUIAsync());
             m_TopActionModal = Modal.Build(m_AssetInfoPanelTop, dialog);
             m_TopActionModal.dismissed += TopActionModalOnDismissed;
 
@@ -884,7 +875,7 @@ namespace Unity.Industry.Viewer.Streaming
                 m_TopActionModal = null;
             }
 
-            void RemoveDownloadedAsset()
+            async void RemoveDownloadedAsset()
             {
                 StreamingUtils.RemoveCache(SharedUIManager.SelectedAsset.Value.Asset, CallbackAfterRemovedCache);
                 
@@ -907,7 +898,7 @@ namespace Unity.Industry.Viewer.Streaming
                     }
                 }
                 
-                var toast = Toast.Build(m_AssetInfoPanelTop, m_Toast_AssetRemovedLocalizedString.GetTitleLocalizedStringForAppUI(), NotificationDuration.Short)
+                var toast = Toast.Build(m_AssetInfoPanelTop, await m_Toast_AssetRemovedLocalizedString.GetTitleLocalizedStringForAppUIAsync(), NotificationDuration.Short)
                     .SetStyle(NotificationStyle.Informative);
                 
                 toast.Show();
@@ -974,7 +965,7 @@ namespace Unity.Industry.Viewer.Streaming
             return false;
         }
         
-        private void OnDownloadCacheFinished(AssetInfo assetInfo)
+        private async void OnDownloadCacheFinished(AssetInfo assetInfo)
         {
             StreamingUtils.MakeTempFolderComplete(assetInfo.Asset);
             
@@ -985,7 +976,7 @@ namespace Unity.Industry.Viewer.Streaming
                 m_DownloadStreamingDataControllers.Remove(assetInfo.Asset);
             }
             
-            var toast = Toast.Build(SharedUIManager.Instance.AssetGridView, m_Toast_FinishDownloadLocalizedString.GetTitleLocalizedStringForAppUI(), NotificationDuration.Short)
+            var toast = Toast.Build(SharedUIManager.Instance.AssetGridView, await m_Toast_FinishDownloadLocalizedString.GetTitleLocalizedStringForAppUIAsync(), NotificationDuration.Short)
                 .SetStyle(NotificationStyle.Informative);
             
             var messageLabel = toast.view.Q<LocalizedTextElement>(UIUtility.k_ToastMessageName);
@@ -1102,7 +1093,7 @@ namespace Unity.Industry.Viewer.Streaming
                 ShowDownloadModal();
             }
             
-            void ShowDownloadModal()
+            async void ShowDownloadModal()
             {
                 if (datasetToDownload == null)
                 {
@@ -1111,33 +1102,35 @@ namespace Unity.Industry.Viewer.Streaming
                 }
                 var customDialog = new AlertDialog()
                 {
-                    title = m_DownloadAssetTitleLocalizedString.GetTitleLocalizedStringForAppUI(),
-                    description = m_DownloadAssetDescriptionLocalizedString.GetTitleLocalizedStringForAppUI(),
+                    title = await m_DownloadAssetTitleLocalizedString.GetTitleLocalizedStringForAppUIAsync(),
+                    description = await m_DownloadAssetDescriptionLocalizedString.GetTitleLocalizedStringForAppUIAsync(),
                     variant = AlertSemantic.Confirmation
                 };
                 
-                customDialog.SetPrimaryAction(95, m_DownloadLocalizedString.GetTitleLocalizedStringForAppUI(), () =>
-                {
-                    StreamingUtils.RemoveCache(assetToDownload.Asset, CallbackAfterRemovedCache);
-                    m_DownloadStreamingAssetButton?.SetEnabled(false);
-
-                    var toast = Toast.Build(SharedUIManager.Instance.AssetGridView, m_Toast_DownloadingAssetLocalizedString.GetTitleLocalizedStringForAppUI(), NotificationDuration.Short)
-                        .SetStyle(NotificationStyle.Informative);
-
-                    toast.Show();
-                    
-                    var downloadStreamingDataController = new DownloadStreamingDataController(assetToDownload, datasetToDownload);
-                    m_DownloadStreamingDataControllers ??= new Dictionary<IAsset, DownloadStreamingDataController>();
-                    m_DownloadStreamingDataControllers.TryAdd(assetToDownload.Asset, downloadStreamingDataController);
-                    downloadStreamingDataController.DownloadProgress += OnDownloadProgress;
-                });
+                customDialog.SetPrimaryAction(95, await m_DownloadLocalizedString.GetTitleLocalizedStringForAppUIAsync(), PrimaryAction);
                 
-                customDialog.SetCancelAction(0, m_CancelLocalizedString.GetTitleLocalizedStringForAppUI());
+                customDialog.SetCancelAction(0, await m_CancelLocalizedString.GetTitleLocalizedStringForAppUIAsync());
                 
                 var modal = Modal.Build(SharedUIManager.Instance.AssetGridView, customDialog);
                 modal.dismissed += OnModalDismissed;
 
                 modal.Show();
+            }
+
+            async void PrimaryAction()
+            {
+                StreamingUtils.RemoveCache(assetToDownload.Asset, CallbackAfterRemovedCache);
+                m_DownloadStreamingAssetButton?.SetEnabled(false);
+
+                var toast = Toast.Build(SharedUIManager.Instance.AssetGridView, await m_Toast_DownloadingAssetLocalizedString.GetTitleLocalizedStringForAppUIAsync(), NotificationDuration.Short)
+                    .SetStyle(NotificationStyle.Informative);
+
+                toast.Show();
+                    
+                var downloadStreamingDataController = new DownloadStreamingDataController(assetToDownload, datasetToDownload);
+                m_DownloadStreamingDataControllers ??= new Dictionary<IAsset, DownloadStreamingDataController>();
+                m_DownloadStreamingDataControllers.TryAdd(assetToDownload.Asset, downloadStreamingDataController);
+                downloadStreamingDataController.DownloadProgress += OnDownloadProgress;
             }
             
             void OnModalDismissed(Modal arg1, DismissType arg2)
@@ -1481,21 +1474,21 @@ namespace Unity.Industry.Viewer.Streaming
             return;
         }
 
-        private void ShowAndEnableStreamButton()
+        private async void ShowAndEnableStreamButton()
         {
             if (m_StreamButton == null) return;
 
             m_StreamButton.DisplayOn();
-            m_StreamButton.label = m_StreamLocalizedString.GetTitleLocalizedStringForAppUI();
+            m_StreamButton.label = await m_StreamLocalizedString.GetTitleLocalizedStringForAppUIAsync();
             m_StreamButton.SetEnabled(true);
         }
 
-        private void ShowAndEnableStreamLayoutButton()
+        private async void ShowAndEnableStreamLayoutButton()
         {
             if (m_StreamButton == null) return;
 
             m_StreamButton.DisplayOn();
-            m_StreamButton.label = m_LoadLayoutLocalizedString.GetTitleLocalizedStringForAppUI();
+            m_StreamButton.label = await m_LoadLayoutLocalizedString.GetTitleLocalizedStringForAppUIAsync();
             m_StreamButton.SetEnabled(true);
         }
 
@@ -1520,7 +1513,7 @@ namespace Unity.Industry.Viewer.Streaming
             m_DirectStreamAssetModal.Show();
             return;
             
-            void DirectStreamAssetModalOnShown(Modal obj)
+            async void DirectStreamAssetModalOnShown(Modal obj)
             {
                 m_DirectStreamAssetModal.shown -= DirectStreamAssetModalOnShown;
                 var closeButton = obj.contentView.Q<IconButton>();
@@ -1566,8 +1559,8 @@ namespace Unity.Industry.Viewer.Streaming
                 
                 actionButton.label =
                     isLayout
-                        ? m_LoadLayoutLocalizedString.GetTitleLocalizedStringForAppUI()
-                        : m_StreamLocalizedString.GetTitleLocalizedStringForAppUI();
+                        ? await m_LoadLayoutLocalizedString.GetTitleLocalizedStringForAppUIAsync()
+                        : await m_StreamLocalizedString.GetTitleLocalizedStringForAppUIAsync();
                 
                 actionButton.clicked += () =>
                 {
@@ -1586,12 +1579,19 @@ namespace Unity.Industry.Viewer.Streaming
                         return;
                     }
                     var asset = assets[selectedIndex];
-                    SharedUIManager.SelectedAsset = asset;
-                    StreamAsset();
+                    if (asset.Asset is not OfflineAsset)
+                    {
+                        if (selectedIndex != 0)
+                        {
+                            AssetsController.ParentAssetSelected?.Invoke(assets[0]);
+                        }
+                        AssetsController.AssetSelected?.Invoke(asset);
+                    }
+                    StreamAsset(asset);
                     m_DirectStreamAssetModal.Dismiss();
                 };
                 
-                void DirectStreamDropdownBindItem(DropdownItem arg1, int arg2)
+                async void DirectStreamDropdownBindItem(DropdownItem arg1, int arg2)
                 {
                     var assets = versionDropdown.sourceItems as List<AssetInfo>;
                     if (assets == null || assets.Count == 0)
@@ -1615,11 +1615,9 @@ namespace Unity.Industry.Viewer.Streaming
                     {
                         verNum = asset.Properties.Value.FrozenSequenceNumber;
                     }
-                    
-                    var localVersionLocalizedString = new LocalizedString(k_AssetLocalisedTable, k_VersionKey);
             
                     var text = arg1.Q<LocalizedTextElement>();
-                    text.text = localVersionLocalizedString.GetTitleLocalizedStringForAppUI();
+                    text.text = $"@{k_AssetLocalisedTable}:{k_VersionKey}";
 
                     text.variables = new object[]
                     {
@@ -1673,7 +1671,7 @@ namespace Unity.Industry.Viewer.Streaming
                 actionButton.SetEnabled(hasStreamableDataset);
                 if (!actionButton.enabledSelf)
                 {
-                    actionButton.tooltip = m_StreamingDataNotAvailableLocalizedString.GetTitleLocalizedStringForAppUI();
+                    actionButton.tooltip = await m_StreamingDataNotAvailableLocalizedString.GetTitleLocalizedStringForAppUIAsync();
                 }
             }
             
@@ -1753,33 +1751,39 @@ namespace Unity.Industry.Viewer.Streaming
         
         private void StreamAsset()
         {
-            if (!SharedUIManager.SelectedAsset.HasValue || m_TopActionModal != null || !m_IsStreamFunctionalityActive)
+            StreamAsset(SharedUIManager.SelectedAsset);
+        }
+
+        
+        private async void StreamAsset(AssetInfo? assetInfo)
+        {
+            if (!assetInfo.HasValue || m_TopActionModal != null || !m_IsStreamFunctionalityActive)
             {
                 return;
             }
             
 #if !UNITY_WEBGL || UNITY_EDITOR
-            if (SharedUIManager.SelectedAsset.Value.Asset is not OfflineAsset)
+            if (assetInfo.Value.Asset is not OfflineAsset)
             {
-                bool hasLocalData = StreamingUtils.CheckHasLocalAsset(SharedUIManager.SelectedAsset.Value.Asset, true, out var ver);
+                bool hasLocalData = StreamingUtils.CheckHasLocalAsset(assetInfo.Value.Asset, true, out var ver);
 
                 if (hasLocalData)
                 {
                     var dialog = new AlertDialog()
                     {
-                        title = m_PickDataTitleLocalizedString.GetTitleLocalizedStringForAppUI(),
-                        description = m_PickDataDescriptionLocalizedString.GetTitleLocalizedStringForAppUI(),
+                        title = await m_PickDataTitleLocalizedString.GetTitleLocalizedStringForAppUIAsync(),
+                        description = await m_PickDataDescriptionLocalizedString.GetTitleLocalizedStringForAppUIAsync(),
                         variant = AlertSemantic.Default
                     };
                     
-                    dialog.SetPrimaryAction(94, m_CloudLocalizedString.GetTitleLocalizedStringForAppUI(), StartStreamingScene);
+                    dialog.SetPrimaryAction(94, await m_CloudLocalizedString.GetTitleLocalizedStringForAppUIAsync(), StartStreamingScene);
 
                     dialog.primaryButton.leadingIcon = "broadcast";
                     
-                    dialog.SetSecondaryAction(93, m_LocalLocalizedString.GetTitleLocalizedStringForAppUI(), () =>
+                    dialog.SetSecondaryAction(93, await m_LocalLocalizedString.GetTitleLocalizedStringForAppUIAsync(), () =>
                     {
                         var offlineAsset =
-                            StreamingUtils.ReturnOfflineAssetInfo(SharedUIManager.SelectedAsset.Value.Asset);
+                            StreamingUtils.ReturnOfflineAssetInfo(assetInfo.Value.Asset);
                         StreamingModelController.StreamingAsset = new AssetInfo()
                         {
                             Asset = offlineAsset,
@@ -1788,7 +1792,7 @@ namespace Unity.Industry.Viewer.Streaming
                         MainSceneController.StartStreaming?.Invoke();
                     });
                     
-                    dialog.SetCancelAction(0, m_CancelLocalizedString.GetTitleLocalizedStringForAppUI());
+                    dialog.SetCancelAction(0, await m_CancelLocalizedString.GetTitleLocalizedStringForAppUIAsync());
                     m_TopActionModal = Modal.Build(m_StreamButton, dialog);
                     
                     m_TopActionModal.dismissed += TopActionModalOnDismissed;
@@ -1810,16 +1814,7 @@ namespace Unity.Industry.Viewer.Streaming
 
             void StartStreamingScene()
             {
-                if (SharedUIManager.SelectedAsset.Value.Asset is OfflineAsset)
-                {
-                    StreamingModelController.StreamingAsset = SharedUIManager.SelectedAsset.Value;
-                }
-                else
-                {
-                    StreamingModelController.StreamingAsset = AssetsController.SelectedParentAsset.HasValue == false ? SharedUIManager.SelectedAsset.Value : AssetsController.SelectedParentAsset.Value;
-                }
-                
-                
+                StreamingModelController.StreamingAsset = assetInfo.Value;
                 MainSceneController.StartStreaming?.Invoke();
             }
             

@@ -18,7 +18,6 @@ using System.Collections;
 using Unity.Industry.Viewer.Shared;
 #if ENABLE_MULTIPLAY
 using Unity.Collections;
-using Unity.Industry.Viewer.Shared;
 #endif
 
 namespace Unity.Industry.Viewer.Streaming.Hierarchy
@@ -754,8 +753,7 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
         {
             float currentTime = Time.unscaledTime;
             bool isDoubleTap = false;
-
-            if (evt.pointerType == UnityEngine.UIElements.PointerType.touch)
+            if (evt.pointerType == UnityEngine.UIElements.PointerType.touch || evt.pointerType == UnityEngine.UIElements.PointerType.tracked)
             {
                 if (currentTime - m_LastTapTime < k_DoubleTapThreshold)
                 {
@@ -771,7 +769,8 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
             if (isDoubleTap)
             {
                 var clickedElement = evt.target as VisualElement;
-                if (clickedElement?.userData is InstanceData instanceData)
+                var dataElement = ReturnDataVisualElement(clickedElement);
+                if (dataElement?.userData is InstanceData instanceData)
                 {
                     if (instanceData.Instance != null && instanceData.Instance.Geometry.HasValue && instanceData.Instance.Geometry.Value.BoundingBox.HasValue)
                     {
@@ -831,7 +830,6 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
                 bool isCurrentlyInvisible =
                     m_HierarchyController.HierarchyToolSceneListener.IsCurrentlyHidden(
                         instanceData.StreamingModel.ModelStream.Id, instanceData.Instance.Id);
-                m_HierarchyController.HierarchyToolSceneListener.UpdateVisibility(instanceData.StreamingModel, false, instanceData, isCurrentlyInvisible);
                 clickedElement.icon = isCurrentlyInvisible ? k_CubeIconName : k_HiddenCubeIconName;
                 HierarchyToolController.InstanceVisibilityChanged?.Invoke(instanceData, isCurrentlyInvisible);
             }

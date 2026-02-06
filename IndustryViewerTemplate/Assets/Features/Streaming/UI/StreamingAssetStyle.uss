@@ -1,5 +1,6 @@
 .StreamAssetButton > #appui-actionbutton__icon {
     width: 32px;
+    height: 32px;
     height: 90%;
     background-size: 100% 100%;
     display: flex;
@@ -7,9 +8,16 @@
     -unity-background-scale-mode: scale-to-fit;
 }
 
-.StreamingAssetButton > #appui-actionbutton__label {
-    color: rgb(0, 0, 0);
-    font-size: 16px;
+#OffloadAssetButton > #appui-actionbutton__icon {
+    width: 32px;
+    height: 32px;
+    margin-right: 6px;
+}
+
+#CopyDeepLinkButton > #appui-actionbutton__icon {
+    width: 32px;
+    height: 32px;
+    margin-right: 6px;
 }
 
 .ProgressActionButton > .appui-circular-progress {

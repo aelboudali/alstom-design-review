@@ -35,3 +35,7 @@
     border-bottom-color: rgb(67, 67, 67);
     background-color: rgb(46, 46, 46);
 }
+
+#LogoutButton #appui-actionbutton__label {
+    color: #E9E9E9
+}

@@ -69,6 +69,10 @@ MonoBehaviour:
       e fazer login?"
     m_Metadata:
       m_Items: []
+  - m_Id: 134464886551863296
+    m_Localized: "Saia da sess\xE3o e limpe o cache."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

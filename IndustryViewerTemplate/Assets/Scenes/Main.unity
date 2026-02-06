@@ -132,6 +132,7 @@ GameObject:
   - component: {fileID: 376695037}
   - component: {fileID: 376695040}
   - component: {fileID: 376695041}
+  - component: {fileID: 376695042}
   m_Layer: 0
   m_Name: Network Manager
   m_TagString: Untagged
@@ -252,6 +253,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   transport: {fileID: 376695037}
+--- !u!114 &376695042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 376695036}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa75495ffe53d4a13904c7ba35ed8637, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Industry.Viewer.Vivox::Unity.Industry.Viewer.Vivox.VivoxWebInitializer
 --- !u!1 &685454535
 GameObject:
   m_ObjectHideFlags: 0
@@ -408,6 +421,15 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  m_LocalizedLogoutCompletely:
+    m_TableReference:
+      m_TableCollectionName: GUID:57a7ebbc038a2427a989d443ddacef3e
+    m_TableEntryReference:
+      m_KeyId: 134464886551863296
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   m_LocalizedCancel:
     m_TableReference:
       m_TableCollectionName: GUID:2a6c1c34211344e798bb376d8fa80190
@@ -515,6 +537,15 @@ MonoBehaviour:
       m_TableCollectionName: GUID:e57257823a7964becb6eb06d6181f15a
     m_TableEntryReference:
       m_KeyId: 41819579604992
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_OrganizationPlaceholderLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: GUID:e57257823a7964becb6eb06d6181f15a
+    m_TableEntryReference:
+      m_KeyId: 113743160664064
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0

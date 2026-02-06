@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Unity.Cloud.Assets;
 using UnityEngine;
@@ -16,22 +17,39 @@ namespace Unity.Industry.Viewer.Assets
     // The script also handles invoking callbacks once the texture download is complete.
     public static class TextureDownload
     {
-        static readonly int k_TimeoutDelay = 10000;
-
         private class TextureDownloadEntry
         {
             public bool IsDownloading;
             public Texture2D Texture2D;
             public string versionId;
             public string Url;
+            public CancellationTokenSource CancellationTokenSource;
             public readonly List<Action<Texture2D>> Listeners = new();
+            
+            public void CancelToken()
+            {
+                if (CancellationTokenSource == null) return;
+                CancellationTokenSource.Cancel();
+                CancellationTokenSource.Dispose();
+                CancellationTokenSource = null;
+            }
+            
+            public bool IsCancelled()
+            {
+                return CancellationTokenSource == null || CancellationTokenSource.IsCancellationRequested;
+            }
         }
 
         private static Dictionary<int, TextureDownloadEntry> s_TextureCache = new();
 
         public static void ClearCache()
         {
+            var textureCacheCopy = s_TextureCache.Values.ToArray();
             s_TextureCache.Clear();
+            foreach (var entry in textureCacheCopy)
+            {
+                entry.CancelToken();
+            }            
         }
 
         public static async Task DownloadThumbnail(IAsset asset, Action<Texture2D> actionCallBack)
@@ -44,6 +62,8 @@ namespace Unity.Industry.Viewer.Assets
             {
                 if (entry.versionId != versionId)
                 {
+                    // Cancel existing download
+                    entry.CancelToken();
                     url = await asset.GetPreviewUrlAsync(CancellationToken.None);
                     updateUrl = true;
                 }
@@ -79,7 +99,8 @@ namespace Unity.Industry.Viewer.Assets
                 {
                     IsDownloading = true,
                     Url = url,
-                    versionId = versionId
+                    versionId = versionId,
+                    CancellationTokenSource = new CancellationTokenSource()
                 };
                 
                 lock (entry.Listeners)
@@ -91,25 +112,39 @@ namespace Unity.Industry.Viewer.Assets
 
                 try
                 {
-                    var taskTexture = DownloadTexture(url.ToString());
+                    var taskTexture = DownloadTexture(url.ToString(), entry.CancellationTokenSource.Token);
                     if (await Task.WhenAny(taskTexture) == taskTexture)
                     {
-                        entry.Texture2D = taskTexture.Result;
-                        entry.IsDownloading = false;
+                        if (!entry.IsCancelled())
+                        {
+                            entry.Texture2D = taskTexture.Result;
+                            entry.IsDownloading = false;
+                        }
                     }
                     else
                     {
                         //Get Preset
                         entry.IsDownloading = false;
-                        actionCallBack?.Invoke(null);
+                        if (!entry.IsCancelled())
+                        {
+                            actionCallBack?.Invoke(null);
+                        }
                         return;
                     }
+                }
+                catch (OperationCanceledException)
+                {
+                    // Download was cancelled, don't invoke callback
+                    return;
                 }
                 catch (Exception e)
                 {
                     Debug.LogError(e);
-                    OnTextureDownloaded(entry);
-                    actionCallBack?.Invoke(null);
+                    if (!entry.IsCancelled())
+                    {
+                        OnTextureDownloaded(entry);
+                        actionCallBack?.Invoke(null);
+                    }
                 }
                 
             } else if (entry.IsDownloading)
@@ -124,7 +159,7 @@ namespace Unity.Industry.Viewer.Assets
             actionCallBack?.Invoke(entry.Texture2D);
         }
         
-        static async Task<Texture2D> DownloadTexture(string url)
+        static async Task<Texture2D> DownloadTexture(string url, CancellationToken cancellationToken = default)
         {
             using var uwr = new UnityWebRequest(url, UnityWebRequest.kHttpVerbGET);
             uwr.downloadHandler = new DownloadHandlerTexture();
@@ -133,6 +168,7 @@ namespace Unity.Industry.Viewer.Assets
 
             while (!operation.isDone)
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 await Task.Yield();
             }
             return DownloadHandlerTexture.GetContent(uwr);
@@ -146,8 +182,22 @@ namespace Unity.Industry.Viewer.Assets
             {
                 foreach (var listener in entry.Listeners)
                 {
-                    listener?.Invoke(entry.Texture2D);
+                    if (!entry.IsCancelled())
+                    {
+                        listener?.Invoke(entry.Texture2D);
+                    }
                 }
+                entry.Listeners.Clear();
+            }
+        }
+
+        public static void CancelDownload(int assetId)
+        {
+            var key = assetId;
+            if (s_TextureCache.TryGetValue(key, out var entry))
+            {
+                entry.CancelToken();
+                s_TextureCache.Remove(key);
             }
         }
 

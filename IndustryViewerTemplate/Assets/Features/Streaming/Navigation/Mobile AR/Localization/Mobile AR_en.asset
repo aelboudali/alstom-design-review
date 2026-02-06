@@ -22,117 +22,117 @@ MonoBehaviour:
     m_Localized: Augmented Reality
     m_Metadata:
       m_Items:
-      - rid: 535153527634001935
+      - rid: 9113942103005331979
   - m_Id: 3464783454209
     m_Localized: Lock Position
     m_Metadata:
       m_Items:
-      - rid: 535153527634001936
+      - rid: 9113942103005331980
   - m_Id: 3464783454210
     m_Localized: Occlusion
     m_Metadata:
       m_Items:
-      - rid: 535153527634001937
+      - rid: 9113942103005331981
   - m_Id: 3464787648512
     m_Localized: Spatial Anchor
     m_Metadata:
       m_Items:
-      - rid: 535153527634001938
+      - rid: 9113942103005331982
   - m_Id: 3464787648513
     m_Localized: Save Anchor
     m_Metadata:
       m_Items:
-      - rid: 535153527634001939
+      - rid: 9113942103005331983
   - m_Id: 3464787648514
     m_Localized: Load Anchor
     m_Metadata:
       m_Items:
-      - rid: 535153527634001940
+      - rid: 9113942103005331984
   - m_Id: 3464787648515
     m_Localized: Move
     m_Metadata:
       m_Items:
-      - rid: 535153527634001941
+      - rid: 9113942103005331985
   - m_Id: 3464787648516
     m_Localized: Rotate
     m_Metadata:
       m_Items:
-      - rid: 535153527634001942
+      - rid: 9113942103005331986
   - m_Id: 3464787648517
     m_Localized: Scale
     m_Metadata:
       m_Items:
-      - rid: 535153527634001943
+      - rid: 9113942103005331987
   - m_Id: 3464787648518
     m_Localized: Increment
     m_Metadata:
       m_Items:
-      - rid: 535153527634001944
+      - rid: 9113942103005331988
   - m_Id: 3464787648519
     m_Localized: Reset to default
     m_Metadata:
       m_Items:
-      - rid: 535153527634001945
+      - rid: 9113942103005331989
   - m_Id: 3464787648520
     m_Localized: m
     m_Metadata:
       m_Items:
-      - rid: 535153527634001946
+      - rid: 9113942103005331990
   - m_Id: 7191313506304
     m_Localized: AR Anchor Aligned
     m_Metadata:
       m_Items:
-      - rid: 535153527634001947
+      - rid: 9113942103005331991
   - m_Id: 7191313506305
     m_Localized: AR Anchor Saved
     m_Metadata:
       m_Items:
-      - rid: 535153527634001948
+      - rid: 9113942103005331992
   - m_Id: 7191313506306
     m_Localized: Fail Save AR Anchor - Unknown
     m_Metadata:
       m_Items:
-      - rid: 535153527634001949
+      - rid: 9113942103005331993
   - m_Id: 7191313506307
     m_Localized: Scan and tap to initialise asset position
     m_Metadata:
       m_Items:
-      - rid: 535153527634001950
+      - rid: 9113942103005331994
   - m_Id: 7191313506308
     m_Localized: You can fine adjust your asset and hit Lock Position
     m_Metadata:
       m_Items:
-      - rid: 535153527634001951
+      - rid: 9113942103005331995
   - m_Id: 41362627148898304
     m_Localized: X Axis
     m_Metadata:
       m_Items:
-      - rid: 535153527634001952
+      - rid: 9113942103005331996
   - m_Id: 41362627157286912
     m_Localized: Y Axis
     m_Metadata:
       m_Items:
-      - rid: 535153527634001953
+      - rid: 9113942103005331997
   - m_Id: 41362627157286913
     m_Localized: Z Axis
     m_Metadata:
       m_Items:
-      - rid: 535153527634001954
+      - rid: 9113942103005331998
   - m_Id: 44105927752671232
     m_Localized: Unlock Position
     m_Metadata:
       m_Items:
-      - rid: 535153527634001955
+      - rid: 9113942103005331999
   - m_Id: 45568947435593728
     m_Localized: Load failed
     m_Metadata:
       m_Items:
-      - rid: 535153527634001956
+      - rid: 9113942103005332000
   - m_Id: 45568947439788032
     m_Localized: You don't have the write permission.
     m_Metadata:
       m_Items:
-      - rid: 535153527634001957
+      - rid: 9113942103005332001
   - m_Id: 119198084964016128
     m_Localized: Spatial Anchor Found
     m_Metadata:
@@ -154,98 +154,102 @@ MonoBehaviour:
     m_Localized: Tap the point to place the asset
     m_Metadata:
       m_Items: []
+  - m_Id: 131130674381840384
+    m_Localized: Place on surface
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
-    - rid: 535153527634001935
+    - rid: 9113942103005331979
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: This is header of the Mobile AR panel
-    - rid: 535153527634001936
+    - rid: 9113942103005331980
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: This is button in Mobile AR panel
-    - rid: 535153527634001937
+    - rid: 9113942103005331981
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: This is text for switcher(toggle) in Mobile AR panel
-    - rid: 535153527634001938
+    - rid: 9113942103005331982
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: This is simple text for Mobile AR panel
-    - rid: 535153527634001939
+    - rid: 9113942103005331983
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: This is button in Mobile AR panel
-    - rid: 535153527634001940
+    - rid: 9113942103005331984
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: This is button in Mobile AR panel
-    - rid: 535153527634001941
+    - rid: 9113942103005331985
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: This is clickable text for tab in Mobile AR panel
-    - rid: 535153527634001942
+    - rid: 9113942103005331986
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: This is clickable text for tab in Mobile AR panel
-    - rid: 535153527634001943
+    - rid: 9113942103005331987
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: This is clickable text for tab in Mobile AR panel
-    - rid: 535153527634001944
+    - rid: 9113942103005331988
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: This is text for text field in Mobile AR panel
-    - rid: 535153527634001945
+    - rid: 9113942103005331989
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: This is button in Mobile AR panel
-    - rid: 535153527634001946
+    - rid: 9113942103005331990
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: This is background text
-    - rid: 535153527634001947
+    - rid: 9113942103005331991
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: This is toast UI
-    - rid: 535153527634001948
+    - rid: 9113942103005331992
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: This is toast UI
-    - rid: 535153527634001949
+    - rid: 9113942103005331993
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: This is toast UI
-    - rid: 535153527634001950
+    - rid: 9113942103005331994
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: This is toast UI at the start of AR mode
-    - rid: 535153527634001951
+    - rid: 9113942103005331995
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: This is toast UI at the start of AR mode
-    - rid: 535153527634001952
+    - rid: 9113942103005331996
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: This is simple text for Mobile AR panel
-    - rid: 535153527634001953
+    - rid: 9113942103005331997
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: This is simple text for Mobile AR panel
-    - rid: 535153527634001954
+    - rid: 9113942103005331998
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: This is simple text for Mobile AR panel
-    - rid: 535153527634001955
+    - rid: 9113942103005331999
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: This is button in Mobile AR panel
-    - rid: 535153527634001956
+    - rid: 9113942103005332000
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: This is toast UI
-    - rid: 535153527634001957
+    - rid: 9113942103005332001
       type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_CommentText: This is toast UI

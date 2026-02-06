@@ -170,7 +170,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 113671218895249408
-    m_Localized: "<b>N\xE3o h\xE1 arquivos baixados para streaming local</b>\n\n<size=70%>Fa\xE7a
+    m_Localized: "<size=20><b>N\xE3o h\xE1 arquivos baixados para streaming local</b></size><size=14><br><br>Fa\xE7a
       o download online antes de continuar</size>"
     m_Metadata:
       m_Items: []
@@ -179,7 +179,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 123180386542936064
-    m_Localized: "Selecione aqui a sua organiza\xE7\xE3o."
+    m_Localized: "Por favor, selecione a sua organiza\xE7\xE3o aqui"
     m_Metadata:
       m_Items: []
   - m_Id: 123892356694925312

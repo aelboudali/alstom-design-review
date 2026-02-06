@@ -131,6 +131,10 @@ MonoBehaviour:
     m_Localized: "Appuyez sur le point pour placer l'\xE9l\xE9ment"
     m_Metadata:
       m_Items: []
+  - m_Id: 131130674381840384
+    m_Localized: "D\xE9poser sur une surface"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

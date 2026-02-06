@@ -19,7 +19,7 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 8400134144
-    m_Localized: "Corte de se\xE7\xE3o"
+    m_Localized: Corte transversal
     m_Metadata:
       m_Items: []
   - m_Id: 2586893165256704
@@ -35,7 +35,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 2586893173645314
-    m_Localized: Corte Invertido
+    m_Localized: Corte invertido
     m_Metadata:
       m_Items: []
   - m_Id: 2586893173645315
@@ -43,7 +43,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 2586893173645316
-    m_Localized: "Caixa de Se\xE7\xE3o Visual"
+    m_Localized: "Se\xE7\xE3o Visual da Caixa"
     m_Metadata:
       m_Items: []
   references:

@@ -55,14 +55,23 @@ namespace Unity.Industry.Viewer.Streaming
 
         private void OnActiveSceneChanged(Scene arg0, Scene newActiveScene)
         {
-            m_NoAssetTextParent = newActiveScene == gameObject.scene ? SharedUIManager.Instance.AssetsContainer : SharedUIManager.Instance.AssetsContainer.Q<VisualElement>(k_AssetRoot);
+            m_NoAssetTextParent = newActiveScene == gameObject.scene ? SharedUIManager.Instance.AssetsContainer: SharedUIManager.Instance.AssetsContainer.Q<VisualElement>(k_AssetRoot);
             if (m_NoAssetText != null)
             {
+                StartCoroutine(WaitForUIUpdate());
+            }
+            return;
+            
+            System.Collections.IEnumerator WaitForUIUpdate()
+            {
+                yield return new WaitForSeconds(0.5f);
                 m_NoAssetTextParent.Add(m_NoAssetText);
                 if (SharedUIManager.Instance.IdentityContainer.resolvedStyle.display == DisplayStyle.Flex)
                 {
                     SharedUIManager.Instance.IdentityContainer.DisplayOff();
                 }
+                SharedUIManager.Instance.AssetsContainer.Q<VisualElement>(k_AssetRoot).DisplayOff();
+                SharedUIManager.Instance.AssetsContainer.DisplayOn();
             }
         }
 
@@ -157,6 +166,8 @@ namespace Unity.Industry.Viewer.Streaming
             
             SharedUIManager.Instance.AssetGridView.bindItem -= AssetGridBindItem;
             SharedUIManager.Instance.AssetGridView.bindItem += AssetGridBindItem;
+            SharedUIManager.Instance.AssetGridView.unbindItem -= AssetGridUnbindItem;
+            SharedUIManager.Instance.AssetGridView.unbindItem += AssetGridUnbindItem;
             SharedUIManager.Instance.AssetGridView.selectionChanged -= OnAssetSelectedOnGrid;
             SharedUIManager.Instance.AssetGridView.selectionChanged += OnAssetSelectedOnGrid;
 
@@ -195,6 +206,7 @@ namespace Unity.Industry.Viewer.Streaming
                 sharedUIManagerInstance.OrganizationButton.clicked -= OnOrganizationButtonClicked;
                 sharedUIManagerInstance.AssetsUIDocument.rootVisualElement.Q<VisualElement>(k_AssetRoot).DisplayOn();
                 sharedUIManagerInstance.AssetGridView.bindItem -= AssetGridBindItem;
+                sharedUIManagerInstance.AssetGridView.unbindItem -= AssetGridUnbindItem;
                 sharedUIManagerInstance.AssetGridView.selectionChanged -= OnAssetSelectedOnGrid;
 
                 sharedUIManagerInstance.AMButton.clicked -= OnAMButtonClicked;
@@ -267,7 +279,7 @@ namespace Unity.Industry.Viewer.Streaming
             SharedUIManager.Instance.AssetGridView.itemsSource = allAssets;
         }
         
-        private void RefreshUI()
+        private async void RefreshUI()
         {
             if (m_AuthenticationState != AuthenticationState.LoggedIn)
             {
@@ -276,8 +288,8 @@ namespace Unity.Industry.Viewer.Streaming
             SharedUIManager.Instance.RefreshAssetButton.SetEnabled(false);
             SharedUIManager.Instance.PathText.text = string.Empty;
             SharedUIManager.Instance.ClearGridView();
-            SharedUIManager.Instance.OrganizationButton.label =
-                SharedUIManager.Instance.SelectOrganization.GetTitleLocalizedStringForAppUI();
+            SharedUIManager.Instance.OrganizationButton.label = await 
+                SharedUIManager.Instance.OrganizationPlaceholder.GetTitleLocalizedStringForAppUIAsync();
 
             if (SceneManager.GetActiveScene() == gameObject.scene)
             {
@@ -311,13 +323,13 @@ namespace Unity.Industry.Viewer.Streaming
             Application.OpenURL(stringToOpen);
         }
         
-        protected override void OnOrganizationListReceived(List<IOrganization> listOfOrg)
+        protected override async void OnOrganizationListReceived(List<IOrganization> listOfOrg)
         {
             base.OnOrganizationListReceived(listOfOrg);
             if (listOfOrg == null || listOfOrg.Count == 0)
             {
                 if (m_NoAssetText != null) return;
-                m_NoAssetText = new Text(m_NoAssetsFoundForUserString.GetTitleLocalizedStringForAppUI())
+                m_NoAssetText = new Text(await m_NoAssetsFoundForUserString.GetTitleLocalizedStringForAppUIAsync())
                 {
                     size = TextSize.XXXL,
                     style =
@@ -336,19 +348,16 @@ namespace Unity.Industry.Viewer.Streaming
                 {
                     SharedUIManager.Instance.IdentityContainer.DisplayOff();
                 }
-                if (m_AuthenticationState == AuthenticationState.LoggedIn && SceneManager.GetActiveScene() == gameObject.scene)
+                if (SceneManager.GetActiveScene() == gameObject.scene)
                 {
                     SharedUIManager.Instance.AssetsContainer.DisplayOn();
                     SharedUIManager.Instance.AssetsUIDocument.rootVisualElement.Q<VisualElement>(k_AssetRoot).DisplayOff();
                 }
-                else
-                {
-                    SharedUIManager.Instance.AssetsUIDocument.rootVisualElement.Q<VisualElement>(k_AssetRoot).DisplayOn();
-                }
                 return;
             }
-            SharedUIManager.Instance.OrganizationButton.label =
-                SharedUIManager.Instance.SelectOrganization.GetTitleLocalizedStringForAppUI();
+
+            SharedUIManager.Instance.OrganizationButton.label = await 
+                SharedUIManager.Instance.OrganizationPlaceholder.GetTitleLocalizedStringForAppUIAsync();
         }
 
         protected override void InitializeExtraUIController()
@@ -359,7 +368,7 @@ namespace Unity.Industry.Viewer.Streaming
             ShowOrgSelectionTips();
         }
 
-        private void ShowOrgSelectionTips()
+        private async void ShowOrgSelectionTips()
         {
             if (SceneManager.GetActiveScene() != gameObject.scene || 
                 SharedUIManager.Instance.OrganizationButton.resolvedStyle.display != DisplayStyle.Flex) return;
@@ -368,19 +377,29 @@ namespace Unity.Industry.Viewer.Streaming
             
             if(offlineAsset == null || offlineAsset.Count == 0) return;
             
-            var contentView = new Text(m_SelectOrganizationHereString.GetTitleLocalizedStringForAppUI())
+            var contentView = new Text(await m_SelectOrganizationHereString.GetTitleLocalizedStringForAppUIAsync())
             {
                 style =
                 {
                     marginBottom = 12,
                     marginTop = 12,
                     marginLeft = 12,
-                    marginRight = 12
+                    marginRight = 12,
+                    height = 20,
+                    minWidth = 286
                 }
             };
             
-            m_tips = Popover.Build(SharedUIManager.Instance.OrganizationButton, contentView)
-                .SetPlacement(PopoverPlacement.BottomStart).SetArrowVisible(true).SetModalBackdrop(false).SetOutsideClickDismiss(false);
+            var orgIcon = SharedUIManager.Instance.OrganizationButton.Q<Icon>("appui-actionbutton__icon");
+            m_tips = Popover
+                .Build(orgIcon, contentView)
+                .SetPlacement(PopoverPlacement.BottomStart)
+                .SetArrowVisible(true)
+                .SetModalBackdrop(false)
+                .SetOutsideClickDismiss(false)
+                .SetOffset(3)
+                .SetCrossOffset(-12);
+
             m_tips.Show();
             SharedUIManager.Instance.OrganizationButton.clicked += OrganizationButtonOnClicked;
             return;
@@ -436,7 +455,8 @@ namespace Unity.Industry.Viewer.Streaming
                 {
                     sb.Append(" / ");
                 }
-                sb.Append("<b>" + ((OfflineAsset)assetInfo.Value.Asset).OfflineAssetInfo.assetName + "</b>");
+
+                sb.Append(FormatLastPathPart(((OfflineAsset)assetInfo.Value.Asset).OfflineAssetInfo.assetName));
             }
             
             SharedUIManager.Instance.PathText.text = sb.ToString();
@@ -473,18 +493,15 @@ namespace Unity.Industry.Viewer.Streaming
             {
                 return;
             }
+
             if (!string.IsNullOrEmpty(offlineAsset.OfflineAssetInfo.previewPic))
             {
-                _ = TextureDownload.DownloadThumbnail(offlineAsset.Descriptor.AssetId.GetHashCode(), offlineAsset.Descriptor.AssetVersion.ToString(), offlineAsset.OfflineAssetInfo.previewPic, textureResult =>
+                HandleThumbnailDownload(iconPlaceHolder, offlineAsset.OfflineAssetInfo.assetType, bindingId =>
                 {
-                    if (textureResult != null)
+                    _ = TextureDownload.DownloadThumbnail(offlineAsset.Descriptor.AssetId.GetHashCode(), offlineAsset.Descriptor.AssetVersion.ToString(), offlineAsset.OfflineAssetInfo.previewPic, textureResult =>
                     {
-                        iconPlaceHolder.style.backgroundImage = textureResult;
-                    }
-                    else
-                    {
-                        AssetIconLoadFailed.Invoke(iconPlaceHolder, offlineAsset.OfflineAssetInfo.assetType);
-                    }
+                        OnThumbnailDownloaded(iconPlaceHolder, bindingId, textureResult, offlineAsset.OfflineAssetInfo.assetType);
+                    });
                 });
             }
             else

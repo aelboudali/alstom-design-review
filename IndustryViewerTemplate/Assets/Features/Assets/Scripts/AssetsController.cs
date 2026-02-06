@@ -308,8 +308,8 @@ namespace Unity.Industry.Viewer.Assets
                             return;
                         }
                     }
-
-                    if (asset.State == AssetState.Frozen)
+                    var assetProperties = await asset.GetPropertiesAsync(cancellationToken);
+                    if (assetProperties.State == AssetState.Frozen)
                     {
                         Debug.Log("Asset Creation: 3DDS, creating unfrozen version...");
                         asset = await asset.CreateUnfrozenVersionAsync(cancellationToken);
@@ -357,20 +357,18 @@ namespace Unity.Industry.Viewer.Assets
                 }
                 catch (OperationCanceledException)
                 {
-                    Debug.Log($"Asset Creation: 3DDS Task for '{asset.Name}' was canceled.");
+                    //Debug.Log($"Asset Creation: 3DDS Task for '{asset.Name}' was canceled.");
                     callback?.Invoke(null, "Operation canceled", null);
                     return;
                 }
                 catch (Exception exception)
                 {
-                    Debug.LogError($"Asset Creation: exception in 3DDS Task for '{asset.Name}': {exception}");
+                    //Debug.LogError($"Asset Creation: exception in 3DDS Task for '{asset.Name}': {exception}");
                     callback?.Invoke(null, exception.Message, null);
                     return;
                 }
-                finally
-                {
-                    Debug.Log($"Asset Creation: 3DDS Task for '{asset.Name}' was finished.");
-                }
+
+                return;
 
                 async Task WaitForTransaction(ITransformation transformation)
                 {
@@ -555,8 +553,8 @@ namespace Unity.Industry.Viewer.Assets
             
             async Task CreateAsset(CancellationToken cancellationToken)
             {
-                Debug.Log($"Asset Creation: {parameters.Organization.Name}\\{parameters.Project.Name}\\{parameters.Collection?.Descriptor.Path}\\{parameters.AssetName}" +
-                    $" - {parameters.AssetType} - {parameters.AssetDescription}");
+                /*Debug.Log($"Asset Creation: {parameters.Organization.Name}\\{parameters.Project.Name}\\{parameters.Collection?.Descriptor.Path}\\{parameters.AssetName}" +
+                    $" - {parameters.AssetType} - {parameters.AssetDescription}");*/
 
                 IAsset newAsset = null;
 
@@ -578,7 +576,7 @@ namespace Unity.Industry.Viewer.Assets
                     cancellationToken.ThrowIfCancellationRequested();
                     if (newAsset == null)
                     {
-                        Debug.LogError($"Asset Creation: failed to create asset '{parameters.AssetName}' in project '{parameters.Project.Name}'.");
+                        //Debug.LogError($"Asset Creation: failed to create asset '{parameters.AssetName}' in project '{parameters.Project.Name}'.");
                         AssetCreationProgress?.Invoke(parameters, null, null, "Failed to create asset", null);
                         return;
                     }
@@ -602,7 +600,7 @@ namespace Unity.Industry.Viewer.Assets
                     cancellationToken.ThrowIfCancellationRequested();
                     if (sourceDataset == null)
                     {
-                        Debug.LogError($"Asset Creation: source dataset not found for created asset '{newAsset.Name}'.");
+                        //Debug.LogError($"Asset Creation: source dataset not found for created asset '{newAsset.Name}'.");
                         AssetCreationProgress?.Invoke(parameters, newAsset, null, "Source dataset not found", null);
                         return;
                     }
@@ -678,7 +676,19 @@ namespace Unity.Industry.Viewer.Assets
         private void OnAssetSelected(AssetInfo asset)
         {
             _selectedAsset = asset;
-            _selectedParentAsset = null;
+            if (_selectedParentAsset.HasValue)
+            {
+                
+                if (_selectedParentAsset.Value.Asset.Descriptor.OrganizationId != asset.Asset.Descriptor.OrganizationId ||
+                    _selectedParentAsset.Value.Asset.Descriptor.ProjectId != asset.Asset.Descriptor.ProjectId ||
+                    _selectedParentAsset.Value.Asset.Descriptor.AssetId != asset.Asset.Descriptor.AssetId)
+                {
+                    _selectedParentAsset = null;
+                }
+            } else
+            {
+                _selectedParentAsset = null;
+            }
             _newerVersionAsset = null;
             CancelVersionChecking();
             m_VersionCheckCoroutine = StartCoroutine(StartVersionChecking());

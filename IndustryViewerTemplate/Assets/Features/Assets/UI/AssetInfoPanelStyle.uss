@@ -7,7 +7,7 @@
 #AssetInfoPanelRoot .field {
     overflow: hidden;
     margin-right: 6px;
-    width: 106px;
+    width: 100px;
     -unity-text-align: middle-left;
 }
 
@@ -35,21 +35,26 @@
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
     height: 20px;
+    margin-bottom: 4px;
+    margin-right: 4px;
 }
 
 .AssetStatusDropdownItem .unity-hidden {
     display: flex;
-    width: 13px;
-    height: 13px;
+    width: 16px;
+    height: 16px;
     --unity-image: none;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
+    margin-right: 4px;
 }
 
 #UpdateVersionVE .appui-icon {
     --unity-image-tint-color: rgb(255, 255, 255);
+    width: 24px;
+    height: 24px;
 }
 
 #UpdateVersionVE #appui-divider__content {
@@ -138,4 +143,16 @@
 .NewVersionAvailable .appui-icon {
     width: 18px;
     height: 18px;
+}
+
+#Tabs .appui-tabitem__label {
+    font-size: 18px;
+}
+
+#AssetInfoPanelRoot .unity-scroll-view__vertical-scroller {
+    width: 26px;
+}
+
+#AssetStatusDropdown #appui-picker__caret {
+    margin-left: 4px;
 }

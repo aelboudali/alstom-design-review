@@ -342,21 +342,26 @@ namespace Unity.Industry.Viewer.Navigation.StandardCameraControl.Shared
             m_Camera.SetCameraSpeedSettings(bounds);
         }
 
-        protected virtual void SetLookAt(DoubleBounds bounds, bool zoom = false)
+        protected virtual void SetLookAt(DoubleBounds bounds, bool zoom = false, bool useStartingPosition = false)
         {
             var t = m_Camera?.Transform;
             //m_Camera?.SetCameraSpeedSettings(bounds);
             
             var newPosition = t.position;
-            if (zoom)
+            if (zoom && !useStartingPosition)
             {
                 Vector3 direction = (t.position - ((Bounds)bounds).center).normalized; // Step 1: Direction
                 newPosition = ((Bounds)bounds).center + direction * 5f; // Step 2: Move along direction
-            }
-            
-            if (NavigationController.StartingPosition.HasValue)
+            } else if(!zoom && useStartingPosition && NavigationController.StartingPosition.HasValue)
             {
-                newPosition = NavigationController.StartingPosition.Value;
+                var result = StandardCamera.ReturnStartingPositionAndBounds();
+                newPosition = result.Item1;
+                bounds = result.Item2;
+            }
+            else if (zoom && useStartingPosition)
+            {
+                Debug.Log("Warning: 'zoom' and 'useStartingPosition' cannot both be true. Ignoring 'zoom' parameter.");
+                return;
             }
             
             m_Camera?.ResetTracking(newPosition, ((Bounds)bounds).center);

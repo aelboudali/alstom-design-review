@@ -40,7 +40,9 @@ namespace Unity.Industry.Viewer.VR
         
         private bool m_SwitchInProgress = false;
         
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        private Vector3 m_LastParentPosition;
+        private const float k_LargeJumpThresholdSqr = 1f;
+        
         private void Awake()
         {
             if (m_Side == Handedness.Invalid)
@@ -64,6 +66,22 @@ namespace Unity.Industry.Viewer.VR
             {
                 return;
             }
+
+            Vector3 currentParentPosition = m_Parent.transform.position;
+            
+            // Detect large controller position jumps
+            if (m_LastParentPosition != Vector3.zero)
+            {
+                float positionDeltaSqr = (currentParentPosition - m_LastParentPosition).sqrMagnitude;
+                if (positionDeltaSqr > k_LargeJumpThresholdSqr)
+                {
+                    // Skip this frame to avoid incorrect positioning
+                    m_LastParentPosition = currentParentPosition;
+                    return;
+                }
+            }
+            
+            m_LastParentPosition = currentParentPosition;
 
             if (m_InputType == ControlType.MotionControllers)
             {
@@ -118,6 +136,10 @@ namespace Unity.Industry.Viewer.VR
             }
             m_InputType = ControlType.Hands;
             m_Parent  = m_AimPoseDriver.gameObject;
+            if (m_Parent != null)
+            {
+                m_LastParentPosition = m_Parent.transform.position;
+            }
             StartCoroutine(ResetSwitchProcessBoolean());
         }
         
@@ -126,6 +148,7 @@ namespace Unity.Industry.Viewer.VR
             if(m_SwitchInProgress) return;
             m_InputType = ControlType.None;
             m_Parent = null;
+            m_LastParentPosition = Vector3.zero;
         }
         
         private void StopFollowingHands()
@@ -133,6 +156,7 @@ namespace Unity.Industry.Viewer.VR
             if(m_SwitchInProgress) return;
             m_InputType = ControlType.None;
             m_Parent = null;
+            m_LastParentPosition = Vector3.zero;
         }
 
         private void UseMotionController()
@@ -141,6 +165,10 @@ namespace Unity.Industry.Viewer.VR
             m_SwitchInProgress = true;
             m_InputType = ControlType.MotionControllers;
             m_Parent = m_Side == Handedness.Left ? m_InputModalityManager.leftController : m_InputModalityManager.rightController;
+            if (m_Parent != null)
+            {
+                m_LastParentPosition = m_Parent.transform.position;
+            }
             StartCoroutine(ResetSwitchProcessBoolean());
         }
 
@@ -211,6 +239,14 @@ namespace Unity.Industry.Viewer.VR
             if (!pauseStatus)
             {
                 UpdateParent();
+            }
+        }
+        
+        public void UpdateTrackedParentPosition()
+        {
+            if (m_Parent != null)
+            {
+                m_LastParentPosition = m_Parent.transform.position;
             }
         }
     }

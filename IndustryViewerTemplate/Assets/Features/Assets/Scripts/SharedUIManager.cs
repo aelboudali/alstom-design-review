@@ -89,7 +89,7 @@ namespace Unity.Industry.Viewer.Assets
                 m_OrganizationButton = new ActionButton
                 {
                     name = k_OrganizationButton,
-                    icon = "three-persons"
+                    icon = "users-three"
                 };
                 var topLeftBar = m_AssetsUIDocument.rootVisualElement.Q<VisualElement>(k_TopLeftBarName);
                 topLeftBar.Add(m_OrganizationButton);
@@ -193,6 +193,7 @@ namespace Unity.Industry.Viewer.Assets
         public readonly LocalizedString NoProjectsFound;
         public readonly LocalizedString NoOrganizationsFound;
         public readonly LocalizedString SelectOrganization;
+        public readonly LocalizedString OrganizationPlaceholder;
         public readonly LocalizedString NewVersionAvailable;
         public readonly LocalizedString ViewNewVersion;
 
@@ -202,6 +203,7 @@ namespace Unity.Industry.Viewer.Assets
             LocalizedString noProjectsFound,
             LocalizedString noOrganizationsFound,
             LocalizedString selectOrganization,
+            LocalizedString organizationPlaceholder,
             LocalizedString newVersionAvailable,
             LocalizedString viewNewVersion,
             VisualTreeAsset organizationPopoverTemplate,
@@ -226,6 +228,7 @@ namespace Unity.Industry.Viewer.Assets
             NoProjectsFound = noProjectsFound;
             NoOrganizationsFound = noOrganizationsFound;
             SelectOrganization = selectOrganization;
+            OrganizationPlaceholder = organizationPlaceholder;
             NewVersionAvailable = newVersionAvailable;
             ViewNewVersion = viewNewVersion;
             OrganizationPopoverTemplate = organizationPopoverTemplate;

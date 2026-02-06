@@ -280,7 +280,7 @@ namespace Unity.Industry.Viewer.DeepLinking
                     if (collectionDescriptor.ProjectDescriptor == projectDescriptor)
                     {
                         AssetCollectionDescriptor = collectionDescriptor;
-                        Debug.Log($"Deep linking: found first collection '{collectionDescriptor.Path}' for asset '{AssetInfo.Value.Asset.Name}'.");
+                        //Debug.Log($"Deep linking: found first collection '{collectionDescriptor.Path}' for asset '{AssetInfo.Value.Asset.Name}'.");
                         return true;
                     }
                 }
@@ -293,7 +293,7 @@ namespace Unity.Industry.Viewer.DeepLinking
                 return false;
             }
 
-            Debug.Log($"Deep linking: no linked asset collections found for asset '{AssetInfo.Value.Asset.Name}' in project '{AssetProject.Name}'.");
+            //Debug.Log($"Deep linking: no linked asset collections found for asset '{AssetInfo.Value.Asset.Name}' in project '{AssetProject.Name}'.");
             return true; // we don't fail here because asset can be located in root of project.
         }
     }

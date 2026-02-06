@@ -19,7 +19,7 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 751689523200
-    m_Localized: Realidad Aumentada
+    m_Localized: Realidad aumentada
     m_Metadata:
       m_Items: []
   - m_Id: 3464783454209
@@ -111,11 +111,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 119198084964016128
-    m_Localized: Ancla espacial encontrada
+    m_Localized: Anclaje espacial encontrado
     m_Metadata:
       m_Items: []
   - m_Id: 119198084972404736
-    m_Localized: "Se ha encontrado un ancla espacial guardada previamente. \xBFDesea
+    m_Localized: "Se encontr\xF3 un ancla espacial previamente guardada. \xBFQuieres
       cargarla?"
     m_Metadata:
       m_Items: []
@@ -128,7 +128,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 119205759076524032
-    m_Localized: Toca el punto para colocar el activo.
+    m_Localized: Toque el punto para colocar el activo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 131130674381840384
+    m_Localized: Colocar sobre la superficie
     m_Metadata:
       m_Items: []
   references:

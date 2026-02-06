@@ -49,9 +49,13 @@
     color: white;
 }
 
+.appui-picker {
+    padding-left: 12px;
+}
+
 /* Vertical Slider */
 .unity-scroller--vertical {
-    padding: 16px 8px;
+    padding: 0 8px;
 }
 
 .unity-scroller--vertical .unity-base-slider__dragger {
@@ -83,4 +87,18 @@
 
 .unity-base-slider--horizontal .unity-scroll-view__horizontal-scroller {
     height: 10px;
+}
+
+.appui-toggle__box {
+    height: 20px;
+    width: 32px;
+}
+
+.appui-checkbox__box {
+    width: 24px;
+    height: 24px;
+}
+
+.ivt-font-semi-bold {
+    -unity-font-definition: var(--appui-font-weights-200);
 }

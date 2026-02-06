@@ -67,6 +67,10 @@ MonoBehaviour:
       takaisin online-tilaan ja kirjautua sis\xE4\xE4n?"
     m_Metadata:
       m_Items: []
+  - m_Id: 134464886551863296
+    m_Localized: Logga ut och rensa cachen
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

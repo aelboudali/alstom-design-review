@@ -395,11 +395,11 @@ namespace Unity.Industry.Viewer.Vivox
             UpdateToolTips();
         }
 
-        protected void UpdateToolTips()
+        protected async void UpdateToolTips()
         {
             m_MicButton.tooltip = VivoxService.Instance.IsInputDeviceMuted
-                ? m_UnmuteLocalizedString.GetTitleLocalizedStringForAppUI()
-                : m_MuteLocalizedString.GetTitleLocalizedStringForAppUI();
+                ? await m_UnmuteLocalizedString.GetTitleLocalizedStringForAppUIAsync()
+                : await m_MuteLocalizedString.GetTitleLocalizedStringForAppUIAsync();
         }
     }
 }

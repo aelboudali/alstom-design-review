@@ -34,7 +34,7 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
         private Panel m_Panel;
         private VisualElement m_AssetTopBar;
         private AssetsUIBaseController m_CurrentActiveAssetsUIBaseController = null;
-        private bool m_CurrentVersionHasStreamableDataset;
+        private bool? m_CurrentVersionHasStreamableDataset;
 
         [SerializeField]
         private StyleSheet m_StyleSheet;
@@ -165,16 +165,16 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
             UninitializeUI();
         }
 
-        protected void FolderButtonOnClicked()
+        protected async void FolderButtonOnClicked()
         {
             if (!NetworkDetector.IsOffline && !PlatformServices.IsUserLoggedIn)
             {
                 var alertDialog = new AlertDialog()
                 {
-                    title = m_UserNotLoggedInLocalizedString.GetTitleLocalizedStringForAppUI(),
-                    description = m_AskToLoginLocalizedString.GetTitleLocalizedStringForAppUI()
+                    title = await m_UserNotLoggedInLocalizedString.GetTitleLocalizedStringForAppUIAsync(),
+                    description = await m_AskToLoginLocalizedString.GetTitleLocalizedStringForAppUIAsync()
                 };
-                alertDialog.SetCancelAction(0, m_OK.GetTitleLocalizedStringForAppUI());
+                alertDialog.SetCancelAction(0, await m_OK.GetTitleLocalizedStringForAppUIAsync());
                 var modal = Modal.Build(m_FolderButton, alertDialog);
                 modal.Show();
                 return;
@@ -262,7 +262,7 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
             
         }
 
-        protected virtual void InitializeUI()
+        protected virtual async void InitializeUI()
         {
             if (!SharedUIManager.Instance.AssetsUIDocument.rootVisualElement.styleSheets.Contains(m_StyleSheet))
             {
@@ -295,8 +295,8 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
             if (NetworkDetector.RequestedOfflineMode)
             {
                 SharedUIManager.Organization = null;
-                SharedUIManager.Instance.OrganizationButton.label =
-                    SharedUIManager.Instance.SelectOrganization.GetTitleLocalizedStringForAppUI();
+                SharedUIManager.Instance.OrganizationButton.label = await 
+                    SharedUIManager.Instance.OrganizationPlaceholder.GetTitleLocalizedStringForAppUIAsync();
                 SharedUIManager.OrganizationSelected += OrganizationSelected;
             }
 
@@ -329,7 +329,7 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
             };
             
             m_AddToSelectionButton.AddToClassList("SelectionButton");
-            m_AddToSelectionButton.label = m_SelectLocalizedString.GetTitleLocalizedStringForAppUI();
+            m_AddToSelectionButton.label = await m_SelectLocalizedString.GetTitleLocalizedStringForAppUIAsync();
             m_AddToSelectionButton.clicked += AddToSelectionButtonOnClicked;
             var m_OffloadButton = assetInfoPanelRoot.Q<ActionButton>(k_OffloadAssetButtonName);
             m_OffloadButton.parent.Insert(0, m_AddToSelectionButton);
@@ -340,7 +340,7 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
                 selected = true,
                 icon = "broadcast",
                 name = "AddModelToSceneButton",
-                label = m_AddToSceneLocalizedString.GetTitleLocalizedStringForAppUI()
+                label = await m_AddToSceneLocalizedString.GetTitleLocalizedStringForAppUIAsync()
             };
 
             m_AssetTopBar.Add(m_AddToSceneButton);
@@ -451,8 +451,17 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
             var item = SharedUIManager.Instance.AssetGridView.itemsSource[arg2] as AssetInfo?;
             if (!item.HasValue) return;
             checkBox.name = item.Value.Asset.Descriptor.AssetId.ToString();
-            var contain = m_AddModelToolController.SelectedAssetsContainAnyVersion(item.Value);
-            checkBox.SetValueWithoutNotify(contain ? CheckboxState.Checked : CheckboxState.Unchecked);
+            if (!m_CurrentVersionHasStreamableDataset.HasValue || (m_CurrentVersionHasStreamableDataset.HasValue && m_CurrentVersionHasStreamableDataset.Value))
+            {
+                var contain = m_AddModelToolController.SelectedAssetsContainAnyVersion(item.Value);
+                checkBox.SetValueWithoutNotify(contain ? CheckboxState.Checked : CheckboxState.Unchecked);
+                checkBox.DisplayOn();
+            }
+            else
+            {
+                checkBox.DisplayOff();
+            }
+            
         }
         
         private void AssetGridUnbindItem(VisualElement element, int index)
@@ -543,13 +552,14 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
             return item?.Q<Checkbox>();
         }
 
-        protected virtual void UninitializeUI()
+        protected virtual async void UninitializeUI()
         {
             if (m_FolderButton != null)
             {
                 m_FolderButton.primary = false;
             }
-            
+
+            m_CurrentVersionHasStreamableDataset = null;
             NavigationController.PauseCameraControl?.Invoke(false);
             
             m_AddModelToolController?.ClearSelectedAssets();
@@ -589,8 +599,8 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
 
             if (NetworkDetector.RequestedOfflineMode)
             {
-                SharedUIManager.Instance.OrganizationButton.label =
-                    SharedUIManager.Instance.SelectOrganization.GetTitleLocalizedStringForAppUI();
+                SharedUIManager.Instance.OrganizationButton.label = await 
+                    SharedUIManager.Instance.OrganizationPlaceholder.GetTitleLocalizedStringForAppUIAsync();
                 SharedUIManager.Instance.ClearGridView();
                 SharedUIManager.Instance.AssetProjectScrollList.Clear();
             }
@@ -602,13 +612,14 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
 
         private void OnCloseInfoButtonPress()
         {
+            m_CurrentVersionHasStreamableDataset = null;
             SharedUIManager.Instance.AssetGridView.ClearSelectionWithoutNotify();
             SharedUIManager.SelectedAsset = null;
             SharedUIManager.ClearSelectionOnGrid();
             SharedUIManager.Instance.PathText.text = string.Empty;
         }
 
-        private void UpdateSelectedButton(bool isSelected)
+        private async void UpdateSelectedButton(bool isSelected)
         {
             m_AddToSelectionButton.label = string.Empty;
             
@@ -625,7 +636,7 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
                     m_AddToSelectionButton.AddToClassList(k_RemoveFromSelectionClassName);
                 }
 
-                m_AddToSelectionButton.label = m_SelectedLocalizedString.GetTitleLocalizedStringForAppUI();
+                m_AddToSelectionButton.label = await m_SelectedLocalizedString.GetTitleLocalizedStringForAppUIAsync();
             }
             else
             {
@@ -640,7 +651,7 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
                     m_AddToSelectionButton.AddToClassList(k_AddToSelectionClassName);
                 }
 
-                m_AddToSelectionButton.label = m_SelectLocalizedString.GetTitleLocalizedStringForAppUI();
+                m_AddToSelectionButton.label = await m_SelectLocalizedString.GetTitleLocalizedStringForAppUIAsync();
             }
         }
 
@@ -648,6 +659,8 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
         {
             if (obj == null || !obj.Any())
             {
+                Debug.Log("No asset selected");
+                m_CurrentVersionHasStreamableDataset = null;
                 return;
             }
 
@@ -685,8 +698,9 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
                 m_AssetsUIBaseController.AssetInfoUIController.AssetVersionDropdown.SetValueWithoutNotify(new[] { 0 });
                 m_AssetsUIBaseController.AssetInfoUIController.AssetVersionDropdown.SetEnabled(false);
             }
-
+#if !UNITY_WEBGL || UNITY_EDITOR
             m_StreamAssetUIController.ShowStreamingAssetDownload(selectedAsset);
+#endif
         }
 
         private async void OnVersionDropdownValueChanged(ChangeEvent<IEnumerable<int>> evt)
@@ -723,14 +737,15 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
             }
             var selected = m_AddModelToolController.SelectedAssetsContainAnyVersion(asset);
 
-            if (m_CurrentVersionHasStreamableDataset && selected)
+            if (m_CurrentVersionHasStreamableDataset.Value && selected)
             {
                 m_AddModelToolController.ManageSelectedAssets(asset, true);
-            } else if (!m_CurrentVersionHasStreamableDataset && selected)
+            } else if (!m_CurrentVersionHasStreamableDataset.Value && selected)
             {
                 m_AddModelToolController.ManageSelectedAssets(asset, false);
                 var checkBox = SharedUIManager.Instance.AssetGridView.Q<Checkbox>(asset.Asset.Descriptor.AssetId.ToString());
                 checkBox?.SetValueWithoutNotify(CheckboxState.Unchecked);
+                checkBox?.SetEnabled(false);
                 m_AddToSceneButton?.SetEnabled(m_AddModelToolController.GetSelectedAssetCount() > 0);
                 UpdateSelectedButton(false);
             }
@@ -786,7 +801,7 @@ namespace Unity.Industry.Viewer.Streaming.AddModel
             //      true               true                             enabled, Deselect
             //      false              false                            disabled, Select
             //      false              true                             enabled, Deselect
-            var addToSelectionEnabled = m_CurrentVersionHasStreamableDataset || selected;
+            var addToSelectionEnabled = (m_CurrentVersionHasStreamableDataset.HasValue && m_CurrentVersionHasStreamableDataset.Value) || selected;
             m_AddToSceneButton.SetEnabled(m_AddModelToolController.GetSelectedAssetCount() > 0);
             m_AddToSelectionButton.SetEnabled(addToSelectionEnabled);
             Checkbox checkBox = FindSelectionCheckbox(asset);

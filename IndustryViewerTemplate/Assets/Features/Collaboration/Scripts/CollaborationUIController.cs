@@ -126,13 +126,14 @@ namespace Unity.Industry.Viewer.Collaboration
             m_currentRootAnnotation = null;
             
             // The comment container is now visible, we can perform layout updates here if needed
-            CollaborationController.QueryThreads?.Invoke(SelectedAsset.Value, TokenSource, CollaborationController.FilterType.All, OnAnnotationLoaded);
+            CollaborationController.QueryThreads?.Invoke(SelectedAsset.Value, TokenSource, FilterType, OnAnnotationLoaded);
         }
 
         public override void UninitializeUI()
         {
             base.UninitializeUI();
-            if(m_UIDocument == null) return;
+            if (m_UIDocument == null) return;
+            if (m_UIDocument?.rootVisualElement?.styleSheets == null) return;
             if (m_UIDocument.rootVisualElement.styleSheets.Contains(annotationStylesheet))
             {
                 m_UIDocument.rootVisualElement.styleSheets.Remove(annotationStylesheet);

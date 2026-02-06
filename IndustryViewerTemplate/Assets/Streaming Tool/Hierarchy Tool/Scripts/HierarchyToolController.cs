@@ -38,6 +38,7 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
         public static Action<InstanceData> InstanceSelectedFromPanel;
         public static Action<ModelStreamId, MetadataInstance, Dictionary<InstanceId, List<InstanceData>>> InstanceSelectedOnModel;
         public static Action<InstanceData, bool> UpdateToggleUI;
+        public static Action RequestTreeViewRefresh;
 
         public static event Action<bool> VisibilityReset;
 
@@ -79,6 +80,7 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
             m_HierarchyToolUIController ??= gameObject.GetComponent<HierarchyToolUIController>();
             QueryStarted += OnQueryStarted;
             InstanceSelectedFromPanel += OnInstanceSelectedFromPanel;
+            RequestTreeViewRefresh += OnRequestTreeViewRefresh;
             
             GridViewManager = FindFirstObjectByType<GridViewManager>();
             
@@ -99,6 +101,11 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
             DestroyTransformHandle();
             QueryStarted -= OnQueryStarted;
             InstanceSelectedFromPanel -= OnInstanceSelectedFromPanel;
+            RequestTreeViewRefresh -= OnRequestTreeViewRefresh;
+            
+            m_RefreshDebounceTokenSource?.Cancel();
+            m_RefreshDebounceTokenSource?.Dispose();
+            m_RefreshDebounceTokenSource = null;
             if (m_TransformGizmo != null)
             {
                 m_TransformGizmo.OnHandlerSelected -= OnCheckForSelectedAxis;
@@ -121,6 +128,35 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
             if (!connected && !NetworkDetector.RequestedOfflineMode) return;
             _ = UpdateTreeViewItems();
         }
+        
+        private CancellationTokenSource m_RefreshDebounceTokenSource;
+        
+        private void OnRequestTreeViewRefresh()
+        {
+            // Debounce refresh requests - cancel previous pending refresh and start a new one
+            m_RefreshDebounceTokenSource?.Cancel();
+            m_RefreshDebounceTokenSource?.Dispose();
+            m_RefreshDebounceTokenSource = new CancellationTokenSource();
+            
+            // Wait a bit to batch multiple refresh requests, then refresh
+            _ = DebouncedRefreshAsync(m_RefreshDebounceTokenSource.Token);
+        }
+        
+        private async Task DebouncedRefreshAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                // Wait a bit to batch multiple refresh requests together
+                await Task.Delay(100, cancellationToken);
+                
+                // Refresh tree view when new hierarchy data is available
+                await UpdateTreeViewItems();
+            }
+            catch (OperationCanceledException)
+            {
+                // Refresh was canceled (new refresh requested), ignore
+            }
+        }
 
         private void FindSelectedInstance()
         {
@@ -130,7 +166,7 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
             {
                 return;
             }
-            _ = QueryData(sceneListeners.SelectedModelID, sceneListeners.SelectedInstanceID);
+            QueryData(sceneListeners.SelectedModelID, sceneListeners.SelectedInstanceID, true);
         }
 
         // This function handles the selection of an instance from the panel.
@@ -146,9 +182,7 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
                 return;
             }
             
-            m_HierarchyToolSceneListener.ResetToken();
-            
-            m_HierarchyToolSceneListener.HighlightInstance(data.StreamModel.Id, data.Instance.Id);
+            QueryData(data.StreamModel.Id, data.Instance.Id, false);
             
             if (!data.Instance.HasChildren)
             {
@@ -169,8 +203,20 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
             
             async Task GetChildData(InstanceId instanceId, IMetadataRepository repository)
             {
-                var children = await m_HierarchyToolSceneListener.QueryHierarchyData(instanceId, repository);
-                TreeViewItemsUpdated?.Invoke(id, new List<List<InstanceData>>() { children });
+                try
+                {
+                    var queryTokenSource = new CancellationTokenSource();
+                    var children = await m_HierarchyToolSceneListener.QueryHierarchyData(instanceId, repository, queryTokenSource.Token);
+                    TreeViewItemsUpdated?.Invoke(id, new List<List<InstanceData>>() { children });
+                }
+                catch (OperationCanceledException)
+                {
+                    // Query was canceled, ignore
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogException(ex);
+                }
             }
         }
 
@@ -183,35 +229,158 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
                 await Task.Yield();
             }
             
-            foreach (var key in m_StreamModelRepositoriesMapping.Keys)
+            // Wait for repositories to be created if models are still loading
+            var maxWaitTime = 30f;
+            var elapsed = 0f;
+            var streamingModels = TransformController.Instance.GetComponentsInChildren<StreamingModel>(true);
+            
+            while (elapsed < maxWaitTime)
             {
-                var repository = m_StreamModelRepositoriesMapping[key];
-                List<InstanceData> data = null;
-                if (NetworkDetector.RequestedOfflineMode)
+                var allRepositoriesReady = true;
+                foreach (var model in streamingModels)
                 {
-                    data = new List<InstanceData>() { new InstanceData(null, key, null) };
-                }
-                else
-                {
-                    if (repository != null)
+                    if (!m_StreamModelRepositoriesMapping.ContainsKey(model))
                     {
-                        data = await m_HierarchyToolSceneListener.QueryHierarchyData(InstanceId.None, repository);
-                    }
-                    else
-                    {
-                        data = new List<InstanceData>() { new InstanceData(null, key, null) };
+                        allRepositoriesReady = false;
+                        break;
                     }
                 }
+                
+                if (allRepositoriesReady && streamingModels.Length == m_StreamModelRepositoriesMapping.Count)
+                {
+                    break;
+                }
+                
+                await Task.Yield();
+                elapsed += Time.deltaTime;
+            }
 
-
-                if (data == null)
+            // Wait for early loading to complete (if in progress)
+            // This ensures all hierarchies are loaded in parallel before refreshing
+            await m_HierarchyToolSceneListener.WaitForEarlyLoadingToComplete();
+            
+            // Use a separate cancellation token for the initial load
+            var loadTokenSource = new CancellationTokenSource();
+            var loadToken = loadTokenSource.Token;
+            
+            // Create a snapshot of keys to avoid collection modification during enumeration
+            StreamingModel[] keysSnapshot;
+            lock (m_StreamModelRepositoriesMapping)
+            {
+                keysSnapshot = m_StreamModelRepositoriesMapping.Keys.ToArray();
+            }
+            
+            // Load all hierarchies in parallel using Task.WhenAll
+            var loadTasks = new List<Task<(StreamingModel model, List<InstanceData> data)>>();
+            
+            foreach (var key in keysSnapshot)
+            {
+                // Check if key still exists (might have been removed)
+                if (!m_StreamModelRepositoriesMapping.TryGetValue(key, out var repository))
                 {
                     continue;
                 }
                 
-                eachRepository.Add(data);
+                // Create a task for each model's hierarchy loading
+                var loadTask = LoadHierarchyForModel(key, repository, loadToken);
+                loadTasks.Add(loadTask);
             }
+            
+            // Wait for all hierarchy loads to complete in parallel
+            var results = await Task.WhenAll(loadTasks);
+            
+            await Task.Yield();
+            
+            // Sort results by original layout order from LayoutJson snapshot
+            // Use the snapshot because LayoutJson.LayoutModels gets modified (models removed) as they're added
+            var originalLayoutOrder = m_HierarchyToolSceneListener.GetOriginalLayoutOrder();
+            
+            var sortedResults = results
+                .Where(r => r.data != null)
+                .OrderBy(r => 
+                {
+                    // Get the layout order from the original layout snapshot if available
+                    if (originalLayoutOrder is { Count: > 0 } && r.model != null)
+                    {
+                        // Find the model's position in the original layout by matching assetID and instanceNumber
+                        var layoutIndex = originalLayoutOrder
+                            .FindIndex(layoutModel => 
+                                string.Equals(layoutModel.assetID, r.model.AssetId, StringComparison.OrdinalIgnoreCase) &&
+                                layoutModel.instanceNumber == r.model.InstanceNumber);
+                        
+                        if (layoutIndex >= 0)
+                        {
+                            return layoutIndex;
+                        }
+                        
+                        // Fallback: try matching by gameObjectName if assetID/instanceNumber match fails
+                        layoutIndex = originalLayoutOrder
+                            .FindIndex(layoutModel => 
+                                string.Equals(layoutModel.gameObjectName, r.model.gameObject.name, StringComparison.OrdinalIgnoreCase));
+                        
+                        if (layoutIndex >= 0)
+                        {
+                            return layoutIndex;
+                        }
+                    }
+                    
+                    // Fallback to sibling index if layout order not available
+                    if (r.model != null && r.model.transform != null && r.model.transform.parent != null)
+                    {
+                        return r.model.transform.GetSiblingIndex() - 10000; // Offset to put before layout-ordered items
+                    }
+                    
+                    return int.MaxValue; // Put models without parent at the end
+                })
+                .ToList();
+            
+            // Process results in sorted order
+            foreach (var (model, data) in sortedResults)
+            {
+                if (data != null)
+                {
+                    eachRepository.Add(data);
+                }
+            }
+            
             TreeViewItemsUpdated?.Invoke(-1, eachRepository);
+        }
+        
+        private async Task<(StreamingModel model, List<InstanceData> data)> LoadHierarchyForModel(StreamingModel model, IMetadataRepository repository, CancellationToken cancellationToken)
+        {
+            try
+            {
+                if (NetworkDetector.RequestedOfflineMode)
+                {
+                    return (model, new List<InstanceData>() { new InstanceData(null, model, null) });
+                }
+                else
+                {
+                    // Check if hierarchy data was already loaded early (before geometry)
+                    if (m_HierarchyToolSceneListener.TryGetCachedHierarchyData(model, out var cachedData))
+                    {
+                        return (model, cachedData);
+                    }
+                    else if (repository != null)
+                    {
+                        var data = await m_HierarchyToolSceneListener.QueryHierarchyData(InstanceId.None, repository, cancellationToken);
+                        return (model, data);
+                    }
+                    else
+                    {
+                        return (model, new List<InstanceData>() { new InstanceData(null, model, null) });
+                    }
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                return (model, null);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+                return (model, null);
+            }
         }
         
         #if !VR_MODE
@@ -292,12 +461,11 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
                 }
                 QueryStarted.Invoke(-2, null);
                 DestroyTransformHandle();
-                m_HierarchyToolSceneListener.ResetToken();
-                await QueryData(raycastResult.ModelId, raycastResult.InstanceId);
+                QueryData(raycastResult.ModelId, raycastResult.InstanceId, true);
             }
         }
         
-        private async Task QueryData(ModelStreamId modelId, InstanceId id)
+        private async void QueryData(ModelStreamId modelId, InstanceId id, bool invokeEvent)
         {
             if(m_StreamModelRepositoriesMapping.Keys.All(x => x.ModelStream.Id != modelId))
             {
@@ -313,67 +481,82 @@ namespace Unity.Industry.Viewer.Streaming.Hierarchy
                 return;
             }
             
-            m_HierarchyToolSceneListener.QueryTokenSource?.Cancel();
-            m_HierarchyToolSceneListener.QueryTokenSource?.Dispose();
-            m_HierarchyToolSceneListener.QueryTokenSource = null;
+            var queryTokenSource = new CancellationTokenSource();
+            var token = queryTokenSource.Token;
             
-            m_HierarchyToolSceneListener.QueryTokenSource = new CancellationTokenSource();
-            
-            var firstQuery = await repository
-                .Query()
-                .Select(MetadataPathCollection.None, new OptionalData(OptionalData.Fields.AncestorIds | OptionalData.Fields.Name | OptionalData.Fields.Id | OptionalData.Fields.HasChildren))
-                .WhereInstanceEquals(id)
-                //.WhereHasAncestor(InstanceId.None, int.MaxValue)
-                .GetFirstOrDefaultAsync(m_HierarchyToolSceneListener.QueryTokenSource.Token);
-            if(firstQuery == null) return;
-            m_HierarchyToolSceneListener.HighlightInstance(modelId, id);
-            MetadataToolController.InstanceSelected?.Invoke(modelId, id);
-            
-            Dictionary<InstanceId, List<InstanceData>> children = new();
-            
-            var streamingModel = m_StreamModelRepositoriesMapping.Keys.First(x => x.ModelStream.Id == modelId);
-            var token = m_HierarchyToolSceneListener.QueryTokenSource.Token;
-
-            var ancestorIds = firstQuery.AncestorIds.ToList();
-            var tasks = ancestorIds.Select(async ancestorId =>
+            try
             {
-                if (token.IsCancellationRequested) return (ancestorId, new List<InstanceData>());
-                try
-                {
-                    var query = repository
-                        .Query()
-                        .Select(MetadataPathCollection.All)
-                        .WhereHasAncestor(ancestorId, 0)
-                        .WithCancellation(token);
+                var firstQuery = await repository
+                    .Query()
+                    .Select(MetadataPathCollection.None, new OptionalData(OptionalData.Fields.AncestorIds | OptionalData.Fields.Name | OptionalData.Fields.Id | OptionalData.Fields.HasChildren))
+                    .WhereInstanceEquals(id)
+                    .GetFirstOrDefaultAsync(token);
+                if(firstQuery == null) return;
 
-                    var list = new List<InstanceData>();
-                    await foreach (var each in query)
+                m_HierarchyToolSceneListener.HighlightInstance(modelId, id);
+                
+                MetadataToolController.InstanceSelected?.Invoke(modelId, id);
+
+                if (!invokeEvent) return;
+                {
+                    Dictionary<InstanceId, List<InstanceData>> children = new();
+                
+                    var streamingModel = m_StreamModelRepositoriesMapping.Keys.First(x => x.ModelStream.Id == modelId);
+
+                    var ancestorIds = firstQuery.AncestorIds.ToList();
+                    var tasks = ancestorIds.Select(async ancestorId =>
                     {
-                        list.Add(new InstanceData(each, streamingModel, repository));
-                    }
-                    return (ancestorId, list);
-                }
-                catch (OperationCanceledException)
-                {
-                    return (ancestorId, new List<InstanceData>());
-                }
-            }).ToList();
+                        if (token.IsCancellationRequested) return (ancestorId, new List<InstanceData>());
+                        try
+                        {
+                            var query = repository
+                                .Query()
+                                .Select(MetadataPathCollection.All)
+                                .WhereHasAncestor(ancestorId, 0)
+                                .WithCancellation(token);
 
-            var results = await Task.WhenAll(tasks);
-            foreach (var result in results)
-            {
-                var ancestorId = result.Item1;
-                var list = result.Item2;
-                if (children.ContainsKey(ancestorId))
-                {
-                    children[ancestorId].AddRange(list);
-                }
-                else
-                {
-                    children.Add(ancestorId, list);
+                            var list = new List<InstanceData>();
+                            await foreach (var each in query)
+                            {
+                                list.Add(new InstanceData(each, streamingModel, repository));
+                            }
+                            return (ancestorId, list);
+                        }
+                        catch (OperationCanceledException)
+                        {
+                            return (ancestorId, new List<InstanceData>());
+                        }
+                    }).ToList();
+
+                    var results = await Task.WhenAll(tasks);
+                    foreach (var result in results)
+                    {
+                        var ancestorId = result.Item1;
+                        var list = result.Item2;
+                        if (!children.TryAdd(ancestorId, list))
+                        {
+                            children[ancestorId].AddRange(list);
+                        }
+                    }
+                    
+                    InstanceSelectedOnModel?.Invoke(modelId, firstQuery, children);
                 }
             }
-            InstanceSelectedOnModel?.Invoke(modelId, firstQuery, children);
+            catch (OperationCanceledException)
+            {
+                // Query was canceled, ignore
+            }
+            catch (InvalidOperationException ex)
+            {
+                if (!ex.Message.Contains("Hierarchy was modified."))
+                {
+                    Debug.LogException(ex);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
         }
         
         private void RemoveStreamModel(StreamingModel obj)

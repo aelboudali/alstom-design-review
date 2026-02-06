@@ -17,7 +17,7 @@ namespace Unity.Industry.Viewer.Identity
     // It includes event handlers for button clicks and authentication state changes.
     // The script integrates with the IdentityController to trigger authentication actions and update the UI accordingly.
     [DefaultExecutionOrder(-100)]
-    public class IdentityUIController : MonoBehaviour
+    public class IdentityUIController: MonoBehaviour
     {
         // Constants for UI element names
         private const string k_IdentityContainerName = "IdentityContainer";
@@ -27,6 +27,7 @@ namespace Unity.Industry.Viewer.Identity
         private const string k_AvatarName = "IdentityAvatar";
         private const string k_IdentityAvatarInitialLabelName = "IdentityAvatarInitialLabel";
         private const string k_GuestContainerName = "GuestContainer";
+        private const string k_CursorPointerClass = "cursor--pointer";
         
         // Serialized fields for UI elements
         [SerializeField]
@@ -49,6 +50,8 @@ namespace Unity.Industry.Viewer.Identity
         private LocalizedString m_LocalizedLogin;
         [SerializeField]
         private LocalizedString m_LocalizedLogout;
+        [SerializeField]
+        private LocalizedString m_LocalizedLogoutCompletely;
         [SerializeField]
         private LocalizedString m_LocalizedCancel;
         [SerializeField]
@@ -97,11 +100,13 @@ namespace Unity.Industry.Viewer.Identity
             
             IdentityController.AuthenticationStateChangedEvent += OnAuthenticationStateChanged;
             IdentityController.UserInfoUpdatedEvent += OnUserInfoUpdated;
+            SceneManager.activeSceneChanged += SceneManagerOnActiveSceneChanged;
         }
 
         // unregister event handlers
         private void OnDestroy()
         {
+            SceneManager.activeSceneChanged -= SceneManagerOnActiveSceneChanged;
             NetworkDetector.OnNetworkStatusChanged -= OnNetworkStatusChanged;
             IdentityController.AuthenticationStateChangedEvent -= OnAuthenticationStateChanged;
             IdentityController.UserInfoUpdatedEvent -= OnUserInfoUpdated;
@@ -123,6 +128,24 @@ namespace Unity.Industry.Viewer.Identity
             }
 
             _avatar.clicked -= OnAvatarClicked;
+        }
+        
+        private void SceneManagerOnActiveSceneChanged(Scene oldScene, Scene newScene)
+        {
+            if (newScene == gameObject.scene)
+            {
+                if (!_avatar.ClassListContains(k_CursorPointerClass))
+                {
+                    _avatar.AddToClassList(k_CursorPointerClass);
+                }
+            }
+            else
+            {
+                if(_avatar.ClassListContains(k_CursorPointerClass))
+                {
+                    _avatar.RemoveFromClassList(k_CursorPointerClass);
+                }
+            }
         }
 
         private void OnNetworkStatusChanged(bool connected)
@@ -177,6 +200,7 @@ namespace Unity.Industry.Viewer.Identity
                     return;
                 
                 default:
+                    if(SceneManager.GetActiveScene() != gameObject.scene) return;
                     if (_identityPopover != null)
                     {
                         _identityPopover.Dismiss();
@@ -187,7 +211,13 @@ namespace Unity.Industry.Viewer.Identity
                     
                     _logoutButton.clicked += OnLogoutButtonPressed;
                     
-                    _identityPopover = Popover.Build(_avatar, identityPopover).SetOutsideClickDismiss(true).SetArrowVisible(false);
+                    _identityPopover = Popover.Build(_avatar, identityPopover)
+                        .SetOutsideClickDismiss(true)
+                        .SetArrowVisible(false)
+                        .SetPlacement(PopoverPlacement.TopRight)
+                        .SetOffset(7)
+                        .SetCrossOffset(-8);
+
                     _identityPopover.dismissed += OnPopoverDismissed;
                     _identityPopover.Show();
                     break;
@@ -209,26 +239,32 @@ namespace Unity.Industry.Viewer.Identity
         }
 
         // handle logout button click event
-        private void OnLogoutButtonPressed()
+        private async void OnLogoutButtonPressed()
         {
             _identityPopover?.Dismiss();
 
             var logoutMessage = new IdentityController.LogoutMessage();
             IdentityController.GetLogoutMessage?.Invoke(logoutMessage);
-
+            
             var logoutDialog = new AlertDialog()
             {
-                title = m_LocalizedLogoutTitle.GetTitleLocalizedStringForAppUI(),
+                title = await m_LocalizedLogoutTitle.GetTitleLocalizedStringForAppUIAsync(),
                 variant = AlertSemantic.Default,
-                description = string.IsNullOrEmpty(logoutMessage.Value) ? m_LocalizedLogoutDescription.GetTitleLocalizedStringForAppUI() : logoutMessage.Value
+                description = string.IsNullOrEmpty(logoutMessage.Value)? await m_LocalizedLogoutDescription.GetTitleLocalizedStringForAppUIAsync(): logoutMessage.Value
             };
-            logoutDialog.SetPrimaryAction(99, m_LocalizedLogoutTitle.GetTitleLocalizedStringForAppUI(), () =>
+            var primaryActionTitle = await m_LocalizedLogout.GetTitleLocalizedStringForAppUIAsync();
+            logoutDialog.SetPrimaryAction(99, primaryActionTitle, () =>
             {
-                //Use true to clear cache on browser too when logging out, and this will force the user to log in again on the next session
                 IdentityController.TriggerLogout?.Invoke(false);
             });
+            var secondaryActionTitle = await m_LocalizedLogoutCompletely.GetTitleLocalizedStringForAppUIAsync();
+            logoutDialog.SetSecondaryAction(98, secondaryActionTitle, () =>
+            {
+                //Use true to clear cache on browser too when logging out, and this will force the user to log in using the browser again on the next session
+                IdentityController.TriggerLogout?.Invoke(true);
+            });
             
-            logoutDialog.SetCancelAction(98, m_LocalizedCancel.GetTitleLocalizedStringForAppUI());
+            logoutDialog.SetCancelAction(0, await m_LocalizedCancel.GetTitleLocalizedStringForAppUIAsync());
             
             var logoutModal = Modal.Build(_logoutButton, logoutDialog);
 
@@ -256,7 +292,7 @@ namespace Unity.Industry.Viewer.Identity
             CheckModeAndLogin(Login);
         }
 
-        private void CheckModeAndLogin(Action loginAction)
+        private async void CheckModeAndLogin(Action loginAction)
         {
             if(_currentState == AuthenticationState.AwaitingInitialization || _currentState == AuthenticationState.LoggedIn) return;
             
@@ -271,19 +307,19 @@ namespace Unity.Industry.Viewer.Identity
                 
                 var offlineDialog = new AlertDialog()
                 {
-                    title = m_OfflineModeTitle.GetTitleLocalizedStringForAppUI(),
-                    description = m_LoginInOfflineModeDescription.GetTitleLocalizedStringForAppUI(),
+                    title = await m_OfflineModeTitle.GetTitleLocalizedStringForAppUIAsync(),
+                    description = await m_LoginInOfflineModeDescription.GetTitleLocalizedStringForAppUIAsync(),
                     variant = AlertSemantic.Default
                 };
                 
-                offlineDialog.SetPrimaryAction(97, m_LocalizedLogin.GetTitleLocalizedStringForAppUI(), () =>
+                offlineDialog.SetPrimaryAction(97, await m_LocalizedLogin.GetTitleLocalizedStringForAppUIAsync(), () =>
                 {
                     m_AttemptToLoginAfterReconnect = true;
                     m_LoginAction = loginAction;
                     NetworkDetector.RequestedOfflineMode = false;
                 });
                 
-                offlineDialog.SetCancelAction(98, m_LocalizedCancel.GetTitleLocalizedStringForAppUI());
+                offlineDialog.SetCancelAction(98, await m_LocalizedCancel.GetTitleLocalizedStringForAppUIAsync());
                 
                 var offlineModal = Modal.Build(_loginButton, offlineDialog);
                 offlineModal.Show();
@@ -306,7 +342,7 @@ namespace Unity.Industry.Viewer.Identity
         }
 
         // update the UI based on the authentication state
-        private void OnAuthenticationStateChanged(AuthenticationState state)
+        private async void OnAuthenticationStateChanged(AuthenticationState state)
         {
             _currentState = state;
             switch (state)
@@ -332,7 +368,7 @@ namespace Unity.Industry.Viewer.Identity
                         Debug.LogError("You have enabled Guest Mode but the Service Account is not set up.");
                     }
 #endif
-                    _loginButton.label = m_LocalizedLogin.GetTitleLocalizedStringForAppUI();
+                    _loginButton.label = await m_LocalizedLogin.GetTitleLocalizedStringForAppUIAsync();
                     break;
                 
                 case AuthenticationState.AwaitingLogin:
@@ -343,10 +379,10 @@ namespace Unity.Industry.Viewer.Identity
                     _loginButton.selected = false;
                     
 #if UNITY_WEBGL
-                    _loginButton.label = m_LocalizedAwaiting.GetTitleLocalizedStringForAppUI();
+                    _loginButton.label = await m_LocalizedAwaiting.GetTitleLocalizedStringForAppUIAsync();
                     _loginButton.SetEnabled(false);
 #else
-                    _loginButton.label = m_LocalizedCancel.GetTitleLocalizedStringForAppUI();
+                    _loginButton.label = await m_LocalizedCancel.GetTitleLocalizedStringForAppUIAsync();
                     _loginButton.SetEnabled(true);
 #endif
                     
@@ -371,7 +407,7 @@ namespace Unity.Industry.Viewer.Identity
                     _loginButton.SetEnabled(false);
                     _loginButton.accent = false;
                     _loginButton.selected = false;
-                    _loginButton.label = m_LocalizedInitializing.GetTitleLocalizedStringForAppUI();
+                    _loginButton.label = await m_LocalizedInitializing.GetTitleLocalizedStringForAppUIAsync();
                     _guestContainer.style.display = DisplayStyle.None;
                     break;
             }

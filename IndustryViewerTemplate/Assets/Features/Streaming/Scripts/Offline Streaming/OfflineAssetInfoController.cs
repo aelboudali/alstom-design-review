@@ -50,10 +50,9 @@ namespace Unity.Industry.Viewer.Streaming
                 return;
             }
             int version = versions[arg2];
-            var localVersionLocalizedString = new LocalizedString(k_SharedLocalisedTable, k_VersionKey);
             
             var text = arg1.Q<LocalizedTextElement>();
-            text.text = localVersionLocalizedString.GetTitleLocalizedStringForAppUI();
+            text.text = $"@{k_SharedLocalisedTable}:{k_VersionKey}";
 
             text.variables = new object[]
             {
@@ -126,8 +125,7 @@ namespace Unity.Industry.Viewer.Streaming
             OfflineAssetInfo offlineAssetInfo = offlineAsset.OfflineAssetInfo;
             m_AssetNameLabel.text = offlineAsset.OfflineAssetInfo.assetName;
 
-            m_AssetTypeLabel.text =
-                offlineAsset.OfflineAssetInfo.assetType.GetAssetTypeAsString().GetTitleLocalizedStringForAppUI();
+            m_AssetTypeLabel.text = offlineAsset.OfflineAssetInfo.assetType.GetAssetTypeAsString();
             
             AssignTags(offlineAsset.OfflineAssetInfo.tags);
             

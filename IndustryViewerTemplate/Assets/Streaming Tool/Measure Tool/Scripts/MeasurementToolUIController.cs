@@ -190,7 +190,7 @@ namespace Unity.Industry.Viewer.Streaming.Measurement
             }
         }
 
-        public override void InitializeUI(UIDocument uiDocument, VisualElement parent, GameObject controller)
+        public override async void InitializeUI(UIDocument uiDocument, VisualElement parent, GameObject controller)
         {
             m_PanelDocument = uiDocument;
             if (!controller.TryGetComponent(out m_MeasurementToolController))
@@ -215,6 +215,9 @@ namespace Unity.Industry.Viewer.Streaming.Measurement
             
             m_SaveButton = m_LineCreatorConfirmationContainer.Q<ActionButton>(k_LineCreatorConfirmationSave);
             m_SaveButton.clicked += OnSaveButtonClicked;
+#if UNITY_WEBGL
+            m_SaveButton.SetEnabled(false);
+#endif
             
             m_LineCreatorEditConfirmationContainer = parent.Q<VisualElement>(k_LineCreatorEditConfirmationContainer);
             m_LineCreatorEditConfirmationContainer?.DisplayOff();
@@ -222,7 +225,7 @@ namespace Unity.Industry.Viewer.Streaming.Measurement
             m_UnitDropdown = parent.Q<Dropdown>(k_LineCreatorUnitDropdown);
             
             var measurementFormat = new string[Enum.GetNames(typeof(MeasureFormat)).Length + 1];
-            measurementFormat[0] = m_AsSystemString.GetTitleLocalizedStringForAppUI();
+            measurementFormat[0] = await m_AsSystemString.GetTitleLocalizedStringForAppUIAsync();
             for(var i = 1; i < measurementFormat.Length; i++)
             {
                 measurementFormat[i] = $"@{m_MeasureToolStringTable}:" + (MeasureFormat)(i - 1);
@@ -259,7 +262,9 @@ namespace Unity.Industry.Viewer.Streaming.Measurement
             m_LineListScrollview.Clear();
             
             ResetUIToDefault();
+#if !UNITY_WEBGL
             _ = ReadCollection();
+#endif
             return;
             
             async Task ReadCollection()
@@ -730,7 +735,7 @@ namespace Unity.Industry.Viewer.Streaming.Measurement
             }
         }
         
-        private void OnUpdateMeasurement()
+        private async void OnUpdateMeasurement()
         {
             if(m_MeasurementToolController == null || m_MeasurementToolController.MeasureLineData == null)
                 return;
@@ -762,11 +767,11 @@ namespace Unity.Industry.Viewer.Streaming.Measurement
 #if !VR_MODE
                 var toast = Toast
                     .Build(m_LineCreatorConfirmationContainer,
-                        m_InfiniteWarning.GetTitleLocalizedStringForAppUI(), NotificationDuration.Long)
+                        await m_InfiniteWarning.GetTitleLocalizedStringForAppUIAsync(), NotificationDuration.Long)
                     .SetStyle(NotificationStyle.Warning);
                 toast.Show();
 #else
-                var toast = XRToastPanel.Build(m_InfiniteWarning.GetTitleLocalizedStringForAppUI(), NotificationDuration.Long)
+                var toast = XRToastPanel.Build(await m_InfiniteWarning.GetTitleLocalizedStringForAppUIAsync(), NotificationDuration.Long)
                     .SetStyle(NotificationStyle.Warning);
                 toast.Show();
 #endif
@@ -783,7 +788,9 @@ namespace Unity.Industry.Viewer.Streaming.Measurement
             
             if (m_LineCreatorConfirmationContainer.IsDisplayOn())
             {
+#if !UNITY_WEBGL
                 m_SaveButton.SetEnabled(true);
+#endif
             }
             
             DrawLine(measureLineData);

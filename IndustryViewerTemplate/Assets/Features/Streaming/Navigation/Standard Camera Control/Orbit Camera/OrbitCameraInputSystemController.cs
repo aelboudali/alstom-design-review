@@ -191,7 +191,7 @@ namespace Unity.Industry.Viewer.Navigation.OrbitCamera
 
                     // Define the bounds
                     var bounds = new DoubleBounds(raycastResult.Point, new double3(maxPoint - minPoint));
-                    SetLookAt(bounds);
+                    SetLookAt(bounds, false, false);
                 }
                 catch (Exception e)
                 {
@@ -457,14 +457,13 @@ namespace Unity.Industry.Viewer.Navigation.OrbitCamera
             m_Camera.OrbitAroundLookAt(m_OrbitVector);
         }
         
-        public void SetView(DoubleBounds bounds)
+        public void SetView(DoubleBounds bounds, bool useStartingPosition)
         {
-            
             m_CurrentBounds = bounds;
             //m_MainBounds = bounds;
             if(!gameObject.activeSelf) return;
             m_Camera.Utility.SetView(bounds);
-            SetLookAt(bounds);
+            SetLookAt(bounds, false, useStartingPosition);
         }
 
         public void HomeView()
@@ -472,7 +471,7 @@ namespace Unity.Industry.Viewer.Navigation.OrbitCamera
             //SetSpeedSettings(m_MainBounds.Value);
             if(!m_MainBounds.HasValue) return;
             m_Camera?.Utility?.SetView(m_MainBounds.Value);
-            SetLookAt(m_MainBounds.Value);
+            SetLookAt(m_MainBounds.Value, false, NavigationController.StartingPosition.HasValue);
         }
 
         public void SetBoundSettings(DoubleBounds bounds)
@@ -480,20 +479,25 @@ namespace Unity.Industry.Viewer.Navigation.OrbitCamera
             boundsFactor = (float)math.length(bounds.Size);
         }
 
-        public void SetLookAt(DoubleBounds bounds, bool zoom = false)
+        public void SetLookAt(DoubleBounds bounds, bool zoom = false, bool useStartingPosition = false)
         {
             var t = m_Camera.Transform;
             //m_Camera.SetCameraSpeedSettings(bounds);
             Vector3 newPosition = t.position;
-            if (zoom)
+            if (zoom && !useStartingPosition)
             {
                 Vector3 direction = (t.position - ((Bounds)bounds).center).normalized;
                 newPosition = ((Bounds)bounds).center + direction * 5.0f;
-            }
-            
-            if (NavigationController.StartingPosition.HasValue)
+            } else if (!zoom && useStartingPosition && NavigationController.StartingPosition.HasValue)
             {
-                newPosition = NavigationController.StartingPosition.Value;
+                var result = StandardCamera.ReturnStartingPositionAndBounds();
+                newPosition = result.Item1;
+                bounds = result.Item2;
+            }
+            else if(zoom && useStartingPosition)
+            {
+                Debug.Log("Warning: Both zoom and useStartingPosition are true. Do nothing.");
+                return;
             }
             m_Camera.ResetTracking(newPosition, ((Bounds)bounds).center);
         }

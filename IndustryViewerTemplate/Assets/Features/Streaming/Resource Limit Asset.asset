@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Industry.Viewer.Streaming::Unity.Industry.Viewer.Streaming.ResourceLimitAsset
   _resourceLimits:
   - Platform: 11
-    MaxResources: 1500000
+    MaxResources: 10000000
     IsNonTethered: 1
   - Platform: 11
-    MaxResources: 1500000
+    MaxResources: 15000000
     IsNonTethered: 0
   - Platform: 8
-    MaxResources: 8000000
+    MaxResources: 18000000
     IsNonTethered: 0
   - Platform: 17
-    MaxResources: 1000000
+    MaxResources: 5000000
     IsNonTethered: 0

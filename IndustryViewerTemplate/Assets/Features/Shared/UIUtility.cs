@@ -1,6 +1,9 @@
 using UnityEngine.Localization.Settings;
 using UnityEngine.Localization;
 using UnityEngine.UIElements;
+using System.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.Localization.Tables;
 
 namespace Unity.Industry.Viewer.Shared
 {
@@ -12,6 +15,29 @@ namespace Unity.Industry.Viewer.Shared
         {
             var tableEntry = LocalizationSettings.StringDatabase.GetTableEntry(localizedString.TableReference, localizedString.TableEntryReference);
             return $"@{tableEntry.Table.TableCollectionName}:{tableEntry.Entry.SharedEntry.Key}";
+        }
+
+        public static async Task<string> GetTitleLocalizedStringForAppUIAsync(this LocalizedString localizedString)
+        {
+            var stringTableHandle = LocalizationSettings.StringDatabase.GetTableAsync(localizedString.TableReference);
+            await stringTableHandle.Task;
+    
+            StringTable stringTable = stringTableHandle.Result;
+            if (stringTable == null)
+            {
+                Debug.LogWarning($"Localization table '{localizedString.TableReference}' not found.");
+                return string.Empty;
+            }
+    
+            // Pass the string key from TableEntryReference to GetEntry
+            TableEntry tableEntry = stringTable.GetEntry(localizedString.TableEntryReference.KeyId);
+    
+            if (tableEntry == null)
+            {
+                Debug.LogWarning($"Table entry '{localizedString.TableEntryReference}' not found in table '{stringTable.TableCollectionName}'.");
+                return string.Empty;
+            }
+            return $"@{stringTable.TableCollectionName}:{tableEntry.Key}";
         }
 
         public static bool IsDisplayOn(this VisualElement element)

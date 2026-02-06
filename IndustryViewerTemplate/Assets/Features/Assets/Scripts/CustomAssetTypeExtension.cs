@@ -18,27 +18,18 @@ namespace Unity.Industry.Viewer.Assets
         private const string k_AssetType_Video = "Type Video";
         private const string k_AssetType_UnityEditor = "Type Unity Editor";
         
-        private static LocalizedString m_AssetType_2DLocalizedString = new LocalizedString(k_AssetsTableKey, k_AssetType_2D);
-        private static LocalizedString m_AssetType_3DLocalizedString = new LocalizedString(k_AssetsTableKey, k_AssetType_3D);
-        private static LocalizedString m_AssetType_AudioLocalizedString = new LocalizedString(k_AssetsTableKey, k_AssetType_Audio);
-        private static LocalizedString m_AssetType_MaterialLocalizedString = new LocalizedString(k_AssetsTableKey, k_AssetType_Material);
-        private static LocalizedString m_AssetType_OtherLocalizedString = new LocalizedString(k_AssetsTableKey, k_AssetType_Other);
-        private static LocalizedString m_AssetType_ScriptLocalizedString = new LocalizedString(k_AssetsTableKey, k_AssetType_Script);
-        private static LocalizedString m_AssetType_VideoLocalizedString = new LocalizedString(k_AssetsTableKey, k_AssetType_Video);
-        private static LocalizedString m_AssetType_UnityEditorLocalizedString = new LocalizedString(k_AssetsTableKey, k_AssetType_UnityEditor);
-        
-        public static LocalizedString GetAssetTypeAsString(this AssetType assetType)
+        public static string GetAssetTypeAsString(this AssetType assetType)
         {
             return assetType switch
             {
-                AssetType.Asset_2D => m_AssetType_2DLocalizedString,
-                AssetType.Model_3D => m_AssetType_3DLocalizedString,
-                AssetType.Audio => m_AssetType_AudioLocalizedString,
-                AssetType.Material => m_AssetType_MaterialLocalizedString,
-                AssetType.Other => m_AssetType_OtherLocalizedString,
-                AssetType.Script => m_AssetType_ScriptLocalizedString,
-                AssetType.Video => m_AssetType_VideoLocalizedString,
-                AssetType.Unity_Editor => m_AssetType_UnityEditorLocalizedString,
+                AssetType.Asset_2D => $"@{k_AssetsTableKey}:{k_AssetType_2D}",
+                AssetType.Model_3D => $"@{k_AssetsTableKey}:{k_AssetType_3D}",
+                AssetType.Audio => $"@{k_AssetsTableKey}:{k_AssetType_Audio}",
+                AssetType.Material => $"@{k_AssetsTableKey}:{k_AssetType_Material}",
+                AssetType.Other => $"@{k_AssetsTableKey}:{k_AssetType_Other}",
+                AssetType.Script => $"@{k_AssetsTableKey}:{k_AssetType_Script}",
+                AssetType.Video => $"@{k_AssetsTableKey}:{k_AssetType_Video}",
+                AssetType.Unity_Editor => $"@{k_AssetsTableKey}:{k_AssetType_UnityEditor}",
                 _ => null
             };
         }

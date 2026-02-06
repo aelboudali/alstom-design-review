@@ -28,6 +28,7 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
         private const string k_StreamingPanelName = "StreamingContainer";
         private const string k_ToolScrollListName = "ToolScrollList";
         private const string k_AddBGToLabelClass = "AddBGToLabel";
+        private const string k_PlaceOnSurfaceButtonName = "PlaceOnSurface";
         #endregion
 
         #region Position
@@ -68,6 +69,7 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
         #endregion
         
         private ActionButton m_ARActionButton;
+        private ActionButton m_PlaceOnSurfaceButton;
         
         private Button m_ResetToDefaultPositionButton,
             m_ConfirmPositionButton,
@@ -174,6 +176,8 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
         private void Start()
         {
             m_ARController ??= GetComponent<MobileARController>();
+            m_ARController.OnAssetPlaceOnSurfaceComplete -= OnAssetPlaceOnSurfaceComplete;
+            m_ARController.OnAssetPlaceOnSurfaceComplete += OnAssetPlaceOnSurfaceComplete;
             ToolPanelUIController.CloseToolPanel += OnCloseToolPanel;
         }
 
@@ -210,6 +214,13 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
                 m_ConfirmPositionButton.clicked -= ConfirmPositionButtonOnClicked;
                 m_ConfirmPositionButton = null;
             }
+
+            if (m_PlaceOnSurfaceButton != null)
+            {
+                m_PlaceOnSurfaceButton.clicked -= OnPlaceOnSurfaceButtonClicked;
+                m_PlaceOnSurfaceButton = null;
+            }
+            
             m_OcclusionToggle?.UnregisterValueChangedCallback(OnOcclusionToggleChanged);
             m_OcclusionToggle = null;
             m_TransformTab?.UnregisterValueChangedCallback(OnTabChangedChanged);
@@ -313,6 +324,11 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
                 m_LoadMapButton = null;
             }
             #endregion
+
+            if (m_ARController != null)
+            {
+                m_ARController.OnAssetPlaceOnSurfaceComplete -= OnAssetPlaceOnSurfaceComplete;
+            }
         }
 
         private void OnDestroy()
@@ -356,6 +372,7 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
                 m_MoveContainer?.SetEnabled(true);
                 m_RotateContainer?.SetEnabled(true);
                 m_ScaleContainer?.SetEnabled(true);
+                m_LoadMapButton?.SetEnabled(true);
                 m_ARController?.ConfirmMapping(false);
             });
             m_ConfirmMappingAlertModal = Modal.Build(
@@ -608,7 +625,7 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
 
             m_OcclusionToggle = panel.Q<Toggle>(k_OcclusionToggleName);
             m_OcclusionToggle.RegisterValueChangedCallback(OnOcclusionToggleChanged);
-            m_OcclusionToggle.SetValueWithoutNotify(false);
+            m_OcclusionToggle.SetValueWithoutNotify(m_ARController.OcclusionManagerIsOn);
 
             if (Application.platform == RuntimePlatform.Android || !m_ARController.MeshManagerSupported)
             {
@@ -695,6 +712,9 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
 
             #endregion
             
+            m_PlaceOnSurfaceButton = panel.Q<ActionButton>(k_PlaceOnSurfaceButtonName);
+            m_PlaceOnSurfaceButton.clicked += OnPlaceOnSurfaceButtonClicked;
+            
             #region Spatial Map
             m_SpatialContainer = panel.Q<VisualElement>(k_SpatialContainerName);
             
@@ -733,6 +753,11 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
             }
         }
 
+        private void OnPlaceOnSurfaceButtonClicked()
+        {
+            m_ARController?.PlaceOnSurface();
+        }
+
         private void OnPanelDetachFromPanel(DetachFromPanelEvent evt)
         {
             m_Panel.UnregisterCallback<DetachFromPanelEvent>(OnPanelDetachFromPanel);
@@ -742,6 +767,12 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
                 m_ARActionButton.accent = m_HasIntialised;
                 m_ARActionButton.selected = m_HasIntialised;
             }
+        }
+        
+        private void OnAssetPlaceOnSurfaceComplete()
+        {
+            var position = TransformController.Instance.transform.position;
+            m_YPositionField.SetValueWithoutNotify(position.y);
         }
 
         private void OnZMoveStepperChanged(ChangeEvent<int> evt)
@@ -788,12 +819,12 @@ namespace Unity.Industry.Viewer.Navigation.MobileAR
 
         private void OnRotateIncrementStepperChanged(ChangeEvent<int> evt)
         {
-            m_RotateIncrementField.value += evt.newValue;
+            m_RotateIncrementField.value = Mathf.Max(5f, m_RotateIncrementField.value + evt.newValue * 5f);
         }
 
         private void OnMoveIncrementStepperChanged(ChangeEvent<int> evt)
         {
-            m_MoveIncrementField.value += evt.newValue * 0.1f;
+            m_MoveIncrementField.value = Mathf.Max(0.1f, m_MoveIncrementField.value + evt.newValue * 0.1f);
         }
 
         public override void CreatePanel()

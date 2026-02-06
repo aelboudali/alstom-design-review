@@ -11,9 +11,9 @@
     border-top-right-radius: 12px;
     border-bottom-right-radius: 12px;
     border-bottom-left-radius: 12px;
-    padding-right: 0;
-    padding-left: 0;
-    margin-right: 9px;
+    padding: 0;
+    margin-right: 4px;
+    margin-bottom: 8px;
 }
 
 .GridAssetSelected {
@@ -30,9 +30,9 @@
     border-bottom-right-radius: 12px;
     border-bottom-left-radius: 12px;
     background-color: rgb(24, 39, 69);
-    padding-right: 0;
-    padding-left: 0;
-    margin-right: 9px;
+    padding: 0;
+    margin-right: 4px;
+    margin-bottom: 8px;
 }
 
 .ProjectButtonClose > #appui-actionbutton__icon {
@@ -52,26 +52,37 @@
 
 .ProjectAssetActionButton > #appui-actionbutton__label {
     color: rgb(255, 255, 255);
-    font-size: 20px;
+    font-size: 24px;
     text-overflow: ellipsis;
     -unity-text-align: middle-left;
     white-space: nowrap;
     overflow: hidden;
+    width: 248px;
+    margin: 0;
+}
+
+.ProjectAssetActionButtonSubLevel > #appui-actionbutton__label {
+    font-size: 18px;
+    -unity-font-definition: var(--appui-font-weights-100);
 }
 
 .ProjectAssetActionButton {
     white-space: nowrap;
     overflow: hidden;
     padding-right: 70px;
-    padding-left: 10px;
+    padding: 6px 0;
     flex-direction: row;
     justify-content: flex-start;
-    height: 40px;
+    height: 46px;
     border-width: 0;
     align-self: flex-start;
-    width: 100%;
+    width: 272px;
     border-radius: 6px;
-    margin-right: 4px;
+    margin-bottom: 8px;
+}
+
+.ProjectAssetActionButtonSubLevel {
+    height: 37px;
 }
 
 .ProjectAssetActionButton.is-selected.appui-actionbutton {
@@ -85,22 +96,11 @@
 .appui-icon--Down-Arrow--regular {
     --unity-image: url("project://database/Assets/UI/Textures/DownArrow.png?fileID=2800000&guid=3e527df8ddfbf4713b33dc173ffa7696&type=3#DownArrow");
     position: absolute;
-    right: 18.34px;
-    width: 23.34px;
-    height: 13.33px;
-}
-
-.AssetDropDownArrow #appui-picker__caret {
-    padding-top: 0;
-    padding-right: 0;
-    padding-bottom: 0;
-    padding-left: 0;
-    margin-top: 0;
-    margin-right: 0;
-    margin-bottom: 0;
-    margin-left: 0;
-    width: 23.34px;
-    height: 13.33px;
+    right: 0;
+    width: 24px;
+    height: 24px;
+    padding-left: 5px;
+    padding-right: 6px;
 }
 
 #DatasetDropdown > #appui-picker__titlecontainer > #appui-picker__title > #appui-dropdown-item__label {
@@ -125,6 +125,7 @@
     margin-right: 16px;
     width: 40px;
     height: 40px;
+    padding: 3px;
     border-left-color: rgb(77, 77, 77);
     border-right-color: rgb(77, 77, 77);
     border-top-color: rgb(77, 77, 77);
@@ -148,6 +149,7 @@
 }
 
 #OrganizationButton {
+    padding-left: 0;
     width: 456px;
     height: 40px;
     background-color: rgba(0, 0, 0, 0);
@@ -164,26 +166,26 @@
     overflow: hidden;
 }
 
-#AssetLeftPanel {
-    padding-top: 11px;
-    padding-right: 10px;
-    padding-bottom: 11px;
-}
-
 .OrganizationSelection {
     height: 40px;
     min-height: 40px;
     max-height: 40px;
-    padding-left: 12px;
-    padding-right: 12px;
+    width: 384px;
+    padding-left: 8px;
+    padding-right: 8px;
     border-width: 0;
     justify-content: flex-start;
     -unity-text-align: middle-left;
     overflow: hidden;
     flex-wrap: nowrap;
     text-overflow: ellipsis;
-    color: white;
+    color: #E9E9E9;
     border-radius: 6px;
+    background-color: #272727;
+}
+
+.OrganizationSelection.ItemSelected {
+    background-color: #0892FF;
 }
 
 .LinkedProject {
@@ -259,4 +261,24 @@
 #AssetBackground {
     flex-grow: 1;
     margin-bottom: 40px;
+}
+
+#AssetSearchBar #appui-textfield__leadingicon {
+    width: 24px;
+    height: 24px;
+    margin-right: 2px;
+    --unity-image: url("MagnifyingGlass.png");
+    --unity-image-tint-color: rgba(255, 255, 255, 1);
+}
+
+#NewAssetButton #appui-actionbutton__icon {
+    width: 40px;
+    height: 40px;
+}
+
+#AssetProjectScrollList #unity-content-viewport {
+    flex-grow: 0;
+    width: 288px;
+    padding: 0 8px;
+    margin-right: 8px;
 }

@@ -75,6 +75,12 @@ MonoBehaviour:
       \u0648\u062A\u0633\u062C\u064A\u0644 \u0627\u0644\u062F\u062E\u0648\u0644\u061F"
     m_Metadata:
       m_Items: []
+  - m_Id: 134464886551863296
+    m_Localized: "\u062A\u0633\u062C\u064A\u0644 \u0627\u0644\u062E\u0631\u0648\u062C
+      \u0648\u0645\u0633\u062D \u0630\u0627\u0643\u0631\u0629 \u0627\u0644\u062A\u062E\u0632\u064A\u0646
+      \u0627\u0644\u0645\u0624\u0642\u062A"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

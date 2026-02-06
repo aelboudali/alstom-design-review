@@ -67,6 +67,10 @@ MonoBehaviour:
       en mode connect\xE9 et vous connecter\_?"
     m_Metadata:
       m_Items: []
+  - m_Id: 134464886551863296
+    m_Localized: "D\xE9connectez-vous et videz le cache."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

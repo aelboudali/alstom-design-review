@@ -103,11 +103,14 @@ namespace Unity.Industry.Viewer.Multiplay
             }
             NetworkDetector.OnNetworkStatusChanged -= NetworkStatusChanged;
             SearchNewLayout -= OnSearchNewLayout;
-            if(NetworkDetector.IsOffline) return;
+            
             if (NetworkManager.Singleton != null)
             {
                 NetworkManager.Singleton.OnConnectionEvent -= OnConnectionEvent;
             }
+            
+            if(NetworkDetector.IsOffline) return;
+            
             
             OnClientConnected -= OnAddClientGameObject;
             OnClientDisconnected -= OnRemoveClientGameObject;

@@ -43,6 +43,7 @@ namespace Unity.Industry.Viewer.Streaming.Annotation
         {
             ToolClosed?.Invoke();
             CollaborationController.CancelRequestAction?.Invoke();
+            UnsubscribeInteraction();
         }
 
         public void SubscribeInteraction()

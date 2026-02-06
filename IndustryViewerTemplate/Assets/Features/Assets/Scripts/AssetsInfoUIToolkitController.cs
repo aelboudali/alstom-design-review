@@ -451,10 +451,9 @@ namespace Unity.Industry.Viewer.Assets
             if(!asset.Properties.HasValue) return;
             
             int verNum = asset.Properties.Value.FrozenSequenceNumber;
-            var localVersionLocalizedString = new LocalizedString(k_SharedLocalisedTable, k_VersionKey);
             
             var text = arg1.Q<LocalizedTextElement>();
-            text.text = localVersionLocalizedString.GetTitleLocalizedStringForAppUI();
+            text.text = $"@{k_SharedLocalisedTable}:{k_VersionKey}";
             text.variables = new object[]
             {
                 new Dictionary<string, object>()
@@ -510,7 +509,7 @@ namespace Unity.Industry.Viewer.Assets
             ShowNewVersionVE();
         }
 
-        public void ShowNewVersionVE()
+        public async void ShowNewVersionVE()
         {
             if(SceneManager.GetActiveScene() != SharedUIManager.Instance.AssetsUIDocument.gameObject.scene) return;
 
@@ -523,15 +522,16 @@ namespace Unity.Industry.Viewer.Assets
             UpdateVersionButtonAction = UpdateVersion;
             m_UpdateVersionVE.Q<Icon>().iconName = "info";
             var text = m_UpdateVersionVE.Q<Text>();
-            text.text = SharedUIManager.Instance.NewVersionAvailable.GetTitleLocalizedStringForAppUI();
+            text.text = await SharedUIManager.Instance.NewVersionAvailable.GetTitleLocalizedStringForAppUIAsync();
             var reviewButton = m_UpdateVersionVE.Q<Button>();
-            reviewButton.title = SharedUIManager.Instance.ViewNewVersion.GetTitleLocalizedStringForAppUI();
+            reviewButton.title = await SharedUIManager.Instance.ViewNewVersion.GetTitleLocalizedStringForAppUIAsync();
         }
         
         // Updates to the latest version of the asset
         private void UpdateToLatestVersion()
         {
             if(!AssetsController.NewerVersionAsset.HasValue) return;
+            AssetsController.ParentAssetSelected?.Invoke(null);
             var asset = AssetsController.NewerVersionAsset.Value;
             SharedUIManager.SelectedAsset = asset;
             AssetsController.AssetSelected?.Invoke(asset);
@@ -602,8 +602,7 @@ namespace Unity.Industry.Viewer.Assets
         {
             base.UpdateAssetUI(assetInfo);
             m_AssetNameLabel.text = assetInfo.Properties.Value.Name;
-            m_AssetTypeLabel.text =
-                assetInfo.Properties.Value.Type.GetAssetTypeAsString().GetTitleLocalizedStringForAppUI();
+            m_AssetTypeLabel.text = assetInfo.Properties.Value.Type.GetAssetTypeAsString();
             AssignTags(assetInfo.Properties.Value.Tags.ToList());
             var fileTabs = m_Tabs.items[2];
             (fileTabs as TabItem)?.SetEnabled(true);

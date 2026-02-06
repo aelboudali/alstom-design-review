@@ -75,7 +75,7 @@ namespace Unity.Industry.Viewer.Navigation.OrbitCamera
             if (!skipCameraUpdate)
             {
                 cameraController.UpdateView(bounds);
-                cameraController.SetView(bounds);
+                cameraController.SetView(bounds, NavigationController.StartingPosition.HasValue);
             }
             else
             {

@@ -22,6 +22,7 @@ namespace Unity.Industry.Viewer. VR.CameraPassThrough
         private const string k_ConfirmButtonName = "ConfirmButton";
         private const string k_OcclusionToggleName = "OcclusionToggle";
         private const string k_TransformTabName = "TransformTab";
+        private const string k_PlaceOnSurfaceButtonName = "PlaceOnSurface";
         #endregion
 
         #region Position
@@ -65,7 +66,7 @@ namespace Unity.Industry.Viewer. VR.CameraPassThrough
         private XRControllerMenu m_XRControllerMenu;
         
         private XRRoundButton m_ToolButton;
-        
+        private ActionButton m_PlaceOnSurfaceButton;
         private Button m_ResetToDefaultPositionButton,
             m_ConfirmPositionButton,
             m_SaveMapButton,
@@ -105,6 +106,8 @@ namespace Unity.Industry.Viewer. VR.CameraPassThrough
         {
             CameraPassThroughController.OnStateChange += OnARStateChange;
             m_CameraPassThroughController = GetComponent<CameraPassThroughController>();
+            m_CameraPassThroughController.OnAssetPlaceOnSurfaceComplete -= OnAssetPlaceOnSurfaceComplete;
+            m_CameraPassThroughController.OnAssetPlaceOnSurfaceComplete += OnAssetPlaceOnSurfaceComplete;
             ToolPanelUIController.CloseToolPanel += OnCloseToolPanel;
         }
 
@@ -116,12 +119,150 @@ namespace Unity.Industry.Viewer. VR.CameraPassThrough
             }
             m_ToolButton?.RemoveFromHierarchy();
             m_ToolButton = null;
+            
+            #region Common
+            if (m_ResetToDefaultPositionButton != null)
+            {
+                m_ResetToDefaultPositionButton.clicked -= ResetToDefaultPositionButtonOnClicked;
+                m_ResetToDefaultPositionButton = null;
+            }
+            if (m_ConfirmPositionButton != null)
+            {
+                m_ConfirmPositionButton.clicked -= ConfirmPositionButtonOnClicked;
+                m_ConfirmPositionButton = null;
+            }
+
+            if (m_PlaceOnSurfaceButton != null)
+            {
+                m_PlaceOnSurfaceButton.clicked -= OnPlaceOnSurfaceButtonClicked;
+                m_PlaceOnSurfaceButton = null;
+            }
+            
+            m_OcclusionToggle?.UnregisterValueChangedCallback(OnOcclusionToggleChanged);
+            m_OcclusionToggle = null;
+            m_TransformTab?.UnregisterValueChangedCallback(OnTabChangedChanged);
+            m_TransformTab = null;
+            #endregion
+            
+            #region Position
+
+            if (m_MoveIncrementStepper != null)
+            {
+                m_MoveIncrementStepper.UnregisterValueChangedCallback(OnMoveIncrementStepperChanged);
+                m_MoveIncrementStepper = null;
+            }
+
+            if (m_XMoveStepper != null)
+            {
+                m_XMoveStepper.UnregisterValueChangedCallback(OnXMoveStepperChanged);
+                m_XMoveStepper = null;
+            }
+
+            if (m_YMoveStepper != null)
+            {
+                m_YMoveStepper.UnregisterValueChangedCallback(OnYMoveStepperChanged);
+                m_YMoveStepper = null;
+            }
+            
+            if (m_ZMoveStepper != null)
+            {
+                m_ZMoveStepper.UnregisterValueChangedCallback(OnZMoveStepperChanged);
+                m_ZMoveStepper = null;
+            }
+            
+            m_XPositionField?.UnregisterValueChangingCallback(OnXPositionValueChanging);
+            m_XPositionField?.UnregisterValueChangedCallback(OnXPositionValueChanged);
+            m_XPositionField = null;
+            
+            m_YPositionField?.UnregisterValueChangedCallback(OnYPositionValueChanged);
+            m_YPositionField?.UnregisterValueChangingCallback(OnYPositionValueChanging);
+            m_YPositionField = null;
+            
+            m_ZPositionField?.UnregisterValueChangedCallback(OnZPositionValueChanged);
+            m_ZPositionField?.UnregisterValueChangingCallback(OnZPositionValueChanging);
+            m_ZPositionField = null;
+
+            #endregion
+            
+            #region Rotation
+            
+            if (m_RotateIncrementStepper != null)
+            {
+                m_RotateIncrementStepper.UnregisterValueChangedCallback(OnRotateIncrementStepperChanged);
+                m_RotateIncrementStepper = null;
+            }
+
+            if (m_XRotateStepper != null)
+            {
+                m_XRotateStepper.UnregisterValueChangedCallback(OnXRotateStepperChanged);
+                m_XRotateStepper = null;
+            }
+
+            if (m_YRotateStepper != null)
+            {
+                m_YRotateStepper.UnregisterValueChangedCallback(OnYRotateStepperChanged);
+                m_YRotateStepper = null;
+            }
+            
+            if (m_ZRotateStepper != null)
+            {
+                m_ZRotateStepper.UnregisterValueChangedCallback(OnZRotateStepperChanged);
+                m_ZRotateStepper = null;
+            }
+
+            m_XRotationField?.UnregisterValueChangingCallback(OnRotationXFieldChanging);
+            m_XRotationField?.UnregisterValueChangedCallback(OnRotationXFieldChanged);
+            m_XRotationField = null;
+            m_YRotationField?.UnregisterValueChangingCallback(OnRotationYFieldChanging);
+            m_YRotationField?.UnregisterValueChangedCallback(OnRotationYFieldChanged);
+            m_YRotationField = null;
+            m_ZRotationField?.UnregisterValueChangingCallback(OnRotationZFieldChanging);
+            m_ZRotationField?.UnregisterValueChangedCallback(OnRotationZFieldChanged);
+            m_ZRotationField = null;
+            
+            #endregion
+            
+            #region Scale
+            m_ScaleSliderField?.UnregisterValueChangingCallback(OnModelScaleChanging);
+            m_ScaleSliderField?.UnregisterValueChangedCallback(OnModelScaleChanged);
+            m_ScaleSliderField = null;
+            #endregion
+            
+            #region Spatial Map
+            if (m_SaveMapButton != null)
+            {
+                m_SaveMapButton.clicked -= OnSaveMapButtonClicked;
+                m_SaveMapButton = null;
+            }
+            
+            if (m_LoadMapButton != null)
+            {
+                m_LoadMapButton.clicked -= OnLoadMapButtonClicked;
+                m_LoadMapButton = null;
+            }
+            #endregion
+
+            if (m_CameraPassThroughController != null)
+            {
+                m_CameraPassThroughController.OnAssetPlaceOnSurfaceComplete -= OnAssetPlaceOnSurfaceComplete;
+            }
         }
 
         private void OnDestroy()
         {
             CameraPassThroughController.OnStateChange -= OnARStateChange;
             ToolPanelUIController.CloseToolPanel += OnCloseToolPanel;
+        }
+        
+        private void OnPlaceOnSurfaceButtonClicked()
+        {
+            m_CameraPassThroughController?.PlaceOnSurface();
+        }
+        
+        private void OnAssetPlaceOnSurfaceComplete()
+        {
+            var position = TransformController.Instance.transform.position;
+            m_YPositionField.SetValueWithoutNotify(position.y);
         }
         
         private void OnCloseToolPanel()
@@ -316,6 +457,9 @@ namespace Unity.Industry.Viewer. VR.CameraPassThrough
 
             #endregion
             
+            m_PlaceOnSurfaceButton = panel.Q<ActionButton>(k_PlaceOnSurfaceButtonName);
+            m_PlaceOnSurfaceButton.clicked += OnPlaceOnSurfaceButtonClicked;
+            
             #region Spatial Map
             m_SpatialContainer = panel.Q<VisualElement>(k_SpatialContainerName);
             
@@ -480,7 +624,7 @@ namespace Unity.Industry.Viewer. VR.CameraPassThrough
         
         private void OnRotateIncrementStepperChanged(ChangeEvent<int> evt)
         {
-            m_RotateIncrementField.value += evt.newValue;
+            m_RotateIncrementField.value = Mathf.Max(5f, m_RotateIncrementField.value + evt.newValue * 5f);
         }
         
         void OnZPositionValueChanging(ChangingEvent<float> evt)
@@ -536,7 +680,7 @@ namespace Unity.Industry.Viewer. VR.CameraPassThrough
         
         private void OnMoveIncrementStepperChanged(ChangeEvent<int> evt)
         {
-            m_MoveIncrementField.value += evt.newValue * 0.1f;
+            m_MoveIncrementField.value = Mathf.Max(0.1f, m_MoveIncrementField.value + evt.newValue * 0.1f);
         }
         
         private void OnTabChangedChanged(ChangeEvent<int> evt)

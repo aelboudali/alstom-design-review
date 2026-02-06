@@ -8,11 +8,6 @@
     margin-right: 20px;
 }
 
-#AssetContainer #AssetSearchBar {
-    width: 570px;
-    max-width: 570px;
-}
-
 .AddModelToSelectionButton {
     background-color: rgb(8, 146, 255);
 }
@@ -45,11 +40,6 @@
     margin-left: 16px;
 }
 
-.appui-checkbox__box {
-    width: 18px;
-    height: 18px;
-}
-
 #AssetLeftPanel #OrganizationButton {
     width: auto;
     margin-bottom: 8px;
@@ -63,17 +53,4 @@
 
 #AssetRoot #AssetLeftPanel{
     padding-top: 0;
-}
-
-#AssetInfoContainer {
-    min-width: 553px;
-    width: 553px;
-    max-width: 553px;
-    margin-left: 8px;
-}
-
-#AssetInfoPanelRoot {
-    min-width: 553px;
-    width: 553px;
-    max-width: 553px;
 }

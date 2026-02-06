@@ -1,22 +1,22 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:VisualElement name="AnnotationEntry" style="flex-grow: 0; border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding-top: 16px; padding-right: 16px; padding-bottom: 16px; padding-left: 16px; background-color: rgb(48, 48, 48); margin-right: 5px; margin-left: 5px;">
-        <ui:VisualElement picking-mode="Ignore" style="flex-grow: 0; flex-direction: row; height: 40px; justify-content: space-between; margin-bottom: 8px;">
+    <ui:VisualElement name="AnnotationEntry" style="flex-grow: 0; border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding-top: 16px; padding-right: 16px; padding-bottom: 16px; padding-left: 16px; background-color: rgb(48, 48, 48);">
+        <ui:VisualElement picking-mode="Ignore" style="flex-grow: 0; flex-direction: row; height: 40px; justify-content: space-between;">
             <ui:VisualElement picking-mode="Ignore" style="flex-grow: 0; flex-direction: row; align-items: center;">
                 <Unity.AppUI.UI.Avatar background-color="RGBA(1.000, 0.000, 0.000, 1.000)" picking-mode="Ignore" name="Avatar" style="width: 40px; height: 40px; margin-right: 8px;">
                     <Unity.AppUI.UI.Text name="InitialLabel" picking-mode="Ignore" style="color: rgb(255, 255, 255);" />
                 </Unity.AppUI.UI.Avatar>
                 <ui:VisualElement style="flex-grow: 0; flex-direction: column; align-items: flex-start; max-width: 100%; justify-content: center;">
                     <Unity.AppUI.UI.Text name="NameLabel" picking-mode="Ignore" style="max-width: 100%; height: 25px; color: rgb(255, 255, 255); font-size: 18px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" />
-                    <Unity.AppUI.UI.Text name="TimeLabel" picking-mode="Ignore" style="height: 15px; -unity-font-definition: url(&quot;project://database/Assets/UI/Fonts/Inter_28pt-ExtraLight.ttf?fileID=12800000&amp;guid=8c8481fa010d44d55a49ea03bb430cd6&amp;type=3#Inter_28pt-ExtraLight&quot;); font-size: 12px; max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" />
+                    <Unity.AppUI.UI.Text name="TimeLabel" picking-mode="Ignore" style="height: 15px; font-size: 12px; max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" />
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement picking-mode="Ignore" style="flex-grow: 0; align-items: center; flex-direction: row-reverse; justify-content: flex-start;">
-                <Unity.AppUI.UI.IconButton name="ResolveIconButton" quiet="true" size="S" class="thread" style="width: 24px; height: 24px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; margin-left: 6px;" />
                 <Unity.AppUI.UI.IconButton quiet="true" icon="dots-three" name="MenuIconButton" size="S" style="width: 24px; height: 24px; margin-left: 6px;" />
+                <Unity.AppUI.UI.IconButton name="ResolveIconButton" quiet="true" size="S" class="thread" style="width: 24px; height: 24px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; margin-left: 6px;" />
                 <Unity.AppUI.UI.IconButton quiet="true" icon="smiley" name="ReactionIconButton" size="S" style="width: 24px; height: 24px; display: none;" />
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="EditContainer" style="flex-grow: 1; display: none;">
+        <ui:VisualElement name="EditContainer" style="flex-grow: 1; display: none; margin-top: 8px;">
             <Unity.AppUI.UI.TextArea auto-resize="true" auto-shrink="true" max-length="10000" />
             <Unity.AppUI.UI.GridView item-height="50" class="attachment entry" style="margin-top: 8px; display: none;" />
             <ui:VisualElement style="flex-grow: 1; margin-top: 8px; height: 40px; min-height: 40px; max-height: 40px; flex-direction: row-reverse; align-items: center;">
@@ -25,12 +25,12 @@
                 <Unity.AppUI.UI.Button title="Cancel" name="CancelEditButton" />
             </ui:VisualElement>
         </ui:VisualElement>
-        <Unity.AppUI.UI.Text name="AnnotationMessageLabel" picking-mode="Ignore" class="ForMargin" style="color: rgb(255, 255, 255); padding-right: 11px; padding-bottom: 8px;" />
+        <Unity.AppUI.UI.Text name="AnnotationMessageLabel" picking-mode="Ignore" class="ForMargin" style="color: rgb(255, 255, 255); padding-right: 11px; margin-top: 8px;" />
         <ui:VisualElement name="AttachmentContainer" class="ForMargin" style="flex-grow: 1; margin-top: 8px; display: none;">
             <Unity.AppUI.UI.Text size="S" name="AttachmentCountLabel" />
             <ui:VisualElement name="AttachmentListContainer" style="flex-grow: 1; margin-top: 8px;" />
         </ui:VisualElement>
-        <Unity.AppUI.UI.Text name="ReplyLabel" picking-mode="Ignore" class="ForMargin" style="color: rgb(255, 255, 255); padding-right: 11px; padding-bottom: 8px;" />
+        <Unity.AppUI.UI.Text name="ReplyLabel" picking-mode="Ignore" class="ForMargin" style="color: rgb(8, 146, 255); padding-right: 11px; margin-top: 6px; -unity-font-style: bold;" />
         <ui:VisualElement name="ReactionContainer" class="ForMargin" style="flex-grow: 0; flex-direction: row; align-items: center; display: none; margin-top: 8px; flex-wrap: wrap;">
             <Unity.AppUI.UI.Button quiet="true" name="thumbup" leading-icon="thumb-up" size="S" class="reaction" style="margin-right: 4px; height: 24px;" />
             <Unity.AppUI.UI.Button quiet="true" leading-icon="thumb-down" size="S" name="thumbdown" class="reaction" style="margin-right: 4px; height: 24px;" />

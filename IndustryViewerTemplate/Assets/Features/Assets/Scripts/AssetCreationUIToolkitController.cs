@@ -88,11 +88,9 @@ namespace Unity.Industry.Viewer.Assets
         private const string k_AssetTableKey = "Assets";
 
         private const string k_AssetUploadTitleKey = "Asset Upload Title";
-        private LocalizedString m_AssetUploadTitleString = new LocalizedString(k_AssetTableKey, k_AssetUploadTitleKey);
 
         // Confirmation and notification messages
         private const string k_AssetCreationConfirmationKey = "Asset Creation Confirmation";
-        private LocalizedString m_AssetCreationConfirmationString = new LocalizedString(k_AssetTableKey, k_AssetCreationConfirmationKey);
 
         private const string k_AssetCreationCompletedKey = "Asset Creation Completed";
         private LocalizedString m_AssetCreationCompletedString = new LocalizedString(k_AssetTableKey, k_AssetCreationCompletedKey);
@@ -129,10 +127,8 @@ namespace Unity.Industry.Viewer.Assets
         private const string k_SharedTableKey = "Shared";
 
         private const string k_CancelKey = "Cancel";
-        private LocalizedString m_CancelString = new LocalizedString(k_SharedTableKey, k_CancelKey);
 
         private const string k_ProceedKey = "Upload";
-        private LocalizedString m_ProceedString = new LocalizedString(k_SharedTableKey, k_ProceedKey);
 
         #endregion
 
@@ -579,7 +575,7 @@ namespace Unity.Industry.Viewer.Assets
 
                 if (request.Status == AssetCreationStatus.AssetCreating && asset != null)
                 {
-                    Debug.Log($"Asset Creation: asset '{asset.Name}' created, starting file upload...");
+                    //Debug.Log($"Asset Creation: asset '{asset.Name}' created, starting file upload...");
                     request.Asset = asset;
                     request.Status = AssetCreationStatus.FileUploading;
                     request.FileUploadingProgress = 0f;
@@ -587,11 +583,11 @@ namespace Unity.Industry.Viewer.Assets
                 else if (request.Status == AssetCreationStatus.FileUploading)
                 {
                     request.FileUploadingProgress = progress;
-                    Debug.Log($"Asset Creation: uploading file for asset '{asset.Name}'... {progress * 100f:0}%");
+                    //Debug.Log($"Asset Creation: uploading file for asset '{asset.Name}'... {progress * 100f:0}%");
 
                     if (progress >= 1f)
                     {
-                        Debug.Log($"AssetCreation: source file for asset '{asset.Name}' uploaded successfully. Starting transformation...");
+                        //Debug.Log($"AssetCreation: source file for asset '{asset.Name}' uploaded successfully. Starting transformation...");
                         Trigger3DDSTransformation(request);
                     }
                 }
@@ -644,15 +640,14 @@ namespace Unity.Industry.Viewer.Assets
                 Asset = null,
                 ErrorMessage = null
             };
-
             var messageDialog = new AlertDialog()
             {
-                title = m_AssetUploadTitleString.GetTitleLocalizedStringForAppUI(),
-                description = m_AssetCreationConfirmationString.GetTitleLocalizedStringForAppUI(),
+                title = $"@{k_AssetTableKey}:{k_AssetUploadTitleKey}",
+                description = $"@{k_AssetTableKey}:{k_AssetCreationConfirmationKey}",
                 variant = AlertSemantic.Confirmation
             };
 
-            messageDialog.SetPrimaryAction(99, m_ProceedString.GetTitleLocalizedStringForAppUI(), () =>
+            messageDialog.SetPrimaryAction(99,  $"@{k_SharedTableKey}:{k_ProceedKey}", () =>
             {
                 lock (AssetCreationRequests)
                 {
@@ -665,7 +660,7 @@ namespace Unity.Industry.Viewer.Assets
                 Close();
             });
 
-            messageDialog.SetCancelAction(98, m_CancelString.GetTitleLocalizedStringForAppUI());
+            messageDialog.SetCancelAction(98, $"@{k_SharedTableKey}:{k_CancelKey}");
 
             var modal = Modal.Build(SharedUIManager.Instance.AssetsContainer, messageDialog);
             modal.Show();
@@ -841,10 +836,8 @@ namespace Unity.Industry.Viewer.Assets
 
             var assetType = assetTypes[arg2];
             var localizedString = assetType.GetAssetTypeAsString();
-            if(localizedString == null) return;
-
             var text = arg1.Q<LocalizedTextElement>();
-            text.text = localizedString.GetTitleLocalizedStringForAppUI();
+            text.text = localizedString;
         }
 
         // Show the asset creation UI
