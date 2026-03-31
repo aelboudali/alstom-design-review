@@ -1,0 +1,16 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:VisualElement style="flex-grow: 0;">
+        <Unity.AppUI.UI.Text>
+            <Bindings>
+                <UnityEngine.Localization.LocalizedString property="text" table="GUID:4ae8c4accfa144438a938b2e4b7e9449" entry="Id(620508471296)"/>
+            </Bindings>
+        </Unity.AppUI.UI.Text>
+        <Unity.AppUI.UI.SliderFloat name="FlySensitivitySlider" low-value="0.01" high-value="5" value="1" format-string="g2" increment-factor="0.01" size="L"/>
+        <Unity.AppUI.UI.Text>
+            <Bindings>
+                <UnityEngine.Localization.LocalizedString property="text" table="GUID:75b7202b47b6842be8d6b5d609ec08e7" entry="Id(161176995317837824)"/>
+            </Bindings>
+        </Unity.AppUI.UI.Text>
+        <Unity.AppUI.UI.Toggle name="CollisionDetectionToggle"/>
+    </engine:VisualElement>
+</engine:UXML>

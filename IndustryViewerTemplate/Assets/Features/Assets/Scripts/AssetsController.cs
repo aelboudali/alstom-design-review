@@ -1023,6 +1023,7 @@ namespace Unity.Industry.Viewer.Assets
                 var organizationsAsyncEnumerable = m_OrganizationRepository.ListOrganizationsAsync(Range.All, m_OrganizationCancellationTokenSource.Token);
                 await foreach (var organization in organizationsAsyncEnumerable)
                 {
+                    if(m_AllOrganizations.Any(x => x.Id == organization.Id)) continue;
                     m_AllOrganizations.Add(organization);
                 }
             }

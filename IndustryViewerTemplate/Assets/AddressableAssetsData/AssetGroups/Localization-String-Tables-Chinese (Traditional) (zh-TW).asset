@@ -50,6 +50,12 @@ MonoBehaviour:
     - Locale-zh-TW
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 428e21aa4d1544fb9bb53b56b1ab87a8
+    m_Address: Interaction Tool_zh-TW
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-TW
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 5ad69c727f6bc4b549ae9ceb3944c1a7
     m_Address: Hierarchy Tool_zh-TW
     m_ReadOnly: 1

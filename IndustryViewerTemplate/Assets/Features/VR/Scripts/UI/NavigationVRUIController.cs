@@ -149,11 +149,18 @@ namespace Unity.Industry.Viewer.VR
 
         private void EnableNavigationOptions()
         {
+            var currentOption = NavigationController.CurrentNavigationOption;
             foreach (var optionButton in m_NavigationOptionsContainer.Query<XRRoundButton>().ToList())
             {
-                optionButton.style.display = NavigationController.CurrentNavigationOption == (NavigationOption)optionButton.userData 
-                    ? DisplayStyle.None 
-                    : DisplayStyle.Flex;
+                NavigationOption option = (NavigationOption)optionButton.userData;
+                if (currentOption == option)
+                {
+                    optionButton.style.display = DisplayStyle.None;
+                }
+                else
+                {
+                    optionButton.style.display = option.IsSupported() ? DisplayStyle.Flex : DisplayStyle.None;
+                }
             }
         }
 

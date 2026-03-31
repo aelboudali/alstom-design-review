@@ -119,6 +119,104 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &51487422
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 51487424}
+  - component: {fileID: 51487423}
+  - component: {fileID: 51487425}
+  m_Layer: 0
+  m_Name: Hand Permission Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &51487423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 51487422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 485bf7359d1e541a183b6fbdf56164bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Industry.Viewer.VR::Unity.Industry.Viewer.VR.HandSubsystemManager
+--- !u!4 &51487424
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 51487422}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &51487425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 51487422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f62c7b7418ee024aa16285921e63d56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit.Samples.StarterAssets::UnityEngine.XR.Interaction.Toolkit.Samples.StarterAssets.PermissionsManager
+  m_ProcessPermissionsOnAwake: 1
+  m_PermissionGroups:
+  - platformType: 1
+    permissions:
+    - permissionId: android.permission.HAND_TRACKING
+      enabled: 1
+      requested: 0
+      responseReceived: 0
+      granted: 0
+      onPermissionGranted:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 51487423}
+            m_TargetAssemblyTypeName: Unity.Industry.Viewer.VR.HandSubsystemManager,
+              Unity.Industry.Viewer.VR
+            m_MethodName: EnableHandTracking
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+      onPermissionDenied:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 51487423}
+            m_TargetAssemblyTypeName: Unity.Industry.Viewer.VR.HandSubsystemManager,
+              Unity.Industry.Viewer.VR
+            m_MethodName: DisableHandTracking
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
 --- !u!1 &99121040
 GameObject:
   m_ObjectHideFlags: 0
@@ -358,14 +456,14 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 317198432}
   m_Enabled: 1
-  serializedVersion: 11
+  serializedVersion: 12
   m_Type: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
-  m_CookieSize: 10
+  m_CookieSize2D: {x: 10, y: 10}
   m_Shadows:
     m_Type: 0
     m_Resolution: -1
@@ -474,6 +572,7 @@ MonoBehaviour:
     Address: 127.0.0.1
     Port: 7777
     ServerListenAddress: 0.0.0.0
+    ClientBindPort: 0
   DebugSimulator:
     PacketDelayMS: 0
     PacketJitterMS: 0
@@ -1587,6 +1686,8 @@ MonoBehaviour:
   m_StartingHoverFilters: []
   m_StartingSelectFilters: []
   m_StartingInteractionStrengthFilters: []
+  m_AutoFindParentInteractableInHierarchy: 0
+  m_ParentInteractableObject: {fileID: 0}
 --- !u!114 &575617395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2297,6 +2398,8 @@ MonoBehaviour:
   m_StartingHoverFilters: []
   m_StartingSelectFilters: []
   m_StartingInteractionStrengthFilters: []
+  m_AutoFindParentInteractableInHierarchy: 0
+  m_ParentInteractableObject: {fileID: 0}
 --- !u!114 &1174084946
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2624,6 +2727,7 @@ MonoBehaviour:
   keepMainSceneCameraActive: 1
   mainSceneCamera: {fileID: 0}
   m_MainLight: {fileID: 317198434}
+  enableCameraPassthroughOnStart: 0
 --- !u!1 &1311312221
 GameObject:
   m_ObjectHideFlags: 0
@@ -2754,6 +2858,8 @@ MonoBehaviour:
   m_StartingHoverFilters: []
   m_StartingSelectFilters: []
   m_StartingInteractionStrengthFilters: []
+  m_AutoFindParentInteractableInHierarchy: 0
+  m_ParentInteractableObject: {fileID: 0}
 --- !u!114 &1311312228
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2823,6 +2929,7 @@ GameObject:
   - component: {fileID: 1386732201}
   - component: {fileID: 1386732203}
   - component: {fileID: 1386732204}
+  - component: {fileID: 1386732205}
   m_Layer: 0
   m_Name: In App Settings
   m_TagString: Untagged
@@ -2892,6 +2999,7 @@ UIRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
 --- !u!114 &1386732204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2948,6 +3056,20 @@ MonoBehaviour:
   references:
     version: 2
     RefIds: []
+--- !u!114 &1386732205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1386732199}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 771af44c3da5642c78f5081e4b037dcd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Industry.Viewer.VR.CameraPassThrough::Unity.Industry.Viewer.VR.CameraPassThrough.CameraPassThroughInAppSettings
+  m_CameraPassThroughSettingsUI: {fileID: 9197481963319205126, guid: f3233c626feb242b0822f13b58d1f391,
+    type: 3}
 --- !u!1 &1481142193
 GameObject:
   m_ObjectHideFlags: 0
@@ -3319,6 +3441,8 @@ MonoBehaviour:
   m_StartingHoverFilters: []
   m_StartingSelectFilters: []
   m_StartingInteractionStrengthFilters: []
+  m_AutoFindParentInteractableInHierarchy: 0
+  m_ParentInteractableObject: {fileID: 0}
   m_AttachTransform: {fileID: 0}
   m_SecondaryAttachTransform: {fileID: 0}
   m_UseDynamicAttach: 1
@@ -3534,6 +3658,7 @@ SkinnedMeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   serializedVersion: 2
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
@@ -3591,3 +3716,4 @@ SceneRoots:
   - {fileID: 622675463}
   - {fileID: 179619136}
   - {fileID: 1481142195}
+  - {fileID: 51487424}

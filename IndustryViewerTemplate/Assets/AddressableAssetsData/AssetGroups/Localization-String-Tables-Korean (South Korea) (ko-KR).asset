@@ -83,6 +83,12 @@ MonoBehaviour:
     - Locale-ko-KR
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8e3c2ed761ea64af8b7bdb68a0e29919
+    m_Address: Interaction Tool_ko-KR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko-KR
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8f93d3395928d4ee08f9387e3110e4c8
     m_Address: Section Cut_ko-KR
     m_ReadOnly: 1

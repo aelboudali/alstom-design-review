@@ -31,6 +31,14 @@ MonoBehaviour:
       \uB204\uB974\uAC70\uB098 \uC190\uAC00\uB77D\uC744 \uAF2C\uC9D1\uC73C\uC138\uC694."
     m_Metadata:
       m_Items: []
+  - m_Id: 161130583641190400
+    m_Localized: "VR \uAC77\uAE30 \uBAA8\uB4DC"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 161176995317837824
+    m_Localized: "\uCDA9\uB3CC \uAC10\uC9C0"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

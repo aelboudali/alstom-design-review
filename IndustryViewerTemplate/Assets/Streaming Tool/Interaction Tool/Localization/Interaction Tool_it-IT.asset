@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Interaction Tool_it-IT
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: it-IT
+  m_SharedData: {fileID: 11400000, guid: 0884d71f57df84ed0950b61b2b978ca2, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 1196847783936
+    m_Localized: Strumento di interazione
+    m_Metadata:
+      m_Items: []
+  - m_Id: 61862300344320
+    m_Localized: Mossa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 61862304538624
+    m_Localized: Ruotare
+    m_Metadata:
+      m_Items: []
+  - m_Id: 61862304538625
+    m_Localized: Scala
+    m_Metadata:
+      m_Items: []
+  - m_Id: 314175560605696
+    m_Localized: Globale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 314175560605697
+    m_Localized: Locale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318339816611840
+    m_Localized: Diventa interattivo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318339816611841
+    m_Localized: Elementi interattivi attuali
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318339816611842
+    m_Localized: Trasformare
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318339816611843
+    m_Localized: Reset
+    m_Metadata:
+      m_Items: []
+  - m_Id: 42351695571705856
+    m_Localized: "La modalit\xE0 offline non \xE8 supportata"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 42379094405406720
+    m_Localized: "Il modello di streaming locale non \xE8 supportato"
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

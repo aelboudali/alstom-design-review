@@ -30,6 +30,14 @@ MonoBehaviour:
     m_Localized: Presione el gatillo o pellizque con el dedo para colocar el elemento.
     m_Metadata:
       m_Items: []
+  - m_Id: 161130583641190400
+    m_Localized: Modo de caminata de realidad virtual
+    m_Metadata:
+      m_Items: []
+  - m_Id: 161176995317837824
+    m_Localized: "Detecci\xF3n de colisiones"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

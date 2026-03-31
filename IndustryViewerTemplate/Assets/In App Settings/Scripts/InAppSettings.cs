@@ -201,7 +201,16 @@ namespace Unity.Industry.Viewer.AppSettings
 
         public static void InitializeSection(string name, ref VisualElement section, VisualElement content)
         {
-            section.Q<Text>("Title").text = name;
+            Text titleText = section.Q<Text>("Title");
+            if (!string.IsNullOrEmpty(name))
+            {
+                titleText.text = name;
+                titleText.style.display = DisplayStyle.Flex;
+            }
+            else
+            {
+                titleText.style.display = DisplayStyle.None;
+            }
             section.Q<VisualElement>("Content").Add(content);
         }
         

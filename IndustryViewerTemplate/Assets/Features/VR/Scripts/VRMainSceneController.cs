@@ -10,12 +10,14 @@ namespace Unity.Industry.Viewer.VR
         [SerializeField] private Light m_MainLight;
         private float defaultNearClipPlane;
         private float defaultFarClipPlane;
+        [SerializeField]
+        private bool enableCameraPassthroughOnStart = false;
+        
+        public bool EnableCameraPassthroughOnStart => enableCameraPassthroughOnStart;
         
         protected override void Start()
         {
             base.Start();
-            Camera.main.clearFlags = CameraClearFlags.SolidColor;
-            Camera.main.backgroundColor = Color.black;
             defaultNearClipPlane = Camera.main.nearClipPlane;
             defaultFarClipPlane = Camera.main.farClipPlane;
         }
@@ -32,8 +34,6 @@ namespace Unity.Industry.Viewer.VR
         IEnumerator WaitForFrame()
         {
             yield return null;
-            Camera.main.clearFlags = CameraClearFlags.SolidColor;
-            Camera.main.backgroundColor = Color.black;
             m_MainLight.gameObject.SetActive(true);
             Camera.main.nearClipPlane = defaultNearClipPlane;
             Camera.main.farClipPlane = defaultFarClipPlane;

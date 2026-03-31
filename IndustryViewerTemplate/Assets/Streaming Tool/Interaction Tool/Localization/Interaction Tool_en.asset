@@ -1,0 +1,96 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Interaction Tool_en
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 0884d71f57df84ed0950b61b2b978ca2, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 1196847783936
+    m_Localized: Interaction Tool
+    m_Metadata:
+      m_Items:
+      - rid: 7207680646873612383
+  - m_Id: 61862300344320
+    m_Localized: Move
+    m_Metadata:
+      m_Items: []
+  - m_Id: 61862304538624
+    m_Localized: Rotate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 61862304538625
+    m_Localized: Scale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 314175560605696
+    m_Localized: Global
+    m_Metadata:
+      m_Items:
+      - rid: 7207680646873612384
+  - m_Id: 314175560605697
+    m_Localized: Local
+    m_Metadata:
+      m_Items:
+      - rid: 7207680646873612385
+  - m_Id: 318339816611840
+    m_Localized: Become interactive
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318339816611841
+    m_Localized: Current interactable items
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318339816611842
+    m_Localized: Transform
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318339816611843
+    m_Localized: Reset
+    m_Metadata:
+      m_Items: []
+  - m_Id: 42351695571705856
+    m_Localized: Offline Mode is not supported
+    m_Metadata:
+      m_Items:
+      - rid: 7207680646873612386
+  - m_Id: 42379094405406720
+    m_Localized: Local Streaming Model is not supported
+    m_Metadata:
+      m_Items:
+      - rid: 7207680646873612387
+  references:
+    version: 2
+    RefIds:
+    - rid: 7207680646873612383
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: Name of the tool
+    - rid: 7207680646873612384
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: for transform handle mode
+    - rid: 7207680646873612385
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: for transform handle mode
+    - rid: 7207680646873612386
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is text of the panel in Offline mode
+    - rid: 7207680646873612387
+      type: {class: Comment, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_CommentText: This is text of the Metadata panel in while local streaming

@@ -31,6 +31,14 @@ MonoBehaviour:
       para posicionar o recurso."
     m_Metadata:
       m_Items: []
+  - m_Id: 161130583641190400
+    m_Localized: Modo de caminhada em realidade virtual
+    m_Metadata:
+      m_Items: []
+  - m_Id: 161176995317837824
+    m_Localized: "Detec\xE7\xE3o de Colis\xE3o"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

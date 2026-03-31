@@ -108,6 +108,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-nl-NL
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7ae6f1257d3d74a1fa3853c779045f62
+    m_Address: Interaction Tool_nl-NL
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-nl-NL
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7b880bbde0488457ba75974ed41976cd
     m_Address: Mobile AR_nl-NL
     m_ReadOnly: 1

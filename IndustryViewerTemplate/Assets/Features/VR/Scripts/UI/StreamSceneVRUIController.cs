@@ -53,7 +53,10 @@ namespace Unity.Industry.Viewer.VR
         protected override void Start()
         {
             base.Start();
-            Camera.main.clearFlags = CameraClearFlags.Skybox;
+            if (Camera.main.backgroundColor != Color.clear)
+            {
+                Camera.main.clearFlags = CameraClearFlags.Skybox;
+            }
             m_BoxCollider = SharedUIManager.Instance.AssetsUIDocument.gameObject.GetComponent<BoxCollider>();
             m_BoxCollider.enabled = false;
             AssetsController.AssetSelected -= OnAssetSelected;

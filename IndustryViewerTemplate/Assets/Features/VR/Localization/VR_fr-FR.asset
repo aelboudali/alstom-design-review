@@ -30,6 +30,14 @@ MonoBehaviour:
     m_Localized: "Appuyez sur la g\xE2chette ou pincez l'\xE9cran pour placer l'\xE9l\xE9ment"
     m_Metadata:
       m_Items: []
+  - m_Id: 161130583641190400
+    m_Localized: "Mode de marche en r\xE9alit\xE9 virtuelle"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 161176995317837824
+    m_Localized: "D\xE9tection de collision"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -69,6 +69,12 @@ MonoBehaviour:
     - Locale-pt-PT
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6e96677fcfb8443f483e07cc41f39203
+    m_Address: Interaction Tool_pt-PT
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-pt-PT
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6f54e1cd20843463db6e55a2d802e6e9
     m_Address: Identity_pt-PT
     m_ReadOnly: 1

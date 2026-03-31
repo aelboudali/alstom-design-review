@@ -1,0 +1,6 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-between; align-items: center; padding-right: 10px; padding-left: 10px;">
+        <Unity.AppUI.UI.Text style="height: 40px; white-space: nowrap; max-width: 85%;"/>
+        <Unity.AppUI.UI.IconButton size="M" icon="trash" quiet="true"/>
+    </ui:VisualElement>
+</ui:UXML>

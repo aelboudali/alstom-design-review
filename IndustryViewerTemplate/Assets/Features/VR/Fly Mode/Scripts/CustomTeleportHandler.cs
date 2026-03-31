@@ -105,14 +105,18 @@ namespace Unity.Industry.Viewer.VR.FlyMode
                 var pos = m_ReticleInstance.transform.position;
                 var rot = m_ReticleInstance.transform.rotation;
                 Destroy(m_ReticleInstance);
-                if (!m_CancelRequested)
+                // Only trigger teleport if not cancelled AND controller is still active
+                if (!m_CancelRequested && m_MovementController != null && m_MovementController.gameObject.activeInHierarchy)
                 {
                     m_MovementController.TeleportStart(pos, rot);
                 }
                 m_CancelRequested = false;
             }
 
-            m_MovementController.TeleportCancelActionReference.action.performed -= CancelActionOnPerformed;
+            if (m_MovementController != null)
+            {
+                m_MovementController.TeleportCancelActionReference.action.performed -= CancelActionOnPerformed;
+            }
         }
         
         // Rotates the reticle based on joystick input (Vector2).
@@ -333,7 +337,10 @@ namespace Unity.Industry.Viewer.VR.FlyMode
         {
             m_CancelRequested = true;
             TargetPosition = null;
-            _lineRenderer.positionCount = 0;
+            if (_lineRenderer != null)
+            {
+                _lineRenderer.positionCount = 0;
+            }
             if (m_ReticleInstance != null)
             {
                 Destroy(m_ReticleInstance);

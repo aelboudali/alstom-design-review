@@ -30,6 +30,14 @@ MonoBehaviour:
     m_Localized: "Aseta kohde painamalla liipaisinta tai nipist\xE4m\xE4ll\xE4 sormea"
     m_Metadata:
       m_Items: []
+  - m_Id: 161130583641190400
+    m_Localized: VR-gangmodus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 161176995317837824
+    m_Localized: Kollisjonsdeteksjon
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -1,0 +1,146 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3864039683273388780
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5262975743680295623}
+  - component: {fileID: 2614215938105740157}
+  - component: {fileID: 270047608770459108}
+  m_Layer: 0
+  m_Name: Interaction Tool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5262975743680295623
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3864039683273388780}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2614215938105740157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3864039683273388780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c95adc9009153472db68700ec058a5bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Industry.Viewer.Streaming.Interaction::Unity.Industry.Viewer.Streaming.Interaction.InteractionToolController
+  highlightColor: {r: 0, g: 200, b: 255, a: 255}
+  m_PointerClick:
+    m_UseReference: 0
+    m_Action:
+      m_Name: Pointer Click
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 9cecb0c9-503a-41b1-bf0e-5c40391e36b5
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings:
+      - m_Name: 
+        m_Id: c14d0187-b7f5-46d6-b271-940e90d9085c
+        m_Path: <Pointer>/press
+        m_Interactions: Tap
+        m_Processors: 
+        m_Groups: 
+        m_Action: Pointer Click
+        m_Flags: 0
+      m_Flags: 0
+    m_Reference: {fileID: 0}
+  m_PointerPress:
+    m_UseReference: 0
+    m_Action:
+      m_Name: Pointer Press
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: a9f05abf-4d6a-4e5d-addd-431da7e08707
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings:
+      - m_Name: 
+        m_Id: 96d19b63-cdb2-4ea5-b85f-9905a39c7311
+        m_Path: <Pointer>/press
+        m_Interactions: Press(behavior=2)
+        m_Processors: 
+        m_Groups: 
+        m_Action: Pointer Press
+        m_Flags: 0
+      m_Flags: 0
+    m_Reference: {fileID: 0}
+  m_PointerMove:
+    m_UseReference: 0
+    m_Action:
+      m_Name: Pointer Move
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 6a5c8a02-91b6-4e73-80b0-8f247122c74d
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings:
+      - m_Name: 
+        m_Id: 4bc6878a-ea39-4954-af99-351a451f4024
+        m_Path: <Pointer>/position
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Pointer Move
+        m_Flags: 0
+      m_Flags: 0
+    m_Reference: {fileID: 0}
+  m_RuntimeHandleLayerMask:
+    serializedVersion: 2
+    m_Bits: 256
+--- !u!114 &270047608770459108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3864039683273388780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26214b576d796477f992f5f4a610aec0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Industry.Viewer.Streaming.Interaction::Unity.Industry.Viewer.Streaming.Interaction.InteractionToolUIController
+  m_toolUIAsset: {fileID: 9197481963319205126, guid: de49ebccdd5ce42408b975ddcf597fdb,
+    type: 3}
+  m_offlineWarningLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: GUID:0884d71f57df84ed0950b61b2b978ca2
+    m_TableEntryReference:
+      m_KeyId: 42351695571705856
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_offlineModelLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: GUID:0884d71f57df84ed0950b61b2b978ca2
+    m_TableEntryReference:
+      m_KeyId: 42379094405406720
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []

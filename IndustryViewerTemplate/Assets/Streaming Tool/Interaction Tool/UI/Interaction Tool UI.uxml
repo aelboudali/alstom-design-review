@@ -1,0 +1,56 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement style="flex-grow: 1;">
+        <Unity.AppUI.UI.ActionButton name="InteractButton" selected="true" accent="true" style="height: 40px;">
+            <Bindings>
+                <UnityEngine.Localization.LocalizedString property="label" table="GUID:0884d71f57df84ed0950b61b2b978ca2" entry="Id(318339816611840)"/>
+            </Bindings>
+        </Unity.AppUI.UI.ActionButton>
+        <Unity.AppUI.UI.Text size="L" style="height: 40px; color: rgb(255, 255, 255); -unity-text-align: middle-center;">
+            <Bindings>
+                <UnityEngine.Localization.LocalizedString property="text" table="GUID:0884d71f57df84ed0950b61b2b978ca2" entry="Id(318339816611841)"/>
+            </Bindings>
+        </Unity.AppUI.UI.Text>
+        <ui:ListView name="InteractableItemList" fixed-item-height="44" allow-add="false" allow-remove="false" item-template="project://database/Assets/Streaming%20Tool/Interaction%20Tool/UI/Interactable%20Item%20Template.uxml?fileID=9197481963319205126&amp;guid=b562b6487d6e0402999b3d50225facc6&amp;type=3#Interactable Item Template" style="flex-grow: 1;"/>
+        <ui:VisualElement name="TransformContainer" style="flex-grow: 0; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; padding-top: 15px; padding-right: 10px; padding-bottom: 15px; padding-left: 10px; margin-top: 2px; margin-right: 2px; margin-bottom: 5px; margin-left: 2px;">
+            <Unity.AppUI.UI.Text size="L" style="margin-bottom: 5px; color: rgb(255, 255, 255); -unity-text-align: middle-center;">
+                <Bindings>
+                    <UnityEngine.Localization.LocalizedString property="text" table="GUID:0884d71f57df84ed0950b61b2b978ca2" entry="Id(318339816611842)"/>
+                </Bindings>
+            </Unity.AppUI.UI.Text>
+            <Unity.AppUI.UI.ActionGroup selection-type="Single" allow-no-selection="false" close-on-selection="false" compact="true" justified="true" name="TransformActionGroup" style="flex-grow: 0;">
+                <Unity.AppUI.UI.ActionButton name="MoveButton" style="border-top-right-radius: 0; border-bottom-right-radius: 0; height: 40px;">
+                    <Bindings>
+                        <UnityEngine.Localization.LocalizedString property="label" table="GUID:0884d71f57df84ed0950b61b2b978ca2" entry="Id(61862300344320)"/>
+                    </Bindings>
+                </Unity.AppUI.UI.ActionButton>
+                <Unity.AppUI.UI.ActionButton name="RotateButton" style="border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; height: 40px;">
+                    <Bindings>
+                        <UnityEngine.Localization.LocalizedString property="label" table="GUID:0884d71f57df84ed0950b61b2b978ca2" entry="Id(61862304538624)"/>
+                    </Bindings>
+                </Unity.AppUI.UI.ActionButton>
+                <Unity.AppUI.UI.ActionButton name="ScaleButton" style="border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 6px; border-bottom-right-radius: 6px; height: 40px;">
+                    <Bindings>
+                        <UnityEngine.Localization.LocalizedString property="label" table="GUID:0884d71f57df84ed0950b61b2b978ca2" entry="Id(61862304538625)"/>
+                    </Bindings>
+                </Unity.AppUI.UI.ActionButton>
+            </Unity.AppUI.UI.ActionGroup>
+            <Unity.AppUI.UI.ActionGroup selection-type="Single" allow-no-selection="false" close-on-selection="false" compact="true" justified="true" name="GlobalLocalActionGroup" style="flex-grow: 0; margin-top: 15px;">
+                <Unity.AppUI.UI.ActionButton name="GlobalButton" style="border-top-right-radius: 0; border-bottom-right-radius: 0; height: 40px;">
+                    <Bindings>
+                        <UnityEngine.Localization.LocalizedString property="label" table="GUID:0884d71f57df84ed0950b61b2b978ca2" entry="Id(314175560605696)"/>
+                    </Bindings>
+                </Unity.AppUI.UI.ActionButton>
+                <Unity.AppUI.UI.ActionButton name="LocalButton" style="border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 6px; border-bottom-right-radius: 6px; height: 40px;">
+                    <Bindings>
+                        <UnityEngine.Localization.LocalizedString property="label" table="GUID:0884d71f57df84ed0950b61b2b978ca2" entry="Id(314175560605697)"/>
+                    </Bindings>
+                </Unity.AppUI.UI.ActionButton>
+            </Unity.AppUI.UI.ActionGroup>
+            <Unity.AppUI.UI.ActionButton name="ResetTransformButton" style="height: 40px; margin-top: 15px;">
+                <Bindings>
+                    <UnityEngine.Localization.LocalizedString property="label" table="GUID:0884d71f57df84ed0950b61b2b978ca2" entry="Id(318339816611843)"/>
+                </Bindings>
+            </Unity.AppUI.UI.ActionButton>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

@@ -114,6 +114,12 @@ MonoBehaviour:
     - Locale-sv
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d31e3b70400ff432381ddb2f93733cb9
+    m_Address: Interaction Tool_sv
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-sv
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: db37fb661427847b081348fdfbe8aed9
     m_Address: Multiplay_sv
     m_ReadOnly: 1

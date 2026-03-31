@@ -16,6 +16,9 @@ namespace Unity.Industry.Viewer.VR.Editor
     public static class VRSetup
     {
         private const string k_VRMode = "VR_MODE";
+
+        private const string k_MetaFeatureSetID = "com.unity.openxr.featureset.meta";
+        private const string k_AndroidXRFeatureSetID = "com.unity.openxr.featureset.android";
         
         static string[] vrScenes = new string[]
         {
@@ -28,11 +31,174 @@ namespace Unity.Industry.Viewer.VR.Editor
             "Assets/Scenes/Main.unity",
             "Assets/Scenes/Streaming.unity"
         };
+
+        [MenuItem("Tools/XR/Setup Android XR")]
+        public static void SetupAndroidXR()
+        {
+            XRSceneSetup();
+            #region Quality Settings
+
+            var currentDefaultQualityName = ReturnCurrentQualityName();
+            string[] qualityNames = QualitySettings.names;
+            int vrQualityIndex = Array.FindIndex(qualityNames, name => name.Equals("Android XR", StringComparison.OrdinalIgnoreCase));
+            if (currentDefaultQualityName == "Android XR")
+            {
+                // If already on "Android XR", save the next quality level as previous
+                if (vrQualityIndex >= 0 && vrQualityIndex + 1 < qualityNames.Length)
+                {
+                    var targetQualityName = qualityNames[vrQualityIndex + 1];
+                    EditorPrefs.SetString("PreviousQualityLevelName", targetQualityName);
+                    Debug.Log($"Saved current default quality level: {targetQualityName}");
+                }
+                else
+                {
+                    EditorPrefs.SetString("PreviousQualityLevelName", currentDefaultQualityName);
+                    Debug.Log($"Saved current default quality level: {currentDefaultQualityName}");
+                }
+            }
+            else
+            {
+                EditorPrefs.SetString("PreviousQualityLevelName", currentDefaultQualityName);
+                Debug.Log($"Saved current default quality level: {currentDefaultQualityName}");
+            }
+
+            // Set quality level to "Standalone VR"
+            SetDefaultQualityLevel(vrQualityIndex);
+            #endregion
+            
+            #region Setup XR Plugin Management
+            EnableOpenXRLoader();
+            LoaderControl.DisableFeatureGroup(BuildTargetGroup.Android, k_MetaFeatureSetID);
+            LoaderControl.EnableFeatureGroup(BuildTargetGroup.Android, k_AndroidXRFeatureSetID);
+            #endregion
+            
+            #region Add Android XR to Scripting Define Symbols
+
+            PlayerSettings.GetScriptingDefineSymbols(NamedBuildTarget.Android, out var symbols);
+            if(!symbols.Any(x => string.Equals(x, k_VRMode)))
+            {
+                symbols = symbols.Append(k_VRMode).ToArray();
+            }
+            PlayerSettings.SetScriptingDefineSymbols(NamedBuildTarget.Android, symbols);
+            
+            PlayerSettings.GetScriptingDefineSymbols(NamedBuildTarget.Standalone, out symbols);
+            if(symbols.Any(x => string.Equals(x, k_VRMode))) return;
+            symbols = symbols.Append(k_VRMode).ToArray();
+            PlayerSettings.SetScriptingDefineSymbols(NamedBuildTarget.Standalone, symbols);
+
+            #endregion
+        }
         
-        [MenuItem("Tools/VR/Setup Standalone VR")]
+        [MenuItem("Tools/XR/Setup Standalone VR")]
         public static void SetupForStandaloneVR()
         {
-#region Scene Setup
+            XRSceneSetup();
+
+            #region Quality Settings
+
+            var currentDefaultQualityName = ReturnCurrentQualityName();
+            string[] qualityNames = QualitySettings.names;
+            int vrQualityIndex = Array.FindIndex(qualityNames, name => name.Equals("Standalone VR", StringComparison.OrdinalIgnoreCase));
+            if (currentDefaultQualityName == "Standalone VR")
+            {
+                // If already on "Standalone VR", save the next quality level as previous
+                if (vrQualityIndex >= 0 && vrQualityIndex + 1 < qualityNames.Length)
+                {
+                    var targetQualityName = qualityNames[vrQualityIndex + 1];
+                    EditorPrefs.SetString("PreviousQualityLevelName", targetQualityName);
+                    Debug.Log($"Saved current default quality level: {targetQualityName}");
+                }
+                else
+                {
+                    EditorPrefs.SetString("PreviousQualityLevelName", currentDefaultQualityName);
+                    Debug.Log($"Saved current default quality level: {currentDefaultQualityName}");
+                }
+            }
+            else
+            {
+                EditorPrefs.SetString("PreviousQualityLevelName", currentDefaultQualityName);
+                Debug.Log($"Saved current default quality level: {currentDefaultQualityName}");
+            }
+
+            // Set quality level to "Standalone VR"
+            SetDefaultQualityLevel(vrQualityIndex);
+            #endregion
+            
+            #region Setup XR Plugin Management
+            EnableOpenXRLoader();
+            LoaderControl.EnableFeatureGroup(BuildTargetGroup.Android, k_MetaFeatureSetID);
+            LoaderControl.DisableFeatureGroup(BuildTargetGroup.Android, k_AndroidXRFeatureSetID);
+            #endregion
+
+#region Add VR Mode to Scripting Define Symbols
+
+            PlayerSettings.GetScriptingDefineSymbols(NamedBuildTarget.Android, out var symbols);
+            if (!symbols.Any(x => string.Equals(x, k_VRMode)))
+            {
+                symbols = symbols.Append(k_VRMode).ToArray();
+            }
+            PlayerSettings.SetScriptingDefineSymbols(NamedBuildTarget.Android, symbols);
+            
+            PlayerSettings.GetScriptingDefineSymbols(NamedBuildTarget.Standalone, out symbols);
+            if(symbols.Any(x => string.Equals(x, k_VRMode))) return;
+            symbols = symbols.Append(k_VRMode).ToArray();
+            PlayerSettings.SetScriptingDefineSymbols(NamedBuildTarget.Standalone, symbols);
+
+#endregion
+
+        }
+
+        private static void EnableOpenXRLoader()
+        {
+            if (LoaderControl.IsLoaderEnabled(BuildTarget.Android, typeof(ARCoreLoader)))
+            {
+                LoaderControl.DisableLoader(BuildTarget.Android, typeof(ARCoreLoader));
+            }
+               
+            //Enable this if want to use Oculus Loader
+            /*if (!LoaderControl.IsLoaderEnabled(BuildTarget.Android, typeof(OculusLoader)))
+            {
+                LoaderControl.EnableLoader(BuildTarget.Android, typeof(OculusLoader));
+            }*/
+            
+            if (!LoaderControl.IsLoaderEnabled(BuildTarget.Android, typeof(OpenXRLoader)))
+            {
+                LoaderControl.EnableLoader(BuildTarget.Android, typeof(OpenXRLoader));
+            }
+        }
+
+        private static string ReturnCurrentQualityName()
+        {
+            var qualitySettingsAsset = AssetDatabase.LoadAssetAtPath<QualitySettings>("ProjectSettings/QualitySettings.asset");
+            string currentDefaultQualityName = QualitySettings.names[QualitySettings.GetQualityLevel()]; // fallback
+
+            if (qualitySettingsAsset != null)
+            {
+                var serializedObject = new SerializedObject(qualitySettingsAsset);
+                var perPlatformDefaultQuality = serializedObject.FindProperty("m_PerPlatformDefaultQuality");
+
+                // Find current default for Android platform
+                for (int i = 0; i < perPlatformDefaultQuality.arraySize; i++)
+                {
+                    var element = perPlatformDefaultQuality.GetArrayElementAtIndex(i);
+                    var first = element.FindPropertyRelative("first");
+                    if (first.stringValue == "Android")
+                    {
+                        var second = element.FindPropertyRelative("second");
+                        int currentIndex = second.intValue;
+                        if (currentIndex >= 0 && currentIndex < QualitySettings.names.Length)
+                        {
+                            currentDefaultQualityName = QualitySettings.names[currentIndex];
+                        }
+                        break;
+                    }
+                }
+            }
+            return currentDefaultQualityName;
+        }
+
+        private static void XRSceneSetup()
+        {
             // Get the current build settings scenes
             var buildScenes = EditorBuildSettings.scenes;
             List<EditorBuildSettingsScene> newScenes = new List<EditorBuildSettingsScene>();
@@ -85,100 +251,9 @@ namespace Unity.Industry.Viewer.VR.Editor
             EditorSceneManager.SaveOpenScenes();
             
             EditorSceneManager.OpenScene(vrScenes[0], OpenSceneMode.Single);
-#endregion
-
-#region Quality Settings
-
-            var qualitySettingsAsset = AssetDatabase.LoadAssetAtPath<QualitySettings>("ProjectSettings/QualitySettings.asset");
-            string currentDefaultQualityName = QualitySettings.names[QualitySettings.GetQualityLevel()]; // fallback
-
-            if (qualitySettingsAsset != null)
-            {
-                var serializedObject = new SerializedObject(qualitySettingsAsset);
-                var perPlatformDefaultQuality = serializedObject.FindProperty("m_PerPlatformDefaultQuality");
-
-                // Find current default for Android platform
-                for (int i = 0; i < perPlatformDefaultQuality.arraySize; i++)
-                {
-                    var element = perPlatformDefaultQuality.GetArrayElementAtIndex(i);
-                    var first = element.FindPropertyRelative("first");
-                    if (first.stringValue == "Android")
-                    {
-                        var second = element.FindPropertyRelative("second");
-                        int currentIndex = second.intValue;
-                        if (currentIndex >= 0 && currentIndex < QualitySettings.names.Length)
-                        {
-                            currentDefaultQualityName = QualitySettings.names[currentIndex];
-                        }
-                        break;
-                    }
-                }
-            }
-            string[] qualityNames = QualitySettings.names;
-            int vrQualityIndex = Array.FindIndex(qualityNames, name => name.Equals("Standalone VR", StringComparison.OrdinalIgnoreCase));
-            if (currentDefaultQualityName == "Standalone VR")
-            {
-                // If already on "Standalone VR", save the next quality level as previous
-                if (vrQualityIndex >= 0 && vrQualityIndex + 1 < qualityNames.Length)
-                {
-                    var targetQualityName = qualityNames[vrQualityIndex + 1];
-                    EditorPrefs.SetString("PreviousQualityLevelName", targetQualityName);
-                    Debug.Log($"Saved current default quality level: {targetQualityName}");
-                }
-                else
-                {
-                    EditorPrefs.SetString("PreviousQualityLevelName", currentDefaultQualityName);
-                    Debug.Log($"Saved current default quality level: {currentDefaultQualityName}");
-                }
-            }
-            else
-            {
-                EditorPrefs.SetString("PreviousQualityLevelName", currentDefaultQualityName);
-                Debug.Log($"Saved current default quality level: {currentDefaultQualityName}");
-            }
-
-            // Set quality level to "Standalone VR"
-            SetDefaultQualityLevel(vrQualityIndex);
-#endregion
-            
-#region Setup XR Plugin Management
-            
-            if (LoaderControl.IsLoaderEnabled(BuildTarget.Android, typeof(ARCoreLoader)))
-            {
-                LoaderControl.DisableLoader(BuildTarget.Android, typeof(ARCoreLoader));
-            }
-               
-            //Enable this if want to use Oculus Loader
-            /*if (!LoaderControl.IsLoaderEnabled(BuildTarget.Android, typeof(OculusLoader)))
-            {
-                LoaderControl.EnableLoader(BuildTarget.Android, typeof(OculusLoader));
-            }*/
-            
-            if (!LoaderControl.IsLoaderEnabled(BuildTarget.Android, typeof(OpenXRLoader)))
-            {
-                LoaderControl.EnableLoader(BuildTarget.Android, typeof(OpenXRLoader));
-            }
-            
-#endregion
-
-#region Add VR Mode to Scripting Define Symbols
-
-            PlayerSettings.GetScriptingDefineSymbols(NamedBuildTarget.Android, out var symbols);
-            if(symbols.Any(x => string.Equals(x, k_VRMode))) return;
-            symbols = symbols.Append(k_VRMode).ToArray();
-            PlayerSettings.SetScriptingDefineSymbols(NamedBuildTarget.Android, symbols);
-            
-            PlayerSettings.GetScriptingDefineSymbols(NamedBuildTarget.Standalone, out symbols);
-            if(symbols.Any(x => string.Equals(x, k_VRMode))) return;
-            symbols = symbols.Append(k_VRMode).ToArray();
-            PlayerSettings.SetScriptingDefineSymbols(NamedBuildTarget.Standalone, symbols);
-
-#endregion
-
-
         }
 
-        [MenuItem("Tools/VR/Disable Standalone VR Setup")]
+        [MenuItem("Tools/XR/Disable XR Setup")]
         public static void DisableSetupForStandaloneVR()
         {
 #region Scene Setup
@@ -283,6 +358,11 @@ namespace Unity.Industry.Viewer.VR.Editor
         {
             LoaderControl.DisableLoader(BuildTarget.Android, typeof(OculusLoader));
         }*/
+        
+        if (LoaderControl.IsLoaderEnabled(BuildTarget.Android, typeof(OpenXRLoader)))
+        {
+            LoaderControl.DisableLoader(BuildTarget.Android, typeof(OpenXRLoader));
+        }
             
 #endregion
             
