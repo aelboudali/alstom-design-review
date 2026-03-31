@@ -8,7 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [2.2.0] - 2026-03-31
 ### Added
 - Support Android XR deployment.
-- Interaction tool for interact object with 3D data streaming.
+- An interaction tool for interacting with objects with 3D data streaming.
+- VR walk mode
 
 ## [2.1.0] - 2026-02-06
 ### Fixes
