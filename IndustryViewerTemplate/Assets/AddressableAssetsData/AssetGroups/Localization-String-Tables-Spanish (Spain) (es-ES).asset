@@ -49,6 +49,12 @@ MonoBehaviour:
     - Locale-es-ES
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 24f1bb4fa662a4ec0b6c9de2a36d6dd1
+    m_Address: Interaction Tool_es-ES
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-es-ES
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 30cf3c724a7a6b442bb50c7afc50a5be
     m_Address: Environment Tool_es-ES
     m_ReadOnly: 1

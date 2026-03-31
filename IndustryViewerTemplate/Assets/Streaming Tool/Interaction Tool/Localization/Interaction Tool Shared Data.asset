@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: Interaction Tool Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: Interaction Tool
+  m_TableCollectionNameGuidString: 0884d71f57df84ed0950b61b2b978ca2
+  m_Entries:
+  - m_Id: 1196847783936
+    m_Key: Interaction Tool
+    m_Metadata:
+      m_Items: []
+  - m_Id: 61862300344320
+    m_Key: Move
+    m_Metadata:
+      m_Items: []
+  - m_Id: 61862304538624
+    m_Key: Rotate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 61862304538625
+    m_Key: Scale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 314175560605696
+    m_Key: Global
+    m_Metadata:
+      m_Items: []
+  - m_Id: 314175560605697
+    m_Key: Local
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318339816611840
+    m_Key: Interactable Button
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318339816611841
+    m_Key: Current List
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318339816611842
+    m_Key: Transform
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318339816611843
+    m_Key: Reset
+    m_Metadata:
+      m_Items: []
+  - m_Id: 42351695571705856
+    m_Key: Offline Mode Message
+    m_Metadata:
+      m_Items: []
+  - m_Id: 42379094405406720
+    m_Key: Offline Asset Message
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 7207680623327838493
+  references:
+    version: 2
+    RefIds:
+    - rid: 7207680623327838493
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables,
+        asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1773664217455

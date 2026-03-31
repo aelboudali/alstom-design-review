@@ -247,6 +247,8 @@ MonoBehaviour:
   m_StartingHoverFilters: []
   m_StartingSelectFilters: []
   m_StartingInteractionStrengthFilters: []
+  m_AutoFindParentInteractableInHierarchy: 0
+  m_ParentInteractableObject: {fileID: 0}
 --- !u!114 &799446
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -427,6 +429,8 @@ MonoBehaviour:
   m_StartingHoverFilters: []
   m_StartingSelectFilters: []
   m_StartingInteractionStrengthFilters: []
+  m_AutoFindParentInteractableInHierarchy: 0
+  m_ParentInteractableObject: {fileID: 0}
 --- !u!114 &125432187
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -477,14 +481,14 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 224892313}
   m_Enabled: 1
-  serializedVersion: 11
+  serializedVersion: 12
   m_Type: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
-  m_CookieSize: 10
+  m_CookieSize2D: {x: 10, y: 10}
   m_Shadows:
     m_Type: 0
     m_Resolution: -1
@@ -732,6 +736,8 @@ MonoBehaviour:
   m_StartingHoverFilters: []
   m_StartingSelectFilters: []
   m_StartingInteractionStrengthFilters: []
+  m_AutoFindParentInteractableInHierarchy: 0
+  m_ParentInteractableObject: {fileID: 0}
 --- !u!114 &478354948
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1011,6 +1017,8 @@ MonoBehaviour:
   m_StartingHoverFilters: []
   m_StartingSelectFilters: []
   m_StartingInteractionStrengthFilters: []
+  m_AutoFindParentInteractableInHierarchy: 0
+  m_ParentInteractableObject: {fileID: 0}
   m_AttachTransform: {fileID: 0}
   m_SecondaryAttachTransform: {fileID: 0}
   m_UseDynamicAttach: 1
@@ -1161,6 +1169,7 @@ SkinnedMeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   serializedVersion: 2
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
@@ -1384,6 +1393,8 @@ MonoBehaviour:
   m_StartingHoverFilters: []
   m_StartingSelectFilters: []
   m_StartingInteractionStrengthFilters: []
+  m_AutoFindParentInteractableInHierarchy: 0
+  m_ParentInteractableObject: {fileID: 0}
 --- !u!114 &903068735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1536,6 +1547,12 @@ MonoBehaviour:
   m_TeleportDirectionInputReference: {fileID: -440298646266941818, guid: c348712bda248c246b8c49b3db54643f,
     type: 3}
   m_TeleportMoveDelay: 0.375
+  m_CurrentNavigationMode: 0
+  m_CollisionRaysHorizontal: 1
+  m_CollisionRaysVertical: 1
+  m_CollisionBodyWidth: 0.4
+  m_CollisionBodyHeightMin: 0.4
+  m_CollisionBodyHeightMax: 0.8
 --- !u!114 &950343831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1941,6 +1958,7 @@ UIRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
 --- !u!4 &1110789378
 Transform:
   m_ObjectHideFlags: 0
@@ -2241,6 +2259,8 @@ MonoBehaviour:
   m_StartingHoverFilters: []
   m_StartingSelectFilters: []
   m_StartingInteractionStrengthFilters: []
+  m_AutoFindParentInteractableInHierarchy: 0
+  m_ParentInteractableObject: {fileID: 0}
 --- !u!114 &1400231355
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2331,6 +2351,7 @@ MonoBehaviour:
   defaultNavigationOption: {fileID: 950343830}
   navigationOptions:
   - {fileID: 950343830}
+  - {fileID: 2109197589}
   - {fileID: 1607821928}
 --- !u!4 &1487104670
 Transform:
@@ -2346,6 +2367,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 950343829}
+  - {fileID: 2109197591}
   - {fileID: 1607821927}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2940,7 +2962,7 @@ Transform:
   m_GameObject: {fileID: 1712628790}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.0075, y: 0.08, z: 0}
+  m_LocalPosition: {x: 0.01, y: 0.08, z: 0}
   m_LocalScale: {x: 0.02, y: 0.02, z: 0.02}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -3061,6 +3083,8 @@ MonoBehaviour:
   m_StartingHoverFilters: []
   m_StartingSelectFilters: []
   m_StartingInteractionStrengthFilters: []
+  m_AutoFindParentInteractableInHierarchy: 0
+  m_ParentInteractableObject: {fileID: 0}
 --- !u!114 &1712628796
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3218,6 +3242,162 @@ MonoBehaviour:
   references:
     version: 2
     RefIds: []
+--- !u!1 &2109197588
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2109197591}
+  - component: {fileID: 2109197589}
+  - component: {fileID: 2109197590}
+  m_Layer: 0
+  m_Name: Walk Camera Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2109197589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2109197588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 824ae4c8240b64353a2d8614aeebc01e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  navigationCamera: {fileID: 0}
+  navigationOptionUIComponent: {fileID: 2109197590}
+  m_Settings: {fileID: 11400000, guid: 66ffcc0064c34a499f0094bbab3b3131, type: 2}
+  m_LeftHandJoystickInputReference: {fileID: 6972639530819350904, guid: c348712bda248c246b8c49b3db54643f,
+    type: 3}
+  m_MaxTimeToTravelFullSpeed: 3
+  _invalidGradient:
+    serializedVersion: 2
+    key0: {r: 1, g: 0, b: 0, a: 0}
+    key1: {r: 1, g: 0, b: 0, a: 0.5882353}
+    key2: {r: 0, g: 0, b: 0, a: 0.5882353}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 3277
+    atime2: 65535
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_ColorSpace: -1
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 3
+  _validGradient:
+    serializedVersion: 2
+    key0: {r: 0.1254902, g: 0.5882353, b: 0.9529412, a: 0}
+    key1: {r: 0.1254902, g: 0.5882353, b: 0.9529412, a: 0.75686276}
+    key2: {r: 0, g: 0, b: 0, a: 1}
+    key3: {r: 0, g: 0, b: 0, a: 0.75686276}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 2891
+    atime2: 22359
+    atime3: 65535
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_ColorSpace: -1
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 4
+  m_DirectionTeleportReticle: {fileID: 8748868027195207512, guid: 3ea2a1bfd6e8c4145a83f4e855dea82d,
+    type: 3}
+  m_TeleportCancelActionReference: {fileID: 2307464322626738743, guid: c348712bda248c246b8c49b3db54643f,
+    type: 3}
+  m_TeleportDirectionInputReference: {fileID: -440298646266941818, guid: c348712bda248c246b8c49b3db54643f,
+    type: 3}
+  m_TeleportMoveDelay: 0.375
+  m_CurrentNavigationMode: 1
+  m_CollisionRaysHorizontal: 1
+  m_CollisionRaysVertical: 1
+  m_CollisionBodyWidth: 0.4
+  m_CollisionBodyHeightMin: 0.4
+  m_CollisionBodyHeightMax: 0.8
+--- !u!114 &2109197590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2109197588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5fae97beed7e4a7388fbce9c23209b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  navigationIcon: {fileID: 2800000, guid: 5163dd911972c3043aa9a636425fd13a, type: 3}
+  navigationName:
+    m_TableReference:
+      m_TableCollectionName: GUID:75b7202b47b6842be8d6b5d609ec08e7
+    m_TableEntryReference:
+      m_KeyId: 161130583641190400
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  navigationOptionUIAsset: {fileID: 9197481963319205126, guid: 9f81a96e1eaa4a84dbfb944583f765af,
+    type: 3}
+  m_XRControllerMenu:
+    m_Side: 1
+    m_Position: 1
+  m_VRFlyNavigationController: {fileID: 2109197589}
+  m_OverheadIcon: {fileID: 2800000, guid: 324fc7bfd9e9d4bf5a618dbb345b0374, type: 3}
+  references:
+    version: 2
+    RefIds: []
+--- !u!4 &2109197591
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2109197588}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1487104670}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

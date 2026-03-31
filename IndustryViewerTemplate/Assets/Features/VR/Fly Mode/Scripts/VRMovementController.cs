@@ -20,43 +20,43 @@ using Unity.Mathematics;
 
 namespace Unity.Industry.Viewer.VR.FlyMode
 {
-    public class VRMovementController : NavigationOption
+    public partial class VRMovementController : NavigationOption
     {
         private const string k_RightHandTeleportInteractorTag = "VR-RightHandTeleport Interactor";
-        
+
         private const float k_PinchThreshold = 0.8f; // Threshold for pinch detection
         private const float k_PinchReleaseThreshold = 0.5f; // Threshold for pinch release detection
         private const float k_PinchMovementThreshold = 0.2f; // Minimum movement distance to trigger pinch movement
-        
+
         XROrigin m_XROrigin;
         DynamicMoveProvider m_DynamicMoveProvider;
-        
+
         DoubleBounds? m_Bounds;
 
         private CameraUtility Utility;
-        
+
         [SerializeField]
         protected CameraSettings m_Settings;
-        
+
         public float MoveSensitivity { get; private set; }
-        
+
         private CameraUtility m_CameraUtility;
-        
+
         XRInputModalityManager m_InputModalityManager;
 
-        private ControlType m_CurrentControlType; 
-        
+        private ControlType m_CurrentControlType;
+
         static List<XRHandSubsystem> s_SubsystemsReuse = new List<XRHandSubsystem>();
-        
+
         XRFingerShape m_LeftHandPinchShape;
         XRFingerShape m_RightHandPinchShape;
-        
+
         bool m_LeftHandPinchActive;
         bool m_RightHandPinchActive;
-        
+
         private Vector3 m_leftHandPinchStartPosition;
         private Vector3 m_rightHandPinchStartPosition;
-        
+
         private LocomotionMediator m_LocomotionMediator;
 
         #region Fly Mode
@@ -65,7 +65,7 @@ namespace Unity.Industry.Viewer.VR.FlyMode
         private InputActionReference m_LeftHandJoystickInputReference;
         private float m_OriginalFlySpeed;
         private float m_MaxFlySpeed;
-        private const float k_JoystickFullPushThreshold = 0.9f; 
+        private const float k_JoystickFullPushThreshold = 0.9f;
         [SerializeField]
         private float m_MaxTimeToTravelFullSpeed = 3f;
         private float m_PinchMovementSpeed = 0.1f;
@@ -73,32 +73,32 @@ namespace Unity.Industry.Viewer.VR.FlyMode
         #endregion
 
         #region Teleport
-        
+
         public Gradient InvalidGradient => _invalidGradient;
         [SerializeField, Header("Teleport Settings")]
         private Gradient _invalidGradient;
         public Gradient ValidGradient => _validGradient;
         [SerializeField]
         private Gradient _validGradient;
-        
+
         [SerializeField]
         private GameObject m_DirectionTeleportReticle;
         public GameObject DirectionTeleportReticle => m_DirectionTeleportReticle;
-        
+
         private CustomTeleportHandler m_CustomTeleportHandler;
         public StreamingModelController StreamingModelController => m_StreamingModelController;
         private StreamingModelController m_StreamingModelController;
-        
+
         [SerializeField]
         private InputActionReference m_TeleportCancelActionReference;
         public InputActionReference TeleportCancelActionReference => m_TeleportCancelActionReference;
 
         [SerializeField] private InputActionReference m_TeleportDirectionInputReference;
         public InputActionReference TeleportDirectionInputReference => m_TeleportDirectionInputReference;
-        
+
         private Coroutine m_TeleportCoroutine;
         private bool m_IsTeleporting;
-        
+
         [SerializeField, Tooltip("The delay after releasing the teleport button to start the teleportation.")]
         float m_TeleportMoveDelay = 0.375f;
 
@@ -109,7 +109,7 @@ namespace Unity.Industry.Viewer.VR.FlyMode
             m_LocomotionMediator = FindFirstObjectByType<LocomotionMediator>(FindObjectsInactive.Include);
             m_InputModalityManager ??= FindFirstObjectByType<XRInputModalityManager>();
             m_StreamingModelController = FindFirstObjectByType<StreamingModelController>();
-            
+
             m_XROrigin = FindFirstObjectByType<XROrigin>();
             m_DynamicMoveProvider = FindFirstObjectByType<DynamicMoveProvider>();
             m_OriginalFlySpeed = m_DynamicMoveProvider.moveSpeed;
@@ -128,9 +128,12 @@ namespace Unity.Industry.Viewer.VR.FlyMode
         private void OnEnable()
         {
             m_LocomotionMediator?.gameObject.SetActive(true);
-            
+
+            // Initialize navigation mode (Fly or Walk) based on Inspector configuration
+            InitializeNavigationMode();
+
             m_CurrentControlType = GetCurrentInputType();
-            
+
             if(m_CurrentControlType == ControlType.Hands)
             {
                 EnablePinchMovement();
@@ -149,11 +152,23 @@ namespace Unity.Industry.Viewer.VR.FlyMode
                 Utility?.SetClipPlane(newBounds);
                 Camera.main.nearClipPlane = 0.01f;
             }
-            
+
+            // Walk mode physics (ground detection, gravity, joystick movement) always
+            // run regardless of input type. DynamicMoveProvider is disabled in walk
+            // mode so the fly speed block below is irrelevant here.
+            // With hand tracking, fall through afterwards so pinch movement also runs.
+            if (m_CurrentNavigationMode == VRNavigationMode.Walk)
+            {
+                UpdateWalkMode();
+                if (m_CurrentControlType != ControlType.Hands)
+                    return;
+            }
+
+            // Fly mode with motion controllers: handle progressive speed acceleration.
             if (m_CurrentControlType == ControlType.MotionControllers)
             {
                 var leftJoystickValue = m_LeftHandJoystickInputReference.action.ReadValue<Vector2>();
-                float magnitude = leftJoystickValue.magnitude; 
+                float magnitude = leftJoystickValue.magnitude;
                 bool isAtFarEnd = magnitude >= k_JoystickFullPushThreshold;
 
                 if (isAtFarEnd)
@@ -171,10 +186,10 @@ namespace Unity.Industry.Viewer.VR.FlyMode
                 }
                 return;
             }
-            
+
             if (!TryGetSubsystem(out var subsystem))
                 return;
-            
+
             m_LeftHandPinchShape = subsystem.leftHand.CalculateFingerShape(XRHandFingerID.Index, XRFingerShapeTypes.Pinch);
             m_RightHandPinchShape = subsystem.rightHand.CalculateFingerShape(XRHandFingerID.Index, XRFingerShapeTypes.Pinch);
             if (m_LeftHandPinchShape.TryGetPinch(out float leftPinch))
@@ -203,7 +218,7 @@ namespace Unity.Industry.Viewer.VR.FlyMode
                 {
                     m_RightHandPinchActive = false;
                 }
-            } 
+            }
             else
             {
                 m_RightHandPinchActive = false;
@@ -265,10 +280,10 @@ namespace Unity.Industry.Viewer.VR.FlyMode
                 m_IsTeleporting = true;
                 m_LocomotionMediator.gameObject.SetActive(false);
                 yield return new WaitForSeconds(m_TeleportMoveDelay);
-                
+
                 var xrRigTransform = m_XROrigin.transform;
                 var currentPosition = xrRigTransform.position;
-                
+
                 var mainCamera = m_XROrigin.Camera;
                 if (mainCamera != null)
                 {
@@ -277,12 +292,12 @@ namespace Unity.Industry.Viewer.VR.FlyMode
                     cameraToRigOffset.y = 0;
                     position += cameraToRigOffset;
                 }
-                
+
                 const float kTargetDuration = 0.05f;
                 var currentDuration = 0f;
-                
+
                 m_XROrigin.MatchOriginUpCameraForward(Vector3.up, rotation * Vector3.forward);
-                
+
                 while (currentDuration < kTargetDuration)
                 {
                     currentDuration += Time.unscaledDeltaTime;
@@ -290,13 +305,19 @@ namespace Unity.Industry.Viewer.VR.FlyMode
                     xrRigTransform.position = currentPosition;
                     yield return null;
                 }
-                
+
                 xrRigTransform.position = position;
                 m_IsTeleporting = false;
                 m_LocomotionMediator.gameObject.SetActive(true);
+
+                // Trigger ground detection after teleport in walk mode
+                if (m_CurrentNavigationMode == VRNavigationMode.Walk)
+                {
+                    OnTeleportCompleteWalkMode();
+                }
             }
         }
-        
+
         private void StartHandSubsystem()
         {
             if (TryGetSubsystem(out var subsystem))
@@ -324,21 +345,23 @@ namespace Unity.Industry.Viewer.VR.FlyMode
 
         private void HandsTrackingStopped()
         {
-
+            m_CurrentControlType = ControlType.None;
         }
 
         private void MotionControllerTrackingStopped()
         {
-            
+            m_CurrentControlType = ControlType.None;
         }
 
         private void UseTrackedHandMode()
         {
+            m_CurrentControlType = ControlType.Hands;
             EnablePinchMovement();
         }
 
         private void UseMotionController()
         {
+            m_CurrentControlType = ControlType.MotionControllers;
             InitializeHandController();
         }
 
@@ -355,11 +378,12 @@ namespace Unity.Industry.Viewer.VR.FlyMode
                     {
                         m_CustomTeleportHandler = rightHandTeleportInteractor.gameObject.AddComponent<CustomTeleportHandler>();
                     }
-
-                    m_CustomTeleportHandler.Init(this);
                 }
             }
-            
+
+            // Always re-initialize with this controller so the handler references the
+            // currently active controller after a mode switch (Fly <-> Walk).
+            m_CustomTeleportHandler?.Init(this);
         }
 
         public override void Initialize()
@@ -379,7 +403,7 @@ namespace Unity.Industry.Viewer.VR.FlyMode
             StreamingModelController.AddObserver -= AddObserver;
             StreamingModelController.BoundsUpdated -= OnBoundsUpdated;
         }
-        
+
         public override void SetDefaultView()
         {
             if(m_Bounds == null) return;
@@ -421,17 +445,17 @@ namespace Unity.Industry.Viewer.VR.FlyMode
         private void OnBoundsUpdated(DoubleBounds bounds, bool skipCameraUpdate)
         {
             if(m_XROrigin == null) return;
-            
+
             m_Bounds = new DoubleBounds(bounds.Center, bounds.Size * 1.5f);
-            
+
             if (!skipCameraUpdate)
             {
                 SetView(bounds);
             }
-           
-            
+
+
             if(m_DynamicMoveProvider == null) return;
-            
+
             CalculateMaxSpeed();
         }
 
@@ -442,7 +466,7 @@ namespace Unity.Industry.Viewer.VR.FlyMode
             //Cap at 100 to avoid too high speeds
             m_MaxFlySpeed = Mathf.Min(200, Mathf.Max(m_OriginalFlySpeed, maxDistanceToMove / m_Settings.maxTimeToTravelFullSpeed * m_Settings.maxSpeedScaling));
         }
-        
+
         private void SetView(DoubleBounds? bounds)
         {
             var pitch = 20.0f;
@@ -451,36 +475,36 @@ namespace Unity.Industry.Viewer.VR.FlyMode
             var aspectRatio = navigationCamera.aspect;
             var nearClipPlane = navigationCamera.nearClipPlane;
             var farClipPlane = navigationCamera.farClipPlane;
-                
+
             var desiredEuler = new Vector3(pitch, 0, 0);
             var distanceFromCenter = GetDistanceFromCenterToFit(bounds.Value, fillRatio, fieldOfView, aspectRatio);
-            
+
             if (distanceFromCenter > farClipPlane)
             {
                 distanceFromCenter = (farClipPlane + nearClipPlane) / 2 ;
             }
 
             var center = new Vector3((float) bounds.Value.Center.x, (float) bounds.Value.Center.y, (float) bounds.Value.Center.z);
-                
+
             var position = center - distanceFromCenter * (Quaternion.Euler(desiredEuler) * Vector3.forward);
 
             if (NavigationController.StartingPosition.HasValue)
             {
                 position = NavigationController.StartingPosition.Value;
             }
-            
+
             position = new Vector3(
                 Mathf.Clamp(position.x, -StandardCamera.DefaultBounds, StandardCamera.DefaultBounds),
                 Mathf.Clamp(position.y, -StandardCamera.DefaultBounds, StandardCamera.DefaultBounds),
                 Mathf.Clamp(position.z, -StandardCamera.DefaultBounds, StandardCamera.DefaultBounds)
             );
-            
-            var faceDirection = center - new Vector3(position.x, center.y, position.z); 
-                
+
+            var faceDirection = center - new Vector3(position.x, center.y, position.z);
+
             m_XROrigin.MoveCameraToWorldLocation(position);
-                
+
             m_XROrigin.MatchOriginUpCameraForward(Vector3.up, faceDirection);
-            
+
             float GetDistanceFromCenterToFit(DoubleBounds bb, float fillRatio, float fovY, float aspectRatio)
             {
                 var fovX = GetHorizontalFov(fovY, aspectRatio);
@@ -488,13 +512,13 @@ namespace Unity.Industry.Viewer.VR.FlyMode
                 var distanceToFitYAxisInView = GetDistanceFromCenter(bb, (float)bb.Extents.y, fovY, fillRatio);
                 return Mathf.Max(distanceToFitXAxisInView, distanceToFitYAxisInView);
             }
-            
+
             float GetHorizontalFov(float fovY, float aspectRatio)
             {
                 var ratio = Mathf.Tan(Mathf.Deg2Rad * (fovY / 2.0f));
                 return Mathf.Rad2Deg * Mathf.Atan(ratio * aspectRatio) * 2.0f;
             }
-            
+
             float GetDistanceFromCenter(DoubleBounds bb, float opposite, float fov, float fillRatio)
             {
                 var lookAt = bb.Center;
@@ -510,9 +534,27 @@ namespace Unity.Industry.Viewer.VR.FlyMode
 
         public void SetHomeView()
         {
-            SetView(m_Bounds);
+            if (m_Bounds != null)
+            {
+                SetView(m_Bounds);
+                return;
+            }
+
+            // Query current bounds if model is already loaded (in case BoundsUpdated fired before Initialize)
+            if (m_StreamingModelController != null && m_StreamingModelController.Stage != null)
+            {
+                try
+                {
+                    var currentBounds = m_StreamingModelController.GetWorldBounds();
+                    SetView(currentBounds);
+                }
+                catch
+                {
+                    // Stage may not be fully ready yet, bounds will be set when BoundsUpdated fires
+                }
+            }
         }
-        
+
         public void UpdateMoveSensitivity(float value)
         {
             MoveSensitivity = Mathf.Clamp(value, 0.1f, 5.0f);
@@ -526,11 +568,18 @@ namespace Unity.Industry.Viewer.VR.FlyMode
 
         public override void OnNavigationOptionDisable()
         {
-            
+
         }
 
         public override bool IsSupported()
         {
+            // For now, we allow both hand tracking and motion controllers in walk mode,
+            // but we may want to disable hand tracking in walk mode in the future if we find it causes usability issues.
+            /*var currentControlType = GetCurrentInputType();
+            if (currentControlType == ControlType.Hands && m_CurrentNavigationMode == VRNavigationMode.Walk)
+            {
+                return false;
+            }*/
             return true;
         }
 
@@ -538,28 +587,28 @@ namespace Unity.Industry.Viewer.VR.FlyMode
         {
             return m_XROrigin == null ? null : m_XROrigin.gameObject;
         }
-        
+
         private ControlType GetCurrentInputType()
         {
             // Check left hand first
             var leftType = GetHandInputType(InputDeviceCharacteristics.Left | InputDeviceCharacteristics.HeldInHand);
             if (leftType != ControlType.None)
                 return leftType;
-    
+
             // Check right hand
             var rightType = GetHandInputType(InputDeviceCharacteristics.Right | InputDeviceCharacteristics.HeldInHand);
             if (rightType != ControlType.None)
                 return rightType;
-    
+
             return ControlType.None;
         }
-        
+
         private ControlType GetHandInputType(InputDeviceCharacteristics characteristics)
         {
             #if UNITY_EDITOR
             return ControlType.MotionControllers;
             #endif
-            
+
             List<InputDevice> devices = new List<InputDevice>();
             InputDevices.GetDevicesWithCharacteristics(characteristics, devices);
 
@@ -572,7 +621,7 @@ namespace Unity.Industry.Viewer.VR.FlyMode
             }
             return ControlType.None;
         }
-        
+
         static bool TryGetSubsystem(out XRHandSubsystem system)
         {
             system = null;

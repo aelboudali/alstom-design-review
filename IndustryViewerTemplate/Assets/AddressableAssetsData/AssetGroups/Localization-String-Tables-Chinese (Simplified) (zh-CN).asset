@@ -127,6 +127,12 @@ MonoBehaviour:
     - Locale-zh-CN
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: da02e47171cf0427f9a674a2968df06d
+    m_Address: Interaction Tool_zh-CN
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-CN
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: da69bfd6cb7694579863c2396647e2ac
     m_Address: Add Model Tool_zh-CN
     m_ReadOnly: 1

@@ -9,16 +9,12 @@ using UnityEditor.XR.Management;
 using UnityEditor.XR.Management.Metadata;
 using UnityEngine.XR.ARCore;
 using UnityEngine.XR.OpenXR;
+using UnityEditor.XR.OpenXR.Features;
 
 namespace Unity.Industry.Viewer.VR.Editor
 {
     public static class LoaderControl
     {
-        const string k_ARCoreLoader = "ARCoreLoader";
-        //Enable this if want to use Oculus Loader
-        //const string k_OculusLoader = "OculusLoader";
-        const string k_OpenXRLoader = "OpenXRLoader";
-
         static void GetXRManagerSettings(BuildTarget buildTarget, out BuildTargetGroup buildTargetGroup, out XRManagerSettings manager)
         {
             buildTargetGroup = BuildPipeline.GetBuildTargetGroup(buildTarget);
@@ -31,7 +27,7 @@ namespace Unity.Industry.Viewer.VR.Editor
 
             manager = xrSettings.Manager;
         }
-        
+
         public static bool IsLoaderEnabled(BuildTarget buildTarget, Type loaderType)
         {
             GetXRManagerSettings(buildTarget, out _, out var manager);
@@ -53,7 +49,7 @@ namespace Unity.Industry.Viewer.VR.Editor
             {
                 case not null when loaderType == typeof(ARCoreLoader):
                     // Add any specific logic for ARCoreLoader here
-                    loaderName = k_ARCoreLoader;
+                    loaderName = typeof(ARCoreLoader).FullName;
                     break;
                 
                 //Enable this if want to use Oculus Loader
@@ -62,15 +58,34 @@ namespace Unity.Industry.Viewer.VR.Editor
                     break;*/
                 
                 case not null when loaderType == typeof(OpenXRLoader):
-                    loaderName = k_OpenXRLoader;
+                    loaderName = typeof(OpenXRLoader).FullName;
                     break;
             }
             
             if (string.IsNullOrEmpty(loaderName))
                 return;
-            
-            if(!XRPackageMetadataStore.AssignLoader(manager, loaderName, buildTargetGroup))
-                Debug.LogError("Failed to assign loader to XR Manager Settings");
+
+            if (!XRPackageMetadataStore.AssignLoader(manager, loaderName, buildTargetGroup)) return;
+            EditorUtility.SetDirty(manager);
+            AssetDatabase.SaveAssets();
+        }
+
+        public static void EnableFeatureGroup(BuildTargetGroup buildTarget, string id)
+        {
+            var featureSets = OpenXRFeatureSetManager.FeatureSetsForBuildTarget(buildTarget);
+            foreach (var featureSet in featureSets.Where(featureSet => featureSet.featureSetId == id).Where(featureSet => featureSet.isInstalled))
+            {
+                featureSet.isEnabled = true;
+            }
+        }
+
+        public static void DisableFeatureGroup(BuildTargetGroup buildTarget, string id)
+        {
+            var featureSets = OpenXRFeatureSetManager.FeatureSetsForBuildTarget(buildTarget);
+            foreach (var featureSet in featureSets.Where(featureSet => featureSet.featureSetId == id).Where(featureSet => featureSet.isInstalled))
+            {
+                featureSet.isEnabled = false;
+            }
         }
         
         public static void DisableLoader(BuildTarget buildTarget, Type loaderType)
@@ -84,7 +99,7 @@ namespace Unity.Industry.Viewer.VR.Editor
             {
                 case not null when loaderType == typeof(ARCoreLoader):
                     // Add any specific logic for ARCoreLoader here
-                    loaderName = k_ARCoreLoader;
+                    loaderName = typeof(ARCoreLoader).FullName;
                     break;
                 
                 //Enable this if want to use Oculus Loader
@@ -93,7 +108,7 @@ namespace Unity.Industry.Viewer.VR.Editor
                     break;*/
                 
                 case not null when loaderType == typeof(OpenXRLoader):
-                    loaderName = k_OpenXRLoader;
+                    loaderName = typeof(OpenXRLoader).FullName;
                     break;
             }
             

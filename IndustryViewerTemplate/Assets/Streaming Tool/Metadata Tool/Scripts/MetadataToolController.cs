@@ -42,16 +42,12 @@ namespace Unity.Industry.Viewer.Streaming.Metadata
 
         private Dictionary<ModelStreamId, IMetadataRepository> m_ModelIDRepositoriesMapping = new();
         
-        private HighlightModifier m_HighlightModifier;
+        private ModelStreamId? m_ModelStreamId;
         
         private async void Start()
         {
             m_StreamingModelController = FindAnyObjectByType<StreamingModelController>(FindObjectsInactive.Include);
             ToolOpened?.Invoke();
-            
-            m_HighlightModifier ??= new HighlightModifier(highlightColor);
-
-            m_StreamingModelController.Stage.InstanceModifiers.Add(m_HighlightModifier);
             
             await CreateRepositories();
 
@@ -62,7 +58,6 @@ namespace Unity.Industry.Viewer.Streaming.Metadata
 
         private void OnDestroy()
         {
-            m_StreamingModelController?.Stage.InstanceModifiers.Remove(m_HighlightModifier);
             #if VR_MODE
             VRInteractionController.UnsubscribeSingleActivate(this);
             #else
@@ -193,7 +188,11 @@ namespace Unity.Industry.Viewer.Streaming.Metadata
             {
                 MetadataFound?.Invoke(null);
                 InstanceSelected?.Invoke(default, InstanceId.None);
-                m_HighlightModifier?.Reset();
+                if (m_ModelStreamId.HasValue)
+                {
+                    m_StreamingModelController.Stage.HighlightController.ResetHighlight(m_ModelStreamId.Value);
+                    m_ModelStreamId = null;
+                }
             }
         }
         
@@ -222,6 +221,25 @@ namespace Unity.Industry.Viewer.Streaming.Metadata
             if(firstQuery == null) return;
             
             var found = new List<MetadataInstance>();
+
+            if (firstQuery.Properties.Count == 0)
+            {
+                Debug.Log("No properties found for the selected instance. Attempting to query the parent instance.");
+                var parentId = firstQuery.AncestorIds[^1];
+                var secondQuery = await repository
+                    .Query()
+                    .Select(MetadataPathCollection.All)
+                    .WhereInstanceEquals(parentId)
+                    .GetFirstOrDefaultAsync(CancellationToken.None);
+                if (secondQuery != null)
+                {
+                    found.Add(secondQuery);
+                }
+            }
+            else
+            {
+                found.Add(firstQuery);
+            }
             
             //Uncomment this if you want to include ancestors in the metadata found.
             /*if (firstQuery.AncestorIds is {Count: > 0})
@@ -242,9 +260,8 @@ namespace Unity.Industry.Viewer.Streaming.Metadata
                         found.Add(ancestor);
                 }
             }*/
-            found.Add(firstQuery);
-                
-            m_HighlightModifier.Update(modelID, id);
+            m_ModelStreamId = modelID;
+            m_StreamingModelController.Stage.HighlightController.SetHighlight(m_ModelStreamId.Value, highlightColor, new []{id});
                 
             InstanceSelected?.Invoke(modelID, id);
                 
@@ -264,8 +281,11 @@ namespace Unity.Industry.Viewer.Streaming.Metadata
         public override void OnToolClosed()
         {
             ToolClosed?.Invoke();
-            m_HighlightModifier?.Reset();
-            m_HighlightModifier?.Dispose();
+            if (m_ModelStreamId.HasValue)
+            {
+                m_StreamingModelController.Stage.HighlightController.ResetHighlight(m_ModelStreamId.Value);
+                m_ModelStreamId = null;
+            }
             InteractionController.UnsubscribeTap(this);
         }
     }

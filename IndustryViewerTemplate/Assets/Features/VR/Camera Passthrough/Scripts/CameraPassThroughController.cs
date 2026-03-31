@@ -10,6 +10,7 @@ using UnityEngine.XR.ARSubsystems;
 #if UNITY_ANDROID
 using UnityEngine.XR.OpenXR.Features.Meta;
 using UnityEngine.Android;
+using UnityEngine.XR.Interaction.Toolkit.Samples.StarterAssets;
 #endif
 using System.Collections.Generic;
 using Unity.Industry.Viewer.VR;
@@ -31,29 +32,25 @@ namespace Unity.Industry.Viewer.VR.CameraPassThrough
     public class CameraPassThroughController : NavigationOption
     {
 #if UNITY_ANDROID && !UNITY_EDITOR
-        const string k_DefaultPermissionId = "com.oculus.permission.USE_SCENE";
+        const string k_DefaultMetaPermissionId = "com.oculus.permission.USE_SCENE";
+        const string k_DefaultAndroidXRPermissionId = "android.permission.SCENE_UNDERSTANDING_COARSE";
 #endif
         
         public static Action<ARState> OnStateChange;
         public static Action<bool> RequestOcclusionOnOff;
         public Action OnAssetPlaceOnSurfaceComplete;
-        ARSession m_ARSession;
         
         [SerializeField]
         MeshFilter m_MeshFilterForARMeshManager;
 
         [SerializeField] private GameObject m_ARPlanePrefab;
         
-        ARCameraManager m_ARCameraManager;
         ARMeshManager m_ARMeshManager;
         ARRaycastManager m_ARRaycastManager;
         AROcclusionManager m_AROcclusionManager;
         
         XROrigin m_XROrigin;
         ARPlaneManager m_ARPlaneManager;
-        
-        CameraClearFlags m_CameraClearFlags;
-        Color originalBackgroundColor;
         
         [SerializeField] private GameObject m_placingMakerPrefab;
         private GameObject m_placingMakerGO;
@@ -97,11 +94,6 @@ namespace Unity.Industry.Viewer.VR.CameraPassThrough
         private void Awake()
         {
             m_LocomotionMediator = FindFirstObjectByType<LocomotionMediator>(FindObjectsInactive.Include);
-            if (!Camera.main.transform.TryGetComponent(out m_ARCameraManager))
-            {
-                m_ARCameraManager = Camera.main.gameObject.AddComponent<ARCameraManager>();
-            }
-            m_ARCameraManager.enabled = false;
             Utility ??= new CameraUtility(Camera.main);
             OnStateChange += OnARStateChanged;
         }
@@ -146,7 +138,7 @@ namespace Unity.Industry.Viewer.VR.CameraPassThrough
                     
                     ARPlane plane = m_RaycastHit[0].trackable as ARPlane;
 #if UNITY_ANDROID
-                    if (m_ARSession.subsystem is MetaOpenXRSessionSubsystem)
+                    if (XRPlatformUnderstanding.CurrentPlatform == XRPlatformType.OpenXRMeta)
                     {
                         if(plane.alignment != PlaneAlignment.HorizontalUp)
                         {
@@ -183,6 +175,7 @@ namespace Unity.Industry.Viewer.VR.CameraPassThrough
         private void OnDisable()
         {
             OnNavigationOptionDisable();
+            CameraPassThroughGlobal.InMRMode = false;
             m_LocomotionMediator?.gameObject.SetActive(true);
             m_XROrigin?.MoveCameraToWorldLocation(m_OriginalXROriginPosition);
             m_XROrigin?.MatchOriginUpCameraForward(Vector3.up, m_OriginalXROriginLookDirection);
@@ -347,10 +340,15 @@ namespace Unity.Industry.Viewer.VR.CameraPassThrough
         {
             //Wait one frame to ensure all systems are initialized
             yield return null;
+            
 #if UNITY_ANDROID && !UNITY_EDITOR
-            if (IsMetaOpenXRActive())
+            var currentPlatform = XRPlatformUnderstanding.CurrentPlatform;
+            if (currentPlatform == XRPlatformType.OpenXRMeta)
             {
-                CheckMetaPermission();
+                CheckPermission(k_DefaultMetaPermissionId);
+            } else if (currentPlatform == XRPlatformType.OpenXRAndroidXR)
+            {
+                CheckPermission(k_DefaultAndroidXRPermissionId);
             }
             else
             {
@@ -359,21 +357,12 @@ namespace Unity.Industry.Viewer.VR.CameraPassThrough
 #else
             StartPassthrough();
 #endif
-            
-#if UNITY_ANDROID && !UNITY_EDITOR
-            bool IsMetaOpenXRActive()
-            {
-                // Check if Meta Quest feature is enabled in OpenXR
-                var features = OpenXRSettings.Instance.GetFeatures<MetaOpenXRFeature>();
-                return features != null && features.Length > 0 && features[0].enabled;
-            }
-#endif
         }
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-        private void CheckMetaPermission()
+        private void CheckPermission(string permission)
         {
-            if (Permission.HasUserAuthorizedPermission(k_DefaultPermissionId))
+            if (Permission.HasUserAuthorizedPermission(permission))
             {
                 StartPassthrough();
             }
@@ -381,7 +370,7 @@ namespace Unity.Industry.Viewer.VR.CameraPassThrough
             {
                 var callbacks = new PermissionCallbacks();
                 callbacks.PermissionGranted += OnPermissionGranted;
-                Permission.RequestUserPermission(k_DefaultPermissionId, callbacks);
+                Permission.RequestUserPermission(permission, callbacks);
             }
         }
 #endif
@@ -406,16 +395,6 @@ namespace Unity.Industry.Viewer.VR.CameraPassThrough
 
         public override void Uninitialize()
         {
-            if (m_ARCameraManager != null)
-            {
-                m_ARCameraManager.enabled = false;
-            }
-
-            if (m_ARSession != null)
-            {
-                m_ARSession.enabled = false;
-            }
-            
             RequestOcclusionOnOff -= OnRequestOcclusionOnOff;
             StreamingModelController.BoundsUpdated -= OnBoundsUpdated;
         }
@@ -432,39 +411,16 @@ namespace Unity.Industry.Viewer.VR.CameraPassThrough
 
         private void StartPassthrough()
         {
+            CameraPassThroughGlobal.InMRMode = true;
+            CameraPassThroughGlobal.ToggleCameraPassThrough(true);
             m_LocomotionMediator?.gameObject.SetActive(false);
-            if (m_ARSession == null)
-            {
-                m_ARSession = FindFirstObjectByType<ARSession>(FindObjectsInactive.Include);
-                if (m_ARSession == null)
-                {
-                    var arSessionObject = new GameObject("ARSession");
-                    arSessionObject.SetActive(false);
-                    m_ARSession = arSessionObject.AddComponent<ARSession>();
-                    m_ARSession.gameObject.AddComponent<ARInputManager>();
-                }
-            }
-            
-            m_ARSession?.gameObject.SetActive(true);
-
-            if (m_ARSession != null)
-            {
-                m_ARSession.enabled = true;
-            }
-            
-            m_ARCameraManager.enabled = true;
-            m_CameraClearFlags = navigationCamera.clearFlags;
-            if (m_CameraClearFlags == CameraClearFlags.Color || m_CameraClearFlags == CameraClearFlags.SolidColor)
-            {
-                originalBackgroundColor = navigationCamera.backgroundColor;
-            }
-
             m_XROrigin ??= FindFirstObjectByType<XROrigin>();
+            ARSession ARSession = FindFirstObjectByType<ARSession>(FindObjectsInactive.Include);
             if (m_XROrigin != null)
             {
-                if (m_ARSession != null)
+                if (ARSession != null)
                 {
-                    SceneManager.MoveGameObjectToScene(m_ARSession.gameObject, m_XROrigin.gameObject.scene);
+                    SceneManager.MoveGameObjectToScene(ARSession.gameObject, m_XROrigin.gameObject.scene);
                 }
                 m_OriginalXROriginPosition = Camera.main.transform.position;
                 m_OriginalXROriginLookDirection = Camera.main.transform.forward;
@@ -537,10 +493,12 @@ namespace Unity.Industry.Viewer.VR.CameraPassThrough
             ControllerVisibility(false);
             
 #if UNITY_ANDROID
-            if (m_ARSession.subsystem is MetaOpenXRSessionSubsystem metaOpenXRSessionSubsystem && !m_HasShownRequestSceneCapture)
+            var currentPlatform = XRPlatformUnderstanding.CurrentPlatform;
+            if (currentPlatform == XRPlatformType.OpenXRMeta && !m_HasShownRequestSceneCapture)
             {
                 m_HasShownRequestSceneCapture = true;
-                if (m_ScanSpacePanel == null)
+                
+                if (m_ScanSpacePanel == null && ARSession.subsystem is MetaOpenXRSessionSubsystem metaOpenXRSessionSubsystem)
                 {
                     m_ScanSpacePanel = new XRPanel.AlertXRPanel("Space Setup", "Please make sure you have set up your space on the device");
                     m_ScanSpacePanel.SetPrimaryButton("Setup Space/Update", () =>
@@ -654,16 +612,11 @@ namespace Unity.Industry.Viewer.VR.CameraPassThrough
 
         public override void OnNavigationOptionDisable()
         {
-            if(!m_ARSession.enabled) return;
-            m_ARSession.enabled = false;
-            m_ARCameraManager.enabled = false;
-            if (navigationCamera.clearFlags != m_CameraClearFlags)
+            if(!CameraPassThroughGlobal.InMRMode) return;
+            CameraPassThroughGlobal.InMRMode = false;
+            if (!PlayerPrefs.HasKey(CameraPassThroughGlobal.k_CameraPassThroughEnabledKey))
             {
-                navigationCamera.clearFlags = m_CameraClearFlags;
-                if (m_CameraClearFlags == CameraClearFlags.Color || m_CameraClearFlags == CameraClearFlags.SolidColor)
-                {
-                    navigationCamera.backgroundColor = originalBackgroundColor;
-                }
+                CameraPassThroughGlobal.ToggleCameraPassThrough(false);
             }
             
             if (m_ARPlaneManager != null)
@@ -704,8 +657,12 @@ namespace Unity.Industry.Viewer.VR.CameraPassThrough
 
         public override bool IsSupported()
         {
-            if (m_ARCameraManager == null) return false;
-            return m_ARCameraManager.descriptor != null;
+            #if UNITY_ANDROID && !UNITY_EDITOR
+            return XRPlatformUnderstanding.CurrentPlatform == XRPlatformType.OpenXRMeta 
+                   || XRPlatformUnderstanding.CurrentPlatform == XRPlatformType.OpenXRAndroidXR;
+            #else
+            return true; //Assume it's supported on other platforms for now since we don't have a
+            #endif
         }
 
         public override GameObject GetNavigationGameObject()

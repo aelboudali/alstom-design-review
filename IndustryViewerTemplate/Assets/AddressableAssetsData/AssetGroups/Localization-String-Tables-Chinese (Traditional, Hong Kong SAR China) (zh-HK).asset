@@ -115,6 +115,12 @@ MonoBehaviour:
     - Locale-zh-HK
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ac0677dd0cd204a73832c07947d88bf7
+    m_Address: Interaction Tool_zh-HK
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-HK
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bb5df540e1dea4f5ea915d067fadeef1
     m_Address: Orbit Camera_zh-HK
     m_ReadOnly: 1

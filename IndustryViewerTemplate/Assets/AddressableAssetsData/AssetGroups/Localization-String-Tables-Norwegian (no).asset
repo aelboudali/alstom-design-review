@@ -121,6 +121,12 @@ MonoBehaviour:
     - Locale-no
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c40f6563858ac4cd29f8d6cd9bb5aa1b
+    m_Address: Interaction Tool_no
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-no
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c8613bb221017409dac1bede75bcf655
     m_Address: Orbit Camera_no
     m_ReadOnly: 1

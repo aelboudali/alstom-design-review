@@ -115,6 +115,12 @@ MonoBehaviour:
     - Locale-en
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9818c0241b896437fa5453a31c0b962c
+    m_Address: Interaction Tool_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: afc5fe4594b40410ea605a116772684e
     m_Address: Fly Camera_en
     m_ReadOnly: 1

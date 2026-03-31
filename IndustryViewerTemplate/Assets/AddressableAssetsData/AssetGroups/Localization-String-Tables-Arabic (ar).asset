@@ -67,6 +67,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-ar
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2af17f26c0b944a5f805df1a66868475
+    m_Address: Interaction Tool_ar
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ar
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 35eb009f073dbed4cab624cf0448e220
     m_Address: MeasureTool_ar
     m_ReadOnly: 1
