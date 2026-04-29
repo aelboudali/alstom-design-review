@@ -1,0 +1,19 @@
+{
+    "name": "Alstom.Branding",
+    "rootNamespace": "Alstom.Branding",
+    "references": [
+        "Unity.AppUI",
+        "Unity.AppUI.UI",
+        "Unity.Industry.Viewer.Identity",
+        "Unity.Industry.Viewer.Shared"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
